@@ -26,6 +26,28 @@ All persistence uses in-memory H2 databases, so you can start experimenting with
 
    Each service registers itself with Eureka and exposes its API through the gateway running on port `8080`.
 
+## Running with Docker
+
+Build and run the full stack using Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+To stop the stack:
+
+```bash
+docker compose down
+```
+
+The services are exposed on the same ports as the local run:
+
+- Eureka Dashboard: `http://localhost:8761`
+- API Gateway: `http://localhost:8080`
+- OMS Service: `http://localhost:8081`
+- WMS Service: `http://localhost:8082`
+- MFG Service: `http://localhost:8083`
+
 3. **Interact with the APIs** – example curl workflow:
    ```bash
    # Create a product and inventory in WMS through the gateway
