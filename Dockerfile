@@ -4,13 +4,10 @@ FROM maven:3.9.6-eclipse-temurin-17 AS build
 ARG MODULE
 WORKDIR /workspace
 
-<<<<<<< HEAD
 RUN apt-get update \
     && apt-get install -y --no-install-recommends maven \
     && rm -rf /var/lib/apt/lists/*
 
-=======
->>>>>>> 2bdf8b6 (Updated the docker file for maven.)
 COPY . .
 RUN mvn -pl ${MODULE} -am -DskipTests package
 
