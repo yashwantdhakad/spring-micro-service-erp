@@ -4,12 +4,12 @@ FROM eclipse-temurin:17-jdk AS build
 ARG MODULE
 WORKDIR /workspace
 
-COPY mvnw mvnw
-COPY .mvn .mvn
-RUN chmod +x mvnw
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends maven \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . .
-RUN ./mvnw -pl ${MODULE} -am -DskipTests package
+RUN mvn -pl ${MODULE} -am -DskipTests package
 
 FROM eclipse-temurin:17-jre
 ARG MODULE
