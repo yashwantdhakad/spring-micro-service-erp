@@ -20,6 +20,7 @@ public class WebSiteService {
     public List<WebSite> list() {
         return repository.findAll();
     }
+    
 
     public WebSite get(Long id) {
         return repository.findById(id)

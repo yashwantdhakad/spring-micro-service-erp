@@ -42,4 +42,5 @@ public class VarianceReasonService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+    
 }

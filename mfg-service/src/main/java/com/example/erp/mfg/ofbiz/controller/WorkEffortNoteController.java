@@ -1,0 +1,54 @@
+package com.example.erp.mfg.ofbiz.controller;
+
+import com.example.erp.mfg.ofbiz.domain.WorkEffortNote;
+import com.example.erp.mfg.ofbiz.service.WorkEffortNoteService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/ofbiz/work-effort-notes")
+public class WorkEffortNoteController {
+
+    private final WorkEffortNoteService service;
+
+    public WorkEffortNoteController(WorkEffortNoteService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<WorkEffortNote> list() {
+        return service.list();
+    }
+
+    @GetMapping("/{id}")
+    public WorkEffortNote get(@PathVariable Long id) {
+        return service.get(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<WorkEffortNote> create(@RequestBody WorkEffortNote entity) {
+        WorkEffortNote created = service.create(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    public WorkEffortNote update(@PathVariable Long id, @RequestBody WorkEffortNote entity) {
+        return service.update(id, entity);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
