@@ -61,3 +61,16 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     ports:
       - "8083:8083"
+
+  party-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MODULE: party-service
+    depends_on:
+      - eureka-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    ports:
+      - "8084:8084"
