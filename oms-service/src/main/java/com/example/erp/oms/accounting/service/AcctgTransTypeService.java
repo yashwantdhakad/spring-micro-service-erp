@@ -16,6 +16,7 @@ public class AcctgTransTypeService {
     public AcctgTransTypeService(AcctgTransTypeRepository repository) {
         this.repository = repository;
     }
+    
 
     public List<AcctgTransType> list() {
         return repository.findAll();

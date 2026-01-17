@@ -16,7 +16,7 @@ public class BillingAccountService {
     public BillingAccountService(BillingAccountRepository repository) {
         this.repository = repository;
     }
-
+ 
     public List<BillingAccount> list() {
         return repository.findAll();
     }

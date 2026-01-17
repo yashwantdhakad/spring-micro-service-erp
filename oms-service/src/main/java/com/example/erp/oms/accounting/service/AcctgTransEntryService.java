@@ -16,6 +16,7 @@ public class AcctgTransEntryService {
     public AcctgTransEntryService(AcctgTransEntryRepository repository) {
         this.repository = repository;
     }
+    
 
     public List<AcctgTransEntry> list() {
         return repository.findAll();

@@ -16,6 +16,7 @@ public class AccommodationClassService {
     public AccommodationClassService(AccommodationClassRepository repository) {
         this.repository = repository;
     }
+    
 
     public List<AccommodationClass> list() {
         return repository.findAll();

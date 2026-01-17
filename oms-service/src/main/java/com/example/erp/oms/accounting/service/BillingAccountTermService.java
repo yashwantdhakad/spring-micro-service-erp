@@ -12,7 +12,7 @@ import java.util.List;
 public class BillingAccountTermService {
 
     private final BillingAccountTermRepository repository;
-
+ 
     public BillingAccountTermService(BillingAccountTermRepository repository) {
         this.repository = repository;
     }

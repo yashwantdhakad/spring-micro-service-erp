@@ -15,7 +15,7 @@ public class BillingAccountRoleService {
 
     public BillingAccountRoleService(BillingAccountRoleRepository repository) {
         this.repository = repository;
-    }
+    } 
 
     public List<BillingAccountRole> list() {
         return repository.findAll();

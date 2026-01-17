@@ -16,7 +16,7 @@ public class BudgetItemAttributeService {
     public BudgetItemAttributeService(BudgetItemAttributeRepository repository) {
         this.repository = repository;
     }
-
+ 
     public List<BudgetItemAttribute> list() {
         return repository.findAll();
     }

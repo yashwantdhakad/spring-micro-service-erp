@@ -15,7 +15,7 @@ public class BudgetItemService {
 
     public BudgetItemService(BudgetItemRepository repository) {
         this.repository = repository;
-    }
+    } 
 
     public List<BudgetItem> list() {
         return repository.findAll();

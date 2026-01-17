@@ -16,6 +16,7 @@ public class AcctgTransEntryTypeService {
     public AcctgTransEntryTypeService(AcctgTransEntryTypeRepository repository) {
         this.repository = repository;
     }
+    
 
     public List<AcctgTransEntryType> list() {
         return repository.findAll();

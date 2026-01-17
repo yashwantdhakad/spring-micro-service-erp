@@ -41,4 +41,5 @@ public class BudgetItemTypeAttrService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
+    
 }

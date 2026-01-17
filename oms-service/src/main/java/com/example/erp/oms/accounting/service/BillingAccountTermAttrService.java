@@ -15,7 +15,7 @@ public class BillingAccountTermAttrService {
 
     public BillingAccountTermAttrService(BillingAccountTermAttrRepository repository) {
         this.repository = repository;
-    }
+    } 
 
     public List<BillingAccountTermAttr> list() {
         return repository.findAll();

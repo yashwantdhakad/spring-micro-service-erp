@@ -16,7 +16,7 @@ public class BudgetAttributeService {
     public BudgetAttributeService(BudgetAttributeRepository repository) {
         this.repository = repository;
     }
-
+ 
     public List<BudgetAttribute> list() {
         return repository.findAll();
     }

@@ -16,6 +16,7 @@ public class AcctgTransAttributeService {
     public AcctgTransAttributeService(AcctgTransAttributeRepository repository) {
         this.repository = repository;
     }
+    
 
     public List<AcctgTransAttribute> list() {
         return repository.findAll();
