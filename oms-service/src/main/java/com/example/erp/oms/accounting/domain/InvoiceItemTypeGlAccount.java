@@ -12,6 +12,7 @@ public class InvoiceItemTypeGlAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String invoiceItemTypeId;
 
     private String organizationPartyId;

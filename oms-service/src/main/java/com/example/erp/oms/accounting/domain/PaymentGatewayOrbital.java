@@ -14,6 +14,7 @@ public class PaymentGatewayOrbital {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentGatewayConfigId;
 
     private String username;

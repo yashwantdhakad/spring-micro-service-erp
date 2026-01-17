@@ -15,6 +15,7 @@ public class PaymentGatewayResponse {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentGatewayResponseId;
 
     private String paymentServiceTypeEnumId;

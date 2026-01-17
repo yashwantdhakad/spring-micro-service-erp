@@ -15,6 +15,7 @@ public class TaxAuthorityRateProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String taxAuthorityRateSeqId;
 
     private String taxAuthGeoId;

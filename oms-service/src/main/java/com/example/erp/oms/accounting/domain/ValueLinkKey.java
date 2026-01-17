@@ -15,6 +15,7 @@ public class ValueLinkKey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String merchantId;
 
     private String publicKey;

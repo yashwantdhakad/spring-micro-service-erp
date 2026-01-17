@@ -15,6 +15,7 @@ public class PartyRate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String partyId;
 
     private String rateTypeId;

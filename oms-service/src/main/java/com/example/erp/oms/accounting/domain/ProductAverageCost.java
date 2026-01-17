@@ -15,6 +15,7 @@ public class ProductAverageCost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String productAverageCostTypeId;
 
     private String organizationPartyId;

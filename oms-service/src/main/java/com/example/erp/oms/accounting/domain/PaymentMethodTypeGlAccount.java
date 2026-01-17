@@ -12,6 +12,7 @@ public class PaymentMethodTypeGlAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentMethodTypeId;
 
     private String organizationPartyId;

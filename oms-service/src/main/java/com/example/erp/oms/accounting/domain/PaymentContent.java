@@ -14,6 +14,7 @@ public class PaymentContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentId;
 
     private String paymentContentTypeId;

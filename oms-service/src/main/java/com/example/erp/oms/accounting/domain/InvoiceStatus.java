@@ -14,6 +14,7 @@ public class InvoiceStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String statusId;
 
     private String invoiceId;

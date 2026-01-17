@@ -12,6 +12,7 @@ public class PaymentAttribute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentId;
 
     private String attrName;

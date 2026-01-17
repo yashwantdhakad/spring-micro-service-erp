@@ -15,6 +15,7 @@ public class RateAmount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String rateTypeId;
 
     private String rateCurrencyUomId;

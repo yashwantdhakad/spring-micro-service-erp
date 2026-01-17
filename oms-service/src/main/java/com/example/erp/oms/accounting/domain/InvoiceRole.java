@@ -15,6 +15,7 @@ public class InvoiceRole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String invoiceId;
 
     private String partyId;

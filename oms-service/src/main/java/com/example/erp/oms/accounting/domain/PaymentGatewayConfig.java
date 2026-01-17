@@ -12,6 +12,7 @@ public class PaymentGatewayConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentGatewayConfigId;
 
     private String paymentGatewayConfigTypeId;

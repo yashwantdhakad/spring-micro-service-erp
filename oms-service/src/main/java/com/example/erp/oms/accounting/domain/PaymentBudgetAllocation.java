@@ -14,6 +14,7 @@ public class PaymentBudgetAllocation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String budgetId;
 
     private String budgetItemSeqId;

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class ZipSalesTaxLookup {
+    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

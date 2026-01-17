@@ -12,6 +12,7 @@ public class TaxAuthorityGlAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String taxAuthGeoId;
 
     private String taxAuthPartyId;

@@ -12,6 +12,7 @@ public class PaymentMethodType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentMethodTypeId;
 
     private String description;

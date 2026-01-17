@@ -15,6 +15,7 @@ public class InvoiceItemAssoc {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String invoiceIdFrom;
 
     private String invoiceItemSeqIdFrom;

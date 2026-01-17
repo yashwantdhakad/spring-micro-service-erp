@@ -12,6 +12,7 @@ public class PaymentGatewayRespMsg {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentGatewayRespMsgId;
 
     private String paymentGatewayResponseId;

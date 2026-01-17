@@ -14,6 +14,7 @@ public class PartyPrefDocTypeTpl {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String partyPrefDocTypeTplId;
 
     private String partyId;

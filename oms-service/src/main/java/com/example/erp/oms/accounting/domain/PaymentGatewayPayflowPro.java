@@ -14,6 +14,7 @@ public class PaymentGatewayPayflowPro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentGatewayConfigId;
 
     private String certsPath;

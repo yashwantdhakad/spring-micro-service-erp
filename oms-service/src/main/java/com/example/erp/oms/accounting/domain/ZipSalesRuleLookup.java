@@ -14,6 +14,7 @@ public class ZipSalesRuleLookup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String stateCode;
 
     private String city;

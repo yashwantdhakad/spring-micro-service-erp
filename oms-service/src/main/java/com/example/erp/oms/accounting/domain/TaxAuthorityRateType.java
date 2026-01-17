@@ -12,6 +12,7 @@ public class TaxAuthorityRateType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String taxAuthorityRateTypeId;
 
     private String description;

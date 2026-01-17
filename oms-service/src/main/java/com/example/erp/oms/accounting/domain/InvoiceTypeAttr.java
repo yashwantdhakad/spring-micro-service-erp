@@ -12,6 +12,7 @@ public class InvoiceTypeAttr {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String invoiceTypeId;
 
     private String attrName;

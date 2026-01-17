@@ -15,6 +15,7 @@ public class PartyAcctgPreference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String partyId;
 
     private BigDecimal fiscalYearStartMonth;

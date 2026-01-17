@@ -14,6 +14,7 @@ public class TaxAuthorityAssoc {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String taxAuthGeoId;
 
     private String taxAuthPartyId;

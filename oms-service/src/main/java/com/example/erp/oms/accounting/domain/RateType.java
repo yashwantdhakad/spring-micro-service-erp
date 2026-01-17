@@ -12,6 +12,7 @@ public class RateType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String rateTypeId;
 
     private String description;

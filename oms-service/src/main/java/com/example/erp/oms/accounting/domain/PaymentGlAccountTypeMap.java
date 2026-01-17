@@ -12,6 +12,7 @@ public class PaymentGlAccountTypeMap {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentTypeId;
 
     private String organizationPartyId;

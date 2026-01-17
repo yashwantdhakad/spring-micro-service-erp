@@ -14,6 +14,7 @@ public class InvoiceItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String invoiceId;
 
     private String invoiceItemSeqId;

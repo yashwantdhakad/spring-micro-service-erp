@@ -12,6 +12,7 @@ public class InvoiceItemAssocType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String invoiceItemAssocTypeId;
 
     private String parentTypeId;

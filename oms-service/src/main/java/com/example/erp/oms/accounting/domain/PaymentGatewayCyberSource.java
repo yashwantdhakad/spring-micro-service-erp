@@ -14,6 +14,7 @@ public class PaymentGatewayCyberSource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private String paymentGatewayConfigId;
 
     private String merchantId;
