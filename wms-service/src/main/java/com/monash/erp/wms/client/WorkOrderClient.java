@@ -12,3 +12,4 @@ public interface WorkOrderClient {
     @GetMapping("/by-product/{sku}")
     List<WorkOrderSummary> findByProduct(@PathVariable("sku") String sku);
 }
+
