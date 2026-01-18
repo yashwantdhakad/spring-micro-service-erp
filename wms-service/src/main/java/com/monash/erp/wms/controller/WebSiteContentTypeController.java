@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-site-content-types")
+@RequestMapping("/api/web-site-content-types")
 public class WebSiteContentTypeController {
 
     private final WebSiteContentTypeService service;

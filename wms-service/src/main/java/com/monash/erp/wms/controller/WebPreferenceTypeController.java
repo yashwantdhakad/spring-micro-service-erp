@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-preference-types")
+@RequestMapping("/api/web-preference-types")
 public class WebPreferenceTypeController {
 
     private final WebPreferenceTypeService service;

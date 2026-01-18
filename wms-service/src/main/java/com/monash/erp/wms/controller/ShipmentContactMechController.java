@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-contact-mechs")
+@RequestMapping("/api/shipment-contact-mechs")
 public class ShipmentContactMechController {
 
     private final ShipmentContactMechService service;

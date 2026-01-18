@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/party-gl-accounts")
+@RequestMapping("/api/accounting/party-gl-accounts")
 public class PartyGlAccountController {
 
     private final PartyGlAccountService service;

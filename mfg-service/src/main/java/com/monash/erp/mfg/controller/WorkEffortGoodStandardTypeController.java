@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-good-standard-types")
+@RequestMapping("/api/work-effort-good-standard-types")
 public class WorkEffortGoodStandardTypeController {
 
     private final WorkEffortGoodStandardTypeService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/fixed-asset-product-types")
+@RequestMapping("/api/accounting/fixed-asset-product-types")
 public class FixedAssetProductTypeController {
 
     private final FixedAssetProductTypeService service;

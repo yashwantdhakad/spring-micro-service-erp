@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/content-purpose-types")
+@RequestMapping("/api/content-purpose-types")
 public class ContentPurposeTypeController {
 
     private final ContentPurposeTypeService service;

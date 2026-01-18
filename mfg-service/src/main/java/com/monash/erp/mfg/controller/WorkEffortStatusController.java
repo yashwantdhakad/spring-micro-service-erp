@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-statuses")
+@RequestMapping("/api/work-effort-statuses")
 public class WorkEffortStatusController {
 
     private final WorkEffortStatusService service;

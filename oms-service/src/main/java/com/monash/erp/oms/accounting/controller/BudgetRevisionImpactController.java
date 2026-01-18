@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/budget-revision-impacts")
+@RequestMapping("/api/accounting/budget-revision-impacts")
 public class BudgetRevisionImpactController {
 
     private final BudgetRevisionImpactService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-cost-estimates")
+@RequestMapping("/api/shipment-cost-estimates")
 public class ShipmentCostEstimateController {
 
     private final ShipmentCostEstimateService service;

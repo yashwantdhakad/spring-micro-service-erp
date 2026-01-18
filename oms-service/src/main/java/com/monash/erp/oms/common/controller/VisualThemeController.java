@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/visual-themes")
+@RequestMapping("/api/common/visual-themes")
 public class VisualThemeController {
 
     private final VisualThemeService service;

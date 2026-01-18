@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-keywords")
+@RequestMapping("/api/product-keywords")
 public class ProductKeywordController {
 
     private final ProductKeywordService service;

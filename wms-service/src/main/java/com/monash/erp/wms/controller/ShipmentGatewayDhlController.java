@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-gateway-dhls")
+@RequestMapping("/api/shipment-gateway-dhls")
 public class ShipmentGatewayDhlController {
 
     private final ShipmentGatewayDhlService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/invoice-item-type-gl-accounts")
+@RequestMapping("/api/accounting/invoice-item-type-gl-accounts")
 public class InvoiceItemTypeGlAccountController {
 
     private final InvoiceItemTypeGlAccountService service;

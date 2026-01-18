@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-deliverable-prods")
+@RequestMapping("/api/work-effort-deliverable-prods")
 public class WorkEffortDeliverableProdController {
 
     private final WorkEffortDeliverableProdService service;

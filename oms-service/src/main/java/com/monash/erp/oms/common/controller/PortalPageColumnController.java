@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/portal-page-columns")
+@RequestMapping("/api/common/portal-page-columns")
 public class PortalPageColumnController {
 
     private final PortalPageColumnService service;

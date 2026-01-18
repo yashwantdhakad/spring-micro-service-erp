@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/electronic-texts")
+@RequestMapping("/api/electronic-texts")
 public class ElectronicTextController {
 
     private final ElectronicTextService service;

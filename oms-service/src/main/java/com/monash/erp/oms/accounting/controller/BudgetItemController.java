@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/budget-items")
+@RequestMapping("/api/accounting/budget-items")
 public class BudgetItemController {
 
     private final BudgetItemService service;

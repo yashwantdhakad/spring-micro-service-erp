@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-gateway-secure-pays")
+@RequestMapping("/api/accounting/payment-gateway-secure-pays")
 public class PaymentGatewaySecurePayController {
 
     private final PaymentGatewaySecurePayService service;

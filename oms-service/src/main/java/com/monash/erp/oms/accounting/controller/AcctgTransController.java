@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/acctg-transes")
+@RequestMapping("/api/accounting/acctg-transes")
 public class AcctgTransController {
 
     private final AcctgTransService service;

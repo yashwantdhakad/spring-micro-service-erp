@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/party-rates")
+@RequestMapping("/api/accounting/party-rates")
 public class PartyRateController {
 
     private final PartyRateService service;

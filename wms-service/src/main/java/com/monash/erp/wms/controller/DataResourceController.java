@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/data-resources")
+@RequestMapping("/api/data-resources")
 public class DataResourceController {
 
     private final DataResourceService service;

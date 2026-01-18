@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/data-sources")
+@RequestMapping("/api/common/data-sources")
 public class DataSourceController {
 
     private final DataSourceService service;

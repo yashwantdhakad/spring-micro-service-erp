@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-manufacturing-rules")
+@RequestMapping("/api/product-manufacturing-rules")
 public class ProductManufacturingRuleController {
 
     private final ProductManufacturingRuleService service;

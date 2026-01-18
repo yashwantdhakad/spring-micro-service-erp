@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gift-card-fulfillments")
+@RequestMapping("/api/accounting/gift-card-fulfillments")
 public class GiftCardFulfillmentController {
 
     private final GiftCardFulfillmentService service;

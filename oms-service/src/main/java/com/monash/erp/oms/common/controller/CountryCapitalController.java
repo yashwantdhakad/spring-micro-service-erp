@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/country-capitals")
+@RequestMapping("/api/common/country-capitals")
 public class CountryCapitalController {
 
     private final CountryCapitalService service;

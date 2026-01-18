@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/rate-types")
+@RequestMapping("/api/accounting/rate-types")
 public class RateTypeController {
 
     private final RateTypeService service;

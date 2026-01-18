@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/status-valid-changes")
+@RequestMapping("/api/common/status-valid-changes")
 public class StatusValidChangeController {
 
     private final StatusValidChangeService service;

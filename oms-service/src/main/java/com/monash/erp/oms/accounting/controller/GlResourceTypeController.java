@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-resource-types")
+@RequestMapping("/api/accounting/gl-resource-types")
 public class GlResourceTypeController {
 
     private final GlResourceTypeService service;

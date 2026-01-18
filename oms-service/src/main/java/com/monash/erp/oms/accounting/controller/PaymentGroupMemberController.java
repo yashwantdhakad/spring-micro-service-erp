@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-group-members")
+@RequestMapping("/api/accounting/payment-group-members")
 public class PaymentGroupMemberController {
 
     private final PaymentGroupMemberService service;

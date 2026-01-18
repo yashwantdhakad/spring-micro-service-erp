@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/order-item-ship-groups")
+@RequestMapping("/api/order-item-ship-groups")
 public class OrderItemShipGroupController {
 
     private final OrderItemShipGroupService orderItemShipGroupService;

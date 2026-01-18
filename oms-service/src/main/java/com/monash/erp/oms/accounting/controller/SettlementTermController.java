@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/settlement-terms")
+@RequestMapping("/api/accounting/settlement-terms")
 public class SettlementTermController {
 
     private final SettlementTermService service;

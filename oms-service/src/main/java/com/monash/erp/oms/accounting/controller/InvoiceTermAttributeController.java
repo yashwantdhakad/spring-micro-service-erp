@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/invoice-term-attributes")
+@RequestMapping("/api/accounting/invoice-term-attributes")
 public class InvoiceTermAttributeController {
 
     private final InvoiceTermAttributeService service;

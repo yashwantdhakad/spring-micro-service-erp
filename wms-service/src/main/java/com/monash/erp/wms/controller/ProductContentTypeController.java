@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-content-types")
+@RequestMapping("/api/product-content-types")
 public class ProductContentTypeController {
 
     private final ProductContentTypeService service;

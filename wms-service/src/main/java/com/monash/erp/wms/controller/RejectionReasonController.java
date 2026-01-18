@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/rejection-reasons")
+@RequestMapping("/api/rejection-reasons")
 public class RejectionReasonController {
 
     private final RejectionReasonService service;

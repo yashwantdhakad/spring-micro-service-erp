@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/budget-scenario-applications")
+@RequestMapping("/api/accounting/budget-scenario-applications")
 public class BudgetScenarioApplicationController {
 
     private final BudgetScenarioApplicationService service;

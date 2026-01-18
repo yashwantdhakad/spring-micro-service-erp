@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/party-identifications")
+@RequestMapping("/api/party-identifications")
 public class PartyIdentificationController {
 
     private final PartyIdentificationService service;

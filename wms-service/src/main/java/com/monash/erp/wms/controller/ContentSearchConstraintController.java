@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/content-search-constraints")
+@RequestMapping("/api/content-search-constraints")
 public class ContentSearchConstraintController {
 
     private final ContentSearchConstraintService service;

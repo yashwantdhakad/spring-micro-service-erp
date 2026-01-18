@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-gateway-clear-commerces")
+@RequestMapping("/api/accounting/payment-gateway-clear-commerces")
 public class PaymentGatewayClearCommerceController {
 
     private final PaymentGatewayClearCommerceService service;

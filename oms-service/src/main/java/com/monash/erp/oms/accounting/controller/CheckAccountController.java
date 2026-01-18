@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/check-accounts")
+@RequestMapping("/api/accounting/check-accounts")
 public class CheckAccountController {
 
     private final CheckAccountService service;

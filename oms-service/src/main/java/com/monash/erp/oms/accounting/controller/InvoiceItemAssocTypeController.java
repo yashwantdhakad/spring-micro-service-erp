@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/invoice-item-assoc-types")
+@RequestMapping("/api/accounting/invoice-item-assoc-types")
 public class InvoiceItemAssocTypeController {
 
     private final InvoiceItemAssocTypeService service;

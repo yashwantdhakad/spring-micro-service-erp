@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/data-resource-attributes")
+@RequestMapping("/api/data-resource-attributes")
 public class DataResourceAttributeController {
 
     private final DataResourceAttributeService service;

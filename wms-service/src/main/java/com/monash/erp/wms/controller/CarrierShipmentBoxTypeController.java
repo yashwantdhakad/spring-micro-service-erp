@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/carrier-shipment-box-types")
+@RequestMapping("/api/carrier-shipment-box-types")
 public class CarrierShipmentBoxTypeController {
 
     private final CarrierShipmentBoxTypeService service;

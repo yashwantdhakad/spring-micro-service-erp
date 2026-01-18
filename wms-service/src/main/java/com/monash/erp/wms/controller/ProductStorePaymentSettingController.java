@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-store-payment-settings")
+@RequestMapping("/api/product-store-payment-settings")
 public class ProductStorePaymentSettingController {
 
     private final ProductStorePaymentSettingService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/picklist-roles")
+@RequestMapping("/api/picklist-roles")
 public class PicklistRoleController {
 
     private final PicklistRoleService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/pay-pal-payment-methods")
+@RequestMapping("/api/accounting/pay-pal-payment-methods")
 public class PayPalPaymentMethodController {
 
     private final PayPalPaymentMethodService service;

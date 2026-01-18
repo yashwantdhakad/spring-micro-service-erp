@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/billing-account-roles")
+@RequestMapping("/api/accounting/billing-account-roles")
 public class BillingAccountRoleController {
 
     private final BillingAccountRoleService service;

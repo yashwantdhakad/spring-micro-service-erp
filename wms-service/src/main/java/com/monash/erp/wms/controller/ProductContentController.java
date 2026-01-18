@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-contents")
+@RequestMapping("/api/product-contents")
 public class ProductContentController {
 
     private final ProductContentService service;

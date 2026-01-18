@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-good-standards")
+@RequestMapping("/api/work-effort-good-standards")
 public class WorkEffortGoodStandardController {
 
     private final WorkEffortGoodStandardService service;

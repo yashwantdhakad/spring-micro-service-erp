@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/inventory-item-variances")
+@RequestMapping("/api/inventory-item-variances")
 public class InventoryItemVarianceController {
 
     private final InventoryItemVarianceService service;

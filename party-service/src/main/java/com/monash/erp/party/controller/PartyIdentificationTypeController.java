@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/party-identification-types")
+@RequestMapping("/api/party-identification-types")
 public class PartyIdentificationTypeController {
 
     private final PartyIdentificationTypeService service;

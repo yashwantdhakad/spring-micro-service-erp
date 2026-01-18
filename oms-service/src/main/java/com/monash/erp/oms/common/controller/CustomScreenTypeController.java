@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/custom-screen-types")
+@RequestMapping("/api/common/custom-screen-types")
 public class CustomScreenTypeController {
 
     private final CustomScreenTypeService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/data-template-types")
+@RequestMapping("/api/data-template-types")
 public class DataTemplateTypeController {
 
     private final DataTemplateTypeService service;

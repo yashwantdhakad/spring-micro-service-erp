@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/tech-data-calendar-exc-weeks")
+@RequestMapping("/api/tech-data-calendar-exc-weeks")
 public class TechDataCalendarExcWeekController {
 
     private final TechDataCalendarExcWeekService service;

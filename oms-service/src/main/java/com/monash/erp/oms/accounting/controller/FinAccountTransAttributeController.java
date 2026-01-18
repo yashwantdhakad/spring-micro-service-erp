@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/fin-account-trans-attributes")
+@RequestMapping("/api/accounting/fin-account-trans-attributes")
 public class FinAccountTransAttributeController {
 
     private final FinAccountTransAttributeService service;

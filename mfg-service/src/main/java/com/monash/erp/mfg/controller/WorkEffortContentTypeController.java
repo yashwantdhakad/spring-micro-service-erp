@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-content-types")
+@RequestMapping("/api/work-effort-content-types")
 public class WorkEffortContentTypeController {
 
     private final WorkEffortContentTypeService service;

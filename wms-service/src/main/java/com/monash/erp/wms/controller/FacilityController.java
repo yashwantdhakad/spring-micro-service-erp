@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/facilities")
+@RequestMapping("/api/facilities")
 public class FacilityController {
 
     private final FacilityService service;

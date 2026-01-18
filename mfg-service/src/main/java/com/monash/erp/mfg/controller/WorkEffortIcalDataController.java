@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-ical-datas")
+@RequestMapping("/api/work-effort-ical-datas")
 public class WorkEffortIcalDataController {
 
     private final WorkEffortIcalDataService service;

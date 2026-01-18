@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-reviews")
+@RequestMapping("/api/work-effort-reviews")
 public class WorkEffortReviewController {
 
     private final WorkEffortReviewService service;

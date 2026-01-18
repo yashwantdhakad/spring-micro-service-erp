@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/variance-reasons")
+@RequestMapping("/api/variance-reasons")
 public class VarianceReasonController {
 
     private final VarianceReasonService service;

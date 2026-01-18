@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/document-attributes")
+@RequestMapping("/api/document-attributes")
 public class DocumentAttributeController {
 
     private final DocumentAttributeService service;

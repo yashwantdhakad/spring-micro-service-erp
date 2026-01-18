@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/party-carrier-accounts")
+@RequestMapping("/api/party-carrier-accounts")
 public class PartyCarrierAccountController {
 
     private final PartyCarrierAccountService service;

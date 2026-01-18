@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-assoc-types")
+@RequestMapping("/api/product-assoc-types")
 public class ProductAssocTypeController {
 
     private final ProductAssocTypeService service;

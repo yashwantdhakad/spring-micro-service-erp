@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-feature-types")
+@RequestMapping("/api/product-feature-types")
 public class ProductFeatureTypeController {
 
     private final ProductFeatureTypeService service;

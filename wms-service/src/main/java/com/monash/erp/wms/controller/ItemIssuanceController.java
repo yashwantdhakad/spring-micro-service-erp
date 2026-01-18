@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/item-issuances")
+@RequestMapping("/api/item-issuances")
 public class ItemIssuanceController {
 
     private final ItemIssuanceService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/order-item-ship-grp-inv-res")
+@RequestMapping("/api/order-item-ship-grp-inv-res")
 public class OrderItemShipGrpInvResController {
 
     private final OrderItemShipGrpInvResService orderItemShipGrpInvResService;

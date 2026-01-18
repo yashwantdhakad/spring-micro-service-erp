@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/custom-time-periods")
+@RequestMapping("/api/common/custom-time-periods")
 public class CustomTimePeriodController {
 
     private final CustomTimePeriodService service;

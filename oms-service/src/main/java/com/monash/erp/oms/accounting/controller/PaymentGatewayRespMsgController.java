@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-gateway-resp-msgs")
+@RequestMapping("/api/accounting/payment-gateway-resp-msgs")
 public class PaymentGatewayRespMsgController {
 
     private final PaymentGatewayRespMsgService service;

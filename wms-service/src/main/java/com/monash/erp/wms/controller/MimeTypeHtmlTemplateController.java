@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/mime-type-html-templates")
+@RequestMapping("/api/mime-type-html-templates")
 public class MimeTypeHtmlTemplateController {
 
     private final MimeTypeHtmlTemplateService service;

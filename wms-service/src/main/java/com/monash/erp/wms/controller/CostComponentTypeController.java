@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/cost-component-types")
+@RequestMapping("/api/cost-component-types")
 public class CostComponentTypeController {
 
     private final CostComponentTypeService service;

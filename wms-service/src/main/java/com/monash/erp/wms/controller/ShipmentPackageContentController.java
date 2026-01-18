@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-package-contents")
+@RequestMapping("/api/shipment-package-contents")
 public class ShipmentPackageContentController {
 
     private final ShipmentPackageContentService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-site-roles")
+@RequestMapping("/api/web-site-roles")
 public class WebSiteRoleController {
 
     private final WebSiteRoleService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/fixed-asset-idents")
+@RequestMapping("/api/accounting/fixed-asset-idents")
 public class FixedAssetIdentController {
 
     private final FixedAssetIdentService service;

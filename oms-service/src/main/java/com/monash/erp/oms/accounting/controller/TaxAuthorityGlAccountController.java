@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/tax-authority-gl-accounts")
+@RequestMapping("/api/accounting/tax-authority-gl-accounts")
 public class TaxAuthorityGlAccountController {
 
     private final TaxAuthorityGlAccountService service;

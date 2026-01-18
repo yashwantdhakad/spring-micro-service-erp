@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/facility-types")
+@RequestMapping("/api/facility-types")
 public class FacilityTypeController {
 
     private final FacilityTypeService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-journals")
+@RequestMapping("/api/accounting/gl-journals")
 public class GlJournalController {
 
     private final GlJournalService service;

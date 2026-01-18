@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/survey-multi-resps")
+@RequestMapping("/api/survey-multi-resps")
 public class SurveyMultiRespController {
 
     private final SurveyMultiRespService service;

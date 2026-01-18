@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/video-data-resources")
+@RequestMapping("/api/video-data-resources")
 public class VideoDataResourceController {
 
     private final VideoDataResourceService service;

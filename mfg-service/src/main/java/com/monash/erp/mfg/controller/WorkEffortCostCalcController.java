@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-cost-calcs")
+@RequestMapping("/api/work-effort-cost-calcs")
 public class WorkEffortCostCalcController {
 
     private final WorkEffortCostCalcService service;

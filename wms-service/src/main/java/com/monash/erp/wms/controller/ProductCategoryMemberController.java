@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-category-members")
+@RequestMapping("/api/product-category-members")
 public class ProductCategoryMemberController {
 
     private final ProductCategoryMemberService service;

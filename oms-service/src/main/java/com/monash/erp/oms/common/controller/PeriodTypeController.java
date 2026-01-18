@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/period-types")
+@RequestMapping("/api/common/period-types")
 public class PeriodTypeController {
 
     private final PeriodTypeService service;

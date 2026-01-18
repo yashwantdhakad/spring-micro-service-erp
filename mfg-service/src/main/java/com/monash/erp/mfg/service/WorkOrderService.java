@@ -1,7 +1,7 @@
 package com.monash.erp.mfg.service;
 
 import com.monash.erp.mfg.entity.WorkOrder;
-import com.monash.erp.mfg.entity.WorkOrderRepository;
+import com.monash.erp.mfg.repository.WorkOrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

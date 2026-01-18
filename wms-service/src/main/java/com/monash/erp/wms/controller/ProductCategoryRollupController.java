@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-category-rollups")
+@RequestMapping("/api/product-category-rollups")
 public class ProductCategoryRollupController {
 
     private final ProductCategoryRollupService service;

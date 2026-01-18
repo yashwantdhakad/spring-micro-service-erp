@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/party-pref-doc-type-tpls")
+@RequestMapping("/api/accounting/party-pref-doc-type-tpls")
 public class PartyPrefDocTypeTplController {
 
     private final PartyPrefDocTypeTplService service;

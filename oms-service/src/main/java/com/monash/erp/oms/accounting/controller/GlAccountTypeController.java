@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-account-types")
+@RequestMapping("/api/accounting/gl-account-types")
 public class GlAccountTypeController {
 
     private final GlAccountTypeService service;

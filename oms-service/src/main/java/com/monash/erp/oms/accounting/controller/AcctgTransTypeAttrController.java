@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/acctg-trans-type-attrs")
+@RequestMapping("/api/accounting/acctg-trans-type-attrs")
 public class AcctgTransTypeAttrController {
 
     private final AcctgTransTypeAttrService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-time-estimates")
+@RequestMapping("/api/shipment-time-estimates")
 public class ShipmentTimeEstimateController {
 
     private final ShipmentTimeEstimateService service;

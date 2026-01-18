@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/billing-account-terms")
+@RequestMapping("/api/accounting/billing-account-terms")
 public class BillingAccountTermController {
 
     private final BillingAccountTermService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/accommodation-classes")
+@RequestMapping("/api/accounting/accommodation-classes")
 public class AccommodationClassController {
 
     private final AccommodationClassService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/character-sets")
+@RequestMapping("/api/character-sets")
 public class CharacterSetController {
 
     private final CharacterSetService service;

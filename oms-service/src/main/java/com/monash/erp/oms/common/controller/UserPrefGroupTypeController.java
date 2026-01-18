@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/user-pref-group-types")
+@RequestMapping("/api/common/user-pref-group-types")
 public class UserPrefGroupTypeController {
 
     private final UserPrefGroupTypeService service;

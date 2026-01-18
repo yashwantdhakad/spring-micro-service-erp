@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/other-data-resources")
+@RequestMapping("/api/other-data-resources")
 public class OtherDataResourceController {
 
     private final OtherDataResourceService service;

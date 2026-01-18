@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-fiscal-types")
+@RequestMapping("/api/accounting/gl-fiscal-types")
 public class GlFiscalTypeController {
 
     private final GlFiscalTypeService service;

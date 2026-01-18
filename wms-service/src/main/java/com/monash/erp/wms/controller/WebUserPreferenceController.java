@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-user-preferences")
+@RequestMapping("/api/web-user-preferences")
 public class WebUserPreferenceController {
 
     private final WebUserPreferenceService service;

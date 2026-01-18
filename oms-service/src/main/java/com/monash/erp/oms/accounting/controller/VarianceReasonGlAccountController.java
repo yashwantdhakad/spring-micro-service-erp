@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/variance-reason-gl-accounts")
+@RequestMapping("/api/accounting/variance-reason-gl-accounts")
 public class VarianceReasonGlAccountController {
 
     private final VarianceReasonGlAccountService service;

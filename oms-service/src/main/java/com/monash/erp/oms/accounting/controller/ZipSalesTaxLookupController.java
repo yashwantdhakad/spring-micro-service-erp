@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/zip-sales-tax-lookups")
+@RequestMapping("/api/accounting/zip-sales-tax-lookups")
 public class ZipSalesTaxLookupController {
 
     private final ZipSalesTaxLookupService service;

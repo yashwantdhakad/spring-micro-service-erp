@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-xbrl-classes")
+@RequestMapping("/api/accounting/gl-xbrl-classes")
 public class GlXbrlClassController {
 
     private final GlXbrlClassService service;

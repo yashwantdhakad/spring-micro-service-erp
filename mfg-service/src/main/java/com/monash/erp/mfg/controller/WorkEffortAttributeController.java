@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-attributes")
+@RequestMapping("/api/work-effort-attributes")
 public class WorkEffortAttributeController {
 
     private final WorkEffortAttributeService service;

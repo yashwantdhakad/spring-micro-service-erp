@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-site-path-aliases")
+@RequestMapping("/api/web-site-path-aliases")
 public class WebSitePathAliasController {
 
     private final WebSitePathAliasService service;

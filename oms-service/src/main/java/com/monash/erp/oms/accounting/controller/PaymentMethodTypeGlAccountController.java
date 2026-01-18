@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-method-type-gl-accounts")
+@RequestMapping("/api/accounting/payment-method-type-gl-accounts")
 public class PaymentMethodTypeGlAccountController {
 
     private final PaymentMethodTypeGlAccountService service;

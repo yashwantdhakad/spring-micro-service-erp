@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/custom-screens")
+@RequestMapping("/api/common/custom-screens")
 public class CustomScreenController {
 
     private final CustomScreenService service;

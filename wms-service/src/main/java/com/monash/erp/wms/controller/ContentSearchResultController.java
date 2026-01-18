@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/content-search-results")
+@RequestMapping("/api/content-search-results")
 public class ContentSearchResultController {
 
     private final ContentSearchResultService service;

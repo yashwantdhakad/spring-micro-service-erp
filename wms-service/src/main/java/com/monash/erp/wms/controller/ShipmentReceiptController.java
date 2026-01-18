@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-receipts")
+@RequestMapping("/api/shipment-receipts")
 public class ShipmentReceiptController {
 
     private final ShipmentReceiptService service;

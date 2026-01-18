@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-accounts")
+@RequestMapping("/api/accounting/gl-accounts")
 public class GlAccountController {
 
     private final GlAccountService service;

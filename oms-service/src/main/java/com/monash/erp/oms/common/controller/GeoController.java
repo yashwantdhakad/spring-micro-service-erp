@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/geos")
+@RequestMapping("/api/common/geos")
 public class GeoController {
 
     private final GeoService service;

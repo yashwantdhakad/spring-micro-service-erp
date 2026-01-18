@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/portal-page-portlets")
+@RequestMapping("/api/common/portal-page-portlets")
 public class PortalPagePortletController {
 
     private final PortalPagePortletService service;

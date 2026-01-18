@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/data-resource-type-attrs")
+@RequestMapping("/api/data-resource-type-attrs")
 public class DataResourceTypeAttrController {
 
     private final DataResourceTypeAttrService service;

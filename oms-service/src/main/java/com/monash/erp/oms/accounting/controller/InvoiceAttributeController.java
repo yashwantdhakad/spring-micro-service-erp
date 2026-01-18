@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/invoice-attributes")
+@RequestMapping("/api/accounting/invoice-attributes")
 public class InvoiceAttributeController {
 
     private final InvoiceAttributeService service;

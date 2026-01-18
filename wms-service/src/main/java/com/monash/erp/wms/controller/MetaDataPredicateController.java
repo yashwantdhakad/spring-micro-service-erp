@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/meta-data-predicates")
+@RequestMapping("/api/meta-data-predicates")
 public class MetaDataPredicateController {
 
     private final MetaDataPredicateService service;

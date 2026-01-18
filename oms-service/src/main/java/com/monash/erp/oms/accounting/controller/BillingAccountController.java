@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/billing-accounts")
+@RequestMapping("/api/accounting/billing-accounts")
 public class BillingAccountController {
 
     private final BillingAccountService service;

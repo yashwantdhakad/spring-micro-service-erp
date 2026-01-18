@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/custom-method-types")
+@RequestMapping("/api/common/custom-method-types")
 public class CustomMethodTypeController {
 
     private final CustomMethodTypeService service;

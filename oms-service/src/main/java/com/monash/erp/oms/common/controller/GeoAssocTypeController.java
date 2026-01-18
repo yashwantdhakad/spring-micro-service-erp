@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/geo-assoc-types")
+@RequestMapping("/api/common/geo-assoc-types")
 public class GeoAssocTypeController {
 
     private final GeoAssocTypeService service;

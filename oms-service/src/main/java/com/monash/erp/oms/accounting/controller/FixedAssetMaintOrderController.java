@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/fixed-asset-maint-orders")
+@RequestMapping("/api/accounting/fixed-asset-maint-orders")
 public class FixedAssetMaintOrderController {
 
     private final FixedAssetMaintOrderService service;

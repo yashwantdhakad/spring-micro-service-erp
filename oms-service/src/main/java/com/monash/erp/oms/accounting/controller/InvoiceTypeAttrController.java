@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/invoice-type-attrs")
+@RequestMapping("/api/accounting/invoice-type-attrs")
 public class InvoiceTypeAttrController {
 
     private final InvoiceTypeAttrService service;

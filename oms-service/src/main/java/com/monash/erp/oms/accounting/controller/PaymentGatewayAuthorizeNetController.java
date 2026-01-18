@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-gateway-authorize-nets")
+@RequestMapping("/api/accounting/payment-gateway-authorize-nets")
 public class PaymentGatewayAuthorizeNetController {
 
     private final PaymentGatewayAuthorizeNetService service;

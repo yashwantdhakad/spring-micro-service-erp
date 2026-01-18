@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/containers")
+@RequestMapping("/api/containers")
 public class ContainerController {
 
     private final ContainerService service;

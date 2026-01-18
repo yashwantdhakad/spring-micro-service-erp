@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/rate-amounts")
+@RequestMapping("/api/accounting/rate-amounts")
 public class RateAmountController {
 
     private final RateAmountService service;

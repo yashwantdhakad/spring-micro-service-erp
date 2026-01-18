@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/content-assoc-types")
+@RequestMapping("/api/content-assoc-types")
 public class ContentAssocTypeController {
 
     private final ContentAssocTypeService service;

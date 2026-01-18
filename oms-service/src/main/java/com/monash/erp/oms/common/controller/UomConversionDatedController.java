@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/uom-conversion-dateds")
+@RequestMapping("/api/common/uom-conversion-dateds")
 public class UomConversionDatedController {
 
     private final UomConversionDatedService service;

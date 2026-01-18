@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/content-revisions")
+@RequestMapping("/api/content-revisions")
 public class ContentRevisionController {
 
     private final ContentRevisionService service;

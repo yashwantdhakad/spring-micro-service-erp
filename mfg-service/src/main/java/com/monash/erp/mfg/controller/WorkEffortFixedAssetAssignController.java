@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-fixed-asset-assigns")
+@RequestMapping("/api/work-effort-fixed-asset-assigns")
 public class WorkEffortFixedAssetAssignController {
 
     private final WorkEffortFixedAssetAssignService service;

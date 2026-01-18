@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-attributes")
+@RequestMapping("/api/accounting/payment-attributes")
 public class PaymentAttributeController {
 
     private final PaymentAttributeService service;

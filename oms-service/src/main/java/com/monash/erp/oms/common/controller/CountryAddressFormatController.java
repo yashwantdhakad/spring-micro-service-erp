@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/country-address-formats")
+@RequestMapping("/api/common/country-address-formats")
 public class CountryAddressFormatController {
 
     private final CountryAddressFormatService service;

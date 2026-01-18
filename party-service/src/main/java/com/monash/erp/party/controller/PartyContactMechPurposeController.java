@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/party-contact-mech-purposes")
+@RequestMapping("/api/party-contact-mech-purposes")
 public class PartyContactMechPurposeController {
 
     private final PartyContactMechPurposeService service;

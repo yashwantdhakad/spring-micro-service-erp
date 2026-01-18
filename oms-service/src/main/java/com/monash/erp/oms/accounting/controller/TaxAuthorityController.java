@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/tax-authoritys")
+@RequestMapping("/api/accounting/tax-authoritys")
 public class TaxAuthorityController {
 
     private final TaxAuthorityService service;

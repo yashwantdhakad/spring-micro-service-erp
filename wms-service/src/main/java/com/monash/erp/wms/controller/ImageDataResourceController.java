@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/image-data-resources")
+@RequestMapping("/api/image-data-resources")
 public class ImageDataResourceController {
 
     private final ImageDataResourceService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-method-types")
+@RequestMapping("/api/accounting/payment-method-types")
 public class PaymentMethodTypeController {
 
     private final PaymentMethodTypeService service;

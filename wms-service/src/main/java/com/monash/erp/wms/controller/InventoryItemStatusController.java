@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/inventory-item-statuses")
+@RequestMapping("/api/inventory-item-statuses")
 public class InventoryItemStatusController {
 
     private final InventoryItemStatusService service;

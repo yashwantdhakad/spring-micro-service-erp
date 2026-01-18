@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-gateway-world-pays")
+@RequestMapping("/api/accounting/payment-gateway-world-pays")
 public class PaymentGatewayWorldPayController {
 
     private final PaymentGatewayWorldPayService service;

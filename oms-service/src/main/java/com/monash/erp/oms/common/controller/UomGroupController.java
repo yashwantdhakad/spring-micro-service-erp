@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/uom-groups")
+@RequestMapping("/api/common/uom-groups")
 public class UomGroupController {
 
     private final UomGroupService service;

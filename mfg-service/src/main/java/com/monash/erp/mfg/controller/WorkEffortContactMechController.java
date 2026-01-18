@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-contact-mechs")
+@RequestMapping("/api/work-effort-contact-mechs")
 public class WorkEffortContactMechController {
 
     private final WorkEffortContactMechService service;

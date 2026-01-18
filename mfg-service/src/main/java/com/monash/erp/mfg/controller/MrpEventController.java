@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/mrp-events")
+@RequestMapping("/api/mrp-events")
 public class MrpEventController {
 
     private final MrpEventService service;

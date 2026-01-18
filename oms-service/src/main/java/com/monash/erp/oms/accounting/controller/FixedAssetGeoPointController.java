@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/fixed-asset-geo-points")
+@RequestMapping("/api/accounting/fixed-asset-geo-points")
 public class FixedAssetGeoPointController {
 
     private final FixedAssetGeoPointService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/tax-authority-assoc-types")
+@RequestMapping("/api/accounting/tax-authority-assoc-types")
 public class TaxAuthorityAssocTypeController {
 
     private final TaxAuthorityAssocTypeService service;

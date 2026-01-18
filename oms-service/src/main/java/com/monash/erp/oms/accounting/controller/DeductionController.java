@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/deductions")
+@RequestMapping("/api/accounting/deductions")
 public class DeductionController {
 
     private final DeductionService service;

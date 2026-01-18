@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/status-types")
+@RequestMapping("/api/common/status-types")
 public class StatusTypeController {
 
     private final StatusTypeService service;

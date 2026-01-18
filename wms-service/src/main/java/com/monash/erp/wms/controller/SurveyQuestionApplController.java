@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/survey-question-appls")
+@RequestMapping("/api/survey-question-appls")
 public class SurveyQuestionApplController {
 
     private final SurveyQuestionApplService service;

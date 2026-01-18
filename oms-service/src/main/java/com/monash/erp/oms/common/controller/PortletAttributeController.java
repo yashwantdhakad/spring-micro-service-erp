@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/portlet-attributes")
+@RequestMapping("/api/common/portlet-attributes")
 public class PortletAttributeController {
 
     private final PortletAttributeService service;

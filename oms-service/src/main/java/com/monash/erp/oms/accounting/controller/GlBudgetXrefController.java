@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-budget-xrefs")
+@RequestMapping("/api/accounting/gl-budget-xrefs")
 public class GlBudgetXrefController {
 
     private final GlBudgetXrefService service;

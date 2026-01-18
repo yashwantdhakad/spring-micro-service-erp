@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-analytics-configs")
+@RequestMapping("/api/web-analytics-configs")
 public class WebAnalyticsConfigController {
 
     private final WebAnalyticsConfigService service;

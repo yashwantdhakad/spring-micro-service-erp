@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/survey-question-categories")
+@RequestMapping("/api/survey-question-categories")
 public class SurveyQuestionCategoryController {
 
     private final SurveyQuestionCategoryService service;

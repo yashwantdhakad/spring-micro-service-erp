@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/email-template-settings")
+@RequestMapping("/api/common/email-template-settings")
 public class EmailTemplateSettingController {
 
     private final EmailTemplateSettingService service;

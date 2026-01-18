@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-gateway-sage-pays")
+@RequestMapping("/api/accounting/payment-gateway-sage-pays")
 public class PaymentGatewaySagePayController {
 
     private final PaymentGatewaySagePayService service;

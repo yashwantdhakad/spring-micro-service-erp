@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/content-approvals")
+@RequestMapping("/api/content-approvals")
 public class ContentApprovalController {
 
     private final ContentApprovalService service;

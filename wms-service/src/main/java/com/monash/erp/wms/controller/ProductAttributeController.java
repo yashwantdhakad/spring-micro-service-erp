@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-attributes")
+@RequestMapping("/api/product-attributes")
 public class ProductAttributeController {
 
     private final ProductAttributeService service;

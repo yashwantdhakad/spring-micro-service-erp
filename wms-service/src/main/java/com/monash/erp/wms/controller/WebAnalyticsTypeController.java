@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-analytics-types")
+@RequestMapping("/api/web-analytics-types")
 public class WebAnalyticsTypeController {
 
     private final WebAnalyticsTypeService service;

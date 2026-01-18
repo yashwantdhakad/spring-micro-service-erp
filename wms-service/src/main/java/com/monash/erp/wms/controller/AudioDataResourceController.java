@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/audio-data-resources")
+@RequestMapping("/api/audio-data-resources")
 public class AudioDataResourceController {
 
     private final AudioDataResourceService service;

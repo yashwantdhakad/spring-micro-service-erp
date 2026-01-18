@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/carrier-shipment-methods")
+@RequestMapping("/api/carrier-shipment-methods")
 public class CarrierShipmentMethodController {
 
     private final CarrierShipmentMethodService service;

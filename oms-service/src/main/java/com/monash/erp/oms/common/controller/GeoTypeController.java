@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/geo-types")
+@RequestMapping("/api/common/geo-types")
 public class GeoTypeController {
 
     private final GeoTypeService service;

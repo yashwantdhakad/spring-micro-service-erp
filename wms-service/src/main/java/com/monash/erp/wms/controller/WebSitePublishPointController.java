@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-site-publish-points")
+@RequestMapping("/api/web-site-publish-points")
 public class WebSitePublishPointController {
 
     private final WebSitePublishPointService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-gateway-uspses")
+@RequestMapping("/api/shipment-gateway-uspses")
 public class ShipmentGatewayUspsController {
 
     private final ShipmentGatewayUspsService service;

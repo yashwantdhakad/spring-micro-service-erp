@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/uom-conversions")
+@RequestMapping("/api/common/uom-conversions")
 public class UomConversionController {
 
     private final UomConversionService service;

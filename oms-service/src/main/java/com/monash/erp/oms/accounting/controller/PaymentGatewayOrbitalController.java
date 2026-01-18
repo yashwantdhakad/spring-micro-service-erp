@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/payment-gateway-orbitals")
+@RequestMapping("/api/accounting/payment-gateway-orbitals")
 public class PaymentGatewayOrbitalController {
 
     private final PaymentGatewayOrbitalService service;

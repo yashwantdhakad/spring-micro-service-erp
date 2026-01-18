@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/telecom-method-types")
+@RequestMapping("/api/common/telecom-method-types")
 public class TelecomMethodTypeController {
 
     private final TelecomMethodTypeService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/invoice-item-type-maps")
+@RequestMapping("/api/accounting/invoice-item-type-maps")
 public class InvoiceItemTypeMapController {
 
     private final InvoiceItemTypeMapService service;

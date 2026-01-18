@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/telecom-gateway-configs")
+@RequestMapping("/api/common/telecom-gateway-configs")
 public class TelecomGatewayConfigController {
 
     private final TelecomGatewayConfigService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/shipment-method-types")
+@RequestMapping("/api/shipment-method-types")
 public class ShipmentMethodTypeController {
 
     private final ShipmentMethodTypeService service;

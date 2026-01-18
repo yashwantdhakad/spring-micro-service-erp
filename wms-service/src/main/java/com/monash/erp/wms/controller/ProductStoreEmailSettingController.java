@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-store-email-settings")
+@RequestMapping("/api/product-store-email-settings")
 public class ProductStoreEmailSettingController {
 
     private final ProductStoreEmailSettingService service;

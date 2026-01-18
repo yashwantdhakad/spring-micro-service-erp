@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/document-types")
+@RequestMapping("/api/document-types")
 public class DocumentTypeController {
 
     private final DocumentTypeService service;

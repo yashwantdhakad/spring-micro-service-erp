@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/enumeration-types")
+@RequestMapping("/api/common/enumeration-types")
 public class EnumerationTypeController {
 
     private final EnumerationTypeService service;

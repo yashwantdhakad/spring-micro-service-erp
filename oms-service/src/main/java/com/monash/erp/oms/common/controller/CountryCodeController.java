@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/country-codes")
+@RequestMapping("/api/common/country-codes")
 public class CountryCodeController {
 
     private final CountryCodeService service;

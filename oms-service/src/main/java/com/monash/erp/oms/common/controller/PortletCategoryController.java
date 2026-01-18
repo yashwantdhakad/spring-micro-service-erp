@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/portlet-categorys")
+@RequestMapping("/api/common/portlet-categorys")
 public class PortletCategoryController {
 
     private final PortletCategoryService service;

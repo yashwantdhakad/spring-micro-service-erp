@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/product-store-shipment-meths")
+@RequestMapping("/api/product-store-shipment-meths")
 public class ProductStoreShipmentMethController {
 
     private final ProductStoreShipmentMethService service;

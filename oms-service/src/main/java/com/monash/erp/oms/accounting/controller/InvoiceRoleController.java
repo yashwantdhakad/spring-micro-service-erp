@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/invoice-roles")
+@RequestMapping("/api/accounting/invoice-roles")
 public class InvoiceRoleController {
 
     private final InvoiceRoleService service;

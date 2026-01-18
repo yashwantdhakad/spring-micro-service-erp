@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/budget-type-attrs")
+@RequestMapping("/api/accounting/budget-type-attrs")
 public class BudgetTypeAttrController {
 
     private final BudgetTypeAttrService service;

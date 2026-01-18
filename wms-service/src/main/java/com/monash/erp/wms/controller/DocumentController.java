@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/documents")
+@RequestMapping("/api/documents")
 public class DocumentController {
 
     private final DocumentService service;

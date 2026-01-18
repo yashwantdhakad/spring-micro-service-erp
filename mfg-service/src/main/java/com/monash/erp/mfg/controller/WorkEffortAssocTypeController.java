@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/work-effort-assoc-types")
+@RequestMapping("/api/work-effort-assoc-types")
 public class WorkEffortAssocTypeController {
 
     private final WorkEffortAssocTypeService service;

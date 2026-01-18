@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/system-propertys")
+@RequestMapping("/api/common/system-propertys")
 public class SystemPropertyController {
 
     private final SystemPropertyService service;

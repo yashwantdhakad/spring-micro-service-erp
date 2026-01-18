@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/party-fixed-asset-assignments")
+@RequestMapping("/api/accounting/party-fixed-asset-assignments")
 public class PartyFixedAssetAssignmentController {
 
     private final PartyFixedAssetAssignmentService service;

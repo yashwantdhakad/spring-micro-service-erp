@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/product-average-cost-types")
+@RequestMapping("/api/accounting/product-average-cost-types")
 public class ProductAverageCostTypeController {
 
     private final ProductAverageCostTypeService service;

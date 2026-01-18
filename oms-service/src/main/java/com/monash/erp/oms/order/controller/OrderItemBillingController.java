@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/order-item-billings")
+@RequestMapping("/api/order-item-billings")
 public class OrderItemBillingController {
 
     private final OrderItemBillingService orderItemBillingService;

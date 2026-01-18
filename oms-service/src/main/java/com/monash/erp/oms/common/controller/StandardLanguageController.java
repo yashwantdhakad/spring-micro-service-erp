@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/common/standard-languages")
+@RequestMapping("/api/common/standard-languages")
 public class StandardLanguageController {
 
     private final StandardLanguageService service;

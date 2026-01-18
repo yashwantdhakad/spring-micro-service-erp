@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/physical-inventories")
+@RequestMapping("/api/physical-inventories")
 public class PhysicalInventoryController {
 
     private final PhysicalInventoryService service;

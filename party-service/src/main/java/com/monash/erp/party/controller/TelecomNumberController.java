@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/telecom-numbers")
+@RequestMapping("/api/telecom-numbers")
 public class TelecomNumberController {
 
     private final TelecomNumberService service;

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/good-identification-types")
+@RequestMapping("/api/good-identification-types")
 public class GoodIdentificationTypeController {
 
     private final GoodIdentificationTypeService service;

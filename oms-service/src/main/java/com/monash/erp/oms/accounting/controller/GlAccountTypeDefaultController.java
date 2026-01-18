@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-account-type-defaults")
+@RequestMapping("/api/accounting/gl-account-type-defaults")
 public class GlAccountTypeDefaultController {
 
     private final GlAccountTypeDefaultService service;

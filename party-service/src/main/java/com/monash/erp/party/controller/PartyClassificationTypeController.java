@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/party-classification-types")
+@RequestMapping("/api/party-classification-types")
 public class PartyClassificationTypeController {
 
     private final PartyClassificationTypeService service;

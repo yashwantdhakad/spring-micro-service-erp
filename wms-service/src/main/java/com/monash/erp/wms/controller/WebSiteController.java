@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/web-sites")
+@RequestMapping("/api/web-sites")
 public class WebSiteController {
 
     private final WebSiteService service;

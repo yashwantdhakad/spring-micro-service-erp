@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/order-roles")
+@RequestMapping("/api/order-roles")
 public class OrderRoleController {
 
     private final OrderRoleService orderRoleService;

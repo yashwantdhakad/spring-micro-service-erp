@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ofbiz/content-type-attrs")
+@RequestMapping("/api/content-type-attrs")
 public class ContentTypeAttrController {
 
     private final ContentTypeAttrService service;

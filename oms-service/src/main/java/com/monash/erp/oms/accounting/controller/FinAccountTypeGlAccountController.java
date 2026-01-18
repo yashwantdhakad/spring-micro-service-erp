@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/fin-account-type-gl-accounts")
+@RequestMapping("/api/accounting/fin-account-type-gl-accounts")
 public class FinAccountTypeGlAccountController {
 
     private final FinAccountTypeGlAccountService service;

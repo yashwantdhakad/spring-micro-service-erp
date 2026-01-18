@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounting/gl-reconciliation-entrys")
+@RequestMapping("/api/accounting/gl-reconciliation-entrys")
 public class GlReconciliationEntryController {
 
     private final GlReconciliationEntryService service;
