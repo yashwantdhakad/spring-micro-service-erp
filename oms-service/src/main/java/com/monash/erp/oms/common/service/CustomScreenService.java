@@ -1,0 +1,44 @@
+package com.monash.erp.oms.common.service;
+
+import com.monash.erp.oms.common.entity.CustomScreen;
+import com.monash.erp.oms.common.repository.CustomScreenRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+public class CustomScreenService {
+
+    private final CustomScreenRepository repository;
+
+    public CustomScreenService(CustomScreenRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<CustomScreen> list() {
+        return repository.findAll();
+    }
+
+    public CustomScreen get(Long id) {
+        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "CustomScreen %d not found".formatted(id)));
+    }
+
+    public CustomScreen create(CustomScreen entity) {
+        entity.setId(null);
+        return repository.save(entity);
+    }
+
+    public CustomScreen update(Long id, CustomScreen entity) {
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CustomScreen %d not found".formatted(id));
+        }
+        entity.setId(id);
+        return repository.save(entity);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+}

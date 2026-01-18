@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.example.erp</groupId>
+        <groupId>com.monash.erp</groupId>
         <artifactId>spring-micro-service-erp</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
