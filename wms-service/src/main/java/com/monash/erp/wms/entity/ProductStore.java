@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 
 @Entity
 public class ProductStore {
@@ -12,83 +13,161 @@ public class ProductStore {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
     private String productStoreId;
+    @Column(columnDefinition = "TEXT")
     private String primaryStoreGroupId;
+    @Column(columnDefinition = "TEXT")
     private String storeName;
+    @Column(columnDefinition = "TEXT")
     private String companyName;
+    @Column(columnDefinition = "TEXT")
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String subtitle;
+    @Column(columnDefinition = "TEXT")
     private String payToPartyId;
+    @Column(columnDefinition = "TEXT")
     private String daysToCancelNonPay;
+    @Column(columnDefinition = "TEXT")
     private String manualAuthIsCapture;
+    @Column(columnDefinition = "TEXT")
     private String prorateShipping;
+    @Column(columnDefinition = "TEXT")
     private String prorateTaxes;
+    @Column(columnDefinition = "TEXT")
     private String viewCartOnAdd;
+    @Column(columnDefinition = "TEXT")
     private String autoSaveCart;
+    @Column(columnDefinition = "TEXT")
     private String autoApproveReviews;
+    @Column(columnDefinition = "TEXT")
     private String isDemoStore;
+    @Column(columnDefinition = "TEXT")
     private String isImmediatelyFulfilled;
+    @Column(columnDefinition = "TEXT")
     private String inventoryFacilityId;
+    @Column(columnDefinition = "TEXT")
     private String oneInventoryFacility;
+    @Column(columnDefinition = "TEXT")
     private String checkInventory;
+    @Column(columnDefinition = "TEXT")
     private String reserveInventory;
+    @Column(columnDefinition = "TEXT")
     private String reserveOrderEnumId;
+    @Column(columnDefinition = "TEXT")
     private String requireInventory;
+    @Column(columnDefinition = "TEXT")
     private String balanceResOnOrderCreation;
+    @Column(columnDefinition = "TEXT")
     private String requirementMethodEnumId;
+    @Column(columnDefinition = "TEXT")
     private String orderNumberPrefix;
+    @Column(columnDefinition = "TEXT")
     private String defaultLocaleString;
+    @Column(columnDefinition = "TEXT")
     private String defaultCurrencyUomId;
+    @Column(columnDefinition = "TEXT")
     private String defaultTimeZoneString;
+    @Column(columnDefinition = "TEXT")
     private String defaultSalesChannelEnumId;
+    @Column(columnDefinition = "TEXT")
     private String allowPassword;
+    @Column(columnDefinition = "TEXT")
     private String defaultPassword;
+    @Column(columnDefinition = "TEXT")
     private String explodeOrderItems;
+    @Column(columnDefinition = "TEXT")
     private String checkGcBalance;
+    @Column(columnDefinition = "TEXT")
     private String retryFailedAuths;
+    @Column(columnDefinition = "TEXT")
     private String headerApprovedStatus;
+    @Column(columnDefinition = "TEXT")
     private String itemApprovedStatus;
+    @Column(columnDefinition = "TEXT")
     private String digitalItemApprovedStatus;
+    @Column(columnDefinition = "TEXT")
     private String headerDeclinedStatus;
+    @Column(columnDefinition = "TEXT")
     private String itemDeclinedStatus;
+    @Column(columnDefinition = "TEXT")
     private String headerCancelStatus;
+    @Column(columnDefinition = "TEXT")
     private String itemCancelStatus;
+    @Column(columnDefinition = "TEXT")
     private String authDeclinedMessage;
+    @Column(columnDefinition = "TEXT")
     private String authFraudMessage;
+    @Column(columnDefinition = "TEXT")
     private String authErrorMessage;
+    @Column(columnDefinition = "TEXT")
     private String visualThemeId;
+    @Column(columnDefinition = "TEXT")
     private String storeCreditAccountEnumId;
+    @Column(columnDefinition = "TEXT")
     private String usePrimaryEmailUsername;
+    @Column(columnDefinition = "TEXT")
     private String requireCustomerRole;
+    @Column(columnDefinition = "TEXT")
     private String autoInvoiceDigitalItems;
+    @Column(columnDefinition = "TEXT")
     private String reqShipAddrForDigItems;
+    @Column(columnDefinition = "TEXT")
     private String showCheckoutGiftOptions;
+    @Column(columnDefinition = "TEXT")
     private String selectPaymentTypePerItem;
+    @Column(columnDefinition = "TEXT")
     private String showPricesWithVatTax;
+    @Column(columnDefinition = "TEXT")
     private String showTaxIsExempt;
+    @Column(columnDefinition = "TEXT")
     private String vatTaxAuthGeoId;
+    @Column(columnDefinition = "TEXT")
     private String vatTaxAuthPartyId;
+    @Column(columnDefinition = "TEXT")
     private String enableAutoSuggestionList;
+    @Column(columnDefinition = "TEXT")
     private String enableDigProdUpload;
+    @Column(columnDefinition = "TEXT")
     private String prodSearchExcludeVariants;
+    @Column(columnDefinition = "TEXT")
     private String digProdUploadCategoryId;
+    @Column(columnDefinition = "TEXT")
     private String autoOrderCcTryExp;
+    @Column(columnDefinition = "TEXT")
     private String autoOrderCcTryOtherCards;
+    @Column(columnDefinition = "TEXT")
     private String autoOrderCcTryLaterNsf;
+    @Column(columnDefinition = "TEXT")
     private String autoOrderCcTryLaterMax;
+    @Column(columnDefinition = "TEXT")
     private String storeCreditValidDays;
+    @Column(columnDefinition = "TEXT")
     private String autoApproveInvoice;
+    @Column(columnDefinition = "TEXT")
     private String autoApproveOrder;
+    @Column(columnDefinition = "TEXT")
     private String shipIfCaptureFails;
+    @Column(columnDefinition = "TEXT")
     private String setOwnerUponIssuance;
+    @Column(columnDefinition = "TEXT")
     private String reqReturnInventoryReceive;
+    @Column(columnDefinition = "TEXT")
     private String addToCartRemoveIncompat;
+    @Column(columnDefinition = "TEXT")
     private String addToCartReplaceUpsell;
+    @Column(columnDefinition = "TEXT")
     private String splitPayPrefPerShpGrp;
+    @Column(columnDefinition = "TEXT")
     private String managedByLot;
+    @Column(columnDefinition = "TEXT")
     private String showOutOfStockProducts;
+    @Column(columnDefinition = "TEXT")
     private String orderDecimalQuantity;
+    @Column(columnDefinition = "TEXT")
     private String allowComment;
+    @Column(columnDefinition = "TEXT")
     private String allocateInventory;
 
     public Long getId() {
