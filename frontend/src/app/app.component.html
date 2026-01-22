@@ -1,0 +1,77 @@
+<div class="ng-container">
+  <mat-toolbar class="barra" color="primary" *ngIf="isLoggedIn">
+    <mat-toolbar-row>
+      <button (click)="toggleNavBar()" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>Ng ERP</span>
+      <span style="flex: 1 1 auto;"></span>
+      <button mat-button (click)="switchLanguage('en')">EN</button>
+      <button mat-button (click)="switchLanguage('es')">ES</button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-sidenav-container class="contenido">
+    <mat-sidenav
+      class="sidenav"
+      mode="side"
+      *ngIf="isLoggedIn"
+      [opened]="navBarToggleOpened"
+    >
+      <mat-nav-list>
+        <ng-container *ngFor="let item of items; let i = index">
+          <ng-container *ngIf="item.children; else listItem">
+            <mat-accordion>
+              <mat-expansion-panel
+                [expanded]="submenuOpenStates[i]"
+                (opened)="toggleSubmenu(i)"
+                (closed)="toggleSubmenu(i)"
+              >
+                <mat-expansion-panel-header class="custom-expansion-panel">
+                  <mat-panel-title>
+                    <mat-icon matListItemIcon class="custom-icon">{{
+                      item.meta.icon
+                    }}</mat-icon>
+                    {{ item.name }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-nav-list class="custom-expansion-panel-body">
+                  <a
+                    mat-list-item
+                    *ngFor="let childItem of item.children"
+                    [routerLink]="childItem.path"
+                  >
+                    {{ childItem.name }}
+                  </a>
+                </mat-nav-list>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </ng-container>
+          <ng-template #listItem>
+            <mat-list-item>
+              <mat-icon matListItemIcon>{{ item.meta.icon }}</mat-icon>
+              <a [routerLink]="item.path">{{ item.name }}</a>
+            </mat-list-item>
+          </ng-template>
+        </ng-container>
+        <mat-list-item (click)="logout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          Logout
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="sidenav-content">
+      <ng-container *ngIf="isLoggedIn; else notLoggedIn">
+        <mat-card class="mat-elevation-z10">
+          <mat-card-content>
+            <router-outlet></router-outlet>
+          </mat-card-content>
+        </mat-card>
+      </ng-container>
+      <ng-template #notLoggedIn>
+        <div>
+          <router-outlet></router-outlet>
+        </div>
+      </ng-template>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

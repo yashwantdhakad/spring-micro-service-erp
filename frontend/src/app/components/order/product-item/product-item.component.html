@@ -1,0 +1,117 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ 'ORDER.PRODUCT_ITEM_TITLE' | translate }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="addUpdateProductItem()"
+      [formGroup]="addUpdateProductItemForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'ORDER.ASSET_CLASS' | translate }}</mat-label>
+        <mat-select formControlName="assetClassEnumId" name="assetClassEnumId">
+          <mat-option
+            *ngFor="let enumType of enumTypes"
+            [value]="enumType.enumId"
+            >{{ enumType.description }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'PO.PRODUCT_NAME' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'PO.PRODUCT_NAME' | translate }}"
+          [matAutocomplete]="autoProduct"
+          formControlName="productId"
+        />
+        <mat-autocomplete #autoProduct="matAutocomplete">
+          <mat-option
+            *ngFor="let product of filteredProducts$ | async"
+            [value]="product.productId"
+          >
+            {{ product.name }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="addUpdateProductItemForm.get('productId')?.hasError('required')">
+          {{ 'PRODUCT_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'ORDER.ITEM_TYPE' | translate }}</mat-label>
+        <mat-select formControlName="itemTypeEnumId" name="itemTypeEnumId">
+          <mat-option
+            *ngFor="let itemType of itemTypes"
+            [value]="itemType.key"
+            >{{ itemType.text }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <input
+          matInput
+          type="number"
+          placeholder="{{ 'PO.QUANTITY' | translate }}"
+          formControlName="quantity"
+          required
+        />
+        <mat-error
+          *ngIf="addUpdateProductItemForm.get('quantity')?.hasError('required')"
+        >
+          {{ 'PO.QUANTITY' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <input
+          matInput
+          type="number"
+          placeholder="{{ 'ORDER.UNIT_AMOUNT' | translate }}"
+          formControlName="unitAmount"
+          required
+        />
+        <mat-error
+          *ngIf="
+            addUpdateProductItemForm.get('unitAmount')?.hasError('required')
+          "
+        >
+          {{ 'ORDER.UNIT_AMOUNT_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <input
+          matInput
+          [matDatepicker]="requiredByDatePicker"
+          placeholder="{{ 'ORDER.REQUIRED_BY_DATE' | translate }}"
+          formControlName="requiredByDate"
+          (click)="requiredByDatePicker.open()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="requiredByDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #requiredByDatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'PARTY.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+        <button mat-button mat-dialog-close color="primary">{{ 'PARTY.CLOSE' | translate }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

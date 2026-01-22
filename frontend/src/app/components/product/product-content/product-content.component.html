@@ -1,0 +1,26 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ 'PRODUCT.CONTENT_TITLE' | translate }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="createProductContent()"
+      [formGroup]="fileForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <input type="file" id="fileInput" formControlName="contentFile" (change)="onFileChange($event)" />
+
+      <button
+        mat-raised-button
+        type="submit"
+        color="primary"
+        class="me-4"
+        [disabled]="isLoading || !fileForm.valid"
+      >
+        <span *ngIf="!isLoading">{{ 'PRODUCT.SUBMIT' | translate }}</span>
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,219 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ 'PARTY.BANK_ACCOUNT_TITLE' | translate }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="addEditBankAccount()"
+      [formGroup]="addEditBankAccountForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'FEATURE.DESCRIPTION' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'FEATURE.DESCRIPTION' | translate }}"
+          formControlName="description"
+        />
+        <mat-error
+          *ngIf="
+            addEditBankAccountForm.get('description')?.hasError('required')
+          "
+          >{{ 'FEATURE.DESCRIPTION_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="32%">
+        <mat-label>{{ 'CUSTOMER.FIRST_NAME' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'CUSTOMER.FIRST_NAME' | translate }}"
+          formControlName="firstNameOnAccount"
+        />
+        <mat-error
+          *ngIf="
+            addEditBankAccountForm
+              .get('firstNameOnAccount')
+              ?.hasError('required')
+          "
+          >{{ 'CUSTOMER.FIRST_NAME' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="32%">
+        <mat-label>{{ 'CUSTOMER.LAST_NAME' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'CUSTOMER.LAST_NAME' | translate }}"
+          formControlName="lastNameOnAccount"
+        />
+        <mat-error
+          *ngIf="
+            addEditBankAccountForm
+              .get('lastNameOnAccount')
+              ?.hasError('required')
+          "
+          >{{ 'CUSTOMER.LAST_NAME' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="32%">
+        <mat-label>{{ 'PARTY.COMPANY_NAME_ON_ACCOUNT' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'PARTY.COMPANY_NAME_ON_ACCOUNT' | translate }}"
+          formControlName="companyNameOnAccount"
+        />
+      </mat-form-field>
+
+      <mat-form-field fxFlex="32%">
+        <mat-label>{{ 'PARTY.BANK_NAME' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'PARTY.BANK_NAME' | translate }}" formControlName="bankName" />
+        <mat-error
+          *ngIf="addEditBankAccountForm.get('bankName')?.hasError('required')"
+          >{{ 'PARTY.BANK_NAME_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="32%">
+        <mat-label>{{ 'PARTY.ROUTING_NUMBER' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'PARTY.ROUTING_NUMBER' | translate }}"
+          formControlName="routingNumber"
+        />
+        <mat-error
+          *ngIf="
+            addEditBankAccountForm.get('routingNumber')?.hasError('required')
+          "
+          >{{ 'PARTY.ROUTING_NUMBER_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="32%">
+        <mat-label>{{ 'PARTY.ACCOUNT_NUMBER' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'PARTY.ACCOUNT_NUMBER' | translate }}"
+          formControlName="accountNumber"
+        />
+        <mat-error
+          *ngIf="
+            addEditBankAccountForm.get('accountNumber')?.hasError('required')
+          "
+          >{{ 'PARTY.ACCOUNT_NUMBER_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'PARTY.TO_NAME' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'PARTY.TO_NAME' | translate }}" formControlName="toName" />
+        <mat-error
+          *ngIf="addEditBankAccountForm.get('toName')?.hasError('required')"
+          >{{ 'PARTY.TO_NAME_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.ADDRESS1' | translate }}</mat-label>
+        <input matInput placeholder="Address 1" formControlName="address1" />
+        <mat-error
+          *ngIf="addEditBankAccountForm.get('address1')?.hasError('required')"
+          >{{ 'CUSTOMER.ADDRESS1' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.ADDRESS2' | translate }}</mat-label>
+        <input matInput placeholder="Address 2" formControlName="address2" />
+      </mat-form-field>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.CITY' | translate }}</mat-label>
+        <input matInput placeholder="City" formControlName="city" />
+        <mat-error
+          *ngIf="addEditBankAccountForm.get('city')?.hasError('required')"
+          >{{ 'CUSTOMER.CITY' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.POSTAL_CODE' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'CUSTOMER.POSTAL_CODE' | translate }}"
+          formControlName="postalCode"
+        />
+        <mat-error
+          *ngIf="addEditBankAccountForm.get('postalCode')?.hasError('required')"
+          >{{ 'CUSTOMER.POSTAL_CODE' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <!-- Country dropdown -->
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.COUNTRY' | translate }}</mat-label>
+        <mat-select formControlName="countryGeoId" name="countryGeoId">
+          <mat-option
+            *ngFor="let country of countries"
+            [value]="country.geoId"
+            >{{ country.geoName }}</mat-option
+          >
+        </mat-select>
+        <mat-error
+          *ngIf="
+            addEditBankAccountForm.get('countryGeoId')?.hasError('required')
+          "
+          >{{ 'CUSTOMER.COUNTRY' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+      <span fxFlex="2%"></span>
+
+      <!-- State dropdown -->
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.STATE' | translate }}</mat-label>
+        <mat-select
+          formControlName="stateProvinceGeoId"
+          name="stateProvinceGeoId"
+        >
+          <mat-option *ngFor="let state of states" [value]="state.geoId">{{
+            state.geoName
+          }}</mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            addEditBankAccountForm
+              .get('stateProvinceGeoId')
+              ?.hasError('required')
+          "
+          >{{ 'CUSTOMER.STATE' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="isLoading">Loading...</span>
+          <span *ngIf="!isLoading">{{ 'PARTY.SAVE' | translate }}</span>
+        </button>
+        <button mat-button mat-dialog-close color="primary">{{ 'PARTY.CLOSE' | translate }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

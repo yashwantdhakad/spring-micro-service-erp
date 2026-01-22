@@ -1,0 +1,152 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>
+      <h1>{{ 'ASSET.RECEIVE_ASSET' | translate }}</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      (ngSubmit)="receiveAsset()"
+      [formGroup]="createAssetForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+    <mat-form-field fxFlex="70%">
+      <mat-label>{{ 'ASSET.PRODUCT' | translate }}</mat-label>
+      <input
+        matInput
+        [placeholder]="'ASSET.PRODUCT' | translate"
+        [matAutocomplete]="autoProduct"
+        formControlName="productId"
+      />
+      <mat-autocomplete #autoProduct="matAutocomplete">
+        <mat-option
+          *ngFor="let product of filteredProducts$ | async"
+          [value]="product.productId"
+        >
+          {{ product.name }}
+        </mat-option>
+      </mat-autocomplete>
+          <mat-error *ngIf="createAssetForm.get('productId')?.hasError('required')">
+            {{ 'ASSET.PRODUCT' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+          </mat-error>
+    </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'ASSET.STATUS' | translate }}</mat-label>
+        <mat-select [placeholder]="'ASSET.STATUS' | translate" formControlName="statusId">
+          <mat-option *ngFor="let status of statusList" [value]="status.statusId">
+            {{ status.description }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createAssetForm.get('statusId')?.hasError('required')">
+          {{ 'ASSET.STATUS' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="34%">
+        <mat-label>{{ 'ASSET.FACILITY' | translate }}</mat-label>
+        <mat-select [placeholder]="'ASSET.FACILITY' | translate" formControlName="facilityId">
+          <mat-option *ngFor="let facility of facilities" [value]="facility.facilityId">
+            {{ facility.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createAssetForm.get('facilityId')?.hasError('required')">
+          {{ 'ASSET.FACILITY' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="34%">
+        <mat-label>{{ 'ASSET.FACILITY_LOCATION' | translate }}</mat-label>
+        <mat-select [placeholder]="'ASSET.FACILITY_LOCATION' | translate" formControlName="locationSeqId">
+          <mat-option *ngFor="let facilityLocation of facilityLocations" [value]="facilityLocation.locationSeqId">
+            {{ facilityLocation.locationSeqId }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="34%">
+        <mat-label>{{ 'ASSET.QUANTITY' | translate }}</mat-label>
+        <input matInput [placeholder]="'ASSET.QUANTITY' | translate" formControlName="quantity" />
+        <mat-error *ngIf="createAssetForm.get('quantity')?.hasError('required')">
+          {{ 'ASSET.QUANTITY' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="34%">
+        <mat-label>{{ 'ASSET.COST' | translate }}</mat-label>
+        <input matInput [placeholder]="'ASSET.COST' | translate" formControlName="acquireCost" />
+        <mat-error *ngIf="createAssetForm.get('acquireCost')?.hasError('required')">
+          {{ 'ASSET.COST' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <span fxFlex="30%"></span>
+
+      <mat-form-field fxFlex="22%">
+        <mat-label>{{ 'ASSET.RECEIVED_DATE' | translate }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="receivedDate"
+          formControlName="receivedDate"
+          [placeholder]="'ASSET.CHOOSE_DATE' | translate"
+          (click)="receivedDate.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="receivedDate"></mat-datepicker-toggle>
+        <mat-datepicker #receivedDate></mat-datepicker>
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="22%">
+        <mat-label>{{ 'ASSET.MANUFACTURED_DATE' | translate }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="manufacturedDate"
+          [placeholder]="'ASSET.MANUFACTURED_DATE' | translate"
+          formControlName="manufacturedDate"
+          (click)="manufacturedDate.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="manufacturedDate"></mat-datepicker-toggle>
+        <mat-datepicker #manufacturedDate></mat-datepicker>
+      </mat-form-field>
+
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="22%">
+        <mat-label>{{ 'ASSET.EXPIRATION_DATE' | translate }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="expectedEndOfLife"
+          [placeholder]="'ASSET.EXPIRATION_DATE' | translate"
+          formControlName="expectedEndOfLife"
+          (click)="expectedEndOfLife.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="expectedEndOfLife"></mat-datepicker-toggle>
+        <mat-datepicker #expectedEndOfLife></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'ASSET.COMMENT' | translate }}</mat-label>
+        <textarea matInput [placeholder]="'ASSET.ENTER_COMMENT' | translate" formControlName="comments"></textarea>
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'ASSET.SUBMIT' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

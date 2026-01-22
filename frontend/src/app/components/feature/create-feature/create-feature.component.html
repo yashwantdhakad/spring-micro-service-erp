@@ -1,0 +1,50 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title mat-dialog-title>
+      <h1>{{ 'FEATURE.CREATE_TITLE' | translate }}</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="createFeature()"
+      [formGroup]="createFeatureForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'FEATURE.TYPE' | translate }}</mat-label>
+        <mat-select formControlName="productFeatureTypeEnumId" name="productFeatureTypeEnumId">
+          <mat-option *ngFor="let enumType of enumTypes" [value]="enumType.enumId">
+            {{ enumType.description }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createFeatureForm.get('productFeatureTypeEnumId')?.hasError('required')">
+          {{ 'FEATURE.TYPE_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'FEATURE.ABBREV' | translate }}</mat-label>
+        <input matInput [placeholder]="'FEATURE.ABBREV' | translate" formControlName="abbrev" />
+        <mat-error *ngIf="createFeatureForm.get('abbrev')?.hasError('required')">
+          {{ 'FEATURE.ABBREV_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'FEATURE.DESCRIPTION' | translate }}</mat-label>
+        <textarea matInput [placeholder]="'FEATURE.DESCRIPTION' | translate" formControlName="description"></textarea>
+        <mat-error *ngIf="createFeatureForm.get('description')?.hasError('required')">
+          {{ 'FEATURE.DESCRIPTION_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button mat-raised-button type="submit" color="primary" class="me-4" [disabled]="isLoading">
+          <span *ngIf="!isLoading">{{ 'FEATURE.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

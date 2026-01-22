@@ -1,0 +1,60 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner [diameter]="100" mode="indeterminate" color="primary"></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/facilities']">{{ 'FACILITY.TITLE' | translate }}</a> / {{ facilityDetail?.facility_id }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'FACILITY.OVERVIEW' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul class="custom-list">
+        <li class="custom-list-item">
+          <strong>{{ 'FACILITY.NAME' | translate }}:</strong> {{ facilityDetail?.facility_name }}
+        </li>
+        <li class="custom-list-item">
+          <strong>{{ 'FACILITY.TYPE' | translate }}:</strong> {{ facilityDetail?.facility_type_id }}
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'FACILITY.LOCATIONS' | translate }}</mat-card-title>
+      <span class="spacer"></span>
+      <button mat-mini-fab color="primary" (click)="openLocationDialog()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="location-table-container">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="location_seq_id">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.LOCATION_ID' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">{{ item.location_seq_id }}</td>
+          </ng-container>
+          <ng-container matColumnDef="area_id">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.LOCATION_NAME' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">{{ item.area_id }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let item">
+              <button mat-icon-button (click)="openLocationDialog(item)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="locationColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: locationColumns"></tr>
+        </table>
+      </div>
+      <mat-paginator [pageSize]="5"></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

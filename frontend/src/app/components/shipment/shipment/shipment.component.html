@@ -1,0 +1,63 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>Shipments</mat-card-title>
+    </mat-card-header>
+    <mat-card-actions>
+      <mat-form-field>
+        <mat-label>Search</mat-label>
+        <input
+          matInput
+          [(ngModel)]="queryString"
+          (input)="getShipments(1, queryString)"
+          autofocus
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-card-actions>
+    <mat-card-content>
+      <table mat-table [dataSource]="items">
+        <ng-container matColumnDef="shipmentId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>ID</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusDescription }}</td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentTypeEnumId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="facility">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Facility</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.destinationFacilityName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Order</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.orderId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="shipBeforeDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Ship Before Date</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipBeforeDate | date : 'MMMM d, y' }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="pagination.rowsPerPage"
+        [length]="pages"
+        (page)="getShipments($event.pageIndex + 1, queryString)"
+      ></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

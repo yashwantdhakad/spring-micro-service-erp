@@ -1,0 +1,91 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ 'PARTY.EDIT_ADDRESS_TITLE' | translate }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="addEditAddress()"
+      [formGroup]="addEditAddressForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'CUSTOMER.NAME' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'CUSTOMER.NAME' | translate }}" formControlName="toName" />
+        <mat-error *ngIf="addEditAddressForm.get('toName')?.hasError('required')">
+          {{ 'PARTY.TO_NAME_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.ADDRESS1' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'CUSTOMER.ADDRESS1' | translate }}" formControlName="address1" />
+        <mat-error *ngIf="addEditAddressForm.get('address1')?.hasError('required')">
+          {{ 'CUSTOMER.ADDRESS1' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.ADDRESS2' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'CUSTOMER.ADDRESS2' | translate }}" formControlName="address2" />
+      </mat-form-field>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.CITY' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'CUSTOMER.CITY' | translate }}" formControlName="city" />
+        <mat-error *ngIf="addEditAddressForm.get('city')?.hasError('required')">
+          {{ 'CUSTOMER.CITY' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.POSTAL_CODE' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'CUSTOMER.POSTAL_CODE' | translate }}" formControlName="postalCode" />
+        <mat-error *ngIf="addEditAddressForm.get('postalCode')?.hasError('required')">
+          {{ 'CUSTOMER.POSTAL_CODE' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.COUNTRY' | translate }}</mat-label>
+        <mat-select formControlName="countryGeoId" name="countryGeoId">
+          <mat-option *ngFor="let country of countries" [value]="country.geo_id">
+            {{ country.geo_name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="addEditAddressForm.get('countryGeoId')?.hasError('required')">
+          {{ 'CUSTOMER.COUNTRY' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <span fxFlex="2%"></span>
+
+      <mat-form-field fxFlex="49%">
+        <mat-label>{{ 'CUSTOMER.STATE' | translate }}</mat-label>
+        <mat-select formControlName="stateProvinceGeoId" name="stateProvinceGeoId">
+          <mat-option *ngFor="let state of states" [value]="state.geo_id">
+            {{ state.geo_name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="addEditAddressForm.get('stateProvinceGeoId')?.hasError('required')">
+          {{ 'CUSTOMER.STATE' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="isLoading">Loading...</span>
+          <span *ngIf="!isLoading">{{ 'PARTY.SAVE' | translate }}</span>
+        </button>
+        <button mat-button mat-dialog-close color="primary">{{ 'PARTY.CLOSE' | translate }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

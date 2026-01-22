@@ -1,0 +1,110 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>
+      <h1>{{ 'PO.CREATE_TITLE' | translate }}</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      [formGroup]="poForm"
+      (ngSubmit)="createPO()"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+      autocomplete="off"
+    >
+      <!-- Supplier Autocomplete -->
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'PO.SUPPLIER' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Supplier"
+          [matAutocomplete]="auto"
+          formControlName="vendorPartyId"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let supplier of filteredSuppliers$ | async"
+            [value]="supplier.partyId"
+          >
+            {{ supplier.name }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="poForm.get('vendorPartyId')?.hasError('required')">
+          {{ 'PO.SUPPLIER_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Customer Org (Dropdown) -->
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'PO.CUSTOMER_ORG' | translate }}</mat-label>
+        <mat-select placeholder="Customer Org" formControlName="customerPartyId">
+          <mat-option
+            *ngFor="let party of customerParties"
+            [value]="party.value"
+            >{{ party.label }}</mat-option
+          >
+        </mat-select>
+        <mat-error *ngIf="poForm.get('customerPartyId')?.hasError('required')">
+          {{ 'PO.CUSTOMER_ORG_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Facility Dropdown -->
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'PO.FACILITY' | translate }}</mat-label>
+        <mat-select placeholder="Facility" formControlName="facilityId">
+          <mat-option
+            *ngFor="let facility of facilities"
+            [value]="facility.facilityId"
+            >{{ facility.label }}</mat-option
+          >
+        </mat-select>
+        <mat-error *ngIf="poForm.get('facilityId')?.hasError('required')">
+          {{ 'PO.FACILITY_REQUIRED' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Ship Before Date -->
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'PO.SHIP_BEFORE_DATE' | translate }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="shipBeforePicker"
+          formControlName="shipBeforeDate"
+          [placeholder]="'PO.SHIP_BEFORE_DATE' | translate"
+          (click)="shipBeforePicker.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="shipBeforePicker"></mat-datepicker-toggle>
+        <mat-datepicker #shipBeforePicker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Estimated Delivery Date -->
+      <mat-form-field fxFlex="70%">
+        <mat-label>Estimated Delivery Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="deliveryPicker"
+          placeholder="Estimated Delivery Date"
+          formControlName="estimatedDeliveryDate"
+          (click)="deliveryPicker.open()"
+        />
+        <mat-datepicker-toggle matSuffix [for]="deliveryPicker"></mat-datepicker-toggle>
+        <mat-datepicker #deliveryPicker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Submit Button -->
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'PO.SUBMIT' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

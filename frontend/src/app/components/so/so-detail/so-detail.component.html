@@ -1,0 +1,351 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/orders']">{{ 'SO.TITLE' | translate }}</a>
+      / {{ orderHeader?.orderId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'SO.OVERVIEW' | translate }} </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul class="custom-list">
+        <li class="custom-list-item">
+          <strong>{{ 'SO.ID' | translate }}:</strong> {{ orderHeader?.orderId }}
+        </li>
+        <li class="custom-list-item">
+          <strong>{{ 'SO.ORDER_DATE' | translate }}:</strong>
+          {{ orderHeader?.entryDate | date : "MMMM d, y" }}
+        </li>
+        <li class="custom-list-item">
+          <span><strong>{{ 'SO.STATUS' | translate }}:</strong> {{ statusItem?.description }}</span>
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title
+        >{{ 'SO.NOTES' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="addUpdateNoteDialog()"
+          >add</mat-icon
+        >
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="orderNotes">
+        <ng-container matColumnDef="noteText">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.NOTE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <span *ngIf="item.noteText">{{ item?.noteText }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="noteDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.NOTE_DATE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.noteDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="userId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'SO.CREATED_BY' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.userId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.ACTION' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="addUpdateNoteDialog(item)"
+              >edit</mat-icon
+            >
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="noteColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: noteColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card *ngFor="let part of parts">
+    <mat-card-header>
+      <mat-card-title>{{ 'SO.PARTS' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-header>
+            <mat-card-title>{{ 'SO.PART_DETAILS' | translate }}:</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>{{ 'SO.PART_NO' | translate }}:</strong> {{ part.orderPartSeqId }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'SO.PART_STATUS' | translate }}:</strong> {{ part?.status?.description }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'SO.PHONE_NO' | translate }}:</strong>
+                {{ part?.telecom?.telecomNumber?.countryCode }}
+                {{ part?.telecom?.telecomNumber?.areaCode }}
+                {{ part?.telecom?.telecomNumber?.contactNumber }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'SO.SHIP_BEFORE_DATE' | translate }}:</strong>
+                {{ part?.shipBeforeDate | date : "MMMM d, y" }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'SO.PART_TOTAL' | translate }}:</strong>
+                {{ part?.partTotal | currency : orderHeader?.currencyUomId }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-header>
+            <mat-card-title>{{ 'SO.SHIP_FROM' | translate }}:</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>{{ 'SO.FACILITY' | translate }}:</strong> {{ part.facility.facilityName }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'SO.ADDRESS' | translate }}:</strong>
+                <span *ngIf="firstPartInfo?.facilityContactInfo">
+                  <div>
+                    {{
+                      firstPartInfo?.facilityContactInfo?.postalAddress?.toName
+                    }}
+                  </div>
+                  <div>
+                    {{
+                      firstPartInfo?.facilityContactInfo?.postalAddress
+                        ?.address1
+                    }}
+                  </div>
+                  <div>
+                    {{
+                      firstPartInfo?.facilityContactInfo?.postalAddress
+                        ?.address2
+                    }}
+                  </div>
+                  <div>
+                    {{
+                      firstPartInfo?.facilityContactInfo?.postalAddress?.city
+                    }},
+                    {{
+                      firstPartInfo?.facilityContactInfo?.postalAddress
+                        ?.stateProvinceGeo?.geoName
+                    }}
+                    {{
+                      firstPartInfo?.facilityContactInfo?.postalAddress
+                        ?.postalCode
+                    }}
+                    {{
+                      firstPartInfo?.facilityContactInfo?.postalAddress
+                        ?.countryGeoId
+                    }}
+                  </div>
+                </span>
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-header>
+            <mat-card-title>{{ 'SO.SHIP_TO' | translate }}:</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>Name:</strong>
+                <ng-container *ngIf="part?.customer?.person; else organization">
+                  {{ part?.customer?.person?.firstName }}
+                  {{ part?.customer?.person?.lastName }}
+                </ng-container>
+                <ng-template #organization>
+                  {{ part?.customer?.organization?.organizationName }}
+                </ng-template>
+              </li>
+            </ul>
+
+            <ul
+              class="custom-list"
+              *ngFor="let primaryAddress of vendorAddress?.postalAddressList"
+            >
+              <li
+                class="custom-list-item"
+                *ngIf="
+                  primaryAddress.contactMechPurposeId ==
+                  'PostalShippingOrigin'
+                "
+              >
+                <strong>Address:</strong>
+                <div>
+                  {{ primaryAddress.postalAddress.toName }}
+                </div>
+                <div>{{ primaryAddress.postalAddress.address1 }}</div>
+                <div>{{ primaryAddress.postalAddress.address2 }}</div>
+                <div>
+                  {{ primaryAddress.postalAddress.city }},
+                  {{ primaryAddress.postalAddressStateGeo.geoName }}
+                  {{ primaryAddress.postalAddress.postalCode }}
+                  {{ primaryAddress.postalAddress.countryGeoId }}
+                </div>
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+    <br />
+    <mat-card-content>
+      <mat-card class="mat-elevation-z10">
+        <mat-card-header>
+            <mat-card-title
+            >{{ 'SO.ITEMS' | translate }}
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="addItemDialog({ orderPartSeqId: part.orderPartSeqId })"
+              >add</mat-icon
+            >
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="part.items">
+            <ng-container matColumnDef="productId">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>
+                {{ 'SO.PRODUCT_ID' | translate }}
+              </th>
+              <td mat-cell class="text-left" *matCellDef="let item">
+                {{ item.productId }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="productName">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>
+                {{ 'SO.PRODUCT_NAME' | translate }}
+              </th>
+              <td mat-cell class="text-left" *matCellDef="let item">
+                {{ item?.product?.productName }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="itemDescription">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>
+                {{ 'SO.ITEM_DESCRIPTION' | translate }}
+              </th>
+              <td mat-cell class="text-left" *matCellDef="let item">
+                {{ item.itemDescription }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.TYPE' | translate }}</th>
+              <td mat-cell class="text-left" *matCellDef="let item">
+                {{ item.itemType.description }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="requiredByDate">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>
+                {{ 'SO.REQUIRED_BY_DATE' | translate }}
+              </th>
+              <td mat-cell class="text-left" *matCellDef="let item">
+                {{ item.requiredByDate | date : "MMMM d, y" }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="unitAmount">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.PRICE' | translate }}</th>
+              <td mat-cell class="text-right" *matCellDef="let item">
+                {{ item.unitAmount | currency : orderHeader?.currencyUomId }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>
+                {{ 'SO.QUANTITY' | translate }}
+              </th>
+              <td mat-cell class="text-right" *matCellDef="let item">
+                {{ item.quantity }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="totalAmount">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>
+                {{ 'SO.TOTAL_AMOUNT' | translate }}
+              </th>
+              <td
+                mat-cell
+                class="text-right"
+                *matCellDef="let item; let i = index"
+              >
+                {{
+                  item.quantity * item.unitAmount
+                    | currency : orderHeader?.currencyUomId
+                }}
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="partColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: partColumns"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'SO.CONTENTS' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="addUpdateContentDialog()"
+          >add</mat-icon
+        ></mat-card-title
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="contents">
+        <ng-container matColumnDef="description">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.TITLE_COL' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.description }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contentDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.CONTENT_COL' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.contentDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="contentLocation">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.MIME_TYPE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.contentLocation }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: contentColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

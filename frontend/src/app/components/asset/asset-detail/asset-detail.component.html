@@ -1,0 +1,188 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/assets']">{{ 'ASSET.BREADCRUMB' | translate }}</a>
+      / {{ assetDetail?.assetId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'ASSET.OVERVIEW' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>{{ 'ASSET.FACILITY' | translate }}</strong>
+                {{ assetDetail?.facility?.facilityName }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'ASSET.LOCATION' | translate }}</strong>
+                {{ assetDetail?.locationSeqId }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'ASSET.RECEIVED_DATE' | translate }}</strong>
+                {{ assetDetail?.receivedDate | date : "MMMM d, y" }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'ASSET.TYPE' | translate }}</strong>
+                {{ assetDetail?.type?.description }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'ASSET.STATUS' | translate }}</strong>
+                {{ assetDetail?.status?.description }}
+              </li>
+              <li *ngIf="assetDetail?.container?.serialNumber" class="custom-list-item">
+                <strong>{{ 'ASSET.SERIAL_NUMBER' | translate }}</strong>
+                {{ assetDetail?.container?.serialNumber }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>{{ 'ASSET.QOH' | translate }}</strong>
+                {{ assetDetail?.quantityOnHandTotal }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'ASSET.ATP' | translate }}</strong>
+                {{ assetDetail?.availableToPromiseTotal }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'ASSET.DETAILS' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="details">
+        <ng-container matColumnDef="assetDetailId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.DETAIL_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.assetDetailId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.ORDER_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.orderId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="assetReceiptId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.RECEIPT_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.assetReceiptId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.PRODUCT_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.productId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="quantityOnHandDiff">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            {{ 'ASSET.QOH_DIFF' | translate }}
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.quantityOnHandDiff || 0 }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="availableToPromiseDiff">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            {{ 'ASSET.QTP_DIFF' | translate }}
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.availableToPromiseDiff }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="effectiveDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.EFFECTIVE_DATE' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.effectiveDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="detailColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: detailColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'ASSET.RECEIPTS' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="receipts">
+        <ng-container matColumnDef="assetReceiptId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.RECEIPT_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.assetReceiptId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.PRODUCT_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.productId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="quantityAccepted">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            {{ 'ASSET.ACCEPTED_QTY' | translate }}
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.quantityAccepted }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="receivedByUserId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.RECEIVED_BY' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.receivedByUserId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="receivedDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.RECEIVED_DATE' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.receivedDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="receiptColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: receiptColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

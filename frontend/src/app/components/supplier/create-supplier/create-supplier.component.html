@@ -1,0 +1,70 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>
+      <h1>{{ 'SUPPLIER.CREATE_TITLE' | translate }}</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      (ngSubmit)="createSupplier()"
+      [formGroup]="supplierForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'SUPPLIER.SUPPLIER_NAME' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Supplier Name"
+          formControlName="groupName"
+        />
+        <mat-error
+          *ngIf="supplierForm.get('groupName')?.hasError('required')"
+          >{{ 'SUPPLIER.SUPPLIER_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'SUPPLIER.CONTACT_NUMBER' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Contact Number"
+          formControlName="contactNumber"
+        />
+        <mat-error
+          *ngIf="supplierForm.get('contactNumber')?.hasError('required')"
+          >{{ 'SUPPLIER.CONTACT_REQUIRED' | translate }}</mat-error
+        >
+        <mat-error
+          *ngIf="supplierForm.get('contactNumber')?.hasError('minlength')"
+          >Contact Number should be 10 numbers.</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'SUPPLIER.EMAIL' | translate }}</mat-label>
+        <input matInput placeholder="Email" formControlName="emailAddress" />
+        <mat-error
+          *ngIf="supplierForm.get('emailAddress')?.hasError('required')"
+          >{{ 'SUPPLIER.EMAIL_REQUIRED' | translate }}</mat-error
+        >
+        <mat-error *ngIf="supplierForm.get('emailAddress')?.hasError('email')"
+          >Email is not valid.</mat-error
+        >
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'SUPPLIER.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

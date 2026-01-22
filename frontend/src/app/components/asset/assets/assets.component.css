@@ -1,0 +1,12 @@
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  min-width: 1200px; /* Adjust this as per your column count */
+}
+
+th.mat-header-cell, td.mat-cell {
+  white-space: nowrap;
+}

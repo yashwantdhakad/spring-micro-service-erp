@@ -1,0 +1,21 @@
+<h1 mat-dialog-title>{{ data?.id ? 'Update Location' : 'Add Location' }}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="fill">
+      <mat-label>Location Seq ID</mat-label>
+      <input matInput formControlName="location_seq_id" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Location Type</mat-label>
+      <input matInput formControlName="location_type_enum_id" />
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Area ID</mat-label>
+      <input matInput formControlName="area_id" />
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button color="primary" (click)="save()" [disabled]="form.invalid">Save</button>
+</div>

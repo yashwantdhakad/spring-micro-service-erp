@@ -1,0 +1,167 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/features']">{{ 'FEATURE.TITLE' | translate }}</a>
+      / {{ featureDetail?.productFeatureId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title> {{ 'FEATURE.OVERVIEW_TITLE' | translate }} </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>{{ 'FEATURE.ABBREV' | translate }}:</strong>
+                {{ featureDetail?.abbrev }}
+                <mat-icon
+                  matListIcon
+                  class="custom-mat-icon custom-icon-align icon-right"
+                  color="primary"
+                  (click)="editFeatureDialog()"
+                  >edit</mat-icon
+                >
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'FEATURE.DESCRIPTION' | translate }}:</strong>
+                {{ featureDetail?.description }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'FEATURE.PRODUCTS_TITLE' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="addFeatureToProductDialog({isNew: true})"
+          >add</mat-icon
+        >
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="products">
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'FEATURE.ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.productId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="applTypeEnumId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.APPL_TYPE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.applTypeEnumId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="sequenceNum">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'FEATURE.SEQUENCE_NUM' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.sequenceNum }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fromDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.FROM_DATE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.fromDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.ACTION' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="addFeatureToProductDialog(item)"
+              >edit</mat-icon
+            >
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="productsColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: productsColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'FEATURE.GROUPS_TITLE' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="addFeatureToGroupDialog({isNew: true})"
+          >add</mat-icon
+        ></mat-card-title
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="groups">
+        <ng-container matColumnDef="productFeatureGroupId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATUREGROUP.ID' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.productFeatureGroupId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="group">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'FEATUREGROUP.DESCRIPTION' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.group?.description }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="sequenceNum">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'FEATURE.SEQUENCE_NUM' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.sequenceNum }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="fromDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.FROM_DATE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.fromDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.ACTION' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="addFeatureToGroupDialog(item)"
+              >edit</mat-icon
+            >
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="groupsColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: groupsColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

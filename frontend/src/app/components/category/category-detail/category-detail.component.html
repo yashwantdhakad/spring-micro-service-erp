@@ -1,0 +1,84 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/category']">{{ 'CATEGORY.TITLE' | translate }}</a> / {{ categoryDetail?.productCategoryId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'CATEGORY.OVERVIEW_TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul class="custom-list">
+        <li class="custom-list-item">
+          <strong>{{ 'CATEGORY.NAME' | translate }}:</strong>
+          {{ categoryDetail?.categoryName }}
+          <mat-icon
+            matListIcon
+            class="custom-mat-icon custom-icon-align"
+            color="primary"
+            (click)="editCategoryDialog()"
+            >edit</mat-icon
+          >
+        </li>
+        <li class="custom-list-item">
+          <strong>{{ 'CATEGORY.TYPE' | translate }}:</strong>
+          {{ categoryDetail?.productCategoryTypeId }}
+        </li>
+        <li class="custom-list-item">
+          <strong>{{ 'CATEGORY.DESCRIPTION' | translate }}:</strong>
+          {{ categoryDetail?.description }}
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'CATEGORY.PRODUCTS_TITLE' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="addProductToCategoryDialog()"
+          >add</mat-icon
+        >
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="products">
+        <ng-container *ngFor="let column of productColumns" [matColumnDef]="column.key">
+          <th mat-header-cell *matHeaderCellDef class="text-left">{{ column.header | translate }}</th>
+          <td mat-cell *matCellDef="let element" class="text-left">
+            <span *ngIf="column.key !== 'action' && !column.isDate">{{ getValue(element, column.key) }}</span>
+            <span *ngIf="column.key !== 'action' && column.isDate">{{ getValue(element, column.key) | date : "MMMM d, y" }}</span>
+            <ng-container *ngIf="column.key === 'action'">
+              <mat-icon
+                matListIcon
+                class="custom-mat-icon custom-icon-align"
+                color="warn"
+                (click)="deleteProductCategoryDialog({
+                  productCategoryId: productCategoryId,
+                  productId: element.productId,
+                  fromDate: element.fromDate,
+                  thruDate: getCurrentDateTime,
+                })"
+                >delete</mat-icon
+              >
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="getProductColumnKeys()"></tr>
+        <tr mat-row *matRowDef="let row; columns: getProductColumnKeys()"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

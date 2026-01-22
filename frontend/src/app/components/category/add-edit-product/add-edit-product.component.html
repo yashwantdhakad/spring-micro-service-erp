@@ -1,0 +1,47 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    <h1>{{ 'CATEGORY.PRODUCT' | translate }}</h1>
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="addProductToCategory()"
+      [formGroup]="addProductToCategoryForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'CATEGORY.PRODUCT' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="{{ 'CATEGORY.PRODUCT' | translate }}"
+          [matAutocomplete]="auto"
+          formControlName="productId"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let product of filteredProducts$ | async"
+            [value]="product.productId"
+          >
+            {{ product.productName }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error *ngIf="addProductToCategoryForm.get('productId')?.hasError('required')"
+          >{{ 'CATEGORY.PRODUCT_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'CATEGORY.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+        <button mat-button mat-dialog-close color="primary">{{ 'CATEGORY.CLOSE' | translate }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

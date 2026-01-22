@@ -1,0 +1,190 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/jobs']">{{ 'MANUFACTURING.TITLE' | translate }}</a>
+      / {{ jobDetail?.workEffortId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'MANUFACTURING.JOB_OVERVIEW' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>Job Name:</strong>
+                {{ jobDetail?.workEffortName }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Facility ID:</strong>
+                {{ jobDetail?.facilityId }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Start Date:</strong>
+                {{ jobDetail?.estimatedStartDate | date : "MMMM d, y" }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Status ID:</strong>
+                {{ jobDetail?.statusId }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Est. Hours:</strong>
+                {{ jobDetail?.estimatedWorkDuration }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>QOH:</strong>
+                {{ jobDetail?.quantityOnHandTotal }}
+              </li>
+              <li class="custom-list-item">
+                <strong>ATP:</strong>
+                {{ jobDetail?.availableToPromiseTotal }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title> Products to Produce </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="productsToProduce">
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Product ID
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.productId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Product Name
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.productName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="atp">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>ATP</th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.availableToPromiseTotal }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="qoh">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>QOH</th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.quantityOnHandTotal }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="estimatedQuantity">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            Estimated Quantity
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.estimatedQuantity }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="uom">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>UOM</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.uom }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="produced">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>Produced</th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.produced }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="productsToProduceColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: productsToProduceColumns"
+        ></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title> Products to Consume </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="productsToConsume">
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Product ID
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.productId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Product Name
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.productName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="atp">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>ATP</th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.availableToPromiseTotal }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="qoh">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>QOH</th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.quantityOnHandTotal }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="estimatedQuantity">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            Estimated Quantity
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.estimatedQuantity }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="uom">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>UOM</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.uom }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="consumed">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>Consumed</th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item?.consumed }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="productsToConsumeColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: productsToConsumeColumns"
+        ></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

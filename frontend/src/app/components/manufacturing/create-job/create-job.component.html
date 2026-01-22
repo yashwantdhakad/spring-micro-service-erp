@@ -1,0 +1,127 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>
+      <h1>{{ 'MANUFACTURING.CREATE_TITLE' | translate }}</h1>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form
+      (ngSubmit)="createJob()"
+      [formGroup]="createJobForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'MANUFACTURING.JOB_NAME' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Job Name"
+          formControlName="workEffortName"
+        />
+        <mat-error
+          *ngIf="createJobForm.get('workEffortName')?.hasError('required')"
+          >{{ 'MANUFACTURING.JOB_NAME_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'MANUFACTURING.FACILITY_ID' | translate }}</mat-label>
+        <mat-select placeholder="Facility" formControlName="facilityId">
+          <mat-option
+            *ngFor="let facility of facilities"
+            [value]="facility.facilityId"
+            >{{ facility.label }}</mat-option
+          >
+        </mat-select>
+        <mat-error *ngIf="createJobForm.get('facilityId')?.hasError('required')"
+          >{{ 'MANUFACTURING.FACILITY_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'MANUFACTURING.EST_START_DATE' | translate }}</mat-label>
+        <input
+          matInput
+          [matDatepicker]="estimatedStartDate"
+          formControlName="estimatedStartDate"
+            [placeholder]="'MANUFACTURING.EST_START_DATE' | translate"
+          (click)="estimatedStartDate.open()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="estimatedStartDate"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #estimatedStartDate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'MANUFACTURING.EST_HOURS' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Est. Hours"
+          formControlName="estimatedWorkDuration"
+        />
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'MANUFACTURING.PRODUCT' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Product to Produce"
+          [matAutocomplete]="auto"
+          formControlName="produceProductId"
+          [formControl]="produceProductIdControl"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let product of filteredProducts$ | async"
+            [value]="product.productId"
+          >
+            {{ product.name }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error
+          *ngIf="createJobForm.get('produceProductId')?.hasError('required')"
+          >{{ 'MANUFACTURING.PRODUCT_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'MANUFACTURING.EST_QUANTITY' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Quantity"
+          formControlName="produceEstimatedQuantity"
+        />
+        <mat-error
+          *ngIf="
+            createJobForm.get('produceEstimatedQuantity')?.hasError('required')
+          "
+          >{{ 'MANUFACTURING.EST_QUANTITY_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="70%">
+        <mat-label>{{ 'MANUFACTURING.EST_COST' | translate }}</mat-label>
+        <input
+          matInput
+          placeholder="Estimated Cost"
+          formControlName="produceEstimatedAmount"
+        />
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'MANUFACTURING.SUBMIT' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

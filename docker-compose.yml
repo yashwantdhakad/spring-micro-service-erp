@@ -108,5 +108,12 @@ services:
     ports:
       - "8084:8084"
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+
 volumes:
   mysql-data:

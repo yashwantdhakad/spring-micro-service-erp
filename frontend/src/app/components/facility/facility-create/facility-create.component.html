@@ -1,0 +1,42 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>{{ 'FACILITY.CREATE_TITLE' | translate }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()" fxLayout="row wrap" fxLayoutAlign="start">
+      <mat-form-field fxFlex="100%">
+        <input matInput placeholder="{{ 'FACILITY.ID' | translate }}" formControlName="facility_id" />
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <input matInput placeholder="{{ 'FACILITY.NAME' | translate }}" formControlName="facility_name" />
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <mat-select
+          placeholder="{{ 'FACILITY.TYPE' | translate }}"
+          formControlName="facility_type_id"
+        >
+          <mat-option
+            *ngFor="let type of facilityTypes"
+            [value]="type.facility_type_id"
+          >
+            {{ type.description || type.facility_type_id }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <input matInput placeholder="{{ 'FACILITY.OWNER' | translate }}" formControlName="owner_party_id" />
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+          <span *ngIf="!isLoading">{{ 'FACILITY.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+

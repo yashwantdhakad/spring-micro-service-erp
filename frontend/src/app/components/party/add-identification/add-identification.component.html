@@ -1,0 +1,56 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ 'PARTY.ADD_IDENTIFICATION_TITLE' | translate }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="addUpdateIdentification()"
+      [formGroup]="addIdentificationForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'PARTY.IDENTIFICATION_LABEL' | translate }}</mat-label>
+        <mat-select
+          formControlName="partyIdTypeEnumId"
+          name="partyIdTypeEnumId"
+        >
+          <mat-option
+            *ngFor="let enumType of enumTypes"
+            [value]="enumType.enumId"
+            >{{ enumType.description }}</mat-option
+          >
+        </mat-select>
+        <mat-error
+          *ngIf="
+            addIdentificationForm.get('partyIdTypeEnumId')?.hasError('required')
+          "
+          >{{ 'PARTY.IDENTIFICATION_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'PARTY.ID_VALUE' | translate }}</mat-label>
+        <input matInput [placeholder]="'PARTY.ID_VALUE' | translate" formControlName="idValue" />
+        <mat-error
+          *ngIf="addIdentificationForm.get('idValue')?.hasError('required')"
+          >{{ 'PARTY.ID_VALUE_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'PARTY.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+        <button mat-button mat-dialog-close color="primary">{{ 'PARTY.CLOSE' | translate }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

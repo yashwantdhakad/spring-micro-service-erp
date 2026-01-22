@@ -1,0 +1,22 @@
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+button[mat-flat-button] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

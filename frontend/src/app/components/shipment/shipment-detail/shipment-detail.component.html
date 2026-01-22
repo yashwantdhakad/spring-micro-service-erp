@@ -1,0 +1,168 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/shipments']">Shipments</a>
+      / {{ shipmentDetail?.shipmentId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title> Shipment Overview </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>Shipment Id:</strong>
+                {{ shipmentDetail?.shipmentId }}
+              </li>
+              <li class="custom-list-item">
+                <strong>From Party:</strong>
+                {{ shipmentDetail?.fromParty?.organization?.organizationName }}
+              </li>
+              <li class="custom-list-item">
+                <strong>To Party:</strong>
+                {{ shipmentDetail?.toParty?.organization?.organizationName }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Type:</strong>
+                {{ shipmentDetail?.type?.description }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Status:</strong>
+                {{ shipmentDetail?.status?.description }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>Created Date:</strong>
+                {{ shipmentDetail?.entryDate | date : "MMMM d, y" }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Ship Before Date:</strong>
+                {{ shipmentDetail?.shipBeforeDate | date : "MMMM d, y" }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title> Items </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table class="mat-table">
+        <thead>
+          <tr class="mat-header-row">
+            <th class="text-left mat-header-cell">Product ID</th>
+            <th class="text-right mat-header-cell">Shipment Quantity</th>
+            <th class="text-left mat-header-cell">Shipment Item Source ID</th>
+            <th class="text-left mat-header-cell">Order ID</th>
+            <th class="text-left mat-header-cell">Order Item Sequence ID</th>
+            <th class="text-right mat-header-cell">Order Quantity</th>
+            <th class="text-right mat-header-cell">Quantity Not Handled</th>
+            <th class="text-left mat-header-cell">Status</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let itemValue of items">
+          <tr class="mat-row" *ngFor="let item of itemValue.sources">
+            <td class="text-left mat-cell">
+              {{ itemValue?.productId }}
+            </td>
+            <td class="text-right mat-cell">
+              {{ itemValue?.quantity || 0 }}
+            </td>
+            <td class="text-left mat-cell">
+              {{ item?.shipmentItemSourceId }}
+            </td>
+            <td class="text-left mat-cell">
+              {{ item?.orderId }}
+            </td>
+            <td class="text-left mat-cell">
+              {{ item?.orderItemSeqId }}
+            </td>
+            <td class="text-right mat-cell">
+              {{ item?.quantity || 0 }}
+            </td>
+            <td class="text-right mat-cell">
+              {{ item?.quantityNotHandled }}
+            </td>
+            <td class="text-left mat-cell">
+              {{ item?.status?.description }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title> Shipment Route Segments </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="shipmentRouteSegments">
+        <ng-container matColumnDef="routeSegSeqId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Shipment Route Seg Seq ID
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.shipmentRouteSegmentSeqId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="destFacility">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Destination Facility
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.destFacility?.facilityName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="destTelecom">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Destination Telecom Number
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item?.destTelecom?.telecomNumber?.countryCode }}
+            {{ item?.destTelecom?.telecomNumber?.areaCode }}
+            {{ item?.destTelecom?.telecomNumber?.contactNumber }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="destPostal">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            Destination Postal Address
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <div>{{ item?.destPostal?.postalAddress?.toName }}</div>
+            <div>{{ item?.destPostal?.postalAddress?.address1 }}</div>
+            <div>{{ item?.destPostal?.postalAddress?.address2 }}</div>
+            <div>
+              {{ item?.destPostal?.postalAddress?.city }},
+              {{ item?.destPostal?.postalAddress?.stateGeo?.geoName }}
+              {{ item?.destPostal?.postalAddress?.postalCode }}
+              {{ item?.destPostal?.postalAddress?.countryGeoId }}
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="shipmentRouteSegColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: shipmentRouteSegColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

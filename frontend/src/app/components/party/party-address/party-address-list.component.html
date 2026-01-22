@@ -1,0 +1,44 @@
+<ul class="custom-list">
+  <ng-container *ngIf="filteredAddresses.length > 0; else noPrimaryAddressRecords">
+    <li class="custom-list-item" *ngFor="let address of filteredAddresses">
+      <strong>{{ 'PARTY.ADDRESS' | translate }}:</strong>
+      <div>
+        {{ address?.toName }}
+        <span>
+          <mat-icon *ngIf="editable" matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+            (click)="editAddress(address)">
+            edit
+          </mat-icon>
+        </span>
+      </div>
+      <div>
+        {{ address?.address1 }}
+      </div>
+      <div>{{ address?.address2 }}</div>
+      <div>
+        {{ address?.city }},
+        {{ address?.geoName }}
+        {{ address?.postalCode }}
+        {{ address?.stateProvinceGeoId }}
+        {{ address?.countryGeoId }}
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
+                  deleteAddressDialog({
+                    partyId: partyId,
+                    contactMechId: address.contactMechId,
+                    contactMechPurposeId:
+                      address.contactMechPurposeId
+                  })
+                ">delete</mat-icon>
+      </div>
+    </li>
+  </ng-container>
+
+  <ng-template #noPrimaryAddressRecords>
+    <li class="custom-list-item">
+      <strong>{{ 'PARTY.ADDRESS' | translate }}:</strong>
+      <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+        (click)="editAddress()">add</mat-icon>
+    </li>
+  </ng-template>
+
+</ul>

@@ -1,0 +1,74 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'PRODUCT.TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-actions>
+      <mat-form-field>
+        <mat-label>{{ 'PRODUCT.SEARCH' | translate }}</mat-label>
+        <input
+          matInput
+          [(ngModel)]="queryString"
+          (input)="getProducts(1, queryString)"
+          autofocus
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-card-actions>
+    <mat-card-content>
+      <table mat-table [dataSource]="items">
+        <ng-container *ngFor="let column of customerColumns" [matColumnDef]="column.key">
+          <th mat-header-cell *matHeaderCellDef class="text-left">{{ column.header | translate }}</th>
+          <td mat-cell *matCellDef="let element" class="text-left">
+            <span *ngIf="column.key !== 'action' && column.key !== 'productId'">{{ getValue(element, column.key) }}</span>
+            <ng-container *ngIf="column.key === 'productId'">
+              <a [routerLink]="['/products', element.productId]">{{ element.productId }}</a>
+            </ng-container>
+            <ng-container *ngIf="column.key === 'action'">
+              <!-- Add action buttons here if needed -->
+            </ng-container>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="getCustomerColumnKeys()"></tr>
+        <tr mat-row *matRowDef="let row; columns: getCustomerColumnKeys()"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="pagination.rowsPerPage"
+        [length]="pages"
+        (page)="getProducts($event.pageIndex + 1, queryString)"
+      ></mat-paginator>
+    </mat-card-content>
+    <!-- <mat-card-content>
+      <table mat-table [dataSource]="items">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.ID' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <a [routerLink]="['/products', item.productId]">{{ item.productId }}</a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.NAME' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.productName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.TYPE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.productTypeId }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="pagination.rowsPerPage"
+        [length]="pages"
+        (page)="getProducts($event.pageIndex + 1, queryString)"
+      ></mat-paginator>
+    </mat-card-content> -->
+  </mat-card>
+</ng-template>

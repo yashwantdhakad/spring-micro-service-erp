@@ -1,0 +1,29 @@
+<div fxLayout="row" fxLayoutAlign="center center" class="login-container">
+  <mat-card class="login-card mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title><h1>{{ 'LOGIN_TITLE' | translate }}</h1></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutGap="20px">
+        <mat-form-field fxFlex="100%">
+          <mat-label>{{ 'USERNAME' | translate }}</mat-label>
+          <input matInput placeholder="{{ 'USERNAME_PLACEHOLDER' | translate }}" formControlName="username" />
+          <mat-error *ngIf="loginForm.get('username')?.invalid">{{ 'USERNAME_REQUIRED' | translate }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="100%">
+          <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
+          <input matInput type="password" placeholder="{{ 'PASSWORD_PLACEHOLDER' | translate }}" formControlName="password" />
+          <mat-error *ngIf="loginForm.get('password')?.invalid">{{ 'PASSWORD_REQUIRED' | translate }}</mat-error>
+        </mat-form-field>
+
+        <div fxFlex="100%" fxLayoutAlign="center">
+          <button mat-flat-button type="submit" color="primary" [disabled]="isLoading || loginForm.invalid">
+            <ng-container *ngIf="!isLoading">{{ 'SUBMIT_LOGIN' | translate }}</ng-container>
+            <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

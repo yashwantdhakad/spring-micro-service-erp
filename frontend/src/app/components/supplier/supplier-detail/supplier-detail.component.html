@@ -1,0 +1,502 @@
+<mat-card class="mat-card mat-elevation-z10">
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/suppliers']">{{ 'SUPPLIER.TITLE' | translate }}</a>
+      / {{ supplierDetail?.partyId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card-header>
+    <mat-card-title>{{ 'SUPPLIER.OVERVIEW' | translate }}</mat-card-title>
+  </mat-card-header>
+  <div fxLayout="row wrap" fxLayout.xs="column">
+    <mat-card fxFlex.gt-xs="25%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.PERSONAL_DETAIL' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <li class="custom-list-item">
+            <strong>{{ 'SUPPLIER.NAME' | translate }}:</strong>
+            {{ supplierDetail?.groupName }}
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+              (click)="editSupplierDialog()">edit</mat-icon>
+          </li>
+        </ul>
+        <app-party-address-list [addressList]="postalAddressList" [countries]="countries" [states]="states"
+          [purposeId]="'PRIMARY_LOCATION'" [partyId]="partyId ?? ''" [editable]="true"
+          (addressUpdated)="getSupplier($event)">
+        </app-party-address-list>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card fxFlex.gt-xs="24%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.EMAIL_AND_PHONE' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <ng-container *ngIf="
+              filterTelecomNumberList(telecomNumberList, 'PRIMARY_PHONE')
+                .length > 0;
+              else noPhoneRecords
+            ">
+            <li class="custom-list-item" *ngFor="
+                let primaryPhone of filterTelecomNumberList(
+                  telecomNumberList,
+                  'PRIMARY_PHONE'
+                )
+              ">
+              <strong>{{ 'SUPPLIER.PHONE' | translate }}:</strong>
+              {{ primaryPhone.countryCode }}
+              {{ primaryPhone.areaCode }}
+              {{ primaryPhone.contactNumber }}
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditPhoneDialog({
+                    contactMechId: primaryPhone.contactMechId,
+                    contactMechPurposeId:
+                      primaryPhone.contactMechPurposeId,
+                    contactNumber: primaryPhone.contactNumber
+                  })
+                ">edit</mat-icon>
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
+                  deletePhoneDialog({
+                    partyId: partyId,
+                    contactMechId: primaryPhone.contactMechId,
+                    contactMechPurposeId:
+                      primaryPhone.contactMechPurposeId
+                  })
+                ">delete</mat-icon>
+            </li>
+          </ng-container>
+
+          <ng-template #noPhoneRecords>
+            <li class="custom-list-item">
+              <strong>{{ 'SUPPLIER.PHONE' | translate }}:</strong><mat-icon matListIcon
+                class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditPhoneDialog({
+                    partyId: partyId,
+                    contactMechPurposeId: 'PRIMARY_PHONE'
+                  })
+                ">add</mat-icon>
+            </li>
+          </ng-template>
+          <ng-container *ngIf="
+              filterEmailAddressList(emailAddressList, 'PRIMARY_EMAIL').length >
+                0;
+              else noEmailRecords
+            ">
+            <li class="custom-list-item" *ngFor="
+                let primaryEmailAddress of filterEmailAddressList(
+                  emailAddressList,
+                  'PRIMARY_EMAIL'
+                )
+              ">
+              <strong>{{ 'SUPPLIER.EMAIL' | translate }}:</strong> {{ primaryEmailAddress.emailAddress }}
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditEmailDialog({
+                    contactMechId: primaryEmailAddress.contactMechId,
+                    contactMechPurposeId:
+                      primaryEmailAddress.contactMechPurposeId,
+                    emailAddress: primaryEmailAddress.emailAddress
+                  })
+                ">edit</mat-icon>
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
+                  deleteEmailDialog({
+                    partyId: partyId,
+                    contactMechId: primaryEmailAddress.contactMechId,
+                    contactMechPurposeId:
+                      primaryEmailAddress.contactMechPurposeId
+                  })
+                ">delete</mat-icon>
+            </li>
+          </ng-container>
+          <ng-template #noEmailRecords>
+            <li class="custom-list-item">
+              <strong>{{ 'SUPPLIER.EMAIL' | translate }}:</strong><mat-icon matListIcon
+                class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditEmailDialog({
+                    partyId: partyId,
+                    contactMechPurposeId: 'PRIMARY_EMAIL',
+                  })
+                ">add</mat-icon>
+            </li>
+          </ng-template>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card fxFlex.gt-xs="24%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.ROLES' | translate }}
+          <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+            (click)="addRoleDialog()">add</mat-icon></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <li class="custom-list-item" *ngFor="let role of partyRoleList">
+            {{ role.roleType }}
+            <mat-icon *ngIf="(role?.roleType || '') !== 'Supplier'"
+              class="custom-mat-icon custom-icon-align" color="warn" (click)="deleteRoleDialog(role)">
+              delete
+            </mat-icon>
+
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <!--
+    <mat-card fxFlex.gt-xs="24%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.IDENTIFICATION' | translate }}
+          <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+            (click)="addIdentificationDialog()">add</mat-icon></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <li class="custom-list-item" *ngFor="let partyIdentification of partyIdentificationList">
+            <strong>{{ partyIdentification.description }}:</strong>
+            {{ partyIdentification.idValue }}
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn"
+              (click)="deleteIdentificationDialog(partyIdentification)">delete</mat-icon>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+    -->
+  </div>
+</mat-card>
+
+<br />
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>{{ 'SUPPLIER.NOTES' | translate }}
+      <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+        (click)="addUpdateNoteDialog()">add</mat-icon>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="partyNotes">
+      <ng-container matColumnDef="noteText">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.NOTE' | translate }}</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          <span *ngIf="item.noteText">{{ item?.noteText }}</span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="noteDate">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.NOTE_DATE' | translate }}</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          {{ item.noteDate | date : "MMMM d, y" }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="userId">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.CREATED_BY' | translate }}</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          {{ item.createdBy }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.ACTION' | translate }}</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+            (click)="addUpdateNoteDialog(item)">edit</mat-icon>
+          <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn"
+            (click)="deleteNoteDialog(item)">delete</mat-icon>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="noteColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: noteColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
+<br />
+
+<mat-card class="mat-card mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>{{ 'SUPPLIER.SHIPPING' | translate }}</mat-card-title>
+  </mat-card-header>
+  <div fxLayout="row wrap" fxLayout.xs="column">
+    <mat-card fxFlex.gt-xs="47%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.SHIP_TO_ADDRESS' | translate }} </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <app-party-address-list [addressList]="postalAddressList" [countries]="countries" [states]="states"
+          [purposeId]="'SHIP_ORIG_LOCATION'" [partyId]="partyId ?? ''" [editable]="true"
+          (addressUpdated)="getSupplier($event)">
+        </app-party-address-list>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card fxFlex.gt-xs="47%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.EMAIL_AND_PHONE' | translate }} </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <ng-container *ngIf="
+              filterTelecomNumberList(telecomNumberList, 'PHONE_SHIP_ORIG')
+                .length > 0;
+              else noShippingPhoneRecords
+            ">
+            <li class="custom-list-item" *ngFor="
+                let shippingPhone of filterTelecomNumberList(
+                  telecomNumberList,
+                  'PHONE_SHIP_ORIG'
+                )
+              ">
+              <strong>{{ 'SUPPLIER.PHONE' | translate }}:</strong>
+              {{ shippingPhone.countryCode }}
+              {{ shippingPhone.areaCode }}
+              {{ shippingPhone.contactNumber }}
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditPhoneDialog({
+                    contactMechId: shippingPhone.contactMechId,
+                    contactMechPurposeId:
+                      shippingPhone.contactMechPurposeId,
+                    contactNumber: shippingPhone.contactNumber,
+                    areaCode: shippingPhone.areaCode,
+                    countryCode: shippingPhone.countryCode
+                  })
+                ">edit</mat-icon>
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
+                  deletePhoneDialog({
+                    partyId: partyId,
+                    contactMechId: shippingPhone.contactMechId,
+                    contactMechPurposeId:
+                      shippingPhone.contactMechPurposeId
+                  })
+                ">delete</mat-icon>
+            </li>
+          </ng-container>
+
+          <ng-template #noShippingPhoneRecords>
+            <li class="custom-list-item">
+              <strong>{{ 'SUPPLIER.PHONE' | translate }}:</strong><mat-icon matListIcon
+                class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditPhoneDialog({
+                    partyId: partyId,
+                    contactMechPurposeId: 'PHONE_SHIP_ORIG'
+                  })
+                ">add</mat-icon>
+            </li>
+          </ng-template>
+
+          <ng-container *ngIf="
+              filterEmailAddressList(emailAddressList, 'SHIPPING_EMAIL')
+                .length > 0;
+              else noShippingEmailRecords
+            ">
+            <li class="custom-list-item" *ngFor="
+                let shippingEmailAddress of filterEmailAddressList(
+                  emailAddressList,
+                  'SHIPPING_EMAIL'
+                )
+              ">
+              <strong>{{ 'SUPPLIER.EMAIL' | translate }}:</strong> {{ shippingEmailAddress.emailAddress }}
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditEmailDialog({
+                    contactMechId: shippingEmailAddress.contactMechId,
+                    contactMechPurposeId:
+                      shippingEmailAddress.contactMechPurposeId,
+                    emailAddress: shippingEmailAddress.emailAddress
+                  })
+                ">edit</mat-icon>
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
+                  deleteEmailDialog({
+                    partyId: partyId,
+                    contactMechId: shippingEmailAddress.contactMechId,
+                    contactMechPurposeId:
+                      shippingEmailAddress.contactMechPurposeId
+                  })
+                ">delete</mat-icon>
+            </li>
+          </ng-container>
+          <ng-template #noShippingEmailRecords>
+            <li class="custom-list-item">
+              <strong>{{ 'SUPPLIER.EMAIL' | translate }}:</strong><mat-icon matListIcon
+                class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                    addEditEmailDialog({
+                      partyId: partyId,
+                      contactMechPurposeId: 'SHIPPING_EMAIL',
+                    })
+                  ">add</mat-icon>
+            </li>
+          </ng-template>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</mat-card>
+
+<br />
+
+<mat-card class="mat-card mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>{{ 'SUPPLIER.BILLING' | translate }}</mat-card-title>
+  </mat-card-header>
+  <div fxLayout="row wrap" fxLayout.xs="column">
+    <mat-card fxFlex.gt-xs="47%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.PAYMENT_METHOD' | translate }}
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Add Payment Method">
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary">add</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="addEditCreditCardDialog()">
+              {{ 'PARTY.CREDIT_CARD_TITLE' | translate }}
+            </button>
+            <button mat-menu-item (click)="addEditBankAccountDialog()">
+              {{ 'PARTY.BANK_ACCOUNT_TITLE' | translate }}
+            </button>
+          </mat-menu>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <li class="custom-list-item" *ngFor="let payment of payments; let last = last">
+            <div *ngIf="
+                payment.paymentMethod.paymentMethodTypeEnumId == 'PmtCreditCard'
+              ">
+              <strong> {{ 'SUPPLIER.CREDIT_CARD_TITLE' | translate }} </strong>
+              <div>{{ payment.paymentMethod.description }}</div>
+              <div>
+                {{ payment.creditCardTypeEnum?.description }}
+                {{ maskCreditCardNumber(payment.creditCard.cardNumber) }}
+                <span *ngIf="payment.creditCard">
+                  {{ payment.creditCard?.expireDate }}
+                </span>
+              </div>
+              <div>
+                {{ payment.paymentMethod?.firstNameOnAccount }}
+                {{ payment.paymentMethod?.lastNameOnAccount }}
+              </div>
+            </div>
+            <div *ngIf="
+                payment.paymentMethod.paymentMethodTypeEnumId ==
+                'PmtBankAccount'
+              ">
+              <strong> {{ 'SUPPLIER.BANK_ACCOUNT_TITLE' | translate }}: </strong>
+              <div>{{ payment.paymentMethod.description }}</div>
+              <div>{{ payment.bankAccount.bankName }}</div>
+              <div>
+                {{ payment.bankAccount.routingNumber }} :
+                {{ payment.bankAccount.accountNumber }}
+              </div>
+            </div>
+            <strong> Address: </strong>
+            <div>{{ payment.postalAddress?.toName }}</div>
+            <div>{{ payment.postalAddress?.address1 }}</div>
+            <div>{{ payment.postalAddress?.address2 }}</div>
+            <div>
+              {{ payment.postalAddress?.city }},
+              {{ payment.postalAddressStateGeo?.geoName }}
+              {{ payment.postalAddress?.postalCode }}
+              {{ payment.postalAddress?.countryGeoId }}
+            </div>
+            <mat-divider *ngIf="!last"></mat-divider>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card fxFlex.gt-xs="47%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'SUPPLIER.EMAIL_AND_PHONE' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <ng-container *ngIf="
+              filterTelecomNumberList(telecomNumberList, 'PHONE_PAYMENT')
+                .length > 0;
+              else noBillingPhoneRecords
+            ">
+            <li class="custom-list-item" *ngFor="
+                let billingPhone of filterTelecomNumberList(
+                  telecomNumberList,
+                  'PHONE_PAYMENT'
+                )
+              ">
+              <strong>{{ 'SUPPLIER.PHONE' | translate }}:</strong>
+              {{ billingPhone.countryCode }}
+              {{ billingPhone.areaCode }}
+              {{ billingPhone.contactNumber }}
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditPhoneDialog({
+                    contactMechId: billingPhone.contactMechId,
+                    contactMechPurposeId:
+                      billingPhone.contactMechPurposeId,
+                    contactNumber: billingPhone.contactNumber,
+                    areaCode: billingPhone.areaCode,
+                    countryCode: billingPhone.countryCode
+                  })
+                ">edit</mat-icon>
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
+                  deletePhoneDialog({
+                    partyId: partyId,
+                    contactMechId: billingPhone.contactMechId,
+                    contactMechPurposeId:
+                      billingPhone.contactMechPurposeId
+                  })
+                ">delete</mat-icon>
+            </li>
+          </ng-container>
+
+          <ng-template #noBillingPhoneRecords>
+            <li class="custom-list-item">
+              <strong>{{ 'SUPPLIER.PHONE' | translate }}:</strong><mat-icon matListIcon
+                class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditPhoneDialog({
+                    partyId: partyId,
+                    contactMechPurposeId: 'PHONE_PAYMENT'
+                  })
+                ">add</mat-icon>
+            </li>
+          </ng-template>
+
+          <ng-container *ngIf="
+              filterEmailAddressList(emailAddressList, 'BILLING_EMAIL').length >
+                0;
+              else noBillingEmailRecords
+            ">
+            <li class="custom-list-item" *ngFor="
+                let billingEmailAddress of filterEmailAddressList(
+                  emailAddressList,
+                  'BILLING_EMAIL'
+                )
+              ">
+              <strong>{{ 'SUPPLIER.EMAIL' | translate }}:</strong> {{ billingEmailAddress.emailAddress }}
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                  addEditEmailDialog({
+                    contactMechId: billingEmailAddress.contactMechId,
+                    contactMechPurposeId:
+                      billingEmailAddress.contactMechPurposeId,
+                    emailAddress: billingEmailAddress.emailAddress
+                  })
+                ">edit</mat-icon>
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
+                  deleteEmailDialog({
+                    partyId: partyId,
+                    contactMechId: billingEmailAddress.contactMechId,
+                    contactMechPurposeId:
+                      billingEmailAddress.contactMechPurposeId
+                  })
+                ">delete</mat-icon>
+            </li>
+          </ng-container>
+          <ng-template #noBillingEmailRecords>
+            <li class="custom-list-item">
+              <strong>{{ 'SUPPLIER.EMAIL' | translate }}:</strong><mat-icon matListIcon
+                class="custom-mat-icon custom-icon-align" color="primary" (click)="
+                    addEditEmailDialog({
+                      partyId: partyId,
+                      contactMechPurposeId: 'BILLING_EMAIL',
+                    })
+                  ">add</mat-icon>
+            </li>
+          </ng-template>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</mat-card>

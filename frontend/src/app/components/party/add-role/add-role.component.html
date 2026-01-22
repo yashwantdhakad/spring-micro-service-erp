@@ -1,0 +1,41 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ 'PARTY.ADD_ROLE_TITLE' | translate }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="addRole()"
+      [formGroup]="roleForm"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'PARTY.ROLE' | translate }}</mat-label>
+        <mat-select formControlName="roleTypeId" name="roleTypeId">
+          <mat-option
+            *ngFor="let role of roleTypes"
+            [value]="role?.roleTypeId"
+            >{{ role?.description }}</mat-option
+          >
+        </mat-select>
+        <mat-error *ngIf="roleForm.get('roleTypeId')?.hasError('required')"
+          >{{ 'PARTY.ROLE_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'PARTY.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+        <button mat-button mat-dialog-close color="primary">{{ 'PARTY.CLOSE' | translate }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

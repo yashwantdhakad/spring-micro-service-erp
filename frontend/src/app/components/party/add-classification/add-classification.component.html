@@ -1,0 +1,70 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ 'PARTY.ADD_CLASSIFICATION_TITLE' | translate }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form
+      (ngSubmit)="addUpdateClassification()"
+      [formGroup]="addClassificationForm"
+      fxLayout="column"
+      fxLayoutGap="20px"
+      fxLayoutAlign="start stretch"
+    >
+      <mat-form-field fxFlex="100%">
+        <mat-label>{{ 'FEATURE.TYPE' | translate }}</mat-label>
+        <mat-select
+          formControlName="classificationTypeEnumId"
+          name="classificationTypeEnumId"
+          required
+        >
+          <mat-option
+            *ngFor="let enumType of enumTypes"
+            [value]="enumType.enumId"
+            >{{ enumType.description }}</mat-option
+          >
+        </mat-select>
+        <mat-error
+          *ngIf="
+            addClassificationForm.get('classificationTypeEnumId')?.hasError('required')
+          "
+          >{{ 'PARTY.TYPE_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex="100%">
+        <mat-label>Class</mat-label>
+        <mat-select
+          formControlName="partyClassificationId"
+          name="partyClassificationId"
+          required
+        >
+          <mat-option
+            *ngFor="let classification of classifications"
+            [value]="classification.partyClassificationId"
+            >{{ classification.description }}</mat-option
+          >
+        </mat-select>
+        <mat-error
+          *ngIf="
+            addClassificationForm.get('partyClassificationId')?.hasError('required')
+          "
+          >{{ 'PARTY.CLASSIFICATION_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
+      <div fxFlex="100%" fxLayoutAlign="start">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="me-4"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">{{ 'PARTY.SAVE' | translate }}</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+        <button mat-button mat-dialog-close color="primary">{{ 'PARTY.CLOSE' | translate }}</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

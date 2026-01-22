@@ -1,0 +1,53 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'MANUFACTURING.TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-actions>
+      <mat-form-field>
+        <mat-label>{{ 'MANUFACTURING.SEARCH' | translate }}</mat-label>
+        <input
+          matInput
+          [(ngModel)]="queryString"
+          (input)="getJobs(1, queryString)"
+          autofocus
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-card-actions>
+    <mat-card-content>
+      <table mat-table [dataSource]="items">
+        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column.key">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ column.header | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <ng-container *ngIf="column.key !== 'workEffortId'; else idLink">
+              <ng-container *ngIf="column.key !== 'estimatedStartDate'; else dateField">
+                {{ item[column.key] }}
+              </ng-container>
+              <ng-template #dateField>
+                {{ item.estimatedStartDate | date:'MMMM d, y' }}
+              </ng-template>
+            </ng-container>
+            <ng-template #idLink>
+              <a [routerLink]="['/jobs', item.workEffortId]">{{ item.workEffortId }}</a>
+            </ng-template>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumnKeys"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnKeys"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="pagination.rowsPerPage"
+        [length]="pages"
+        (page)="getJobs($event.pageIndex + 1, '')"
+      ></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

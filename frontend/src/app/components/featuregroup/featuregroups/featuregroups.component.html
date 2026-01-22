@@ -1,0 +1,44 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'FEATUREGROUP.TITLE' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-actions>
+      <mat-form-field>
+        <mat-label>{{ 'FEATUREGROUP.SEARCH' | translate }}</mat-label>
+        <input
+          matInput
+          [(ngModel)]="queryString"
+          (input)="fetchFeatureGroups(1, queryString)"
+          autofocus
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-card-actions>
+    <mat-card-content>
+      <table mat-table [dataSource]="items">
+        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column.key">
+          <th mat-header-cell *matHeaderCellDef class="text-left">{{ column.header | translate }}</th>
+          <td mat-cell *matCellDef="let element" class="text-left">
+            <a *ngIf="column.key === 'productFeatureGroupId'" [routerLink]="['/featuregroups', element[column.key]]">{{ element[column.key] }}</a>
+            <span *ngIf="column.key !== 'productFeatureGroupId'">{{ element[column.key] }}</span>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="getColumnKeys()"></tr>
+        <tr mat-row *matRowDef="let row; columns: getColumnKeys()"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="pagination.rowsPerPage"
+        [length]="pages"
+        (page)="fetchFeatureGroups($event.pageIndex + 1, queryString)"
+      ></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
