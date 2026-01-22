@@ -1,4 +1,4 @@
-package com.monash.erp.oms.entity;
+package com.monash.erp.oms.order.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

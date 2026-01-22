@@ -1,7 +1,7 @@
-package com.monash.erp.oms.service;
+package com.monash.erp.oms.order.service;
 
-import com.monash.erp.oms.entity.OrderItemShipGroup;
-import com.monash.erp.oms.repository.OrderItemShipGroupRepository;
+import com.monash.erp.oms.order.entity.OrderItemShipGroup;
+import com.monash.erp.oms.order.repository.OrderItemShipGroupRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

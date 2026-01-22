@@ -1,7 +1,7 @@
-package com.monash.erp.oms.controller;
+package com.monash.erp.oms.order.controller;
 
-import com.monash.erp.oms.entity.OrderAdjustment;
-import com.monash.erp.oms.service.OrderAdjustmentService;
+import com.monash.erp.oms.order.entity.OrderAdjustment;
+import com.monash.erp.oms.order.service.OrderAdjustmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

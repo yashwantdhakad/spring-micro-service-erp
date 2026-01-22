@@ -1,7 +1,7 @@
-package com.monash.erp.oms.service;
+package com.monash.erp.oms.order.service;
 
-import com.monash.erp.oms.entity.OrderItemShipGrpInvRes;
-import com.monash.erp.oms.repository.OrderItemShipGrpInvResRepository;
+import com.monash.erp.oms.order.entity.OrderItemShipGrpInvRes;
+import com.monash.erp.oms.order.repository.OrderItemShipGrpInvResRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

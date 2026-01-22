@@ -4,6 +4,15 @@ server:
 spring:
   application:
     name: api-gateway
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:partydb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:123456}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
   cloud:
     gateway:
       discovery:
@@ -11,6 +20,12 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        - id: party-service
+          uri: lb://party-service
+          predicates:
+            - Path=/party/**
+          filters:
+            - StripPrefix=1
         - id: oms-service
           uri: lb://oms-service
           predicates:
@@ -34,3 +49,15 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+security:
+  auth:
+    enabled: true
+    secret: YXskSV6tKeQso3GjcnQV5mOVJHgkjWOrYUTrWjPlIWCFgJ3YdOcpN0VhsGLIVInl
+    issuer: ${JWT_ISSUER:}
+    allowed-skew-seconds: 60
+    token-ttl-seconds: ${JWT_TTL_SECONDS:3600}
+    ignored-paths:
+      - /actuator/**
+      - /eureka/**
+      - /security/auth/**

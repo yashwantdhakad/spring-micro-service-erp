@@ -1,7 +1,7 @@
-package com.monash.erp.oms.controller;
+package com.monash.erp.oms.order.controller;
 
-import com.monash.erp.oms.entity.OrderItemBilling;
-import com.monash.erp.oms.service.OrderItemBillingService;
+import com.monash.erp.oms.order.entity.OrderItemBilling;
+import com.monash.erp.oms.order.service.OrderItemBillingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

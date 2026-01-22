@@ -1,7 +1,7 @@
-package com.monash.erp.oms.controller;
+package com.monash.erp.oms.order.controller;
 
-import com.monash.erp.oms.entity.OrderItemShipGroupAssoc;
-import com.monash.erp.oms.service.OrderItemShipGroupAssocService;
+import com.monash.erp.oms.order.entity.OrderItemShipGroupAssoc;
+import com.monash.erp.oms.order.service.OrderItemShipGroupAssocService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
