@@ -18,7 +18,7 @@ export class SupplierComponent implements OnInit {
   items: any[] = [];
   pages: number = 0;
   supplierColumns = [
-    { key: 'party_id', header: 'SUPPLIER.ID' },
+    { key: 'partyId', header: 'SUPPLIER.ID' },
     { key: 'groupName', header: 'SUPPLIER.NAME' },
     { key: 'contactNumber', header: 'SUPPLIER.PHONE' },
     { key: 'emailAddress', header: 'SUPPLIER.EMAIL' },

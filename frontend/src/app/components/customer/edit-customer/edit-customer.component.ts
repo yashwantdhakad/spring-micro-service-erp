@@ -37,7 +37,7 @@ export class EditCustomerComponent {
       this.isLoading = true;
       const values = this.updateCustomerForm.value;
 
-      this.partyService.updatePartyDetail(values)
+      this.partyService.updateCustomer(values)
         .pipe(finalize(() => this.isLoading = false))
         .subscribe({
           next: () => {

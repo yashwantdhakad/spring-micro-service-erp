@@ -33,7 +33,7 @@ describe('PartyService', () => {
     const mockResponse = of({ documentList: [{ partyId: '1', name: 'Customer 1' }], documentListCount: 1 });
 
     const response = await service.getCustomers(1, 'keyword');
-    const req = httpTestingController.expectOne('/api/customers/?page=1&query=keyword');
+    const req = httpTestingController.expectOne('/party/api/customers?page=1&query=keyword');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
 
@@ -56,7 +56,7 @@ describe('PartyService', () => {
     const mockResponse = of({ success: true });
 
     const response = await service.createCustomer(params);
-    const req = httpTestingController.expectOne('/api/customers');
+    const req = httpTestingController.expectOne('/party/api/customers');
     expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
 
@@ -67,7 +67,7 @@ describe('PartyService', () => {
     const mockResponse = of({ partyId: '1', name: 'Customer 1' });
 
     const response = await service.getCustomer('1');
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/getCustomerDetail?partyId=1');
+    const req = httpTestingController.expectOne('/party/api/customers/1');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
 
@@ -78,7 +78,7 @@ describe('PartyService', () => {
     const mockResponse = of({ documentList: [{ partyId: '1', name: 'Supplier 1' }], documentListCount: 1 });
 
     const response = await service.getSuppliers(1, 'keyword');
-    const req = httpTestingController.expectOne('/api/suppliers?page=1&query=keyword');
+    const req = httpTestingController.expectOne('/party/api/suppliers?page=1&query=keyword');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
 
@@ -90,7 +90,7 @@ describe('PartyService', () => {
     const mockResponse = of({ success: true });
 
     const response = await service.createSupplier(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/createSupplier');
+    const req = httpTestingController.expectOne('/party/api/suppliers');
     expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
 
@@ -101,20 +101,32 @@ describe('PartyService', () => {
     const mockResponse = of({ partyId: '1', name: 'Supplier 1' });
 
     const response = await service.getSupplier('1');
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/getSupplierDetail?partyId=1');
+    const req = httpTestingController.expectOne('/party/api/suppliers/1');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
 
     expect(response).toEqual(mockResponse);
   });
 
-  it('should update party detail', async () => {
-    const params = { name: 'Party 1' };
+  it('should update customer detail', async () => {
+    const params = { partyId: 'CUST1', firstName: 'John' };
     const mockResponse = of({ success: true });
 
-    const response = await service.updatePartyDetail(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/partyDetail');
-    expect(req.request.method).toBe('POST');
+    const response = await service.updateCustomer(params);
+    const req = httpTestingController.expectOne('/party/api/customers/CUST1');
+    expect(req.request.method).toBe('PUT');
+    req.flush(mockResponse);
+
+    expect(response).toEqual(mockResponse);
+  });
+
+  it('should update supplier detail', async () => {
+    const params = { partyId: 'SUPP1', groupName: 'Supplier 1' };
+    const mockResponse = of({ success: true });
+
+    const response = await service.updateSupplier(params);
+    const req = httpTestingController.expectOne('/party/api/suppliers/SUPP1');
+    expect(req.request.method).toBe('PUT');
     req.flush(mockResponse);
 
     expect(response).toEqual(mockResponse);

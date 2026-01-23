@@ -16,7 +16,7 @@ describe('EditSupplierComponent', () => {
   let dialogRefSpy: jasmine.SpyObj<MatDialogRef<EditSupplierComponent>>;
 
   beforeEach(async () => {
-    partyServiceSpy = jasmine.createSpyObj('PartyService', ['updatePartyDetail']);
+    partyServiceSpy = jasmine.createSpyObj('PartyService', ['updateSupplier']);
     snackbarServiceSpy = jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']);
     translateSpy = jasmine.createSpyObj('TranslateService', ['instant']);
     dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
@@ -34,7 +34,7 @@ describe('EditSupplierComponent', () => {
           useValue: {
             supplierDetail: {
               partyId: 'SUPP-1001',
-              organizationName: 'Supplier Inc.'
+              groupName: 'Supplier Inc.'
             }
           },
         },
@@ -50,19 +50,19 @@ describe('EditSupplierComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call updatePartyDetail and close dialog on success', fakeAsync(() => {
+  it('should call updateSupplier and close dialog on success', fakeAsync(() => {
     translateSpy.instant.and.callFake((key) => key);
-    partyServiceSpy.updatePartyDetail.and.returnValue(of({}));
+    partyServiceSpy.updateSupplier.and.returnValue(of({}));
 
     component.updateSupplierForm.setValue({
       partyId: 'SUPP-1001',
-      organizationName: 'Updated Supplier'
+      groupName: 'Updated Supplier'
     });
 
     component.updateSupplier();
     tick();
 
-    expect(partyServiceSpy.updatePartyDetail).toHaveBeenCalledWith(component.updateSupplierForm.value);
+    expect(partyServiceSpy.updateSupplier).toHaveBeenCalledWith(component.updateSupplierForm.value);
     expect(snackbarServiceSpy.showSuccess).toHaveBeenCalledWith('SUPPLIER.UPDATED_SUCCESS');
     expect(dialogRefSpy.close).toHaveBeenCalledWith(component.updateSupplierForm.value);
     expect(component.isLoading).toBeFalse();
@@ -71,11 +71,11 @@ describe('EditSupplierComponent', () => {
   it('should handle error if API call fails', fakeAsync(() => {
     const consoleSpy = spyOn(console, 'error');
     translateSpy.instant.and.callFake((key) => key);
-    partyServiceSpy.updatePartyDetail.and.returnValue(throwError(() => new Error('API Error')));
+    partyServiceSpy.updateSupplier.and.returnValue(throwError(() => new Error('API Error')));
 
     component.updateSupplierForm.setValue({
       partyId: 'SUPP-1001',
-      organizationName: 'Updated Supplier'
+      groupName: 'Updated Supplier'
     });
 
     component.updateSupplier();
@@ -89,12 +89,12 @@ describe('EditSupplierComponent', () => {
   it('should not submit if form is invalid', () => {
     component.updateSupplierForm.setValue({
       partyId: 'SUPP-1001',
-      organizationName: ''
+      groupName: ''
     });
 
     component.updateSupplier();
 
-    expect(partyServiceSpy.updatePartyDetail).not.toHaveBeenCalled();
+    expect(partyServiceSpy.updateSupplier).not.toHaveBeenCalled();
     expect(dialogRefSpy.close).not.toHaveBeenCalled();
   });
 });

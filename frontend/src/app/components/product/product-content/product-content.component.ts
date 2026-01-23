@@ -48,7 +48,7 @@ export class ProductContentComponent implements OnInit {
       formData.append('contentFile', file);
 
       this.productService
-        .createProductContent(formData)
+        .createProductContent(this.data.contentData.productId, formData)
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe({
           next: () => {

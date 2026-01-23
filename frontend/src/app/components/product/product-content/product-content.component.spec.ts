@@ -61,7 +61,10 @@ describe('ProductContentComponent', () => {
 
     component.createProductContent();
 
-    expect(mockProductService.createProductContent).toHaveBeenCalled();
+    expect(mockProductService.createProductContent).toHaveBeenCalledWith(
+      mockData.contentData.productId,
+      jasmine.any(FormData)
+    );
     expect(mockSnackbarService.showSuccess).toHaveBeenCalled();
     expect(mockDialogRef.close).toHaveBeenCalledWith(mockData.contentData);
   });

@@ -34,7 +34,7 @@ describe('ProductService', () => {
     });
 
     const req = httpMock.expectOne((request) =>
-      request.url.includes('/api/rest/s1/commerce/getProducts') &&
+      request.url.includes('/wms/api/products') &&
       request.method === 'GET'
     );
     expect(req.request.params.get('queryString')).toBe('Test');
@@ -45,7 +45,7 @@ describe('ProductService', () => {
     const params = { name: 'p1' };
     const res = { productId: 'P1' };
     service.createProduct(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/createProduct');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
@@ -53,7 +53,7 @@ describe('ProductService', () => {
   it('should get product detail', () => {
     const res = { productId: 'P1' };
     service.getProduct('P1').subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/products/P1');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1'));
     expect(req.request.method).toBe('GET');
     req.flush(res);
   });
@@ -62,8 +62,8 @@ describe('ProductService', () => {
     const params = { productId: 'P1' };
     const res = { ok: true };
     service.updateProduct(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/products/P1');
-    expect(req.request.method).toBe('PATCH');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1'));
+    expect(req.request.method).toBe('PUT');
     req.flush(res);
   });
 
@@ -71,7 +71,7 @@ describe('ProductService', () => {
     const params = { productId: 'P1' };
     const res = { ok: true };
     service.addProductPrice(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/products/P1/prices');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1/prices'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
@@ -80,7 +80,7 @@ describe('ProductService', () => {
     const params = { productId: 'P1', productPriceId: 'PP1' };
     const res = { ok: true };
     service.deleteProductPrice(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/products/P1/prices/PP1');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1/prices/PP1'));
     expect(req.request.method).toBe('DELETE');
     req.flush(res);
   });
@@ -89,8 +89,8 @@ describe('ProductService', () => {
     const params = { productId: 'P1', productPriceId: 'PP1' };
     const res = { ok: true };
     service.updateProductPrice(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/products/P1/prices/PP1');
-    expect(req.request.method).toBe('PATCH');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1/prices/PP1'));
+    expect(req.request.method).toBe('PUT');
     req.flush(res);
   });
 
@@ -98,7 +98,7 @@ describe('ProductService', () => {
     const params = { productId: 'P1' };
     const res = { ok: true };
     service.addProductCategory(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/products/P1/categories');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1/categories'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
@@ -106,25 +106,25 @@ describe('ProductService', () => {
   it('should delete product', () => {
     const res = { ok: true };
     service.deleteProduct('P1').subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/deleteProduct/P1');
-    expect(req.request.method).toBe('POST');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1'));
+    expect(req.request.method).toBe('DELETE');
     req.flush(res);
   });
 
   it('should create product assoc', () => {
-    const params = { assoc: true };
+    const params = { assoc: true, productId: 'P1' };
     const res = { ok: true };
     service.createProductAssoc(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/createProductAssoc');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1/assocs'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
 
   it('should create product content', () => {
-    const params = { data: 'c' };
+    const params = new FormData();
     const res = { ok: true };
-    service.createProductContent(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/createProductContent');
+    service.createProductContent('P1', params).subscribe(d => expect(d).toEqual(res));
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/products/P1/contents'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });

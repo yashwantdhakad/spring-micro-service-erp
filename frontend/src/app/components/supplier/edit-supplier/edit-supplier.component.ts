@@ -37,7 +37,7 @@ export class EditSupplierComponent {
       const values = this.updateSupplierForm.value;
 
       this.partyService
-        .updatePartyDetail(values)
+        .updateSupplier(values)
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe({
           next: () => {

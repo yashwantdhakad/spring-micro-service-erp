@@ -26,7 +26,7 @@ export class CreateSupplierComponent {
       groupName: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.minLength(10)]],
-      roleTypeId: ['Supplier'],
+      roleTypeId: ['SUPPLIER'],
     });
   }
 
@@ -40,11 +40,11 @@ export class CreateSupplierComponent {
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe({
           next: (data) => {
-            if (data?.party_id) {
+            if (data?.partyId) {
               this.snackbarService.showSuccess(
                 this.translate.instant('SUPPLIER.CREATED_SUCCESS')
               );
-              this.router.navigate([`/suppliers/${data.party_id}`]);
+              this.router.navigate([`/suppliers/${data.partyId}`]);
               this.supplierForm.reset();
             } else {
               this.snackbarService.showError(

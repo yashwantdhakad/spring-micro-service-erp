@@ -31,7 +31,7 @@ export class AddEditPhoneComponent {
       partyId: [addEditPhoneData.partyId || null],
       contactMechId: [addEditPhoneData.contactMechId],
       contactMechPurposeId: [
-        addEditPhoneData.contactMechPurposeId || 'PhonePrimary',
+        addEditPhoneData.contactMechPurposeId || 'PRIMARY_PHONE',
       ],
       contactNumber: [
         contactNumber,

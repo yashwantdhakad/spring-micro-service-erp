@@ -100,12 +100,11 @@ export class CreateCustomerComponent implements OnInit {
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe({
           next: (data) => {
-            console.log(data);
-            if (data?.party_id) {
+            if (data?.partyId) {
               this.snackbarService.showSuccess(
                 this.translate.instant('CUSTOMER.CREATED_SUCCESS')
               );
-              this.router.navigate([`/customers/${data.party_id}`]);
+              this.router.navigate([`/customers/${data.partyId}`]);
               this.createCustomerForm.reset();
             } else {
               this.snackbarService.showError(

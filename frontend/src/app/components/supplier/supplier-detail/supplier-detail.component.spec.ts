@@ -78,12 +78,12 @@ describe('SupplierDetailComponent', () => {
 
   it('should filter email addresses by purpose', () => {
     const emailList = [
-      { emailContactMechPurposeId: 'PRIMARY_EMAIL', address: 'a@example.com' },
-      { emailContactMechPurposeId: 'BILLING_EMAIL', address: 'b@example.com' },
+      { contactMechPurposeId: 'PRIMARY_EMAIL', emailAddress: 'a@example.com' },
+      { contactMechPurposeId: 'BILLING_EMAIL', emailAddress: 'b@example.com' },
     ];
     const result = component.filterEmailAddressList(emailList, 'PRIMARY_EMAIL');
     expect(result.length).toBe(1);
-    expect(result[0].address).toBe('a@example.com');
+    expect(result[0].emailAddress).toBe('a@example.com');
   });
 
   it('should mask credit card number properly', () => {

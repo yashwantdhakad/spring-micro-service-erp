@@ -51,7 +51,7 @@ export class CategoryDetailComponent implements OnInit {
 
     this.categoryService.getCategory(productCategoryId).subscribe({
       next: (response) => {
-        this.categoryDetail = response;
+        this.categoryDetail = response.category;
         this.products = response.products;
       },
       error: (error) => {

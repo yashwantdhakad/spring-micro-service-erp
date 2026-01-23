@@ -53,7 +53,7 @@ describe('CustomerComponent', () => {
 
   it('should return column keys from config', () => {
     const keys = component.getCustomerColumnKeys();
-    expect(keys).toEqual(['partyId', 'name', 'phone', 'email']);
+    expect(keys).toEqual(['partyId', 'firstName', 'lastName', 'contactNumber', 'emailAddress']);
   });
 
   it('should return value for direct and nested properties', () => {

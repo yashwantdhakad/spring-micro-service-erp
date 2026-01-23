@@ -28,7 +28,7 @@ describe('SupplierComponent', () => {
 
   it('should fetch suppliers on init', fakeAsync(() => {
     const mockResponse = {
-      resultList: [{ partyId: 'SUP-1', name: 'Test Supplier', phone: '1234567890', email: 'test@example.com' }],
+      resultList: [{ partyId: 'SUPP1', groupName: 'Test Supplier', contactNumber: '1234567890', emailAddress: 'test@example.com' }],
       documentListCount: 1,
     };
     partyServiceSpy.getSuppliers.and.returnValue(of(mockResponse));

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 public class PartyNote {
@@ -14,6 +15,9 @@ public class PartyNote {
 
     private String partyId;
     private String noteId;
+    private String noteText;
+    private LocalDateTime noteDate;
+    private String createdBy;
 
     public Long getId() {
         return id;
@@ -37,6 +41,30 @@ public class PartyNote {
 
     public void setNoteId(String noteId) {
         this.noteId = noteId;
+    }
+
+    public String getNoteText() {
+        return noteText;
+    }
+
+    public void setNoteText(String noteText) {
+        this.noteText = noteText;
+    }
+
+    public LocalDateTime getNoteDate() {
+        return noteDate;
+    }
+
+    public void setNoteDate(LocalDateTime noteDate) {
+        this.noteDate = noteDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
 }

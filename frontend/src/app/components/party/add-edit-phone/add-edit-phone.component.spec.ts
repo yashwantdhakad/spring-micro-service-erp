@@ -19,7 +19,7 @@ describe('AddEditPhoneComponent', () => {
     addEditPhoneData: {
       partyId: 'PARTY_001',
       telecomContactMechId: null,
-      telecomContactMechPurposeId: 'PhonePrimary',
+      telecomContactMechPurposeId: 'PRIMARY_PHONE',
       contactNumber: '1234567890',
       areaCode: '022',
       countryCode: '+91',

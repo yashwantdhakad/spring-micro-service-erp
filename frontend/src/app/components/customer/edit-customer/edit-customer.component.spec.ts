@@ -23,7 +23,7 @@ describe('EditCustomerComponent', () => {
   };
 
   beforeEach(async () => {
-    partyServiceSpy = jasmine.createSpyObj('PartyService', ['updatePartyDetail']);
+    partyServiceSpy = jasmine.createSpyObj('PartyService', ['updateCustomer']);
     snackbarSpy = jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']);
     dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
 
@@ -50,13 +50,13 @@ describe('EditCustomerComponent', () => {
     expect(component.updateCustomerForm.valid).toBeTrue();
   });
 
-  it('should call updatePartyDetail and close dialog on success', () => {
-    partyServiceSpy.updatePartyDetail.and.returnValue(of({}));
+  it('should call updateCustomer and close dialog on success', () => {
+    partyServiceSpy.updateCustomer.and.returnValue(of({}));
 
     component.updateCustomer();
 
     expect(component.isLoading).toBeTrue();
-    expect(partyServiceSpy.updatePartyDetail).toHaveBeenCalledWith({
+    expect(partyServiceSpy.updateCustomer).toHaveBeenCalledWith({
       partyId: 'PARTY_1',
       firstName: 'John',
       lastName: 'Doe'
@@ -66,11 +66,11 @@ describe('EditCustomerComponent', () => {
   });
 
   it('should show error message on update failure', () => {
-    partyServiceSpy.updatePartyDetail.and.returnValue(throwError(() => new Error('Failed')));
+    partyServiceSpy.updateCustomer.and.returnValue(throwError(() => new Error('Failed')));
 
     component.updateCustomer();
 
-    expect(partyServiceSpy.updatePartyDetail).toHaveBeenCalled();
+    expect(partyServiceSpy.updateCustomer).toHaveBeenCalled();
     expect(snackbarSpy.showError).toHaveBeenCalled();
   });
 
@@ -80,6 +80,6 @@ describe('EditCustomerComponent', () => {
     
     component.updateCustomer();
 
-    expect(partyServiceSpy.updatePartyDetail).not.toHaveBeenCalled();
+    expect(partyServiceSpy.updateCustomer).not.toHaveBeenCalled();
   });
 });

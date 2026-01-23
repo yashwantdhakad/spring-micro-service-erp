@@ -19,7 +19,7 @@ export class CustomerComponent implements OnInit {
   pages: number = 0;
 
   customerColumns = [
-    { key: 'party_id', header: 'CUSTOMER.ID' },
+    { key: 'partyId', header: 'CUSTOMER.ID' },
     { key: 'firstName', header: 'CUSTOMER.FIRST_NAME' },
     { key: 'lastName', header: 'CUSTOMER.LAST_NAME' },
     { key: 'contactNumber', header: 'CUSTOMER.PHONE' },

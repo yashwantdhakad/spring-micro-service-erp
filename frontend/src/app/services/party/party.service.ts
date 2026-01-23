@@ -13,7 +13,7 @@ export class PartyService {
       page: page.toString(),
       query: keyword,
     });
-    const url = `/api/customers/?${params.toString()}`;
+    const url = `/party/api/customers?${params.toString()}`;
     return this.apiService.get(url);
   }
 
@@ -29,14 +29,11 @@ export class PartyService {
   }
 
   createCustomer(params: any): Observable<any> {
-    return this.apiService.post('/api/customers/', params);
+    return this.apiService.post('/party/api/customers', params);
   }
 
   getCustomer(partyId: string): Observable<any> {
-    // const queryString = new URLSearchParams({ partyId }).toString();
-    // const url = `/api/customers/${queryString}`;
-    const url = `/api/customers/${encodeURIComponent(partyId)}`;
-    console.log(url);
+    const url = `/party/api/customers/${encodeURIComponent(partyId)}`;
     return this.apiService.get(url);
   }
 
@@ -45,38 +42,48 @@ export class PartyService {
       page: page.toString(),
       query: keyword,
     });
-    const url = `/api/suppliers?${params.toString()}`;
+    const url = `/party/api/suppliers?${params.toString()}`;
     return this.apiService.get(url);
   }
 
   createSupplier(params: any): Observable<any> {
-    return this.apiService.post('/api/suppliers/', params);
+    return this.apiService.post('/party/api/suppliers', params);
   }
 
   getSupplier(partyId: string): Observable<any> {
-    const url = `/api/suppliers/${encodeURIComponent(partyId)}`;
+    const url = `/party/api/suppliers/${encodeURIComponent(partyId)}`;
     return this.apiService.get(url);
   }
 
-  updatePartyDetail(params: any): Observable<any> {
-    return this.apiService.post('/api/rest/s1/commerce/partyDetail', params);
+  updateCustomer(params: any): Observable<any> {
+    const partyId = encodeURIComponent(params.partyId);
+    const url = `/party/api/customers/${partyId}`;
+    const { partyId: _, ...body } = params;
+    return this.apiService.put(url, body);
+  }
+
+  updateSupplier(params: any): Observable<any> {
+    const partyId = encodeURIComponent(params.partyId);
+    const url = `/party/api/suppliers/${partyId}`;
+    const { partyId: _, ...body } = params;
+    return this.apiService.put(url, body);
   }
 
   addPostalAddress(partyId: string | number, payload: any) {
-    const url = `/api/parties/${encodeURIComponent(partyId)}/postal-addresses`;
+    const url = `/party/api/parties/${encodeURIComponent(partyId)}/postal-addresses`;
     return this.apiService.post(url, payload);
   }
 
   updatePostalAddress(partyId: string | number,contactMechId: string | number, payload: any) {
     // Adjust this path if your backend uses a different one
-    const url = `/api/parties/${encodeURIComponent(partyId)}/postal-addresses/${encodeURIComponent(contactMechId)}`;
+    const url = `/party/api/parties/${encodeURIComponent(partyId)}/postal-addresses/${encodeURIComponent(contactMechId)}`;
     return this.apiService.put(url, payload);
   }
 
   addAddress(params: any): Observable<any> {
     console.log('params', params);
     const partyId = encodeURIComponent(params.partyId);
-    const url = `/api/parties/${partyId}/postal-addresses`;
+    const url = `/party/api/parties/${partyId}/postal-addresses`;
 
     const { partyId: _, contactMechId: __, ...body } = params;
 
@@ -87,7 +94,7 @@ export class PartyService {
     console.log('params', params);
     const partyId = encodeURIComponent(params.partyId);
     const contactMechId = encodeURIComponent(params.contactMechId);
-    const url = `/api/parties/${partyId}/postal-addresses/${contactMechId}`;
+    const url = `/party/api/parties/${partyId}/postal-addresses/${contactMechId}`;
 
     const { partyId: _, contactMechId: __, ...body } = params;
 
@@ -108,16 +115,21 @@ export class PartyService {
 
   addEmail(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
-    const url = `/api/parties/${partyId}/emails`;
+    const contactMechId = params.contactMechId;
+    const baseUrl = `/party/api/parties/${partyId}/emails`;
 
-    const { partyId: _, ...body } = params;
+    const { partyId: _, contactMechId: __, ...body } = params;
 
-    return this.apiService.post(url, params);
+    if (contactMechId) {
+      const url = `${baseUrl}/${encodeURIComponent(contactMechId)}`;
+      return this.apiService.put(url, body);
+    }
+    return this.apiService.post(baseUrl, body);
   }
 
   addPhone(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
-    const url = `/api/parties/${partyId}/telecom-numbers`;
+    const url = `/party/api/parties/${partyId}/telecom-numbers`;
 
     const { partyId: _, ...body } = params;
 
@@ -127,7 +139,7 @@ export class PartyService {
   updatePhoneNumber(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
     const contactMechId = encodeURIComponent(params.contactMechId);
-    const url = `/api/parties/${partyId}/telecom-numbers/${contactMechId}`;
+    const url = `/party/api/parties/${partyId}/telecom-numbers/${contactMechId}`;
 
     const { partyId: _, contactMechId: __, ...body } = params;
 
@@ -137,21 +149,21 @@ export class PartyService {
   deleteContactMech(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
     const contactMechId = encodeURIComponent(params.contactMechId);
-    const url = `/api/parties/${partyId}/telecom-numbers/${contactMechId}`;
+    const url = `/party/api/parties/${partyId}/telecom-numbers/${contactMechId}`;
     return this.apiService.delete(url);
   }
 
   deleteEmail(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
     const contactMechId = encodeURIComponent(params.contactMechId);
-    const url = `/api/parties/${partyId}/emails/${contactMechId}`;
+    const url = `/party/api/parties/${partyId}/emails/${contactMechId}`;
     return this.apiService.delete(url);
   }
 
   deletePostalAddress(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
     const contactMechId = encodeURIComponent(params.contactMechId);
-    const url = `/api/parties/${partyId}/postal-addresses/${contactMechId}`;
+    const url = `/party/api/parties/${partyId}/postal-addresses/${contactMechId}`;
     return this.apiService.delete(url);
   }
 
@@ -199,7 +211,7 @@ export class PartyService {
   createPartyNote(params: any): Observable<any> {
     // Expecting params to contain { partyId, noteDate, noteText }
     const partyId = encodeURIComponent(params.partyId);
-    const url = `/api/parties/${partyId}/notes`;
+    const url = `/party/api/parties/${partyId}/notes`;
 
     // Remove partyId from body if backend only wants noteDate/noteText
     const { partyId: _, ...body } = params;
@@ -210,7 +222,7 @@ export class PartyService {
   updatePartyNote(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
     const noteId = encodeURIComponent(params.noteId);
-    const url = `/api/parties/${partyId}/notes/${noteId}`;
+    const url = `/party/api/parties/${partyId}/notes/${noteId}`;
 
     const { partyId: _, noteId: __, ...body } = params;
 
@@ -220,7 +232,7 @@ export class PartyService {
   deletePartyNote(params: any): Observable<any> {
     const partyId = encodeURIComponent(params.partyId);
     const noteId = encodeURIComponent(params.noteId);
-    const url = `/api/parties/${partyId}/notes/${noteId}`;
+    const url = `/party/api/parties/${partyId}/notes/${noteId}`;
     return this.apiService.delete(url);
   }
 

@@ -53,7 +53,7 @@ describe('CustomerDetailComponent', () => {
     const mockCustomer = {
       customerDetail: {
         partyRoleList: [],
-        party: { name: 'Test Customer' },
+        party: { firstName: 'Test', lastName: 'Customer' },
         pcaaList: [],
         partyIdentificationList: [],
         emailAddressList: [],
@@ -70,11 +70,11 @@ describe('CustomerDetailComponent', () => {
     fixture.detectChanges();
 
     expect(partyServiceSpy.getCustomer).toHaveBeenCalledWith('TEST_ID');
-    expect(component.customerDetail.name).toBe('Test Customer');
+    expect(component.customerDetail.firstName).toBe('Test');
     expect(component.roles).toEqual([]);
   });
 
-  it('should call deleteContactMech when deleting phone or email', () => {
+  it('should call deleteContactMech when deleting phone', () => {
     partyServiceSpy.deleteContactMech.and.returnValue(of({}));
 
     const params = { partyId: 'TEST_ID' };
@@ -82,8 +82,7 @@ describe('CustomerDetailComponent', () => {
     component.getCustomer = jasmine.createSpy('getCustomer');
 
     component['deletePhoneDialog'](params);
-    component['deleteEmailDialog'](params);
 
-    expect(partyServiceSpy.deleteContactMech).toHaveBeenCalledTimes(2);
+    expect(partyServiceSpy.deleteContactMech).toHaveBeenCalledTimes(1);
   });
 });

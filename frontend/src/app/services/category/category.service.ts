@@ -13,31 +13,31 @@ export class CategoryService {
     params.set('page', pageIndex.toString());
     params.set('categoryName', keyword);
 
-    const url = `/api/categories?${params.toString()}`;
+    const url = `/wms/api/product-categories?${params.toString()}`;
     return this.apiService.customGet(url); // already returns Observable
   }
 
   createCategory(params: any): Observable<any> {
-    return this.apiService.post('/api/categories', params);
+    return this.apiService.post('/wms/api/product-categories', params);
   }
 
   updateCategory(params: any): Observable<any> {
-    const url = `/api/categories/${encodeURIComponent(params.productCategoryId)}`;
+    const url = `/wms/api/product-categories/${encodeURIComponent(params.productCategoryId)}`;
     return this.apiService.put(url, params);
   }
 
   getCategory(categoryId: string): Observable<any> {
-    const url = `/api/categories/${encodeURIComponent(categoryId)}`;
+    const url = `/wms/api/product-categories/${encodeURIComponent(categoryId)}`;
     return this.apiService.get(url);
   }
 
   addProductToCategory(params: any): Observable<any> {
-    const url = `/api/products/${params.productId}/categories`;
+    const url = `/wms/api/products/${encodeURIComponent(params.productId)}/categories`;
     return this.apiService.post(url, params);
   }
 
   deleteProductCategory(params: any): Observable<any> {
-    const url = `/api/rest/s1/commerce/productCategoryMember`;
-    return this.apiService.patch(url, params);
+    const url = `/wms/api/product-categories/${encodeURIComponent(params.productCategoryId)}/products/${encodeURIComponent(params.productId)}`;
+    return this.apiService.delete(url);
   }
 }

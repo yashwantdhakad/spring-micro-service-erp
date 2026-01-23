@@ -35,16 +35,16 @@ describe('CreateSupplierComponent', () => {
 
   it('should call partyService.createSupplier and navigate on success', fakeAsync(() => {
     const supplierData = {
-      partyId: 'SUPP-1001'
+      partyId: 'SUPP1001'
     };
 
     mockPartyService.createSupplier.and.returnValue(of(supplierData));
 
     component.supplierForm.setValue({
-      organizationName: 'Test Supplier',
+      groupName: 'Test Supplier',
       emailAddress: 'test@supplier.com',
       contactNumber: '1234567890',
-      roleTypeId: 'Supplier'
+      roleTypeId: 'SUPPLIER'
     });
 
     component.createSupplier();
@@ -52,7 +52,7 @@ describe('CreateSupplierComponent', () => {
 
     expect(component.isLoading).toBeFalse();
     expect(mockPartyService.createSupplier).toHaveBeenCalledWith(component.supplierForm.value);
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/suppliers/SUPP-1001']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/suppliers/SUPP1001']);
   }));
 
   it('should handle error if API fails', fakeAsync(() => {
@@ -60,10 +60,10 @@ describe('CreateSupplierComponent', () => {
     mockPartyService.createSupplier.and.returnValue(throwError(() => new Error('API Error')));
 
     component.supplierForm.setValue({
-      organizationName: 'Test Supplier',
+      groupName: 'Test Supplier',
       emailAddress: 'test@supplier.com',
       contactNumber: '1234567890',
-      roleTypeId: 'Supplier'
+      roleTypeId: 'SUPPLIER'
     });
 
     component.createSupplier();
@@ -74,7 +74,7 @@ describe('CreateSupplierComponent', () => {
   }));
 
   it('should not submit if form is invalid', () => {
-    component.supplierForm.patchValue({ organizationName: '', emailAddress: '', contactNumber: '' });
+    component.supplierForm.patchValue({ groupName: '', emailAddress: '', contactNumber: '' });
 
     component.createSupplier();
 

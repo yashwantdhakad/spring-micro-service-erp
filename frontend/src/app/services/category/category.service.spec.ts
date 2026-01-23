@@ -9,7 +9,7 @@ describe('CategoryService', () => {
   let apiServiceSpy: jasmine.SpyObj<ApiService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('ApiService', ['customGet', 'post', 'patch', 'get']);
+    const spy = jasmine.createSpyObj('ApiService', ['customGet', 'post', 'put', 'get', 'delete']);
 
     TestBed.configureTestingModule({
       providers: [
@@ -41,7 +41,7 @@ describe('CategoryService', () => {
       expect(res).toEqual(mockResponse);
     });
 
-    const expectedUrl = `/api/rest/s1/commerce/getCategories?pageIndex=0&categoryName=electronics`;
+    const expectedUrl = `/wms/api/product-categories?page=0&categoryName=electronics`;
     expect(apiServiceSpy.customGet).toHaveBeenCalledWith(expectedUrl);
   });
 
@@ -55,7 +55,7 @@ describe('CategoryService', () => {
       expect(res).toEqual(mockResponse);
     });
 
-    expect(apiServiceSpy.post).toHaveBeenCalledWith('/api/rest/s1/commerce/category', params);
+    expect(apiServiceSpy.post).toHaveBeenCalledWith('/wms/api/product-categories', params);
   });
 
   it('should call getCategory with correct ID', () => {
@@ -66,15 +66,15 @@ describe('CategoryService', () => {
       expect(res).toEqual(mockCategory);
     });
 
-    expect(apiServiceSpy.get).toHaveBeenCalledWith('/api/rest/s1/mantle/products/categories/CAT01');
+    expect(apiServiceSpy.get).toHaveBeenCalledWith('/wms/api/product-categories/CAT01');
   });
 
   it('should update category', () => {
-    const params = { id: 'CAT01' };
+    const params = { productCategoryId: 'CAT01' };
     const res = { ok: true };
-    apiServiceSpy.patch.and.returnValue(of(res));
+    apiServiceSpy.put.and.returnValue(of(res));
     service.updateCategory(params).subscribe(r => expect(r).toEqual(res));
-    expect(apiServiceSpy.patch).toHaveBeenCalledWith('/api/rest/s1/commerce/category', params);
+    expect(apiServiceSpy.put).toHaveBeenCalledWith('/wms/api/product-categories/CAT01', params);
   });
 
   it('should add product to category', () => {
@@ -82,14 +82,14 @@ describe('CategoryService', () => {
     const res = { ok: true };
     apiServiceSpy.post.and.returnValue(of(res));
     service.addProductToCategory(params).subscribe(r => expect(r).toEqual(res));
-    expect(apiServiceSpy.post).toHaveBeenCalledWith('/api/rest/s1/commerce/productCategoryMember', params);
+    expect(apiServiceSpy.post).toHaveBeenCalledWith('/wms/api/products/P1/categories', params);
   });
 
   it('should delete product category', () => {
-    const params = { productId: 'P1' };
+    const params = { productId: 'P1', productCategoryId: 'C1' };
     const res = { ok: true };
-    apiServiceSpy.patch.and.returnValue(of(res));
+    apiServiceSpy.delete.and.returnValue(of(res));
     service.deleteProductCategory(params).subscribe(r => expect(r).toEqual(res));
-    expect(apiServiceSpy.patch).toHaveBeenCalledWith('/api/rest/s1/commerce/productCategoryMember', params);
+    expect(apiServiceSpy.delete).toHaveBeenCalledWith('/wms/api/product-categories/C1/products/P1');
   });
 });
