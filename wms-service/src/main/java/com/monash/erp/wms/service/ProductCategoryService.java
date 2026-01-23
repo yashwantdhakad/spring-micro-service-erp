@@ -1,14 +1,10 @@
 package com.monash.erp.wms.service;
 
-import com.monash.erp.wms.dto.CategoryProductDto;
-import com.monash.erp.wms.dto.ProductCategoryDetailResponse;
-import com.monash.erp.wms.dto.ProductSummary;
-import com.monash.erp.wms.entity.Product;
-import com.monash.erp.wms.entity.ProductCategory;
-import com.monash.erp.wms.entity.ProductCategoryMember;
-import com.monash.erp.wms.repository.ProductCategoryMemberRepository;
-import com.monash.erp.wms.repository.ProductCategoryRepository;
-import com.monash.erp.wms.repository.ProductRepository;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,10 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.monash.erp.wms.dto.CategoryProductDto;
+import com.monash.erp.wms.dto.ProductCategoryDetailResponse;
+import com.monash.erp.wms.dto.ProductSummary;
+import com.monash.erp.wms.entity.ProductCategory;
+import com.monash.erp.wms.entity.ProductCategoryMember;
+import com.monash.erp.wms.repository.ProductCategoryMemberRepository;
+import com.monash.erp.wms.repository.ProductCategoryRepository;
+import com.monash.erp.wms.repository.ProductRepository;
 
 @Service
 public class ProductCategoryService {

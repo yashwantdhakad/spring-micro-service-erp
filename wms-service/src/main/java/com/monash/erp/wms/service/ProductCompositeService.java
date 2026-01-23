@@ -1,5 +1,24 @@
 package com.monash.erp.wms.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.monash.erp.wms.dto.ProductAssocDto;
 import com.monash.erp.wms.dto.ProductAssocRequest;
 import com.monash.erp.wms.dto.ProductAssocTypeDto;
@@ -18,7 +37,6 @@ import com.monash.erp.wms.entity.Content;
 import com.monash.erp.wms.entity.ContentMetaData;
 import com.monash.erp.wms.entity.Product;
 import com.monash.erp.wms.entity.ProductAssoc;
-import com.monash.erp.wms.entity.ProductAssocType;
 import com.monash.erp.wms.entity.ProductCategory;
 import com.monash.erp.wms.entity.ProductCategoryMember;
 import com.monash.erp.wms.entity.ProductContent;
@@ -32,24 +50,6 @@ import com.monash.erp.wms.repository.ProductCategoryRepository;
 import com.monash.erp.wms.repository.ProductContentRepository;
 import com.monash.erp.wms.repository.ProductPriceRepository;
 import com.monash.erp.wms.repository.ProductRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductCompositeService {
@@ -401,6 +401,17 @@ public class ProductCompositeService {
             results.add(dto);
         }
         return results;
+    }
+
+    private ProductAssocDto toAssocDto(ProductAssoc assoc) {
+        Map<String, ProductSummary> productCache = new HashMap<>();
+        ProductAssocDto dto = new ProductAssocDto();
+        dto.setProduct(getProductSummary(assoc.getProductId(), productCache));
+        dto.setToProduct(getProductSummary(assoc.getProductIdTo(), productCache));
+        dto.setType(getAssocType(assoc.getProductAssocTypeId()));
+        dto.setFromDate(assoc.getFromDate());
+        dto.setQuantity(assoc.getQuantity());
+        return dto;
     }
 
     private ProductSummary getProductSummary(String productId, Map<String, ProductSummary> cache) {
