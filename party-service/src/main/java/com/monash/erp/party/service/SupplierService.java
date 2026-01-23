@@ -1,5 +1,21 @@
 package com.monash.erp.party.service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.monash.erp.party.dto.AddressDto;
 import com.monash.erp.party.dto.AddressRequest;
 import com.monash.erp.party.dto.EmailDto;
@@ -20,9 +36,9 @@ import com.monash.erp.party.entity.ContactMech;
 import com.monash.erp.party.entity.Party;
 import com.monash.erp.party.entity.PartyContactMech;
 import com.monash.erp.party.entity.PartyContactMechPurpose;
+import com.monash.erp.party.entity.PartyGroup;
 import com.monash.erp.party.entity.PartyNote;
 import com.monash.erp.party.entity.PartyRole;
-import com.monash.erp.party.entity.PartyGroup;
 import com.monash.erp.party.entity.PostalAddress;
 import com.monash.erp.party.entity.TelecomNumber;
 import com.monash.erp.party.repository.ContactMechRepository;
@@ -34,22 +50,6 @@ import com.monash.erp.party.repository.PartyRepository;
 import com.monash.erp.party.repository.PartyRoleRepository;
 import com.monash.erp.party.repository.PostalAddressRepository;
 import com.monash.erp.party.repository.TelecomNumberRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class SupplierService {
