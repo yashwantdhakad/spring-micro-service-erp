@@ -4,7 +4,7 @@
 <ng-template #content>
   <mat-list>
     <mat-list-item>
-      <a [routerLink]="['/facilities']">{{ 'FACILITY.TITLE' | translate }}</a> / {{ facilityDetail?.facility_id }}
+      <a [routerLink]="['/facilities']">{{ 'FACILITY.TITLE' | translate }}</a> / {{ facilityDetail?.facilityId }}
     </mat-list-item>
   </mat-list>
   <mat-card class="mat-elevation-z10">
@@ -14,10 +14,10 @@
     <mat-card-content>
       <ul class="custom-list">
         <li class="custom-list-item">
-          <strong>{{ 'FACILITY.NAME' | translate }}:</strong> {{ facilityDetail?.facility_name }}
+          <strong>{{ 'FACILITY.NAME' | translate }}:</strong> {{ facilityDetail?.facilityName }}
         </li>
         <li class="custom-list-item">
-          <strong>{{ 'FACILITY.TYPE' | translate }}:</strong> {{ facilityDetail?.facility_type_id }}
+          <strong>{{ 'FACILITY.TYPE' | translate }}:</strong> {{ facilityDetail?.facilityTypeId }}
         </li>
       </ul>
     </mat-card-content>
@@ -34,13 +34,13 @@
     <mat-card-content>
       <div class="location-table-container">
         <table mat-table [dataSource]="dataSource">
-          <ng-container matColumnDef="location_seq_id">
+          <ng-container matColumnDef="locationSeqId">
             <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.LOCATION_ID' | translate }}</th>
-            <td mat-cell class="text-left" *matCellDef="let item">{{ item.location_seq_id }}</td>
+            <td mat-cell class="text-left" *matCellDef="let item">{{ item.locationSeqId }}</td>
           </ng-container>
-          <ng-container matColumnDef="area_id">
+          <ng-container matColumnDef="areaId">
             <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.LOCATION_NAME' | translate }}</th>
-            <td mat-cell class="text-left" *matCellDef="let item">{{ item.area_id }}</td>
+            <td mat-cell class="text-left" *matCellDef="let item">{{ item.areaId }}</td>
           </ng-container>
           <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef></th>

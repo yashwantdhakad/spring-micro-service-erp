@@ -8,5 +8,9 @@ import java.util.List;
 public interface ShipmentReceiptRepository extends JpaRepository<ShipmentReceipt, Long> {
     List<ShipmentReceipt> findByShipmentId(String shipmentId);
 
+    List<ShipmentReceipt> findByInventoryItemId(String inventoryItemId);
+
     void deleteByShipmentId(String shipmentId);
+
+    void deleteByInventoryItemId(String inventoryItemId);
 }

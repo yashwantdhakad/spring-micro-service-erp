@@ -16,10 +16,15 @@ describe('CreateAssetComponent', () => {
   let mockAssetService: jasmine.SpyObj<AssetService>;
   let mockSnackbarService: jasmine.SpyObj<SnackbarService>;
   let mockRouter = { navigate: jasmine.createSpy('navigate') };
+  let mockCommonService: jasmine.SpyObj<CommonService>;
 
   beforeEach(async () => {
     mockAssetService = jasmine.createSpyObj('AssetService', ['receiveAsset']);
     mockSnackbarService = jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']);
+    mockCommonService = jasmine.createSpyObj('CommonService', ['getStatusItems', 'getFacilities', 'getFacilityLocations']);
+    mockCommonService.getStatusItems.and.returnValue(of([]));
+    mockCommonService.getFacilities.and.returnValue(of([]));
+    mockCommonService.getFacilityLocations.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       declarations: [CreateAssetComponent],
@@ -28,7 +33,7 @@ describe('CreateAssetComponent', () => {
         { provide: AssetService, useValue: mockAssetService },
         { provide: SnackbarService, useValue: mockSnackbarService },
         { provide: Router, useValue: mockRouter },
-        CommonService,
+        { provide: CommonService, useValue: mockCommonService },
         PartyService,
         ProductService,
       ],

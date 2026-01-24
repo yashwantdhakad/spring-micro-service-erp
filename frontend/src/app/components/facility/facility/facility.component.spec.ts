@@ -33,7 +33,7 @@ describe('FacilityComponent', () => {
   });
 
   it('should load facilities on init', fakeAsync(() => {
-    const mockFacilities = [{ facility_id: 'F1' }];
+    const mockFacilities = [{ facilityId: 'F1' }];
     facilityService.getFacilities.and.returnValue(of(mockFacilities));
     fixture.detectChanges();
     tick();

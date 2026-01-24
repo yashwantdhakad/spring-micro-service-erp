@@ -45,8 +45,9 @@ describe('AssetDetailComponent', () => {
 
   it('should call getAsset when assetId is present in route', () => {
     const mockResponse = {
-      details: [{ assetDetailId: 'AD123' }],
-      receipts: [{ assetReceiptId: 'AR123' }],
+      asset: { inventoryItemId: 'A001' },
+      details: [{ inventoryItemDetailSeqId: '00001' }],
+      receipts: [{ receiptId: 'R1' }],
     };
     assetService.getAsset.and.returnValue(of(mockResponse));
 
@@ -58,14 +59,15 @@ describe('AssetDetailComponent', () => {
 
   it('should assign data correctly on getAsset success', () => {
     const mockData = {
-      details: [{ assetDetailId: 'D1' }],
-      receipts: [{ assetReceiptId: 'R1' }],
+      asset: { inventoryItemId: 'A001' },
+      details: [{ inventoryItemDetailSeqId: 'D1' }],
+      receipts: [{ receiptId: 'R1' }],
     };
     assetService.getAsset.and.returnValue(of(mockData));
 
     component.getAsset('A001');
 
-    expect(component.assetDetail).toEqual(mockData);
+    expect(component.assetDetail).toEqual(mockData.asset);
     expect(component.details.length).toBe(1);
     expect(component.receipts.length).toBe(1);
   });

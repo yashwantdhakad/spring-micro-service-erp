@@ -99,7 +99,9 @@ export class CreateAssetComponent implements OnInit {
   }
 
   private getSuppliersFromService(value: string): Observable<any[]> {
-    if (!value) return of([]);
+    if (!value) {
+      return of([]);
+    }
     return this.partyService.getSuppliers(0, value).pipe(
       map((res: any) => res?.resultList ?? []),
       catchError(() => {
@@ -110,7 +112,9 @@ export class CreateAssetComponent implements OnInit {
   }
 
   private getProductsFromService(value: string): Observable<any[]> {
-    if (!value) return of([]);
+    if (!value) {
+      return of([]);
+    }
     return this.productService.getProducts(0, value).pipe(
       map((res: any) => res?.documentList ?? []),
       catchError(() => {
@@ -124,8 +128,12 @@ export class CreateAssetComponent implements OnInit {
     this.commonService.getStatusItems('Asset').subscribe({
       next: (data) => {
         this.statusList = Array.isArray(data) ? data : [data];
+        if (this.statusList.length === 0) {
+          this.statusList = this.getDefaultStatuses();
+        }
       },
-      error: (error) => {
+      error: () => {
+        this.statusList = this.getDefaultStatuses();
         this.snackbarService.showError('Error fetching asset status list.');
       }
     });
@@ -136,7 +144,7 @@ export class CreateAssetComponent implements OnInit {
       next: (data) => {
         this.facilities = Array.isArray(data) ? data : [data];
       },
-      error: (error) => {
+      error: () => {
         this.snackbarService.showError('Error fetching facilities.');
       }
     });
@@ -147,7 +155,7 @@ export class CreateAssetComponent implements OnInit {
       next: (data) => {
         this.facilityLocations = Array.isArray(data) ? data : [data];
       },
-      error: (error) => {
+      error: () => {
         this.snackbarService.showError('Error fetching facility locations.');
       }
     });
@@ -162,7 +170,14 @@ export class CreateAssetComponent implements OnInit {
     const values = this.createAssetForm.value;
     this.isLoading = true;
 
-    this.assetService.receiveAsset(values).pipe(
+    const payload = {
+      ...values,
+      receivedDate: this.toLocalDateTime(values.receivedDate),
+      manufacturedDate: this.toLocalDateTime(values.manufacturedDate),
+      expirationDate: this.toLocalDateTime(values.expirationDate),
+    };
+
+    this.assetService.receiveAsset(payload).pipe(
       finalize(() => (this.isLoading = false))
     ).subscribe({
       next: (data: any) => {
@@ -174,9 +189,36 @@ export class CreateAssetComponent implements OnInit {
         this.createAssetForm.reset({ statusId: 'AstAvailable' });
         this.router.navigate([`/assets/${data.assetId}`]);
       },
-      error: (error) => {
+      error: () => {
         this.snackbarService.showError('Error receiving asset.');
       }
     });
+  }
+
+  private toLocalDateTime(value: any): string | null {
+    if (!value) {
+      return null;
+    }
+    if (value instanceof Date && !isNaN(value.getTime())) {
+      const year = value.getFullYear();
+      const month = String(value.getMonth() + 1).padStart(2, '0');
+      const day = String(value.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}T00:00:00`;
+    }
+    if (typeof value === 'string') {
+      if (value.includes('T')) {
+        return value;
+      }
+      return `${value}T00:00:00`;
+    }
+    return null;
+  }
+
+  private getDefaultStatuses(): any[] {
+    return [
+      { statusId: 'AstAvailable', description: 'Available' },
+      { statusId: 'AstInUse', description: 'In Use' },
+      { statusId: 'AstOutOfService', description: 'Out of Service' },
+    ];
   }
 }

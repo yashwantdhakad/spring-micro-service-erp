@@ -36,13 +36,13 @@ export class JobsComponent implements OnInit {
 
   getJobs(page: number, queryString: string): void {
     this.manufacturingService
-      .getJobs(page - 1, queryString)
+      .getJobs(page - 1, this.pagination.rowsPerPage, queryString)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
-          this.items = response.body ?? [];
-          const totalCountHeader = response.headers.get('x-total-count');
-          this.pages = totalCountHeader ? parseInt(totalCountHeader, 10) : 0;
+          const responseMap = response?.responseMap ?? {};
+          this.items = responseMap.resultList ?? [];
+          this.pages = responseMap.total ?? 0;
         },
         error: (error) => {
         },

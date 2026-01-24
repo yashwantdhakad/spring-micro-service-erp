@@ -20,10 +20,10 @@ export class FacilityCreateComponent implements OnInit {
     private router: Router
   ) {
     this.form = this.fb.group({
-      facility_id: ['', Validators.required],
-      facility_name: ['', Validators.required],
-      facility_type_id: [''],
-      owner_party_id: [''],
+      facilityId: ['', Validators.required],
+      facilityName: ['', Validators.required],
+      facilityTypeId: [''],
+      ownerPartyId: [''],
     });
   }
 
@@ -48,4 +48,3 @@ export class FacilityCreateComponent implements OnInit {
       });
   }
 }
-

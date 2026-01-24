@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../common/api.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,19 @@ export class PartyService {
       query: keyword,
     });
     const url = `/party/api/customers?${params.toString()}`;
-    return this.apiService.get(url);
+    return this.apiService.get(url).pipe(
+      map((response: any) => {
+        const list = Array.isArray(response?.resultList) ? response.resultList : [];
+        const mappedList = list.map((item: any) => ({
+          ...item,
+          name: [item?.firstName, item?.lastName].filter(Boolean).join(' ').trim() || item?.partyId,
+        }));
+        return {
+          ...response,
+          resultList: mappedList,
+        };
+      })
+    );
   }
 
   getParties(page: number, pageSize: number, keyword: string): Observable<any> {
@@ -43,7 +56,19 @@ export class PartyService {
       query: keyword,
     });
     const url = `/party/api/suppliers?${params.toString()}`;
-    return this.apiService.get(url);
+    return this.apiService.get(url).pipe(
+      map((response: any) => {
+        const list = Array.isArray(response?.resultList) ? response.resultList : [];
+        const mappedList = list.map((item: any) => ({
+          ...item,
+          name: item?.groupName || item?.partyId,
+        }));
+        return {
+          ...response,
+          resultList: mappedList,
+        };
+      })
+    );
   }
 
   createSupplier(params: any): Observable<any> {

@@ -16,9 +16,9 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
   assetDetail: any;
   details: any[] = [];
   detailColumns: string[] = [
-    'assetDetailId',
+    'inventoryItemDetailSeqId',
     'orderId',
-    'assetReceiptId',
+    'receiptId',
     'productId',
     'quantityOnHandDiff',
     'availableToPromiseDiff',
@@ -27,11 +27,11 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
 
   receipts: any[] = [];
   receiptColumns: string[] = [
-    'assetReceiptId',
+    'receiptId',
     'productId',
     'quantityAccepted',
-    'receivedByUserId',
-    'receivedDate',
+    'receivedByUserLoginId',
+    'datetimeReceived',
   ];
 
   private destroy$ = new Subject<void>();
@@ -64,7 +64,7 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (response) => {
-          this.assetDetail = response;
+          this.assetDetail = response?.asset || response;
           this.details = response?.details || [];
           this.receipts = response?.receipts || [];
         },

@@ -9,32 +9,32 @@ export class FacilityService {
   constructor(private apiService: ApiService) {}
 
   getFacilities(): Observable<any> {
-    const url = '/api/facilities';
+    const url = '/wms/api/facilities';
     return this.apiService.get(url);
   }
 
   getFacility(facilityId: string): Observable<any> {
-    const url = `/api/facilities/${facilityId}`;
+    const url = `/wms/api/facilities/${encodeURIComponent(facilityId)}`;
     return this.apiService.get(url);
   }
 
   createFacility(payload: any): Observable<any> {
-    const url = '/api/facilities';
+    const url = '/wms/api/facilities';
     return this.apiService.post(url, payload);
   }
 
   getFacilityTypes(): Observable<any> {
-    const url = '/api/facilities/types';
+    const url = '/wms/api/facility-types';
     return this.apiService.get(url);
   }
 
   createFacilityLocation(payload: any): Observable<any> {
-    const url = '/api/facility-locations';
+    const url = '/wms/api/facility-locations';
     return this.apiService.post(url, payload);
   }
 
   updateFacilityLocation(id: number, payload: any): Observable<any> {
-    const url = `/api/facility-locations/${id}`;
+    const url = `/wms/api/facility-locations/${id}`;
     return this.apiService.put(url, payload);
   }
 }

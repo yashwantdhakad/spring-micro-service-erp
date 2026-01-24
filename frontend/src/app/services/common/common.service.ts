@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import * as GeoActions from 'src/app/store/geo/geo.actions';
 import * as EnumActions from 'src/app/store/enum/enum.actions';
 import { ApiService } from './api.service';
@@ -73,13 +73,19 @@ export class CommonService {
   }
 
   getFacilities(): Observable<any> {
-    return this.apiService.get('/api/rest/s1/commerce/Facilities').pipe(
+    return this.apiService.get('/wms/api/facilities').pipe(
+      map((facilities: any) =>
+        (Array.isArray(facilities) ? facilities : [facilities]).map((facility: any) => ({
+          ...facility,
+          label: facility.facilityName || facility.facilityId,
+        }))
+      ),
       catchError(this.handleError)
     );
   }
 
   getFacilityLocations(): Observable<any> {
-    return this.apiService.get('/api/rest/s1/commerce/FacilityLocations').pipe(
+    return this.apiService.get('/wms/api/facility-locations').pipe(
       catchError(this.handleError)
     );
   }

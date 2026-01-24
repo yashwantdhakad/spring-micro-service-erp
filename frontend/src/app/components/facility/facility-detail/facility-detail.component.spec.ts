@@ -40,7 +40,7 @@ describe('FacilityDetailComponent', () => {
   });
 
   it('should load facility on init', fakeAsync(() => {
-    facilityService.getFacility.and.returnValue(of({ locations: [] }));
+    facilityService.getFacility.and.returnValue(of({ facility: { facilityId: 'F1' }, locations: [] }));
     fixture.detectChanges();
     routeSubject.next({ facilityId: 'F1' });
     tick();

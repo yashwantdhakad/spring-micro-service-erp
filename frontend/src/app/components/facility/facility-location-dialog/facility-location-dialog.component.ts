@@ -16,10 +16,10 @@ export class FacilityLocationDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.form = this.fb.group({
-      facility_id: [data.facility_id, Validators.required],
-      location_seq_id: [data.location_seq_id || '', Validators.required],
-      location_type_enum_id: [data.location_type_enum_id || '', Validators.required],
-      area_id: [data.area_id || '']
+      facilityId: [data.facilityId, Validators.required],
+      locationSeqId: [data.locationSeqId || '', Validators.required],
+      locationTypeEnumId: [data.locationTypeEnumId || '', Validators.required],
+      areaId: [data.areaId || '']
     });
   }
 

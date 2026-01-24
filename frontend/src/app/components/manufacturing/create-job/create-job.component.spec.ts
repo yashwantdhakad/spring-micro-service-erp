@@ -21,7 +21,7 @@ describe('CreateJobComponent', () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate']);
     productServiceSpy = jasmine.createSpyObj('ProductService', ['getProducts']);
     commonServiceSpy = jasmine.createSpyObj('CommonService', ['getFacilities']);
-    manufacturingServiceSpy = jasmine.createSpyObj('ManufacturingService', ['createJob']);
+    manufacturingServiceSpy = jasmine.createSpyObj('ManufacturingService', ['createJob', 'getJobBom']);
     snackbarSpy = jasmine.createSpyObj('SnackbarService', ['showError', 'showSuccess']);
 
     await TestBed.configureTestingModule({
@@ -40,6 +40,7 @@ describe('CreateJobComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CreateJobComponent);
     component = fixture.componentInstance;
+    manufacturingServiceSpy.getJobBom.and.returnValue(of([]));
     fixture.detectChanges();
   });
 
@@ -58,18 +59,17 @@ describe('CreateJobComponent', () => {
   });
 
   it('should handle error while loading facilities', () => {
-    const consoleSpy = spyOn(console, 'error');
     commonServiceSpy.getFacilities.and.returnValue(throwError(() => new Error('fail')));
 
     component.ngOnInit();
 
-    expect(consoleSpy).toHaveBeenCalled();
     expect(snackbarSpy.showError).toHaveBeenCalledWith('Error fetching facilities');
   });
 
   it('should search products', fakeAsync(() => {
     const mockProducts = { documentList: [{ productId: 'P001' }] };
     productServiceSpy.getProducts.and.returnValue(of(mockProducts));
+    manufacturingServiceSpy.getJobBom.and.returnValue(of([]));
 
     component.produceProductIdControl.setValue('product');
     tick(400); // debounce time
@@ -96,7 +96,9 @@ describe('CreateJobComponent', () => {
 
     component.createJob();
 
-    expect(manufacturingServiceSpy.createJob).toHaveBeenCalled();
+    expect(manufacturingServiceSpy.createJob).toHaveBeenCalledWith(jasmine.objectContaining({
+      consumeItems: [],
+    }));
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/jobs/WE123']);
     expect(snackbarSpy.showSuccess).toHaveBeenCalledWith('Production run created successfully');
   });

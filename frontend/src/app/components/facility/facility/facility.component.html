@@ -11,23 +11,23 @@
         {{ 'FACILITY.CREATE_TITLE' | translate }}
       </button>
       <table mat-table [dataSource]="items">
-        <ng-container matColumnDef="facility_id">
+        <ng-container matColumnDef="facilityId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.ID' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            <a [routerLink]="['/facilities', item.facility_id]">{{ item.facility_id }}</a>
+            <a [routerLink]="['/facilities', item.facilityId]">{{ item.facilityId }}</a>
           </td>
         </ng-container>
-        <ng-container matColumnDef="facility_name">
+        <ng-container matColumnDef="facilityName">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.NAME' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.facility_name }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.facilityName }}</td>
         </ng-container>
-        <ng-container matColumnDef="facility_type_id">
+        <ng-container matColumnDef="facilityTypeId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.TYPE' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.facility_type_id }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.facilityTypeId }}</td>
         </ng-container>
-        <ng-container matColumnDef="owner_party_id">
+        <ng-container matColumnDef="ownerPartyId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.OWNER' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.owner_party_id }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.ownerPartyId }}</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

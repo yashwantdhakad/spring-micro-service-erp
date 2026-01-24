@@ -29,7 +29,9 @@ describe('ProductService', () => {
     const dummyResponse = { documentList: [{ productId: 'P100', productName: 'Test Product' }] };
 
     service.getProducts(0, 'Test').subscribe((data) => {
-      expect(data).toEqual(dummyResponse);
+      expect(data).toEqual({
+        documentList: [{ productId: 'P100', productName: 'Test Product', name: 'Test Product' }],
+      });
       done();
     });
 

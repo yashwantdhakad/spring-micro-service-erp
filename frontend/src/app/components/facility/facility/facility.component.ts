@@ -10,7 +10,7 @@ import { FacilityService } from 'src/app/services/facility/facility.service';
 export class FacilityComponent implements OnInit {
   isLoading = false;
   items: any[] = [];
-  displayedColumns: string[] = ['facility_id', 'facility_name', 'facility_type_id', 'owner_party_id'];
+  displayedColumns: string[] = ['facilityId', 'facilityName', 'facilityTypeId', 'ownerPartyId'];
 
   constructor(private facilityService: FacilityService) {}
 

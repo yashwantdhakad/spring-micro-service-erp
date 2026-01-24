@@ -29,6 +29,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 export class CreateJobComponent implements OnInit {
   isLoading = false;
   facilities: any[] = [];
+  consumeItems: any[] = [];
 
   createJobForm: FormGroup;
   produceProductIdControl = new FormControl('', Validators.required);
@@ -63,6 +64,7 @@ export class CreateJobComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFacilities();
+    this.listenForBom();
   }
 
   private searchProducts(value: string | null): Observable<any[]> {
@@ -91,11 +93,38 @@ export class CreateJobComponent implements OnInit {
     });
   }
 
+  private listenForBom(): void {
+    this.produceProductIdControl.valueChanges.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => {
+        if (!value || typeof value !== 'string') {
+          return of([]);
+        }
+        const trimmed = value.trim();
+        if (!trimmed) {
+          return of([]);
+        }
+        return this.manufacturingService.getJobBom(trimmed).pipe(
+          catchError(() => {
+            this.snackbarService.showError('Error fetching product components');
+            return of([]);
+          })
+        );
+      })
+    ).subscribe((items) => {
+      this.consumeItems = Array.isArray(items) ? items : [];
+    });
+  }
+
   createJob(): void {
     if (this.createJobForm.invalid) return;
 
     this.isLoading = true;
-    const formData = this.createJobForm.value;
+    const formData = {
+      ...this.createJobForm.value,
+      consumeItems: this.consumeItems,
+    };
 
     this.manufacturingService
       .createJob(formData)
@@ -108,6 +137,7 @@ export class CreateJobComponent implements OnInit {
           }
 
           this.createJobForm.reset();
+          this.consumeItems = [];
           this.router.navigate([`/jobs/${response.workEffortId}`]);
           this.snackbarService.showSuccess('Production run created successfully');
         },

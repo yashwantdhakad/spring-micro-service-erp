@@ -37,13 +37,12 @@ describe('FacilityCreateComponent', () => {
   it('should call service on submit', () => {
     facilityService.createFacility.and.returnValue(of({}));
     component.form.setValue({
-      facility_id: 'F1',
-      facility_name: 'Name',
-      facility_type_id: '',
-      owner_party_id: '',
+      facilityId: 'F1',
+      facilityName: 'Name',
+      facilityTypeId: '',
+      ownerPartyId: '',
     });
     component.submit();
     expect(facilityService.createFacility).toHaveBeenCalled();
   });
 });
-

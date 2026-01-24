@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { JobsComponent } from './jobs.component';
 import { ManufacturingService } from 'src/app/services/manufacturing/manufacturing.service';
 import { of, throwError } from 'rxjs';
-import { HttpResponse, HttpHeaders } from '@angular/common/http';
 
 describe('JobsComponent', () => {
   let component: JobsComponent;
@@ -30,9 +29,12 @@ describe('JobsComponent', () => {
   });
 
   it('should initialize column keys and fetch jobs on init', () => {
-    const mockJobs = [{ workEffortId: 'JOB1' }];
-    const headers = new HttpHeaders({ 'x-total-count': '1' });
-    const mockResponse = new HttpResponse({ body: mockJobs, headers });
+    const mockResponse = {
+      responseMap: {
+        resultList: [{ workEffortId: 'JOB1' }],
+        total: 1,
+      },
+    };
 
     manufacturingServiceSpy.getJobs.and.returnValue(of(mockResponse));
 
@@ -45,21 +47,19 @@ describe('JobsComponent', () => {
       'statusId',
       'estimatedStartDate',
     ]);
-    expect(manufacturingServiceSpy.getJobs).toHaveBeenCalledWith(0, '');
+    expect(manufacturingServiceSpy.getJobs).toHaveBeenCalledWith(0, 10, '');
     expect(component.items.length).toBe(1);
     expect(component.pages).toBe(1);
     expect(component.isLoading).toBeFalse();
   });
 
   it('should handle error when getJobs fails', () => {
-    const errorSpy = spyOn(console, 'error');
     manufacturingServiceSpy.getJobs.and.returnValue(throwError(() => new Error('fetch failed')));
 
     fixture.detectChanges(); // triggers ngOnInit
 
-    expect(manufacturingServiceSpy.getJobs).toHaveBeenCalledWith(0, '');
+    expect(manufacturingServiceSpy.getJobs).toHaveBeenCalledWith(0, 10, '');
     expect(component.items.length).toBe(0);
-    expect(errorSpy).toHaveBeenCalledWith('Error fetching jobs:', jasmine.any(Error));
     expect(component.isLoading).toBeFalse();
   });
 });

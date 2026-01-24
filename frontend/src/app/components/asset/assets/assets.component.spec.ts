@@ -3,7 +3,6 @@ import { AssetsComponent } from './assets.component';
 import { AssetService } from 'src/app/services/asset/asset.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of, throwError } from 'rxjs';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 describe('AssetsComponent', () => {
   let component: AssetsComponent;
@@ -31,11 +30,9 @@ describe('AssetsComponent', () => {
   });
 
   it('should call getAssets() on ngOnInit', () => {
-    const mockHeaders = new HttpHeaders({ 'x-total-count': '1' });
-    const mockResponse = new HttpResponse({
-      body: [{ assetId: 'A001' }],
-      headers: mockHeaders,
-    });
+    const mockResponse = {
+      responseMap: { resultList: [{ inventoryItemId: 'A001' }], total: 1 }
+    };
 
     assetService.getAssets.and.returnValue(of(mockResponse));
     fixture.detectChanges(); // triggers ngOnInit
@@ -46,16 +43,14 @@ describe('AssetsComponent', () => {
   });
 
   it('should handle error response gracefully', () => {
-    const consoleSpy = spyOn(console, 'error');
     assetService.getAssets.and.returnValue(throwError(() => new Error('API error')));
 
     component.getAssets(1, '');
-    expect(consoleSpy).toHaveBeenCalledWith('Error fetching assets:', jasmine.any(Error));
+    expect(component.items).toEqual([]);
   });
 
   it('should update loading state properly', (done) => {
-    const mockHeaders = new HttpHeaders({ 'x-total-count': '0' });
-    const mockResponse = new HttpResponse({ body: [], headers: mockHeaders });
+    const mockResponse = { responseMap: { resultList: [], total: 0 } };
 
     assetService.getAssets.and.returnValue(of(mockResponse));
 

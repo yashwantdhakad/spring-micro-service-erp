@@ -1,5 +1,6 @@
 package com.monash.erp.wms.controller;
 
+import com.monash.erp.wms.dto.FacilityDetailResponse;
 import com.monash.erp.wms.entity.Facility;
 import com.monash.erp.wms.service.FacilityService;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,9 @@ public class FacilityController {
         return service.list();
     }
 
-    @GetMapping("/{id}")
-    public Facility get(@PathVariable Long id) {
-        return service.get(id);
+    @GetMapping("/{facilityId}")
+    public FacilityDetailResponse get(@PathVariable String facilityId) {
+        return service.getDetail(facilityId);
     }
 
     @PostMapping
@@ -41,9 +42,12 @@ public class FacilityController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PutMapping("/{id}")
-    public Facility update(@PathVariable Long id, @RequestBody Facility entity) {
-        return service.update(id, entity);
+    @PutMapping("/{facilityId}")
+    public Facility update(@PathVariable String facilityId, @RequestBody Facility entity) {
+        if (entity.getId() == null && facilityId != null && facilityId.chars().allMatch(Character::isDigit)) {
+            entity.setId(Long.parseLong(facilityId));
+        }
+        return service.update(entity.getId(), entity);
     }
 
     @DeleteMapping("/{id}")

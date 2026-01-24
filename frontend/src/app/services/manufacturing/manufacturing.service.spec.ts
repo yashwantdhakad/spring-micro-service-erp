@@ -2,14 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { ManufacturingService } from './manufacturing.service';
 import { ApiService } from '../common/api.service';
 import { of } from 'rxjs';
-import { HttpResponse, HttpHeaders } from '@angular/common/http';
 
 describe('ManufacturingService', () => {
   let service: ManufacturingService;
   let apiServiceSpy: jasmine.SpyObj<ApiService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('ApiService', ['customGet', 'get', 'post']);
+    const spy = jasmine.createSpyObj('ApiService', ['get', 'post']);
 
     TestBed.configureTestingModule({
       providers: [
@@ -27,19 +26,16 @@ describe('ManufacturingService', () => {
   });
 
   it('should call getJobs with correct URL', () => {
-    const mockResponse = new HttpResponse({
-      body: [{ workEffortId: 'WE1001' }],
-      headers: new HttpHeaders({ 'x-total-count': '1' }),
-    });
+    const mockResponse = { responseMap: { resultList: [{ workEffortId: 'WE1001' }], total: 1 } };
 
-    apiServiceSpy.customGet.and.returnValue(of(mockResponse));
+    apiServiceSpy.get.and.returnValue(of(mockResponse));
 
-    service.getJobs(0, 'cutting').subscribe((res) => {
+    service.getJobs(0, 10, 'cutting').subscribe((res) => {
       expect(res).toEqual(mockResponse);
     });
 
-    const expectedUrl = `/api/rest/s1/mantle/workEfforts?pageIndex=0&purposeEnumId=WepProductionRun&jobName=cutting`;
-    expect(apiServiceSpy.customGet).toHaveBeenCalledWith(expectedUrl);
+    const expectedUrl = `/mfg/api/jobs?page=0&size=10&queryString=cutting`;
+    expect(apiServiceSpy.get).toHaveBeenCalledWith(expectedUrl);
   });
 
   it('should call getJob with correct ID', () => {
@@ -50,7 +46,7 @@ describe('ManufacturingService', () => {
       expect(res).toEqual(mockJob);
     });
 
-    expect(apiServiceSpy.get).toHaveBeenCalledWith('/api/rest/s1/mantle/workEfforts/WE123/run/displayInfo');
+    expect(apiServiceSpy.get).toHaveBeenCalledWith('/mfg/api/jobs/WE123');
   });
 
   it('should call createJob with correct payload', () => {
@@ -63,28 +59,17 @@ describe('ManufacturingService', () => {
       expect(res).toEqual(mockResponse);
     });
 
-    expect(apiServiceSpy.post).toHaveBeenCalledWith('/api/rest/s1/mantle/workEfforts/runs', params);
+    expect(apiServiceSpy.post).toHaveBeenCalledWith('/mfg/api/jobs', params);
   });
 
-  it('should call getFacilities and return list', () => {
-    const mockFacilities = [{ facilityId: 'FAC01' }];
-    apiServiceSpy.get.and.returnValue(of(mockFacilities));
+  it('should call getJobBom with correct product', () => {
+    const mockBom = [{ productId: 'P1', estimatedQuantity: '1' }];
+    apiServiceSpy.get.and.returnValue(of(mockBom));
 
-    service.getFacilities().subscribe((res) => {
-      expect(res).toEqual(mockFacilities);
+    service.getJobBom('P1').subscribe((res) => {
+      expect(res).toEqual(mockBom);
     });
 
-    expect(apiServiceSpy.get).toHaveBeenCalledWith('/api/rest/s1/commerce/Facilities');
-  });
-
-  it('should call getFacilityLocations and return list', () => {
-    const mockLocations = [{ locationSeqId: 'LOC01' }];
-    apiServiceSpy.get.and.returnValue(of(mockLocations));
-
-    service.getFacilityLocations().subscribe((res) => {
-      expect(res).toEqual(mockLocations);
-    });
-
-    expect(apiServiceSpy.get).toHaveBeenCalledWith('/api/rest/s1/commerce/FacilityLocations');
+    expect(apiServiceSpy.get).toHaveBeenCalledWith('/mfg/api/jobs/bom?productId=P1');
   });
 });

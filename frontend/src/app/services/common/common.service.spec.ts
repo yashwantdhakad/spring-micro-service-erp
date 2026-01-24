@@ -122,7 +122,7 @@ describe('CommonService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/Facilities');
+    const req = httpMock.expectOne('/wms/api/facilities');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -134,7 +134,7 @@ describe('CommonService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/FacilityLocations');
+    const req = httpMock.expectOne('/wms/api/facility-locations');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

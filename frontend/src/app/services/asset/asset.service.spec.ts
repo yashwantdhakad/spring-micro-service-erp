@@ -2,14 +2,13 @@ import { TestBed } from '@angular/core/testing';
 import { AssetService } from './asset.service';
 import { ApiService } from '../common/api.service';
 import { of } from 'rxjs';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
 
 describe('AssetService', () => {
   let service: AssetService;
   let apiServiceSpy: jasmine.SpyObj<ApiService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('ApiService', ['customGet', 'get', 'post']);
+    const spy = jasmine.createSpyObj('ApiService', ['get', 'post']);
 
     TestBed.configureTestingModule({
       providers: [
@@ -27,17 +26,15 @@ describe('AssetService', () => {
   });
 
   it('should call getAssets with correct URL', () => {
-    const headers = new HttpHeaders({ 'x-total-count': '42' });
-    const mockResponse = new HttpResponse({ body: [], headers });
-
-    apiServiceSpy.customGet.and.returnValue(of(mockResponse));
+    const mockResponse = { responseMap: { resultList: [], total: 0 } };
+    apiServiceSpy.get.and.returnValue(of(mockResponse));
 
     service.getAssets(0, 'test').subscribe(res => {
       expect(res).toEqual(mockResponse);
     });
 
-    const expectedUrl = `/api/rest/s1/mantle/assets?pageIndex=0&query=test`;
-    expect(apiServiceSpy.customGet).toHaveBeenCalledWith(expectedUrl);
+    const expectedUrl = `/wms/api/assets?page=0&size=10&queryString=test`;
+    expect(apiServiceSpy.get).toHaveBeenCalledWith(expectedUrl);
   });
 
   it('should call getAsset with correct assetId', () => {
@@ -48,7 +45,7 @@ describe('AssetService', () => {
       expect(res).toEqual(mockAsset);
     });
 
-    expect(apiServiceSpy.get).toHaveBeenCalledWith('/api/rest/s1/mantle/assets/A1001');
+    expect(apiServiceSpy.get).toHaveBeenCalledWith('/wms/api/assets/A1001');
   });
 
   it('should call receiveAsset with correct params', () => {
@@ -60,6 +57,6 @@ describe('AssetService', () => {
       expect(res).toEqual(response);
     });
 
-    expect(apiServiceSpy.post).toHaveBeenCalledWith('/api/rest/s1/mantle/assets/receive', params);
+    expect(apiServiceSpy.post).toHaveBeenCalledWith('/wms/api/assets/receive', params);
   });
 });

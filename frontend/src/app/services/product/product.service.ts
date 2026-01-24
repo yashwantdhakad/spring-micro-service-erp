@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../common/api.service';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,19 @@ export class ProductService {
     };
     const queryString = new URLSearchParams(params).toString();
     const url = `/wms/api/products?${queryString}`;
-    return this.apiService.get(url);
+    return this.apiService.get(url).pipe(
+      map((response: any) => {
+        const list = Array.isArray(response?.documentList) ? response.documentList : [];
+        const mappedList = list.map((item: any) => ({
+          ...item,
+          name: item?.productName || item?.name || item?.productId,
+        }));
+        return {
+          ...response,
+          documentList: mappedList,
+        };
+      })
+    );
   }
 
   createProduct(params: any): Observable<any> {

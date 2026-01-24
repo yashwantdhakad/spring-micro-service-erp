@@ -19,7 +19,7 @@ export class FacilityDetailComponent implements OnInit {
   locations: any[] = [];
   dataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  locationColumns: string[] = ['location_seq_id', 'area_id', 'actions'];
+  locationColumns: string[] = ['locationSeqId', 'areaId', 'actions'];
 
   constructor(
     private facilityService: FacilityService,
@@ -42,7 +42,7 @@ export class FacilityDetailComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
-          this.facilityDetail = response;
+          this.facilityDetail = response?.facility || response;
           this.locations = response?.locations || [];
           this.dataSource.data = this.locations;
           if (this.paginator) {
@@ -60,7 +60,7 @@ export class FacilityDetailComponent implements OnInit {
   openLocationDialog(location?: any): void {
     const dialogRef = this.dialog.open(FacilityLocationDialogComponent, {
       width: '400px',
-      data: { facility_id: this.facilityId, ...(location || {}) },
+      data: { facilityId: this.facilityId, ...(location || {}) },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

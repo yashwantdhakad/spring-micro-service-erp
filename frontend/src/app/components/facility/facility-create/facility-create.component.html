@@ -5,29 +5,29 @@
   <mat-card-content>
     <form [formGroup]="form" (ngSubmit)="submit()" fxLayout="row wrap" fxLayoutAlign="start">
       <mat-form-field fxFlex="100%">
-        <input matInput placeholder="{{ 'FACILITY.ID' | translate }}" formControlName="facility_id" />
+        <input matInput placeholder="{{ 'FACILITY.ID' | translate }}" formControlName="facilityId" />
       </mat-form-field>
 
       <mat-form-field fxFlex="100%">
-        <input matInput placeholder="{{ 'FACILITY.NAME' | translate }}" formControlName="facility_name" />
+        <input matInput placeholder="{{ 'FACILITY.NAME' | translate }}" formControlName="facilityName" />
       </mat-form-field>
 
       <mat-form-field fxFlex="100%">
         <mat-select
           placeholder="{{ 'FACILITY.TYPE' | translate }}"
-          formControlName="facility_type_id"
+          formControlName="facilityTypeId"
         >
           <mat-option
             *ngFor="let type of facilityTypes"
-            [value]="type.facility_type_id"
+            [value]="type.facilityTypeId"
           >
-            {{ type.description || type.facility_type_id }}
+            {{ type.description || type.facilityTypeId }}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field fxFlex="100%">
-        <input matInput placeholder="{{ 'FACILITY.OWNER' | translate }}" formControlName="owner_party_id" />
+        <input matInput placeholder="{{ 'FACILITY.OWNER' | translate }}" formControlName="ownerPartyId" />
       </mat-form-field>
 
       <div fxFlex="100%" fxLayoutAlign="start">
@@ -39,4 +39,3 @@
     </form>
   </mat-card-content>
 </mat-card>
-

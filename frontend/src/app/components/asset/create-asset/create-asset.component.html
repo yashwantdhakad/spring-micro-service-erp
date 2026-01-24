@@ -121,13 +121,13 @@
         <mat-label>{{ 'ASSET.EXPIRATION_DATE' | translate }}</mat-label>
         <input
           matInput
-          [matDatepicker]="expectedEndOfLife"
+          [matDatepicker]="expirationDate"
           [placeholder]="'ASSET.EXPIRATION_DATE' | translate"
-          formControlName="expectedEndOfLife"
-          (click)="expectedEndOfLife.open()"
+          formControlName="expirationDate"
+          (click)="expirationDate.open()"
         />
-        <mat-datepicker-toggle matSuffix [for]="expectedEndOfLife"></mat-datepicker-toggle>
-        <mat-datepicker #expectedEndOfLife></mat-datepicker>
+        <mat-datepicker-toggle matSuffix [for]="expirationDate"></mat-datepicker-toggle>
+        <mat-datepicker #expirationDate></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field fxFlex="70%">

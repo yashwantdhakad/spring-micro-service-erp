@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AssetService } from 'src/app/services/asset/asset.service';
-import { HttpResponse } from '@angular/common/http';
 import { Subject, finalize, takeUntil } from 'rxjs';
 
 @Component({
@@ -19,19 +18,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
   pages: number = 0;
 
   displayedColumns = [
-    { key: 'assetId', header: 'ASSET.ASSET_ID' },
-    { key: 'assetName', header: 'ASSET.ASSET_NAME' },
+    { key: 'inventoryItemId', header: 'ASSET.ASSET_ID' },
+    { key: 'productId', header: 'ASSET.PRODUCT_ID' },
     { key: 'facilityId', header: 'ASSET.FACILITY_ID' },
-    { key: 'assetTypeEnumId', header: 'ASSET.ASSET_TYPE_ENUM_ID' },
-    { key: 'classEnumId', header: 'ASSET.CLASS_ENUM_ID' },
+    { key: 'inventoryItemTypeId', header: 'ASSET.ASSET_TYPE_ENUM_ID' },
     { key: 'statusId', header: 'ASSET.STATUS_ID' },
     { key: 'quantityOnHandTotal', header: 'ASSET.QUANTITY_ON_HAND_TOTAL' },
     { key: 'availableToPromiseTotal', header: 'ASSET.AVAILABLE_TO_PROMISE_TOTAL' },
-    { key: 'acquireCost', header: 'ASSET.ACQUIRE_COST' },
+    { key: 'unitCost', header: 'ASSET.ACQUIRE_COST' },
     { key: 'serialNumber', header: 'ASSET.SERIAL_NUMBER' },
-    { key: 'receivedDate', header: 'ASSET.RECEIVED_DATE' },
-    { key: 'acquiredDate', header: 'ASSET.ACQUIRED_DATE' },
-    { key: 'expectedEndOfLife', header: 'ASSET.EXPECTED_END_OF_LIFE' },
+    { key: 'datetimeReceived', header: 'ASSET.RECEIVED_DATE' },
+    { key: 'datetimeManufactured', header: 'ASSET.ACQUIRED_DATE' },
+    { key: 'expireDate', header: 'ASSET.EXPECTED_END_OF_LIFE' },
   ];
   displayedColumnKeys = this.displayedColumns.map(col => col.key);
 
@@ -51,10 +49,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
         finalize(() => (this.isLoading = false))
       )
       .subscribe({
-        next: (response: HttpResponse<any>) => {
-          this.items = response.body || [];
-          const totalCount = response.headers.get('x-total-count');
-          this.pages = totalCount ? parseInt(totalCount, 10) : 0;
+        next: (response: any) => {
+          const responseMap = response?.responseMap;
+          this.items = responseMap?.resultList || [];
+          this.pages = responseMap?.total ?? this.items.length;
         },
         error: (error) => {
         }

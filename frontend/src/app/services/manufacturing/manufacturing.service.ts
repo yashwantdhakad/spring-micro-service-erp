@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../common/api.service';
 import { Observable } from 'rxjs';
-import { HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -9,32 +8,31 @@ import { HttpResponse } from '@angular/common/http';
 export class ManufacturingService {
   constructor(private apiService: ApiService) {}
 
-  getJobs(pageIndex: number, keyword: string): Observable<HttpResponse<any>> {
+  getJobs(pageIndex: number, pageSize: number, keyword: string): Observable<any> {
     const params = new URLSearchParams();
-    params.append('pageIndex', pageIndex.toString());
-    params.append('purposeEnumId', 'WepProductionRun');
+    params.append('page', pageIndex.toString());
+    params.append('size', pageSize.toString());
     if (keyword) {
-      params.append('jobName', keyword);
+      params.append('queryString', keyword);
     }
 
-    const url = `/api/rest/s1/mantle/workEfforts?${params.toString()}`;
-    return this.apiService.customGet(url); // Expected to return Observable<HttpResponse<any>>
-  }
-
-  getJob(workEffortId: string): Observable<any> {
-    const url = `/api/rest/s1/mantle/workEfforts/${workEffortId}/run/displayInfo`;
+    const url = `/mfg/api/jobs?${params.toString()}`;
     return this.apiService.get(url);
   }
 
-  getFacilities(): Observable<any> {
-    return this.apiService.get('/api/rest/s1/commerce/Facilities');
-  }
-
-  getFacilityLocations(): Observable<any> {
-    return this.apiService.get('/api/rest/s1/commerce/FacilityLocations');
+  getJob(workEffortId: string): Observable<any> {
+    const url = `/mfg/api/jobs/${encodeURIComponent(workEffortId)}`;
+    return this.apiService.get(url);
   }
 
   createJob(params: any): Observable<any> {
-    return this.apiService.post('/api/rest/s1/mantle/workEfforts/runs', params);
+    return this.apiService.post('/mfg/api/jobs', params);
+  }
+
+  getJobBom(productId: string): Observable<any> {
+    const params = new URLSearchParams({
+      productId: productId,
+    });
+    return this.apiService.get(`/mfg/api/jobs/bom?${params.toString()}`);
   }
 }

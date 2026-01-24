@@ -54,13 +54,12 @@ describe('JobDetailComponent', () => {
   });
 
   it('should handle error when fetchJobDetail fails', () => {
-    const errorSpy = spyOn(console, 'error');
     manufacturingServiceSpy.getJob.and.returnValue(throwError(() => new Error('fetch failed')));
 
     fixture.detectChanges(); // triggers ngOnInit
 
     expect(manufacturingServiceSpy.getJob).toHaveBeenCalledWith('JOB123');
-    expect(errorSpy).toHaveBeenCalledWith('Error fetching job detail:', jasmine.any(Error));
+    expect(component.jobDetail).toEqual({});
   });
 
   it('getCurrentDateTime should return formatted string', () => {
