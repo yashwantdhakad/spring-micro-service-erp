@@ -74,9 +74,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
   fetchData(): void {
     this.orderService.getProductStores().subscribe({
       next: (res) => {
-        this.productStores = Array.isArray(res?.resultList)
-          ? res.resultList
-          : [res.resultList];
+        this.productStores = Array.isArray(res) ? res : [res];
       },
     });
 

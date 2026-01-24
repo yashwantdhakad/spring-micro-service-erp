@@ -50,10 +50,12 @@ describe('ShipmentComponent', () => {
 
   it('should fetch shipments on initialization', async () => {
     const mockResponse = {
-      body: [
-        { shipmentId: '1', statusDescription: 'Pending', shipmentTypeEnumId: 'TypeA', destinationFacilityName: 'FacilityA', orderId: '123', shipBeforeDate: new Date() },
-      ],
-      headers: { get: () => '1' },
+      responseMap: {
+        resultList: [
+          { shipmentId: '1', statusId: 'Pending', shipmentTypeId: 'TypeA', destinationFacilityId: 'FacilityA', primaryOrderId: '123', estimatedShipDate: new Date() },
+        ],
+        total: 1,
+      },
     };
 
     shipmentService.getShipments.and.returnValue(of(mockResponse));
@@ -75,10 +77,12 @@ describe('ShipmentComponent', () => {
 
   it('should search shipments based on query string', async () => {
     const mockResponse = {
-      body: [
-        { shipmentId: '1', statusDescription: 'Pending', shipmentTypeEnumId: 'TypeA', destinationFacilityName: 'FacilityA', orderId: '123', shipBeforeDate: new Date() },
-      ],
-      headers: { get: () => '1' },
+      responseMap: {
+        resultList: [
+          { shipmentId: '1', statusId: 'Pending', shipmentTypeId: 'TypeA', destinationFacilityId: 'FacilityA', primaryOrderId: '123', estimatedShipDate: new Date() },
+        ],
+        total: 1,
+      },
     };
 
     shipmentService.getShipments.and.returnValue(of(mockResponse));

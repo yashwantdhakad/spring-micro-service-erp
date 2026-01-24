@@ -15,7 +15,7 @@ describe('CreateSOComponent', () => {
 
   beforeEach(async () => {
     mockOrderService = {
-      getProductStores: jasmine.createSpy().and.returnValue(of({ resultList: [] })),
+      getProductStores: jasmine.createSpy().and.returnValue(of([])),
       getFacilities: jasmine.createSpy().and.returnValue(of([])),
       getVendorParties: jasmine.createSpy().and.returnValue(of([{ value: 'VENDOR1' }])),
       createOrder: jasmine.createSpy().and.returnValue(of({ orderId: 'ORDER123' }))

@@ -21,10 +21,11 @@ export class NoteComponent {
     private orderService: OrderService,
     private snackbarService: SnackbarService
   ) {
-    const { orderId, noteDate, noteText } = this.data?.noteData ?? {};
+    const { orderId, noteDate, noteText, id } = this.data?.noteData ?? {};
 
     this.addUpdateNoteForm = this.fb.group({
       orderId: [orderId],
+      noteId: [id],
       noteDate: [noteDate],
       noteText: [noteText, Validators.required],
     });
@@ -38,7 +39,7 @@ export class NoteComponent {
     this.isLoading = true;
     const values = this.addUpdateNoteForm.value;
 
-    const noteObservable = values.noteDate
+    const noteObservable = values.noteId
       ? this.orderService.updateOrderNote(values)
       : this.orderService.createOrderNote(values);
 

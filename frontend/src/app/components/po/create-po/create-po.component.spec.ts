@@ -16,7 +16,7 @@ describe('CreatePOComponent', () => {
   let mockRouter: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    mockOrderService = jasmine.createSpyObj('OrderService', ['getFacilities', 'getVendorParties', 'createOrder']);
+    mockOrderService = jasmine.createSpyObj('OrderService', ['getFacilities', 'getCustomerParties', 'createOrder']);
     mockPartyService = jasmine.createSpyObj('PartyService', ['getSuppliers']);
     mockSnackbarService = jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']);
     mockRouter = jasmine.createSpyObj('Router', ['navigate']);
@@ -48,12 +48,12 @@ describe('CreatePOComponent', () => {
     const mockParties = [{ partyId: 'PARTY1' }];
 
     mockOrderService.getFacilities.and.returnValue(of(mockFacilities));
-    mockOrderService.getVendorParties.and.returnValue(of(mockParties));
+    mockOrderService.getCustomerParties.and.returnValue(of(mockParties));
 
     component.ngOnInit();
 
     expect(mockOrderService.getFacilities).toHaveBeenCalled();
-    expect(mockOrderService.getVendorParties).toHaveBeenCalled();
+    expect(mockOrderService.getCustomerParties).toHaveBeenCalled();
   });
 
   it('should not call createOrder if form is invalid', () => {

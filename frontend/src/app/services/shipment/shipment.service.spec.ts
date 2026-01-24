@@ -1,16 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ShipmentService } from './shipment.service';
 import { ApiService } from '../common/api.service';
 import { of } from 'rxjs';
-import { HttpResponse } from '@angular/common/http';
 
 describe('ShipmentService', () => {
   let service: ShipmentService;
   let apiServiceSpy: jasmine.SpyObj<ApiService>;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('ApiService', ['customGet', 'get']);
+    const spy = jasmine.createSpyObj('ApiService', ['get', 'post']);
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -29,23 +28,16 @@ describe('ShipmentService', () => {
   });
 
   it('should fetch shipments', (done) => {
-    const mockResponse = new HttpResponse({
-      body: { shipments: ['SHP001'], total: 1 },
-      status: 200,
-      statusText: 'OK',
-      url: '/api/rest/s1/mantle/shipments?pageIndex=0&queryString=test'
-    });
-
-
     const pageIndex = 0;
     const keyword = 'test';
-    const expectedUrl = `/api/rest/s1/mantle/shipments?pageIndex=${pageIndex}&queryString=${keyword}`;
+    const expectedUrl = `/wms/api/shipments?page=${pageIndex}&size=10&queryString=${keyword}`;
+    const mockResponse = { responseMap: { resultList: ['SHP001'], total: 1 } };
 
-    apiServiceSpy.customGet.and.returnValue(of(mockResponse));
+    apiServiceSpy.get.and.returnValue(of(mockResponse));
 
     service.getShipments(pageIndex, keyword).subscribe((res) => {
       expect(res).toEqual(mockResponse);
-      expect(apiServiceSpy.customGet).toHaveBeenCalledWith(expectedUrl);
+      expect(apiServiceSpy.get).toHaveBeenCalledWith(expectedUrl);
       done();
     });
   });
@@ -53,13 +45,27 @@ describe('ShipmentService', () => {
   it('should fetch single shipment', (done) => {
     const shipmentId = 'SHP001';
     const mockResponse = { shipmentId: 'SHP001', status: 'DELIVERED' };
-    const expectedUrl = `/api/rest/s1/mantle/shipments/${shipmentId}`;
+    const expectedUrl = `/wms/api/shipments/${shipmentId}`;
 
     apiServiceSpy.get.and.returnValue(of(mockResponse));
 
     service.getShipment(shipmentId).subscribe((res) => {
       expect(res).toEqual(mockResponse);
       expect(apiServiceSpy.get).toHaveBeenCalledWith(expectedUrl);
+      done();
+    });
+  });
+
+  it('should create a shipment', (done) => {
+    const payload = { shipment: { shipmentTypeId: 'SALES_SHIPMENT', statusId: 'SHIPMENT_INPUT' } };
+    const mockResponse = { shipment: { shipmentId: 'SHP001' } };
+    const expectedUrl = '/wms/api/shipments';
+
+    apiServiceSpy.post.and.returnValue(of(mockResponse));
+
+    service.createShipment(payload).subscribe((res) => {
+      expect(res).toEqual(mockResponse);
+      expect(apiServiceSpy.post).toHaveBeenCalledWith(expectedUrl, payload);
       done();
     });
   });

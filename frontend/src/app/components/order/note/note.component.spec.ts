@@ -62,7 +62,7 @@ describe('NoteComponent', () => {
   });
 
   it('should call createOrderNote and close dialog on success', fakeAsync(() => {
-    component.addUpdateNoteForm.get('noteDate')?.setValue(null); // creation mode
+    component.addUpdateNoteForm.get('noteId')?.setValue(null); // creation mode
     const formValue = component.addUpdateNoteForm.value;
 
     orderService.createOrderNote.and.returnValue(of({ noteId: 'NOTE001' }));
@@ -77,7 +77,7 @@ describe('NoteComponent', () => {
   }));
 
   it('should call updateOrderNote on update mode', fakeAsync(() => {
-    component.addUpdateNoteForm.get('noteDate')?.setValue('2023-07-27'); // update mode
+    component.addUpdateNoteForm.get('noteId')?.setValue('NOTE002'); // update mode
     const formValue = component.addUpdateNoteForm.value;
 
     orderService.updateOrderNote.and.returnValue(of({ noteId: 'NOTE002' }));

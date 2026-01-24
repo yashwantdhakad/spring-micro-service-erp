@@ -51,9 +51,9 @@ export class ShipmentDetailComponent implements OnInit {
       .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (response) => {
-          this.shipmentDetail = response;
-          this.items = response.items || [];
-          this.shipmentRouteSegments = response.routeSegments || [];
+          this.shipmentDetail = response?.shipment || response;
+          this.items = response?.items || [];
+          this.shipmentRouteSegments = response?.routeSegments || [];
         },
         error: (error) => {
         }

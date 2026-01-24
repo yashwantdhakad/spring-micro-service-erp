@@ -30,25 +30,25 @@
             <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>
           </td>
         </ng-container>
-        <ng-container matColumnDef="status">
+        <ng-container matColumnDef="statusId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusDescription }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusId }}</td>
         </ng-container>
-        <ng-container matColumnDef="type">
+        <ng-container matColumnDef="shipmentTypeId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentTypeEnumId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentTypeId }}</td>
         </ng-container>
-        <ng-container matColumnDef="facility">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Facility</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.destinationFacilityName }}</td>
+        <ng-container matColumnDef="destinationFacilityId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Destination Facility</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.destinationFacilityId }}</td>
         </ng-container>
-        <ng-container matColumnDef="orderId">
+        <ng-container matColumnDef="primaryOrderId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Order</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.orderId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.primaryOrderId }}</td>
         </ng-container>
-        <ng-container matColumnDef="shipBeforeDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Ship Before Date</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipBeforeDate | date : 'MMMM d, y' }}</td>
+        <ng-container matColumnDef="estimatedShipDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Estimated Ship Date</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.estimatedShipDate | date : 'MMMM d, y' }}</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

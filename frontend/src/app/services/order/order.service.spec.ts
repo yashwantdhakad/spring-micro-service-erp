@@ -34,7 +34,7 @@ describe('OrderService', () => {
     });
 
     const req = httpMock.expectOne((request) =>
-      request.url.includes('/api/rest/s1/commerce/orders')
+      request.url.includes('/oms/api/orders')
     );
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
@@ -48,7 +48,7 @@ describe('OrderService', () => {
       expect(data).toEqual(mockOrder);
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/mantle/orders');
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders'));
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(params);
     req.flush(mockOrder);
@@ -61,7 +61,7 @@ describe('OrderService', () => {
       expect(data).toEqual(mockCustomer);
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/getCustomerDetail?partyId=P100');
+    const req = httpMock.expectOne((request) => request.url.includes('/party/api/customers/P100'));
     expect(req.request.method).toBe('GET');
     req.flush(mockCustomer);
   });
@@ -74,7 +74,7 @@ describe('OrderService', () => {
     });
 
     const req = httpMock.expectOne((r) =>
-      r.url.includes('/api/rest/s1/commerce/getPurchaseOrders') &&
+      r.url.includes('/oms/api/orders') &&
       r.method === 'GET'
     );
     req.flush(mockPOs);
@@ -82,15 +82,14 @@ describe('OrderService', () => {
 
   it('should delete order note', () => {
     const mockRes = { success: true };
-    const params = { noteId: 'N123' };
+    const params = { orderId: 'O1', noteId: 'N123' };
 
     service.deleteOrderNote(params).subscribe(data => {
       expect(data).toEqual(mockRes);
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/createOrderNote');
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(params);
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders/O1/notes/N123'));
+    expect(req.request.method).toBe('DELETE');
     req.flush(mockRes);
   });
 
@@ -101,7 +100,7 @@ describe('OrderService', () => {
       expect(data).toEqual(response);
     });
 
-    const req = httpMock.expectOne(r => r.url.includes('/api/rest/s1/commerce/orders'));
+    const req = httpMock.expectOne(r => r.url.includes('/oms/api/orders'));
     expect(req.request.method).toBe('GET');
     req.flush(response);
   });
@@ -110,7 +109,7 @@ describe('OrderService', () => {
     const params = { name: 'c' };
     const res = { partyId: '1' };
     service.createCustomer(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/customers');
+    const req = httpMock.expectOne((request) => request.url.includes('/party/api/customers'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
@@ -118,7 +117,7 @@ describe('OrderService', () => {
   it('should get order detail', () => {
     const res = { orderId: 'O1' };
     service.getOrder('O1').subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/orders/O1');
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders/O1'));
     expect(req.request.method).toBe('GET');
     req.flush(res);
   });
@@ -126,7 +125,7 @@ describe('OrderService', () => {
   it('should get PO display info', () => {
     const res = { info: true };
     service.getPODisplayInfo('PO1').subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/orders/PO1/displayInfo');
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders/PO1/display-info'));
     expect(req.request.method).toBe('GET');
     req.flush(res);
   });
@@ -135,7 +134,7 @@ describe('OrderService', () => {
     const params = { orderId: 'O1', qty: 1 };
     const res = { ok: true };
     service.addItem(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/mantle/orders/O1/items');
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders/O1/items'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
@@ -143,58 +142,65 @@ describe('OrderService', () => {
   it('should fetch product stores', () => {
     const res = [{ id: '1' }];
     service.getProductStores().subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/ProductStore');
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/product-stores'));
     expect(req.request.method).toBe('GET');
     req.flush(res);
   });
 
   it('should fetch vendor parties', () => {
-    const res = [{ id: 'v1' }];
-    service.getVendorParties('PS1').subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/VendorParty?productStoreId=PS1');
+    const res = [{ partyId: 'v1', groupName: 'Vendor 1' }];
+    service.getVendorParties('PS1').subscribe(d => expect(d).toEqual([
+      { value: 'v1', label: 'Vendor 1' }
+    ]));
+    const req = httpMock.expectOne((request) => request.url.includes('/party/api/suppliers'));
     expect(req.request.method).toBe('GET');
-    req.flush(res);
+    req.flush({ resultList: res });
   });
 
   it('should fetch facilities', () => {
-    const res = [{ id: 'f1' }];
-    service.getFacilities().subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/Facilities');
+    const res = [{ facilityId: 'f1', facilityName: 'Main' }];
+    service.getFacilities().subscribe(d => expect(d).toEqual([
+      { facilityId: 'f1', facilityName: 'Main', label: 'Main' }
+    ]));
+    const req = httpMock.expectOne((request) => request.url.includes('/wms/api/facilities'));
     expect(req.request.method).toBe('GET');
     req.flush(res);
   });
 
   it('should create order note', () => {
-    const params = { note: 'n' };
+    const params = { orderId: 'O1', note: 'n' };
     const res = { ok: true };
     service.createOrderNote(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/OrderNote');
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders/O1/notes'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
 
   it('should update order note', () => {
-    const params = { note: 'n' };
+    const params = { orderId: 'O1', noteId: 'N1', note: 'n' };
     const res = { ok: true };
     service.updateOrderNote(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/OrderNote');
-    expect(req.request.method).toBe('PATCH');
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders/O1/notes/N1'));
+    expect(req.request.method).toBe('PUT');
     req.flush(res);
   });
 
   it('should fetch customer parties', () => {
-    const res = [{ id: 'c1' }];
-    service.getCustomerParties().subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/VendorParty');
+    const res = [{ partyId: 'c1', firstName: 'Customer', lastName: 'One' }];
+    service.getCustomerParties().subscribe(d => expect(d).toEqual([
+      { value: 'c1', label: 'Customer One' }
+    ]));
+    const req = httpMock.expectOne((request) => request.url.includes('/party/api/customers'));
     expect(req.request.method).toBe('GET');
-    req.flush(res);
+    req.flush({ resultList: res });
   });
 
   it('should create order content', () => {
     const form = new FormData();
+    form.append('orderId', 'O1');
     const res = { ok: true };
     service.createOrderContent(form).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne('/api/rest/s1/commerce/OrderContent');
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/orders/O1/contents'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });

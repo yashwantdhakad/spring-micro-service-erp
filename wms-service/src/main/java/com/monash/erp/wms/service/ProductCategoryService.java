@@ -81,9 +81,37 @@ public class ProductCategoryService {
 
     public ProductCategory update(String productCategoryId, ProductCategory entity) {
         ProductCategory existing = getByCategoryId(productCategoryId);
-        entity.setId(existing.getId());
-        entity.setProductCategoryId(existing.getProductCategoryId());
-        return repository.save(entity);
+        if (entity.getProductCategoryTypeId() != null) {
+            existing.setProductCategoryTypeId(entity.getProductCategoryTypeId());
+        }
+        if (entity.getPrimaryParentCategoryId() != null) {
+            existing.setPrimaryParentCategoryId(entity.getPrimaryParentCategoryId());
+        }
+        if (entity.getCategoryName() != null) {
+            existing.setCategoryName(entity.getCategoryName());
+        }
+        if (entity.getDescription() != null) {
+            existing.setDescription(entity.getDescription());
+        }
+        if (entity.getLongDescription() != null) {
+            existing.setLongDescription(entity.getLongDescription());
+        }
+        if (entity.getCategoryImageUrl() != null) {
+            existing.setCategoryImageUrl(entity.getCategoryImageUrl());
+        }
+        if (entity.getLinkOneImageUrl() != null) {
+            existing.setLinkOneImageUrl(entity.getLinkOneImageUrl());
+        }
+        if (entity.getLinkTwoImageUrl() != null) {
+            existing.setLinkTwoImageUrl(entity.getLinkTwoImageUrl());
+        }
+        if (entity.getDetailScreen() != null) {
+            existing.setDetailScreen(entity.getDetailScreen());
+        }
+        if (entity.getShowInSelect() != null) {
+            existing.setShowInSelect(entity.getShowInSelect());
+        }
+        return repository.save(existing);
     }
 
     public void delete(String productCategoryId) {

@@ -18,11 +18,11 @@ export class ShipmentComponent implements OnInit {
   pages: number = 0;
   displayedColumns: string[] = [
     'shipmentId',
-    'status',
-    'type',
-    'facility',
-    'orderId',
-    'shipBeforeDate',
+    'statusId',
+    'shipmentTypeId',
+    'destinationFacilityId',
+    'primaryOrderId',
+    'estimatedShipDate',
   ];
 
   constructor(private shipmentService: ShipmentService) {}
@@ -38,9 +38,9 @@ export class ShipmentComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
-          // Adjust according to actual API shape
-          this.items = response.body || response || [];
-          this.pages = response.total || 0;
+          const responseMap = response?.responseMap;
+          this.items = responseMap?.resultList || [];
+          this.pages = responseMap?.total ?? this.items.length;
         },
         error: (err) => {
         },

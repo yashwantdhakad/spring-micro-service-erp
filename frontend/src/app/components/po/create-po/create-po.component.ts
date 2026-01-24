@@ -117,7 +117,7 @@ export class CreatePOComponent implements OnInit {
   }
 
   getCustomerParties(): void {
-    this.orderService.getVendorParties('').subscribe({
+    this.orderService.getCustomerParties().subscribe({
       next: (data) => {
         this.customerParties = Array.isArray(data) ? data : [data];
       },
