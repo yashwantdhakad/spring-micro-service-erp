@@ -17,6 +17,8 @@ public class UserLogin {
 
     private String userLoginId;
 
+    private String partyId;
+
     private String currentPassword;
 
     private String passwordHint;
@@ -59,6 +61,14 @@ public class UserLogin {
 
     public void setUserLoginId(String userLoginId) {
         this.userLoginId = userLoginId;
+    }
+
+    public String getPartyId() {
+        return partyId;
+    }
+
+    public void setPartyId(String partyId) {
+        this.partyId = partyId;
     }
 
     public String getCurrentPassword() {
