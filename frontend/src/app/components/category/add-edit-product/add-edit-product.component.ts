@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Observable, firstValueFrom, from } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service'; // Import SnackbarService
 import { ProductService } from 'src/app/services/product/product.service';
@@ -12,10 +12,11 @@ import { ProductService } from 'src/app/services/product/product.service';
   templateUrl: './add-edit-product.component.html',
   styleUrls: ['./add-edit-product.component.css'],
 })
-export class AddEditProductComponent implements OnInit {
+export class AddEditProductComponent implements OnInit, OnDestroy {
   addProductToCategoryForm: FormGroup;
   isLoading: boolean = false;
   filteredProducts$: Observable<any[]> = new Observable<any[]>();
+  private destroy$ = new Subject<void>();
 
   constructor(
     public dialogRef: MatDialogRef<AddEditProductComponent>,
@@ -45,32 +46,41 @@ export class AddEditProductComponent implements OnInit {
   }
 
   private getProductsFromService(value: string): Observable<any[]> {
-    return from(this.productService.getProducts(0, value)).pipe(
-      map((response: any) => response.documentList)
+    return this.productService.getProducts(0, value).pipe(
+      map((response: any) => response.documentList || [])
     );
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
-  async addProductToCategory(): Promise<void> {
+  addProductToCategory(): void {
     if (!this.addProductToCategoryForm.valid) {
       this.addProductToCategoryForm.markAllAsTouched();
       return;
     }
 
     this.isLoading = true;
-    try {
-      const values = this.addProductToCategoryForm.value;
+    const values = this.addProductToCategoryForm.value;
 
-      await firstValueFrom(this.categoryService.addProductToCategory(values));
-
-      this.addProductToCategoryForm.reset();
-      this.dialogRef.close({ productCategoryId: values.productCategoryId, refresh: true });
-      this.snackbarService.showSuccess('Product added to category successfully');
-    } catch (e) {
-      this.snackbarService.showError('Error adding product to category');
-    } finally {
-      this.isLoading = false;
-    }
+    this.categoryService
+      .addProductToCategory(values)
+      .pipe(
+        finalize(() => (this.isLoading = false)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: () => {
+          this.addProductToCategoryForm.reset();
+          this.dialogRef.close({ productCategoryId: values.productCategoryId, refresh: true });
+          this.snackbarService.showSuccess('Product added to category successfully');
+        },
+        error: () => {
+          this.snackbarService.showError('Error adding product to category');
+        },
+      });
   }
 
 }

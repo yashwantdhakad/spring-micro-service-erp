@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product/product.service';
 // In your product list component
@@ -14,13 +14,15 @@ import { AddEditProductCategoryComponent } from '../add-edit-product-category/ad
 import { AddEditProductPriceComponent } from '../add-edit-product-price/add-edit-product-price.component';
 import { ProductAssocComponent } from '../product-assoc/product-assoc.component';
 import { ProductContentComponent } from '../product-content/product-content.component';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   productId: string | undefined;
 
@@ -76,8 +78,10 @@ export class ProductDetailComponent implements OnInit {
     private commonService: CommonService
   ) { }
 
+  private destroy$ = new Subject<void>();
+
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.productId = params['productId'];
       if (this.productId) {
         this.isLoading = true;
@@ -88,8 +92,16 @@ export class ProductDetailComponent implements OnInit {
     this.fetchProductPricePurposeTypes();
 
   }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
   fetchProductPriceTypes(): void {
-    this.commonService.getLookupResults({}, 'productpricetype').subscribe({
+    this.commonService
+      .getLookupResults({}, 'productpricetype')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
       next: (data: any) => {
         this.priceTypeEnums = Array.isArray(data) ? data : [data];
       },
@@ -102,7 +114,10 @@ export class ProductDetailComponent implements OnInit {
   }
 
   fetchProductPricePurposeTypes(): void {
-    this.commonService.getLookupResults({}, 'productpricepurpose').subscribe({
+    this.commonService
+      .getLookupResults({}, 'productpricepurpose')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
       next: (data: any) => {
         this.pricePurposeEnums = Array.isArray(data) ? data : [data];
       },
@@ -117,7 +132,9 @@ export class ProductDetailComponent implements OnInit {
   getProduct(productId: string): void {
     this.isLoading = true;
 
-    this.productService.getProduct(productId).subscribe({
+    this.productService.getProduct(productId).pipe(
+      finalize(() => (this.isLoading = false))
+    ).subscribe({
       next: (response) => {
         const { product, prices, categories, contents, assocs, toAssocs } = response;
 
@@ -128,11 +145,8 @@ export class ProductDetailComponent implements OnInit {
         this.assocs = assocs;
         this.toAssocs = toAssocs;
       },
-      error: (error) => {
+      error: () => {
       },
-      complete: () => {
-        this.isLoading = false;
-      }
     });
   }
 

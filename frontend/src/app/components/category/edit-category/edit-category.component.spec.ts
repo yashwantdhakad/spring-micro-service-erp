@@ -75,7 +75,7 @@ describe('EditCategoryComponent', () => {
   }));
 
   it('should show error if updateCategory fails', fakeAsync(() => {
-    categoryServiceSpy.updateCategory.and.returnValue(of('API error'));
+    categoryServiceSpy.updateCategory.and.returnValue(throwError(() => new Error('API error')));
 
     component.updateCategory();
     tick(); // simulate async

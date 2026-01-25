@@ -29,23 +29,25 @@ export class ProductEditComponent {
   }
 
   updateProduct(): void {
-    if (this.updateProductForm.valid) {
-      this.isLoading = true;
-      const values = this.updateProductForm.value;
-
-      this.productService
-        .updateProduct(values)
-        .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe({
-          next: () => {
-            this.snackbarService.showSuccess('Product updated successfully.');
-            this.updateProductForm.reset();
-            this.dialogRef.close(values);
-          },
-          error: () => {
-            this.snackbarService.showError('Error in updating product.');
-          },
-        });
+    if (this.updateProductForm.invalid) {
+      this.updateProductForm.markAllAsTouched();
+      return;
     }
+    this.isLoading = true;
+    const values = this.updateProductForm.value;
+
+    this.productService
+      .updateProduct(values)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: () => {
+          this.snackbarService.showSuccess('Product updated successfully.');
+          this.updateProductForm.reset();
+          this.dialogRef.close(values);
+        },
+        error: () => {
+          this.snackbarService.showError('Error in updating product.');
+        },
+      });
   }
 }

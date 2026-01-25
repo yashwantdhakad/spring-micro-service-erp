@@ -69,7 +69,6 @@ describe('EditSupplierComponent', () => {
   }));
 
   it('should handle error if API call fails', fakeAsync(() => {
-    const consoleSpy = spyOn(console, 'error');
     translateSpy.instant.and.callFake((key) => key);
     partyServiceSpy.updateSupplier.and.returnValue(throwError(() => new Error('API Error')));
 
@@ -81,7 +80,6 @@ describe('EditSupplierComponent', () => {
     component.updateSupplier();
     tick();
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error in update supplier:', jasmine.any(Error));
     expect(snackbarServiceSpy.showError).toHaveBeenCalledWith('SUPPLIER.ERROR_UPDATE');
     expect(component.isLoading).toBeFalse();
   }));

@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Observable, from } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, switchMap, finalize } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { ProductService } from 'src/app/services/product/product.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
@@ -12,11 +12,12 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
   templateUrl: './add-edit-product-category.component.html',
   styleUrls: ['./add-edit-product-category.component.css'],
 })
-export class AddEditProductCategoryComponent implements OnInit {
+export class AddEditProductCategoryComponent implements OnInit, OnDestroy {
   addProductCategoryForm: FormGroup;
 
   isLoading: boolean = false;
   cachedCategories: any[] = [];
+  private destroy$ = new Subject<void>();
 
   filteredCategories$: Observable<any[]> = new Observable<any[]>();
   get productCategoryIdControl(): FormControl {
@@ -50,7 +51,7 @@ export class AddEditProductCategoryComponent implements OnInit {
   }
 
   private getCategoriesFromService(value: string): Observable<any[]> {
-    return from(this.categoryService.getCategories(0, value)).pipe(
+    return this.categoryService.getCategories(0, value).pipe(
       map((response: any) => {
         this.cachedCategories = response.body;
         return response.body;
@@ -58,6 +59,10 @@ export class AddEditProductCategoryComponent implements OnInit {
     );
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   addProductCategory(): void {
     if (this.addProductCategoryForm.valid) {
@@ -66,7 +71,10 @@ export class AddEditProductCategoryComponent implements OnInit {
 
       this.productService
         .addProductCategory(values)
-        .pipe(finalize(() => (this.isLoading = false)))
+        .pipe(
+          finalize(() => (this.isLoading = false)),
+          takeUntil(this.destroy$)
+        )
         .subscribe({
           next: () => {
             this.snackbarService.showSuccess('Product category added successfully.');

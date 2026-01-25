@@ -18,7 +18,7 @@ describe('CreateProductComponent', () => {
   let translateService: jasmine.SpyObj<TranslateService>;
 
   beforeEach(async () => {
-    const commonSpy = jasmine.createSpyObj('CommonService', ['getEnumTypes']);
+    const commonSpy = jasmine.createSpyObj('CommonService', ['getLookupResults']);
     const productSpy = jasmine.createSpyObj('ProductService', ['createProduct']);
     const snackbarSpy = jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']);
     const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
@@ -56,21 +56,21 @@ describe('CreateProductComponent', () => {
   it('should initialize product form with default values', () => {
     const form = component.productForm;
     expect(form).toBeTruthy();
-    expect(form.get('productTypeEnumId')?.value).toBe('PtAsset');
+    expect(form.get('productTypeId')?.value).toBe('FINISHED_GOOD');
   });
 
   it('should fetch product types on init', () => {
-    commonService.getEnumTypes.and.returnValue(of([{ enumId: 'PtAsset' }]));
+    commonService.getLookupResults.and.returnValue(of([{ productTypeId: 'FINISHED_GOOD' }]));
 
     component.fetchProductTypes();
 
-    expect(commonService.getEnumTypes).toHaveBeenCalledWith('ProductType');
+    expect(commonService.getLookupResults).toHaveBeenCalledWith({}, 'product_type');
     expect(component.productTypes.length).toBe(1);
   });
 
   it('should show error if fetch product types fails', () => {
     translateService.instant.and.returnValue('Error fetching types');
-    commonService.getEnumTypes.and.returnValue(throwError(() => new Error()));
+    commonService.getLookupResults.and.returnValue(throwError(() => new Error()));
 
     component.fetchProductTypes();
 
@@ -86,13 +86,14 @@ describe('CreateProductComponent', () => {
   it('should submit product and navigate on success', fakeAsync(() => {
     const formData = {
       productName: 'Product 1',
-      productTypeEnumId: 'PtAsset',
+      productTypeId: 'FINISHED_GOOD',
+      price: 10,
       description: '',
     };
 
     translateService.instant.and.returnValue('Created');
     component.productForm.setValue(formData);
-    productService.createProduct.and.returnValue(of({ productId: 'P001' }));
+    productService.createProduct.and.returnValue(of({ product: { productId: 'P001' } }));
 
     component.createProduct();
     tick();
@@ -107,7 +108,8 @@ describe('CreateProductComponent', () => {
     translateService.instant.and.returnValue('Failed');
     component.productForm.setValue({
       productName: 'Test',
-      productTypeEnumId: 'PtAsset',
+      productTypeId: 'FINISHED_GOOD',
+      price: 10,
       description: '',
     });
 
@@ -123,7 +125,8 @@ describe('CreateProductComponent', () => {
     translateService.instant.and.returnValue('Create error');
     component.productForm.setValue({
       productName: 'Test',
-      productTypeEnumId: 'PtAsset',
+      productTypeId: 'FINISHED_GOOD',
+      price: 10,
       description: '',
     });
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from 'src/app/services/category/category.service';
@@ -6,13 +6,15 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { AddEditProductComponent } from '../add-edit-product/add-edit-product.component';
 import { EditCategoryComponent } from '../edit-category/edit-category.component';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-category-detail',
   templateUrl: './category-detail.component.html',
   styleUrls: ['./category-detail.component.css'],
 })
-export class CategoryDetailComponent implements OnInit {
+export class CategoryDetailComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   productCategoryId: string | undefined;
   categoryDetail: any;
@@ -36,8 +38,10 @@ export class CategoryDetailComponent implements OnInit {
     private snackbarService: SnackbarService // Inject SnackbarService
   ) { }
 
+  private destroy$ = new Subject<void>();
+
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.productCategoryId = params['productCategoryId'];
       if (this.productCategoryId) {
         this.isLoading = true;
@@ -46,19 +50,23 @@ export class CategoryDetailComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getCategory(productCategoryId: string): void {
     this.isLoading = true;
 
-    this.categoryService.getCategory(productCategoryId).subscribe({
+    this.categoryService.getCategory(productCategoryId).pipe(
+      finalize(() => (this.isLoading = false))
+    ).subscribe({
       next: (response) => {
         this.categoryDetail = response.category;
         this.products = response.products;
       },
       error: (error) => {
         this.snackbarService.showError('Error fetching products');
-      },
-      complete: () => {
-        this.isLoading = false;
       }
     });
   }

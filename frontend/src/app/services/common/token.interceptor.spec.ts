@@ -47,7 +47,7 @@ describe('TokenInterceptor', () => {
     http.get('/data').subscribe();
 
     const req = httpMock.expectOne('/data');
-    expect(req.request.headers.get('SessionToken')).toBe('ABC');
+    expect(req.request.headers.get('Authorization')).toBe('Bearer ABC');
   });
 
   it('should handle unauthorized error', () => {

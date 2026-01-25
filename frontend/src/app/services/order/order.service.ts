@@ -54,6 +54,16 @@ export class OrderService {
     return this.apiService.post('/oms/api/orders', params);
   }
 
+  addOrderAddress(orderId: string, payload: any): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/addresses`;
+    return this.apiService.post(url, payload);
+  }
+
+  updateOrderAddress(orderId: string, contactMechId: string, payload: any): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/addresses/${encodeURIComponent(contactMechId)}`;
+    return this.apiService.put(url, payload);
+  }
+
   addItem(params: any): Observable<any> {
     const url = `/oms/api/orders/${encodeURIComponent(params.orderId)}/items`;
     return this.apiService.post(url, params);

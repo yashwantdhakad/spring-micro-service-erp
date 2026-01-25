@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import { CreateSOComponent } from './create-so.component';
 import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('CreateSOComponent', () => {
   let component: CreateSOComponent;
@@ -12,6 +13,7 @@ describe('CreateSOComponent', () => {
   let mockOrderService: any;
   let mockPartyService: any;
   let mockRouter: any;
+  let mockDialog: any;
 
   beforeEach(async () => {
     mockOrderService = {
@@ -22,11 +24,15 @@ describe('CreateSOComponent', () => {
     };
 
     mockPartyService = {
-      getCustomers: jasmine.createSpy().and.returnValue(of({ resultList: [] }))
+      getCustomers: jasmine.createSpy().and.returnValue(of({ resultList: [] })),
+      getPartyPostalContactMechByPurpose: jasmine.createSpy().and.returnValue(of([])),
     };
 
     mockRouter = {
       navigate: jasmine.createSpy()
+    };
+    mockDialog = {
+      open: jasmine.createSpy().and.returnValue({ afterClosed: () => of(true) }),
     };
 
     await TestBed.configureTestingModule({
@@ -35,7 +41,8 @@ describe('CreateSOComponent', () => {
       providers: [
         { provide: OrderService, useValue: mockOrderService },
         { provide: PartyService, useValue: mockPartyService },
-        { provide: Router, useValue: mockRouter }
+        { provide: Router, useValue: mockRouter },
+        { provide: MatDialog, useValue: mockDialog }
       ]
     }).compileComponents();
 
@@ -59,7 +66,11 @@ describe('CreateSOComponent', () => {
       productStoreId: 'STORE1',
       vendorPartyId: 'VENDOR1',
       facilityId: 'FAC1',
-      customerPartyId: 'CUST1'
+      customerPartyId: 'CUST1',
+      shippingAddress: {
+        contactMechId: 'ADDR1',
+        address1: '123 Main',
+      }
     });
 
     component.createOrder();

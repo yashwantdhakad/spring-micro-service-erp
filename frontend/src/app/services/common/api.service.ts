@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { TokenStorageService } from './token-storage.service';
 import { ApiConfigService } from './api-config.service';
 
@@ -15,20 +15,20 @@ export class ApiService {
     private apiConfig: ApiConfigService
   ) {}
 
-  private getHeaders(contentType: string = 'application/json'): HttpHeaders {
-  const token = this.tokenStorage.getToken(); // returns the JWT/bearer token
-  let headers = new HttpHeaders();
+  private getHeaders(contentType?: string): HttpHeaders {
+    const token = this.tokenStorage.getToken();
+    let headers = new HttpHeaders();
 
-  if (token) {
-    headers = headers.set('Authorization', `Bearer ${token}`);
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+
+    if (contentType) {
+      headers = headers.set('Content-Type', contentType);
+    }
+
+    return headers;
   }
-
-  if (contentType) {
-    headers = headers.set('Content-Type', contentType);
-  }
-
-  return headers;
-}
 
 
   private handleError(error: HttpErrorResponse): Observable<never> {
@@ -46,7 +46,6 @@ export class ApiService {
   get<T>(endpoint: string): Observable<T> {
     const url = this.apiConfig.buildUrl(endpoint);
     return this.http.get<T>(url, { headers: this.getHeaders() }).pipe(
-      map(response => response as T),
       catchError(this.handleError)
     );
   }
@@ -60,16 +59,14 @@ export class ApiService {
 
   post<T>(endpoint: string, body: any): Observable<T> {
     const url = this.apiConfig.buildUrl(endpoint);
-    return this.http.post<T>(url, body, { headers: this.getHeaders() }).pipe(
-      map(response => response as T),
+    return this.http.post<T>(url, body, { headers: this.getHeaders('application/json') }).pipe(
       catchError(this.handleError)
     );
   }
 
   put<T>(endpoint: string, body: any): Observable<T> {
     const url = this.apiConfig.buildUrl(endpoint);
-    return this.http.put<T>(url, body, { headers: this.getHeaders() }).pipe(
-      map(response => response as T),
+    return this.http.put<T>(url, body, { headers: this.getHeaders('application/json') }).pipe(
       catchError(this.handleError)
     );
   }
@@ -77,23 +74,20 @@ export class ApiService {
   delete<T>(endpoint: string): Observable<T> {
     const url = this.apiConfig.buildUrl(endpoint);
     return this.http.delete<T>(url, { headers: this.getHeaders() }).pipe(
-      map(response => response as T),
       catchError(this.handleError)
     );
   }
 
   patch<T>(endpoint: string, data: any): Observable<T> {
     const url = this.apiConfig.buildUrl(endpoint);
-    return this.http.patch<T>(url, data, { headers: this.getHeaders() }).pipe(
-      map(response => response as T),
+    return this.http.patch<T>(url, data, { headers: this.getHeaders('application/json') }).pipe(
       catchError(this.handleError)
     );
   }
 
   postFormData<T>(endpoint: string, formData: FormData): Observable<T> {
     const url = this.apiConfig.buildUrl(endpoint);
-    return this.http.post<T>(url, formData, { headers: this.getHeaders('') }).pipe(
-      map(response => response as T),
+    return this.http.post<T>(url, formData, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

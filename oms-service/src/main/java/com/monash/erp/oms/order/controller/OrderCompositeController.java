@@ -1,5 +1,7 @@
 package com.monash.erp.oms.order.controller;
 
+import com.monash.erp.oms.order.dto.OrderAddressRequest;
+import com.monash.erp.oms.order.dto.OrderContactMechDto;
 import com.monash.erp.oms.order.dto.OrderContentDto;
 import com.monash.erp.oms.order.dto.OrderCreateRequest;
 import com.monash.erp.oms.order.dto.OrderDetailResponse;
@@ -58,6 +60,23 @@ public class OrderCompositeController {
     @PostMapping
     public ResponseEntity<OrderHeaderDto> createOrder(@RequestBody OrderCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.createOrder(request));
+    }
+
+    @PostMapping("/{orderId}/addresses")
+    public ResponseEntity<OrderContactMechDto> addOrderAddress(
+            @PathVariable String orderId,
+            @RequestBody OrderAddressRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.addOrderAddress(orderId, request));
+    }
+
+    @PutMapping("/{orderId}/addresses/{contactMechId}")
+    public OrderContactMechDto updateOrderAddress(
+            @PathVariable String orderId,
+            @PathVariable String contactMechId,
+            @RequestBody OrderAddressRequest request
+    ) {
+        return orderCompositeService.updateOrderAddress(orderId, contactMechId, request);
     }
 
     @PostMapping("/{orderId}/items")

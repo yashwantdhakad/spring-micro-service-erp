@@ -32,27 +32,29 @@ export class EditSupplierComponent {
   }
 
   updateSupplier(): void {
-    if (this.updateSupplierForm.valid) {
-      this.isLoading = true;
-      const values = this.updateSupplierForm.value;
-
-      this.partyService
-        .updateSupplier(values)
-        .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe({
-          next: () => {
-            this.updateSupplierForm.reset();
-            this.dialogRef.close(values);
-            this.snackbarService.showSuccess(
-              this.translate.instant('SUPPLIER.UPDATED_SUCCESS')
-            );
-          },
-          error: () => {
-            this.snackbarService.showError(
-              this.translate.instant('SUPPLIER.ERROR_UPDATE')
-            );
-          },
-        });
+    if (this.updateSupplierForm.invalid) {
+      this.updateSupplierForm.markAllAsTouched();
+      return;
     }
+    this.isLoading = true;
+    const values = this.updateSupplierForm.value;
+
+    this.partyService
+      .updateSupplier(values)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: () => {
+          this.updateSupplierForm.reset();
+          this.dialogRef.close(values);
+          this.snackbarService.showSuccess(
+            this.translate.instant('SUPPLIER.UPDATED_SUCCESS')
+          );
+        },
+        error: () => {
+          this.snackbarService.showError(
+            this.translate.instant('SUPPLIER.ERROR_UPDATE')
+          );
+        },
+      });
   }
 }

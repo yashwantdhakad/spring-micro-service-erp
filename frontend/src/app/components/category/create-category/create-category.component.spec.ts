@@ -17,7 +17,7 @@ describe('CreateCategoryComponent', () => {
 
   beforeEach(async () => {
     const categorySpy = jasmine.createSpyObj('CategoryService', ['createCategory']);
-    const commonSpy = jasmine.createSpyObj('CommonService', ['getEnumTypes']);
+    const commonSpy = jasmine.createSpyObj('CommonService', ['getLookupResults']);
     const snackbarSpy = jasmine.createSpyObj('SnackbarService', ['showError', 'showSuccess']);
     const routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
@@ -46,16 +46,16 @@ describe('CreateCategoryComponent', () => {
 
   it('should fetch category types on init', () => {
     const enumTypes = [{ id: 'CATALOG_CATEGORY', name: 'Catalog' }];
-    commonServiceSpy.getEnumTypes.and.returnValue(of(enumTypes));
+    commonServiceSpy.getLookupResults.and.returnValue(of(enumTypes));
 
     component.ngOnInit();
 
-    expect(commonServiceSpy.getEnumTypes).toHaveBeenCalledWith('ProductCategoryType');
+    expect(commonServiceSpy.getLookupResults).toHaveBeenCalledWith({}, 'product_category_type');
     expect(component.categoryTypes).toEqual(enumTypes);
   });
 
   it('should handle error when fetching category types', () => {
-    commonServiceSpy.getEnumTypes.and.returnValue(throwError(() => new Error('API Error')));
+    commonServiceSpy.getLookupResults.and.returnValue(throwError(() => new Error('API Error')));
 
     component.ngOnInit();
 

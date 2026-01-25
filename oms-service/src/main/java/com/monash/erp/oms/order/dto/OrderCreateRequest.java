@@ -11,6 +11,8 @@ public class OrderCreateRequest {
     private String customerPartyId;
     private LocalDateTime shipBeforeDate;
     private LocalDateTime estimatedDeliveryDate;
+    private OrderAddressRequest shippingAddress;
+    private OrderAddressRequest billingAddress;
 
     public String getOrderTypeEnumId() {
         return orderTypeEnumId;
@@ -66,5 +68,21 @@ public class OrderCreateRequest {
 
     public void setEstimatedDeliveryDate(LocalDateTime estimatedDeliveryDate) {
         this.estimatedDeliveryDate = estimatedDeliveryDate;
+    }
+
+    public OrderAddressRequest getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(OrderAddressRequest shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public OrderAddressRequest getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(OrderAddressRequest billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }

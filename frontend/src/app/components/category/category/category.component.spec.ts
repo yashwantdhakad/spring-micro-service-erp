@@ -3,6 +3,7 @@ import { of, throwError } from 'rxjs';
 import { CategoryComponent } from './category.component';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('CategoryComponent', () => {
   let component: CategoryComponent;
@@ -15,6 +16,7 @@ describe('CategoryComponent', () => {
     const snackbarSpy = jasmine.createSpyObj('SnackbarService', ['showError']);
 
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
       declarations: [CategoryComponent],
       providers: [
         { provide: CategoryService, useValue: categorySpy },
@@ -45,7 +47,7 @@ describe('CategoryComponent', () => {
 
     categoryService.getCategories.and.returnValue(of(mockResponse));
     fixture.detectChanges();
-    tick(); // For subscription
+    tick(300); // For debounce
 
     expect(component.items.length).toBe(1);
     expect(component.pages).toBe(100);
@@ -54,17 +56,15 @@ describe('CategoryComponent', () => {
 
   it('should handle error in getCategories', fakeAsync(() => {
     categoryService.getCategories.and.returnValue(throwError(() => new Error('API failure')));
-    spyOn(console, 'error');
 
     fixture.detectChanges();
-    tick();
+    tick(300);
 
-    expect(console.error).toHaveBeenCalledWith('Error fetching categories:', jasmine.any(Error));
     expect(snackbarService.showError).toHaveBeenCalledWith('Error fetching categories');
     expect(component.isLoading).toBeFalse();
   }));
 
-  it('should update queryString and call getCategories on onSearch', fakeAsync(() => {
+  it('should update queryString and call getCategories on search', fakeAsync(() => {
     const response = {
       body: [{ productCategoryId: 'CAT1' }],
       headers: { get: () => '1' },
@@ -72,8 +72,7 @@ describe('CategoryComponent', () => {
 
     categoryService.getCategories.and.returnValue(of(response));
     fixture.detectChanges();
-    component.queryString = 'Test';
-    component.onSearch();
+    component.searchControl.setValue('Test');
     tick(300);
 
     expect(categoryService.getCategories).toHaveBeenCalledWith(0, 'Test');

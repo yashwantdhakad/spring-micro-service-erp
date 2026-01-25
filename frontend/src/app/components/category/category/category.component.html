@@ -15,8 +15,7 @@
         <mat-label>{{ 'CATEGORY.SEARCH' | translate }}</mat-label>
         <input
           matInput
-          [(ngModel)]="queryString"
-          (input)="getCategories(1, queryString)"
+          [formControl]="searchControl"
           autofocus
         />
         <mat-icon matSuffix>search</mat-icon>
@@ -39,7 +38,7 @@
       <mat-paginator
         [pageSize]="pagination.rowsPerPage"
         [length]="pages"
-        (page)="getCategories($event.pageIndex + 1, '')"
+        (page)="onPageChange($event.pageIndex)"
       ></mat-paginator>
     </mat-card-content>
   </mat-card>

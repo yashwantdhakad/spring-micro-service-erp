@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
@@ -17,14 +17,15 @@ import { EditSupplierComponent } from '../edit-supplier/edit-supplier.component'
 import { AddEditCreditCardComponent } from '../../party/add-edit-credit-card/add-edit-credit-card.component';
 import { AddEditBankAccountComponent } from '../../party/add-edit-bank-account/add-edit-bank-account.component';
 import { PartyNoteComponent } from '../../party/party-note/party-note.component';
-import { finalize } from 'rxjs';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-supplier-detail',
   templateUrl: './supplier-detail.component.html',
   styleUrls: ['./supplier-detail.component.css'],
 })
-export class SupplierDetailComponent {
+export class SupplierDetailComponent implements OnDestroy {
   roles: any;
   partyIdentificationList: any;
   postalAddressList: any;
@@ -72,8 +73,10 @@ export class SupplierDetailComponent {
     private store: Store<GeoState>
   ) {}
 
+  private destroy$ = new Subject<void>();
+
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.partyId = params['partyId'];
       if (this.partyId) {
         this.isLoading = true;
@@ -82,7 +85,9 @@ export class SupplierDetailComponent {
     });
 
     this.store.dispatch(loadGeos());
-    this.store.pipe(select(selectGeoList)).subscribe((geoListObject: any) => {
+    this.store
+      .pipe(select(selectGeoList), takeUntil(this.destroy$))
+      .subscribe((geoListObject: any) => {
       if (geoListObject) {
         this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
         this.states = filterGeoRecords(geoListObject, 'STATE');
@@ -90,7 +95,13 @@ export class SupplierDetailComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getSupplier(partyId: string): void {
+    this.isLoading = true;
     this.partyService.getSupplier(partyId).pipe(
       finalize(() => (this.isLoading = false))
     ).subscribe({
@@ -117,7 +128,7 @@ export class SupplierDetailComponent {
         this.payments = payments;
         this.partyNotes = partyNoteList;
       },
-      error: (err) => {
+      error: () => {
       },
     });
   }

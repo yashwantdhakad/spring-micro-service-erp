@@ -1,20 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common/common.service';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
-import { finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-category',
   templateUrl: './create-category.component.html',
   styleUrls: ['./create-category.component.css'],
 })
-export class CreateCategoryComponent implements OnInit {
+export class CreateCategoryComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   categoryForm: FormGroup;
   categoryTypes: any[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -34,12 +36,17 @@ export class CreateCategoryComponent implements OnInit {
     this.getCategoryTypes();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   getCategoryTypes(): void {
   this.isLoading = true;
 
   this.commonService
     .getLookupResults({}, 'product_category_type')
-    .pipe(finalize(() => (this.isLoading = false)))
+    .pipe(finalize(() => (this.isLoading = false)), takeUntil(this.destroy$))
     .subscribe({
       next: (data) => {
         this.categoryTypes = Array.isArray(data) ? data : [data];
@@ -51,7 +58,10 @@ export class CreateCategoryComponent implements OnInit {
 }
 
   createCategory(): void {
-  if (!this.categoryForm.valid) return;
+  if (this.categoryForm.invalid) {
+    this.categoryForm.markAllAsTouched();
+    return;
+  }
 
   this.isLoading = true;
   const values = this.categoryForm.value;

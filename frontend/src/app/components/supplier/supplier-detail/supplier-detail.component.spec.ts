@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SupplierDetailComponent } from './supplier-detail.component';
 import { PartyService } from 'src/app/services/party/party.service';
 import { ActivatedRoute } from '@angular/router';
@@ -67,14 +67,14 @@ describe('SupplierDetailComponent', () => {
     expect(component.supplierDetail.partyId).toBe('SUP123');
   });
 
-  it('should handle getSupplier error', () => {
-    const consoleSpy = spyOn(console, 'error');
+  it('should handle getSupplier error', fakeAsync(() => {
     partyServiceSpy.getSupplier.and.returnValue(throwError(() => new Error('API error')));
 
     component.getSupplier('SUP123');
+    tick();
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error fetching supplier details:', jasmine.any(Error));
-  });
+    expect(component.isLoading).toBeFalse();
+  }));
 
   it('should filter email addresses by purpose', () => {
     const emailList = [

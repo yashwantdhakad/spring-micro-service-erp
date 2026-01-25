@@ -1,21 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common/common.service';
 import { ProductService } from 'src/app/services/product/product.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-create-product',
   templateUrl: './create-product.component.html',
   styleUrls: ['./create-product.component.css'],
 })
-export class CreateProductComponent implements OnInit {
+export class CreateProductComponent implements OnInit, OnDestroy {
   isLoading = false;
   productForm: FormGroup;
   productTypes: any[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -44,8 +46,16 @@ export class CreateProductComponent implements OnInit {
     this.fetchProductTypes();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   createProduct(): void {
-    if (this.productForm.invalid) return;
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
 
     this.isLoading = true;
     const values = this.productForm.value;
@@ -79,7 +89,9 @@ export class CreateProductComponent implements OnInit {
   }
 
   fetchProductTypes(): void {
-    this.commonService.getLookupResults({}, 'product_type').subscribe({
+    this.commonService.getLookupResults({}, 'product_type')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
       next: (data) => {
         this.productTypes = Array.isArray(data) ? data : [data];
       },

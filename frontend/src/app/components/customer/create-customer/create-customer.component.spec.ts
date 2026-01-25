@@ -59,15 +59,15 @@ describe('CreateCustomerComponent', () => {
     const form = component.createCustomerForm;
     expect(form).toBeTruthy();
     expect(form.get('firstName')?.value).toBe('');
-    expect(form.get('roleTypeId')?.value).toBe('Customer');
+    expect(form.get('roleTypeId')?.value).toBe('CUSTOMER');
     expect(form.get('countryGeoId')?.value).toBe('USA');
   });
 
   it('should filter states by country', () => {
     const mockStates = [
-      { geoId: 'USA_TX' },
-      { geoId: 'USA_CA' },
-      { geoId: 'CAN_ON' },
+      { geoId: 'USA_TX', country_geo_id: 'USA' },
+      { geoId: 'USA_CA', country_geo_id: 'USA' },
+      { geoId: 'CAN_ON', country_geo_id: 'CAN' },
     ];
     const result = component.filterStatesByCountry(mockStates);
     expect(result.length).toBe(2);
@@ -80,7 +80,7 @@ describe('CreateCustomerComponent', () => {
       lastName: 'Doe',
       emailAddress: 'john.doe@example.com',
       contactNumber: '1234567890',
-      roleTypeId: 'Customer',
+      roleTypeId: 'CUSTOMER',
       address1: '123 Street',
       address2: '',
       city: 'NYC',
@@ -96,7 +96,10 @@ describe('CreateCustomerComponent', () => {
     component.createCustomer();
     tick();
 
-    expect(partyService.createCustomer).toHaveBeenCalledWith(formValues);
+    expect(partyService.createCustomer).toHaveBeenCalledWith({
+      ...formValues,
+      toName: 'John Doe',
+    });
     expect(snackbarService.showSuccess).toHaveBeenCalledWith('Customer created');
     expect(router.navigate).toHaveBeenCalledWith(['/customers/CUST123']);
   }));

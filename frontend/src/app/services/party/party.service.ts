@@ -106,24 +106,22 @@ export class PartyService {
   }
 
   addAddress(params: any): Observable<any> {
-    console.log('params', params);
     const partyId = encodeURIComponent(params.partyId);
     const url = `/party/api/parties/${partyId}/postal-addresses`;
 
     const { partyId: _, contactMechId: __, ...body } = params;
 
-    return this.apiService.post(url, params);
+    return this.apiService.post(url, body);
   }
 
   updateAddress(params: any): Observable<any> {
-    console.log('params', params);
     const partyId = encodeURIComponent(params.partyId);
     const contactMechId = encodeURIComponent(params.contactMechId);
     const url = `/party/api/parties/${partyId}/postal-addresses/${contactMechId}`;
 
     const { partyId: _, contactMechId: __, ...body } = params;
 
-    return this.apiService.put(url, params);
+    return this.apiService.put(url, body);
   }
 
   updateEmailAddress(params: any): Observable<any> {
@@ -158,7 +156,7 @@ export class PartyService {
 
     const { partyId: _, ...body } = params;
 
-    return this.apiService.post(url, params);
+    return this.apiService.post(url, body);
   }
 
   updatePhoneNumber(params: any): Observable<any> {
@@ -194,7 +192,7 @@ export class PartyService {
 
 
   addRole(params: any): Observable<any> {
-    return this.apiService.post('/api/rest/s1/commerce/partyRole', params);
+    return this.apiService.post('/party/api/party-roles', params);
   }
 
   getClassifications(params: any): Observable<any> {

@@ -189,23 +189,23 @@
               </li>
             </ul>
 
-            <ul class="custom-list" *ngIf="vendorAddresses?.length; else noVendorAddress">
-              <li class="custom-list-item" *ngFor="let primaryAddress of vendorAddresses">
+            <ul class="custom-list" *ngIf="shipToAddresses?.length; else noVendorAddress">
+              <li class="custom-list-item" *ngFor="let shipToAddress of shipToAddresses">
                 <strong>Address:</strong>
                 <mat-icon
                   matListIcon
                   class="custom-mat-icon custom-icon-align"
                   color="primary"
-                  (click)="editVendorAddress(primaryAddress)"
+                  (click)="editShipToAddress(shipToAddress)"
                 >edit</mat-icon>
-                <div>{{ primaryAddress.toName }}</div>
-                <div>{{ primaryAddress.address1 }}</div>
-                <div>{{ primaryAddress.address2 }}</div>
+                <div>{{ shipToAddress?.postalAddress?.toName }}</div>
+                <div>{{ shipToAddress?.postalAddress?.address1 }}</div>
+                <div>{{ shipToAddress?.postalAddress?.address2 }}</div>
                 <div>
-                  {{ primaryAddress.city }},
-                  {{ primaryAddress.stateProvinceGeoId }}
-                  {{ primaryAddress.postalCode }}
-                  {{ primaryAddress.countryGeoId }}
+                  {{ shipToAddress?.postalAddress?.city }},
+                  {{ shipToAddress?.postalAddress?.stateProvinceGeo?.geoName }}
+                  {{ shipToAddress?.postalAddress?.postalCode }}
+                  {{ shipToAddress?.postalAddress?.countryGeoId }}
                 </div>
               </li>
             </ul>
@@ -216,7 +216,7 @@
                   matListIcon
                   class="custom-mat-icon custom-icon-align"
                   color="primary"
-                  (click)="editVendorAddress()"
+                  (click)="editShipToAddress()"
                 >add</mat-icon>
               </div>
             </ng-template>

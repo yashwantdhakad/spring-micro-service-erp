@@ -31,33 +31,35 @@ export class CreateSupplierComponent {
   }
 
   createSupplier(): void {
-    if (this.supplierForm.valid) {
-      this.isLoading = true;
-      const values = this.supplierForm.value;
-
-      this.partyService
-        .createSupplier(values)
-        .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe({
-          next: (data) => {
-            if (data?.partyId) {
-              this.snackbarService.showSuccess(
-                this.translate.instant('SUPPLIER.CREATED_SUCCESS')
-              );
-              this.router.navigate([`/suppliers/${data.partyId}`]);
-              this.supplierForm.reset();
-            } else {
-              this.snackbarService.showError(
-                this.translate.instant('SUPPLIER.FAILED_CREATE')
-              );
-            }
-          },
-          error: () => {
-            this.snackbarService.showError(
-              this.translate.instant('SUPPLIER.ERROR_CREATE')
-            );
-          },
-        });
+    if (this.supplierForm.invalid) {
+      this.supplierForm.markAllAsTouched();
+      return;
     }
+    this.isLoading = true;
+    const values = this.supplierForm.value;
+
+    this.partyService
+      .createSupplier(values)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (data) => {
+          if (data?.partyId) {
+            this.snackbarService.showSuccess(
+              this.translate.instant('SUPPLIER.CREATED_SUCCESS')
+            );
+            this.router.navigate([`/suppliers/${data.partyId}`]);
+            this.supplierForm.reset({ roleTypeId: 'SUPPLIER' });
+          } else {
+            this.snackbarService.showError(
+              this.translate.instant('SUPPLIER.FAILED_CREATE')
+            );
+          }
+        },
+        error: () => {
+          this.snackbarService.showError(
+            this.translate.instant('SUPPLIER.ERROR_CREATE')
+          );
+        },
+      });
   }
 }

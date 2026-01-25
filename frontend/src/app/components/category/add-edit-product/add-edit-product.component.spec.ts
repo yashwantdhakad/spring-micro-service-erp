@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { ProductService } from 'src/app/services/product/product.service';
@@ -73,12 +73,13 @@ describe('AddEditProductComponent', () => {
     component.addProductToCategoryForm.controls['productId'].markAsTouched();
     component.addProductToCategoryForm.updateValueAndValidity();
 
-    component.addProductToCategory().then(() => {
-      expect(categoryServiceSpy.addProductToCategory).not.toHaveBeenCalled();
-    });
+    component.addProductToCategory();
+    tick();
+
+    expect(categoryServiceSpy.addProductToCategory).not.toHaveBeenCalled();
   }));
 
-  it('should call service and close dialog on success', fakeAsync(async() => {
+  it('should call service and close dialog on success', fakeAsync(() => {
     const formValues = component.addProductToCategoryForm.value;
     categoryServiceSpy.addProductToCategory.and.returnValue(of({ success: true }));
 
@@ -86,13 +87,18 @@ describe('AddEditProductComponent', () => {
     tick();
 
     expect(categoryServiceSpy.addProductToCategory).toHaveBeenCalledWith(formValues);
-    expect(dialogRefSpy.close).toHaveBeenCalledWith(formValues);
+    expect(dialogRefSpy.close).toHaveBeenCalledWith({
+      productCategoryId: formValues.productCategoryId,
+      refresh: true,
+    });
     expect(snackbarSpy.showSuccess).toHaveBeenCalledWith('Product added to category successfully');
     flush();
   }));
 
-  it('should handle service error gracefully', fakeAsync(async () => {
-    categoryServiceSpy.addProductToCategory.and.returnValue(await Promise.reject(new Error('API Error')));
+  it('should handle service error gracefully', fakeAsync(() => {
+    categoryServiceSpy.addProductToCategory.and.returnValue(
+      throwError(() => new Error('API Error'))
+    );
 
     component.addProductToCategory();
     tick();

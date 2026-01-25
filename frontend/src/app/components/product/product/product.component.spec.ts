@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { of, throwError } from 'rxjs';
 import { ProductComponent } from './product.component';
 import { ProductService } from 'src/app/services/product/product.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('ProductComponent', () => {
   let component: ProductComponent;
@@ -10,8 +11,8 @@ describe('ProductComponent', () => {
 
   const mockProducts = {
     documentList: [
-      { id: 'P001', name: 'Product 1', type: 'Type A', assetClass: 'Class A', assetType: 'Asset X' },
-      { id: 'P002', name: 'Product 2', type: 'Type B', assetClass: 'Class B', assetType: 'Asset Y' }
+      { productId: 'P001', productName: 'Product 1', productTypeId: 'Type A' },
+      { productId: 'P002', productName: 'Product 2', productTypeId: 'Type B' }
     ],
     documentListCount: 20
   };
@@ -20,6 +21,7 @@ describe('ProductComponent', () => {
     const productServiceSpy = jasmine.createSpyObj('ProductService', ['getProducts']);
 
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
       declarations: [ProductComponent],
       providers: [
         { provide: ProductService, useValue: productServiceSpy }
@@ -38,14 +40,14 @@ describe('ProductComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should define displayed columns correctly', () => {
-    expect(component.displayedColumns).toEqual(['id', 'name', 'type', 'assetClass', 'assetType']);
+  it('should define customer columns correctly', () => {
+    expect(component.getCustomerColumnKeys()).toEqual(['productId', 'productName', 'productTypeId']);
   });
 
   it('should call getProducts on init', fakeAsync(() => {
     productService.getProducts.and.returnValue(of(mockProducts));
     fixture.detectChanges(); // triggers ngOnInit
-    tick();
+    tick(300);
 
     expect(productService.getProducts).toHaveBeenCalledWith(0, '');
     expect(component.items.length).toBe(2);
@@ -53,20 +55,19 @@ describe('ProductComponent', () => {
     expect(component.isLoading).toBeFalse();
   }));
 
-  it('should handle getProducts success', fakeAsync(() => {
+  it('should handle page change', fakeAsync(() => {
     productService.getProducts.and.returnValue(of(mockProducts));
-    component.getProducts(1, '');
+    component.queryString = 'test';
+    component.onPageChange(1);
     tick();
 
-    expect(component.items.length).toBe(2);
-    expect(component.pages).toBe(20);
-    expect(component.isLoading).toBeFalse();
+    expect(productService.getProducts).toHaveBeenCalledWith(1, 'test');
   }));
 
   it('should handle getProducts error', fakeAsync(() => {
     productService.getProducts.and.returnValue(throwError(() => new Error('Failed')));
-    component.getProducts(1, 'test');
-    tick();
+    fixture.detectChanges();
+    tick(300);
 
     expect(component.items).toEqual([]);
     expect(component.pages).toBe(0);

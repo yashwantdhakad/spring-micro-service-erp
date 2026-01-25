@@ -30,12 +30,15 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // Clone the request to add the authorization header
-    const clonedRequest = request.clone({
-      setHeaders: {
-        SessionToken: this.tokenStorage.getToken() || '',
-      },
-    });
+    const token = this.tokenStorage.getToken();
+    const hasAuthHeader = request.headers.has('Authorization');
+    const clonedRequest = token && !hasAuthHeader
+      ? request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      : request;
 
     return next.handle(clonedRequest).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))

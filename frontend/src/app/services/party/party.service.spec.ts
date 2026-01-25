@@ -44,7 +44,7 @@ describe('PartyService', () => {
     const mockResponse = of({ documentList: [{ partyId: '1', name: 'Party 1' }], documentListCount: 1 });
 
     const response = await service.getParties(1, 10, 'keyword');
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/parties?pageIndex=0&roleTypeId=Supplier&pageSize=10&anyField=keyword');
+    const req = httpTestingController.expectOne('/api/rest/s1/commerce/parties?page=1&roleTypeId=Supplier&pageSize=10&anyField=keyword');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
 
@@ -133,11 +133,15 @@ describe('PartyService', () => {
   });
 
   it('should update address', async () => {
-    const params = { address: '123 Main St' };
+    const params = {
+      partyId: 'CUST1',
+      contactMechId: 'CM1',
+      address1: '123 Main St'
+    };
     const mockResponse = of({ success: true });
 
     const response = await service.updateAddress(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/contactMechs');
+    const req = httpTestingController.expectOne('/party/api/parties/CUST1/postal-addresses/CM1');
     expect(req.request.method).toBe('PUT');
     req.flush(mockResponse);
 
@@ -159,11 +163,15 @@ describe('PartyService', () => {
   });
 
   it('should update phone number', async () => {
-    const params = { phone: '123-456-7890' };
+    const params = {
+      partyId: 'CUST1',
+      contactMechId: 'CM1',
+      contactNumber: '123-456-7890'
+    };
     const mockResponse = of({ success: true });
 
     const response = await service.updatePhoneNumber(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/contactMechs');
+    const req = httpTestingController.expectOne('/party/api/parties/CUST1/telecom-numbers/CM1');
     expect(req.request.method).toBe('PUT');
     req.flush(mockResponse);
 
@@ -195,36 +203,36 @@ describe('PartyService', () => {
   });
 
   it('should add email', async () => {
-    const params = { email: 'test@example.com' };
+    const params = { partyId: 'CUST1', emailAddress: 'test@example.com' };
     const mockResponse = of({ success: true });
 
     const response = await service.addEmail(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/contactMechs');
-    expect(req.request.method).toBe('PUT');
+    const req = httpTestingController.expectOne('/party/api/parties/CUST1/emails');
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
 
     expect(response).toEqual(mockResponse);
   });
 
   it('should add phone', async () => {
-    const params = { phone: '123-456-7890' };
+    const params = { partyId: 'CUST1', contactNumber: '123-456-7890' };
     const mockResponse = of({ success: true });
 
     const response = await service.addPhone(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/contactMechs');
-    expect(req.request.method).toBe('PUT');
+    const req = httpTestingController.expectOne('/party/api/parties/CUST1/telecom-numbers');
+    expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
 
     expect(response).toEqual(mockResponse);
   });
 
   it('should delete contact mech', async () => {
-    const params = { mechId: '1' };
+    const params = { partyId: 'CUST1', contactMechId: 'CM1' };
     const mockResponse = of({ success: true });
 
     const response = await service.deleteContactMech(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/partyContactMech');
-    expect(req.request.method).toBe('POST');
+    const req = httpTestingController.expectOne('/party/api/parties/CUST1/telecom-numbers/CM1');
+    expect(req.request.method).toBe('DELETE');
     req.flush(mockResponse);
 
     expect(response).toEqual(mockResponse);
@@ -235,7 +243,7 @@ describe('PartyService', () => {
     const mockResponse = of({ success: true });
 
     const response = await service.addRole(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/partyRole');
+    const req = httpTestingController.expectOne('/party/api/party-roles');
     expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
 
@@ -338,11 +346,11 @@ describe('PartyService', () => {
   });
 
   it('should create party note', async () => {
-    const params = { note: 'Party note' };
+    const params = { partyId: 'CUST1', noteDate: '2024-01-01', noteText: 'Party note' };
     const mockResponse = of({ success: true });
 
     const response = await service.createPartyNote(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/PartyNote');
+    const req = httpTestingController.expectOne('/party/api/parties/CUST1/notes');
     expect(req.request.method).toBe('POST');
     req.flush(mockResponse);
 
@@ -350,12 +358,12 @@ describe('PartyService', () => {
   });
 
   it('should update party note', async () => {
-    const params = { note: 'Updated note' };
+    const params = { partyId: 'CUST1', noteId: 'N1', noteDate: '2024-01-01', noteText: 'Updated note' };
     const mockResponse = of({ success: true });
 
     const response = await service.updatePartyNote(params);
-    const req = httpTestingController.expectOne('/api/rest/s1/commerce/PartyNote');
-    expect(req.request.method).toBe('PATCH');
+    const req = httpTestingController.expectOne('/party/api/parties/CUST1/notes/N1');
+    expect(req.request.method).toBe('PUT');
     req.flush(mockResponse);
 
     expect(response).toEqual(mockResponse);

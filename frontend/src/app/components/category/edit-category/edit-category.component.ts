@@ -32,24 +32,26 @@ export class EditCategoryComponent {
   }
 
   updateCategory(): void {
-    if (this.updateCategoryForm.valid) {
-      this.isLoading = true;
-      const values = this.updateCategoryForm.value;
-
-      this.categoryService
-        .updateCategory(values)
-        .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe({
-          next: () => {
-            this.updateCategoryForm.reset();
-            this.dialogRef.close(values);
-            this.snackbarService.showSuccess('Category updated successfully.');
-          },
-          error: () => {
-            this.snackbarService.showError('Failed to update category.');
-          },
-        });
+    if (this.updateCategoryForm.invalid) {
+      this.updateCategoryForm.markAllAsTouched();
+      return;
     }
+    this.isLoading = true;
+    const values = this.updateCategoryForm.value;
+
+    this.categoryService
+      .updateCategory(values)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: () => {
+          this.updateCategoryForm.reset();
+          this.dialogRef.close(values);
+          this.snackbarService.showSuccess('Category updated successfully.');
+        },
+        error: () => {
+          this.snackbarService.showError('Failed to update category.');
+        },
+      });
   }
 
 }

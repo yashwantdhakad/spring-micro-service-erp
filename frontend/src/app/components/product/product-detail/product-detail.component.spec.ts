@@ -1,12 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ProductDetailComponent } from './product-detail.component';
 import { ProductService } from 'src/app/services/product/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { Store, StoreModule } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { CommonService } from 'src/app/services/common/common.service';
+import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 describe('ProductDetailComponent', () => {
   let component: ProductDetailComponent;
@@ -15,13 +17,15 @@ describe('ProductDetailComponent', () => {
   let dialogSpy: jasmine.SpyObj<MatDialog>;
   let mockStore: MockStore;
   let translate: TranslateService;
+  let commonServiceSpy: jasmine.SpyObj<CommonService>;
+  let snackbarSpy: jasmine.SpyObj<SnackbarService>;
 
   const mockActivatedRoute = {
     params: of({ productId: 'PROD-1' })
   };
 
   const productResponseMock = {
-    productId: 'PROD-1',
+    product: { productId: 'PROD-1' },
     prices: [{ price: 99 }],
     categories: [{ categoryName: 'Electronics' }],
     contents: [{ contentLocation: 'file.pdf' }],
@@ -34,6 +38,8 @@ describe('ProductDetailComponent', () => {
       'getProduct',
       'deleteProductPrice'
     ]);
+    commonServiceSpy = jasmine.createSpyObj('CommonService', ['getLookupResults']);
+    snackbarSpy = jasmine.createSpyObj('SnackbarService', ['showError']);
 
     dialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
 
@@ -44,6 +50,8 @@ describe('ProductDetailComponent', () => {
         { provide: ProductService, useValue: productServiceSpy },
         { provide: MatDialog, useValue: dialogSpy },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: CommonService, useValue: commonServiceSpy },
+        { provide: SnackbarService, useValue: snackbarSpy },
         provideMockStore({}),
         TranslateService
       ]
@@ -53,6 +61,7 @@ describe('ProductDetailComponent', () => {
     component = fixture.componentInstance;
     mockStore = TestBed.inject(Store) as MockStore;
     translate = TestBed.inject(TranslateService);
+    commonServiceSpy.getLookupResults.and.returnValue(of([]));
   });
 
   it('should create the component', () => {
@@ -60,23 +69,25 @@ describe('ProductDetailComponent', () => {
   });
 
   it('should load product on init', () => {
+    commonServiceSpy.getLookupResults.and.returnValue(of([]));
     productServiceSpy.getProduct.and.returnValue(of(productResponseMock));
 
     fixture.detectChanges();
 
-    expect(component.productDetail).toEqual(productResponseMock);
+    expect(component.productDetail).toEqual(productResponseMock.product);
     expect(component.prices.length).toBe(1);
     expect(component.categories.length).toBe(1);
   });
 
-  it('should handle getProduct error', () => {
-    const consoleSpy = spyOn(console, 'error');
+  it('should handle getProduct error', fakeAsync(() => {
+    commonServiceSpy.getLookupResults.and.returnValue(of([]));
     productServiceSpy.getProduct.and.returnValue(throwError(() => new Error('API error')));
 
     component.getProduct('PROD-1');
+    tick();
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error fetching product details:', jasmine.any(Error));
-  });
+    expect(component.isLoading).toBeFalse();
+  }));
 
   it('should open dialog for price and reload on success', () => {
     const afterClosedMock = of({ productId: 'PROD-1' });

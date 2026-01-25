@@ -59,6 +59,22 @@
         </mat-error>
       </mat-form-field>
 
+      <!-- Shipping Address -->
+      <mat-form-field fxFlex="70%" appearance="fill">
+        <mat-label>Shipping Address</mat-label>
+        <mat-select formControlName="shippingAddress">
+          <mat-option *ngFor="let address of customerAddresses" [value]="address">
+            {{ formatAddress(address) }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div fxFlex="70%" fxLayoutAlign="start">
+        <button mat-stroked-button type="button" color="primary" (click)="addCustomerAddress()">
+          Add Address
+        </button>
+      </div>
+
 
       <!-- Ship Before Date -->
       <mat-form-field fxFlex="70%">

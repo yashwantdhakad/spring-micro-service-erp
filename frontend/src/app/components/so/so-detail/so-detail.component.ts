@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { OrderService } from 'src/app/services/order/order.service';
-import { PartyService } from 'src/app/services/party/party.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
@@ -18,7 +17,7 @@ export class SODetailComponent implements OnInit {
   orderId: string | undefined;
   orderHeader: any;
   statusItem: any;
-  vendorAddresses: any[] = [];
+  shipToAddresses: any[] = [];
   firstPartInfo: any;
   customerPartyId: string | undefined;
 
@@ -55,7 +54,6 @@ export class SODetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
-    private partyService: PartyService,
     private dialog: MatDialog
   ) {}
 
@@ -82,11 +80,12 @@ export class SODetailComponent implements OnInit {
         this.statusItem = displayInfo.statusItem;
         this.orderNotes = displayInfo.orderNoteList;
         this.firstPartInfo = displayInfo.firstPartInfo;
+        this.shipToAddresses = (displayInfo?.orderContactMechList || [])
+          .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
 
         const customerPartyId = displayInfo?.firstPart?.customerPartyId;
         if (customerPartyId) {
           this.customerPartyId = customerPartyId;
-          this.loadVendorAddresses(customerPartyId);
         }
       },
       error: (error) => {
@@ -137,38 +136,30 @@ export class SODetailComponent implements OnInit {
     });
   }
 
-  loadVendorAddresses(partyId: string): void {
-    this.partyService.getPartyPostalContactMechByPurpose(partyId, 'PostalShippingOrigin', 'customer').subscribe({
-      next: (data) => {
-        this.vendorAddresses = Array.isArray(data) ? data : [];
-      },
-      error: (err) => {
-      },
-    });
-  }
-
-  editVendorAddress(address: any = null): void {
-    if (!this.customerPartyId) {
+  editShipToAddress(address: any = null): void {
+    if (!this.orderId) {
       return;
     }
+    const postal = address?.postalAddress || {};
     const addressData = {
-      partyId: this.customerPartyId,
+      orderId: this.orderId,
       contactMechId: address?.contactMechId,
-      contactMechPurposeId: address?.contactMechPurposeId || 'PostalShippingOrigin',
-      toName: address?.toName,
-      address1: address?.address1,
-      address2: address?.address2,
-      city: address?.city,
-      postalCode: address?.postalCode,
-      countryGeoId: address?.countryGeoId,
-      stateProvinceGeoId: address?.stateProvinceGeoId,
+      contactMechPurposeId: address?.contactMechPurposeTypeId || 'SHIPPING_LOCATION',
+      defaultPurpose: 'SHIPPING_LOCATION',
+      toName: postal?.toName,
+      address1: postal?.address1,
+      address2: postal?.address2,
+      city: postal?.city,
+      postalCode: postal?.postalCode,
+      countryGeoId: postal?.countryGeoId,
+      stateProvinceGeoId: postal?.stateProvinceGeoId || postal?.stateProvinceGeo?.geoName,
     };
 
     this.dialog.open(AddEditAddressComponent, {
       data: { addressData },
     }).afterClosed().subscribe(() => {
-      if (this.customerPartyId) {
-        this.loadVendorAddresses(this.customerPartyId);
+      if (this.orderId) {
+        this.getOrder(this.orderId);
       }
     });
   }

@@ -1,7 +1,9 @@
 package com.monash.erp.oms.order.dto;
 
-public class PostalAddressDto {
+public class OrderAddressRequest {
 
+    private String contactMechId;
+    private String contactMechPurposeTypeId;
     private String toName;
     private String address1;
     private String address2;
@@ -9,7 +11,22 @@ public class PostalAddressDto {
     private String postalCode;
     private String countryGeoId;
     private String stateProvinceGeoId;
-    private GeoDto stateProvinceGeo;
+
+    public String getContactMechId() {
+        return contactMechId;
+    }
+
+    public void setContactMechId(String contactMechId) {
+        this.contactMechId = contactMechId;
+    }
+
+    public String getContactMechPurposeTypeId() {
+        return contactMechPurposeTypeId;
+    }
+
+    public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
+        this.contactMechPurposeTypeId = contactMechPurposeTypeId;
+    }
 
     public String getToName() {
         return toName;
@@ -65,13 +82,5 @@ public class PostalAddressDto {
 
     public void setStateProvinceGeoId(String stateProvinceGeoId) {
         this.stateProvinceGeoId = stateProvinceGeoId;
-    }
-
-    public GeoDto getStateProvinceGeo() {
-        return stateProvinceGeo;
-    }
-
-    public void setStateProvinceGeo(GeoDto stateProvinceGeo) {
-        this.stateProvinceGeo = stateProvinceGeo;
     }
 }

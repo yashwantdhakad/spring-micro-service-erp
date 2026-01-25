@@ -33,26 +33,28 @@ export class EditCustomerComponent {
   }
 
   updateCustomer(): void {
-    if (this.updateCustomerForm.valid) {
-      this.isLoading = true;
-      const values = this.updateCustomerForm.value;
-
-      this.partyService.updateCustomer(values)
-        .pipe(finalize(() => this.isLoading = false))
-        .subscribe({
-          next: () => {
-            this.updateCustomerForm.reset();
-            this.dialogRef.close(values);
-            this.snackbarService.showSuccess(
-              this.translate.instant('CUSTOMER.UPDATED_SUCCESS')
-            );
-          },
-          error: (error) => {
-            this.snackbarService.showError(
-              this.translate.instant('CUSTOMER.ERROR_UPDATE')
-            );
-          }
-        });
+    if (this.updateCustomerForm.invalid) {
+      this.updateCustomerForm.markAllAsTouched();
+      return;
     }
+    this.isLoading = true;
+    const values = this.updateCustomerForm.value;
+
+    this.partyService.updateCustomer(values)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe({
+        next: () => {
+          this.updateCustomerForm.reset();
+          this.dialogRef.close(values);
+          this.snackbarService.showSuccess(
+            this.translate.instant('CUSTOMER.UPDATED_SUCCESS')
+          );
+        },
+        error: () => {
+          this.snackbarService.showError(
+            this.translate.instant('CUSTOMER.ERROR_UPDATE')
+          );
+        }
+      });
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -20,14 +20,15 @@ import { AddEditCreditCardComponent } from '../../party/add-edit-credit-card/add
 import { AddEditBankAccountComponent } from '../../party/add-edit-bank-account/add-edit-bank-account.component';
 import { PartyNoteComponent } from '../../party/party-note/party-note.component';
 import { PartyContentComponent } from '../../party/party-content/party-content.component';
-import { finalize } from 'rxjs';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-customer-detail',
   templateUrl: './customer-detail.component.html',
   styleUrls: ['./customer-detail.component.css'],
 })
-export class CustomerDetailComponent {
+export class CustomerDetailComponent implements OnDestroy {
   roles: any;
   partyClassifications: any;
   partyIdentificationList: any;
@@ -90,8 +91,10 @@ export class CustomerDetailComponent {
     });
   }
 
+  private destroy$ = new Subject<void>();
+
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.partyId = params['partyId'];
       if (this.partyId) {
         this.isLoading = true;
@@ -100,12 +103,19 @@ export class CustomerDetailComponent {
     });
 
     this.store.dispatch(loadGeos());
-    this.store.pipe(select(selectGeoList)).subscribe((geoListObject: any) => {
+    this.store
+      .pipe(select(selectGeoList), takeUntil(this.destroy$))
+      .subscribe((geoListObject: any) => {
       if (geoListObject) {
         this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
         this.states = filterGeoRecords(geoListObject, 'STATE');
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getCustomer(partyId: string): void {
@@ -139,9 +149,10 @@ export class CustomerDetailComponent {
         this.payments = payments;
         this.partyNotes = partyNoteList;
         this.contents = contentList;
+        console.log(this.partyRoleList);
       },
-      error: (error) => {
-      }
+      error: () => {
+      },
     });
   }
 

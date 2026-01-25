@@ -3,18 +3,26 @@ import { SupplierComponent } from './supplier.component';
 import { PartyService } from 'src/app/services/party/party.service';
 import { of, throwError } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 describe('SupplierComponent', () => {
   let component: SupplierComponent;
   let fixture: ComponentFixture<SupplierComponent>;
   let partyServiceSpy: jasmine.SpyObj<PartyService>;
+  let snackbarServiceSpy: jasmine.SpyObj<SnackbarService>;
 
   beforeEach(async () => {
     partyServiceSpy = jasmine.createSpyObj('PartyService', ['getSuppliers']);
+    snackbarServiceSpy = jasmine.createSpyObj('SnackbarService', ['showError']);
 
     await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
       declarations: [SupplierComponent],
-      providers: [{ provide: PartyService, useValue: partyServiceSpy }],
+      providers: [
+        { provide: PartyService, useValue: partyServiceSpy },
+        { provide: SnackbarService, useValue: snackbarServiceSpy },
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // To ignore unknown component tags like <mat-table>, <mat-spinner> etc.
     }).compileComponents();
 
@@ -34,7 +42,7 @@ describe('SupplierComponent', () => {
     partyServiceSpy.getSuppliers.and.returnValue(of(mockResponse));
 
     fixture.detectChanges(); // triggers ngOnInit
-    tick();
+    tick(300);
 
     expect(partyServiceSpy.getSuppliers).toHaveBeenCalledWith(0, '');
     expect(component.items.length).toBe(1);
@@ -43,15 +51,24 @@ describe('SupplierComponent', () => {
   }));
 
   it('should handle error when getSuppliers fails', fakeAsync(() => {
-    const consoleSpy = spyOn(console, 'error');
     partyServiceSpy.getSuppliers.and.returnValue(throwError(() => new Error('API Error')));
 
-    component.getSuppliers(1, '');
-    tick();
+    fixture.detectChanges();
+    tick(300);
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error fetching suppliers:', jasmine.any(Error));
+    expect(snackbarServiceSpy.showError).toHaveBeenCalledWith('Error fetching suppliers');
     expect(component.items).toEqual([]);
     expect(component.pages).toBe(0);
     expect(component.isLoading).toBeFalse();
   }));
+
+  it('should request next page', () => {
+    const mockResponse = { resultList: [{ partyId: 'SUPP2' }], documentListCount: 2 };
+    partyServiceSpy.getSuppliers.and.returnValue(of(mockResponse));
+    component.queryString = 'supp';
+
+    component.onPageChange(1);
+
+    expect(partyServiceSpy.getSuppliers).toHaveBeenCalledWith(1, 'supp');
+  });
 });

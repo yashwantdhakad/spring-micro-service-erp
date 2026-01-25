@@ -11,6 +11,7 @@ import com.monash.erp.oms.order.dto.FirstPartInfoDto;
 import com.monash.erp.oms.order.dto.GeoDto;
 import com.monash.erp.oms.order.dto.ItemTypeDto;
 import com.monash.erp.oms.order.dto.OrderAdjustmentDto;
+import com.monash.erp.oms.order.dto.OrderAddressRequest;
 import com.monash.erp.oms.order.dto.OrderContactMechDto;
 import com.monash.erp.oms.order.dto.OrderContentDto;
 import com.monash.erp.oms.order.dto.OrderCreateRequest;
@@ -85,6 +86,8 @@ public class OrderCompositeService {
     private static final String ROLE_END_USER_CUSTOMER = "END_USER_CUSTOMER";
     private static final String ROLE_SHIP_FROM_VENDOR = "SHIP_FROM_VENDOR";
     private static final String ROLE_SUPPLIER_AGENT = "SUPPLIER_AGENT";
+    private static final String PURPOSE_SHIPPING = "SHIPPING_LOCATION";
+    private static final String PURPOSE_BILLING = "BILLING_LOCATION";
 
     private final OrderHeaderRepository orderHeaderRepository;
     private final OrderItemRepository orderItemRepository;
@@ -245,6 +248,14 @@ public class OrderCompositeService {
         shipGroup.setEstimatedDeliveryDate(request.getEstimatedDeliveryDate());
         orderItemShipGroupRepository.save(shipGroup);
 
+        if (request.getShippingAddress() != null) {
+            attachOrderAddress(header.getOrderId(), request.getShippingAddress(), PURPOSE_SHIPPING, true);
+        }
+
+        if (request.getBillingAddress() != null) {
+            attachOrderAddress(header.getOrderId(), request.getBillingAddress(), PURPOSE_BILLING, false);
+        }
+
         OrderStatus status = new OrderStatus();
         status.setOrderId(header.getOrderId());
         status.setStatusId(DEFAULT_STATUS);
@@ -253,6 +264,24 @@ public class OrderCompositeService {
         orderStatusRepository.save(status);
 
         return toHeaderDto(header);
+    }
+
+    public OrderContactMechDto addOrderAddress(String orderId, OrderAddressRequest request) {
+        OrderContactMechDto created = attachOrderAddress(orderId, request, PURPOSE_SHIPPING, true);
+        if (created == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address payload is required");
+        }
+        return created;
+    }
+
+    public OrderContactMechDto updateOrderAddress(String orderId, String contactMechId, OrderAddressRequest request) {
+        OrderAddressRequest payload = request == null ? new OrderAddressRequest() : request;
+        payload.setContactMechId(firstNonBlank(payload.getContactMechId(), contactMechId));
+        OrderContactMechDto updated = attachOrderAddress(orderId, payload, PURPOSE_SHIPPING, true);
+        if (updated == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address payload is required");
+        }
+        return updated;
     }
 
     public OrderItemDto addItem(String orderId, OrderItemRequest request) {
@@ -575,6 +604,55 @@ public class OrderCompositeService {
         return dto;
     }
 
+    private OrderContactMechDto attachOrderAddress(
+            String orderId,
+            OrderAddressRequest request,
+            String defaultPurpose,
+            boolean assignShipGroup
+    ) {
+        if (request == null || !hasAddressData(request)) {
+            return null;
+        }
+
+        String contactMechId = firstNonBlank(request.getContactMechId(), "OCM" + UUID.randomUUID().toString().replace("-", "").toUpperCase(Locale.ROOT));
+        PostalAddress address = postalAddressRepository.findByContactMechId(contactMechId)
+                .orElseGet(PostalAddress::new);
+        address.setContactMechId(contactMechId);
+        address.setToName(request.getToName());
+        address.setAddress1(request.getAddress1());
+        address.setAddress2(request.getAddress2());
+        address.setCity(request.getCity());
+        address.setPostalCode(request.getPostalCode());
+        address.setCountryGeoId(request.getCountryGeoId());
+        address.setStateProvinceGeoId(request.getStateProvinceGeoId());
+        postalAddressRepository.save(address);
+
+        OrderContactMech contactMech = new OrderContactMech();
+        contactMech.setOrderId(orderId);
+        contactMech.setContactMechId(contactMechId);
+        contactMech.setContactMechPurposeTypeId(firstNonBlank(request.getContactMechPurposeTypeId(), defaultPurpose));
+        contactMech = orderContactMechRepository.save(contactMech);
+
+        if (assignShipGroup && PURPOSE_SHIPPING.equalsIgnoreCase(contactMech.getContactMechPurposeTypeId())) {
+            orderItemShipGroupRepository.findByOrderIdAndShipGroupSeqId(orderId, "00001").ifPresent(shipGroup -> {
+                shipGroup.setContactMechId(contactMechId);
+                orderItemShipGroupRepository.save(shipGroup);
+            });
+        }
+
+        return toContactMechDto(contactMech);
+    }
+
+    private boolean hasAddressData(OrderAddressRequest request) {
+        return !isBlank(request.getAddress1())
+                || !isBlank(request.getAddress2())
+                || !isBlank(request.getCity())
+                || !isBlank(request.getPostalCode())
+                || !isBlank(request.getCountryGeoId())
+                || !isBlank(request.getStateProvinceGeoId())
+                || !isBlank(request.getToName());
+    }
+
     private PostalAddressDto toPostalAddressDto(PostalAddress address) {
         PostalAddressDto dto = new PostalAddressDto();
         dto.setToName(address.getToName());
@@ -583,6 +661,7 @@ public class OrderCompositeService {
         dto.setCity(address.getCity());
         dto.setPostalCode(address.getPostalCode());
         dto.setCountryGeoId(address.getCountryGeoId());
+        dto.setStateProvinceGeoId(address.getStateProvinceGeoId());
         dto.setStateProvinceGeo(resolveGeo(address.getStateProvinceGeoId()));
         return dto;
     }

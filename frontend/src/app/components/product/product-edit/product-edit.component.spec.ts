@@ -65,7 +65,6 @@ describe('ProductEditComponent', () => {
   });
 
   it('should show error on updateProduct failure', () => {
-    const consoleSpy = spyOn(console, 'error');
     component.updateProductForm.setValue({
       productId: 'PROD-123',
       productName: 'Fail Product',
@@ -78,7 +77,6 @@ describe('ProductEditComponent', () => {
     component.updateProduct();
 
     expect(snackbarSpy.showError).toHaveBeenCalledWith('Error in updating product.');
-    expect(consoleSpy).toHaveBeenCalledWith('Error in update product:', jasmine.any(Error));
     expect(dialogRefSpy.close).not.toHaveBeenCalled();
   });
 

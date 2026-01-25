@@ -15,8 +15,7 @@
         <mat-label>{{ 'CUSTOMER.SEARCH' | translate }}</mat-label>
         <input
           matInput
-          [(ngModel)]="queryString"
-          (input)="getCustomers(1, queryString)"
+          [formControl]="searchControl"
           autofocus
         />
         <mat-icon matSuffix>search</mat-icon>
@@ -42,7 +41,7 @@
       <mat-paginator
         [pageSize]="pagination.rowsPerPage"
         [length]="pages"
-        (page)="getCustomers($event.pageIndex + 1, queryString)"
+        (page)="onPageChange($event.pageIndex)"
       ></mat-paginator>
     </mat-card-content>
   </mat-card>

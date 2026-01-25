@@ -5,6 +5,7 @@ import { forkJoin, of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { PartyService } from 'src/app/services/party/party.service';
 import { CommonService } from 'src/app/services/common/common.service';
+import { OrderService } from 'src/app/services/order/order.service';
 
 @Component({
   selector: 'app-add-edit-address',
@@ -19,6 +20,7 @@ export class AddEditAddressComponent implements OnInit {
 
   constructor(
     private partyService: PartyService,
+    private orderService: OrderService,
     private commonService: CommonService,
     public dialogRef: MatDialogRef<AddEditAddressComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { addressData: any },
@@ -33,12 +35,13 @@ export class AddEditAddressComponent implements OnInit {
   initializeForm(): void {
     const address = this.data.addressData;
     const required = Validators.required;
-    console.log('address', address);
+    const defaultPurpose = address.defaultPurpose || address.contactMechPurposeId || 'SHIP_ORIG_LOCATION';
 
     this.addEditAddressForm = this.fb.group({
+      orderId: [address.orderId],
       partyId: [address.partyId],
       contactMechId: [address.contactMechId],
-      contactMechPurposeId: [address.contactMechPurposeId || 'SHIP_ORIG_LOCATION'],
+      contactMechPurposeId: [defaultPurpose],
       toName: [address.toName, [required]],
       address1: [address.address1, [required]],
       address2: [address.address2],
@@ -88,9 +91,8 @@ export class AddEditAddressComponent implements OnInit {
 
     this.isLoading = true;
     const v = this.addEditAddressForm.value;
-    console.log("v", v);
+    const isOrderContext = !!v.orderId;
 
-    // Build payload in snake_case (match FastAPI/Pydantic)
     const payload = {
       toName: v.toName ?? null,
       address1: v.address1,
@@ -102,10 +104,20 @@ export class AddEditAddressComponent implements OnInit {
       contactMechPurposeId: v.contactMechPurposeId ?? null
     };
 
-    // Choose API call: create vs update
-    const call$ = v.contactMechId
-      ? this.partyService.updatePostalAddress(v.partyId, v.contactMechId, payload)
-      : this.partyService.addPostalAddress(v.partyId, payload);
+    const orderPayload = {
+      ...payload,
+      contactMechPurposeTypeId: payload.contactMechPurposeId,
+    };
+
+    delete (orderPayload as { contactMechPurposeId?: string }).contactMechPurposeId;
+
+    const call$ = isOrderContext
+      ? (v.contactMechId
+        ? this.orderService.updateOrderAddress(v.orderId, v.contactMechId, orderPayload)
+        : this.orderService.addOrderAddress(v.orderId, orderPayload))
+      : (v.contactMechId
+        ? this.partyService.updatePostalAddress(v.partyId, v.contactMechId, payload)
+        : this.partyService.addPostalAddress(v.partyId, payload));
 
     call$
       .pipe(finalize(() => (this.isLoading = false)))

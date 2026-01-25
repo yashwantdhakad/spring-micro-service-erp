@@ -60,13 +60,11 @@ describe('CategoryDetailComponent', () => {
 
   it('should handle error in getCategory', fakeAsync(() => {
     categoryService.getCategory.and.returnValue(throwError(() => new Error('Failed')));
-    spyOn(console, 'error');
 
     component.getCategory('CAT123');
     tick();
 
     expect(snackbarService.showError).toHaveBeenCalledWith('Error fetching products');
-    expect(console.error).toHaveBeenCalled();
   }));
 
   it('should open addProductToCategoryDialog and refresh if dialog returns result', fakeAsync(() => {
@@ -96,7 +94,7 @@ describe('CategoryDetailComponent', () => {
     expect(categoryService.getCategory).toHaveBeenCalledWith('CAT123');
   }));
 
-  it('should handle deleteProductCategoryDialog with confirm', fakeAsync(async () => {
+  it('should handle deleteProductCategoryDialog with confirm', fakeAsync(() => {
     const dialogRef = {
       afterClosed: () => of(true),
       close: () => {},
@@ -106,36 +104,37 @@ describe('CategoryDetailComponent', () => {
     categoryService.deleteProductCategory.and.returnValue(of(undefined));
     categoryService.getCategory.and.returnValue(of({ products: [] }));
 
-    await component.deleteProductCategoryDialog({ productCategoryId: 'CAT123' });
+    component.deleteProductCategoryDialog({ productCategoryId: 'CAT123' });
+    tick();
 
     expect(categoryService.deleteProductCategory).toHaveBeenCalled();
     expect(snackbarService.showSuccess).toHaveBeenCalledWith('Product deleted successfully');
   }));
 
-  it('should handle deleteProductCategoryDialog error', fakeAsync(async () => {
+  it('should handle deleteProductCategoryDialog error', fakeAsync(() => {
     const dialogRef = {
       afterClosed: () => of(true),
       close: () => {},
     };
     dialog.open.and.returnValue(dialogRef as any);
 
-    spyOn(console, 'error');
-    categoryService.deleteProductCategory.and.returnValue(await Promise.reject('error'));
+    categoryService.deleteProductCategory.and.returnValue(throwError(() => new Error('error')));
 
-    await component.deleteProductCategoryDialog({ productCategoryId: 'CAT123' });
+    component.deleteProductCategoryDialog({ productCategoryId: 'CAT123' });
+    tick();
 
     expect(snackbarService.showError).toHaveBeenCalledWith('Error deleting product');
-    expect(console.error).toHaveBeenCalled();
   }));
 
-  it('should not delete if confirmation is cancelled', fakeAsync(async () => {
+  it('should not delete if confirmation is cancelled', fakeAsync(() => {
     const dialogRef = {
       afterClosed: () => of(false),
       close: () => {},
     };
     dialog.open.and.returnValue(dialogRef as any);
 
-    await component.deleteProductCategoryDialog({ productCategoryId: 'CAT123' });
+    component.deleteProductCategoryDialog({ productCategoryId: 'CAT123' });
+    tick();
     expect(categoryService.deleteProductCategory).not.toHaveBeenCalled();
   }));
 

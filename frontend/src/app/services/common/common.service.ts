@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, forkJoin, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import * as GeoActions from 'src/app/store/geo/geo.actions';
 import * as EnumActions from 'src/app/store/enum/enum.actions';
 import { ApiService } from './api.service';
@@ -12,40 +12,79 @@ import { ApiService } from './api.service';
 export class CommonService {
   constructor(private apiService: ApiService, private store: Store) {}
 
+  private enumTypeCache = new Map<string, Observable<any[]>>();
+  private statusItemCache = new Map<string, Observable<any[]>>();
+  private parentEnumTypeCache = new Map<string, Observable<any[]>>();
+  private uomCache = new Map<string, Observable<any[]>>();
+  private roleTypeCache = new Map<string, Observable<any[]>>();
+  private geosCache$: Observable<any[]> | null = null;
+
   getEnumTypes(enumTypeId: string): Observable<any> {
-    return this.apiService.get<any[]>('/oms/api/common/enumerations').pipe(
-      map((items) =>
-        (items || []).filter((item) => item?.enumTypeId === enumTypeId)
-      ),
-      catchError(this.handleError)
-    );
+    if (!this.enumTypeCache.has(enumTypeId)) {
+      const request$ = this.apiService.get<any[]>('/oms/api/common/enumerations').pipe(
+        map((items) =>
+          (items || []).filter((item) => item?.enumTypeId === enumTypeId)
+        ),
+        shareReplay(1),
+        catchError((error) => {
+          this.enumTypeCache.delete(enumTypeId);
+          return this.handleError(error);
+        })
+      );
+      this.enumTypeCache.set(enumTypeId, request$);
+    }
+    return this.enumTypeCache.get(enumTypeId)!;
   }
 
   getStatusItems(statusTypeId: string): Observable<any> {
-    return this.apiService.get<any[]>('/oms/api/common/status-items').pipe(
-      map((items) =>
-        (items || []).filter((item) => item?.statusTypeId === statusTypeId)
-      ),
-      catchError(this.handleError)
-    );
+    if (!this.statusItemCache.has(statusTypeId)) {
+      const request$ = this.apiService.get<any[]>('/oms/api/common/status-items').pipe(
+        map((items) =>
+          (items || []).filter((item) => item?.statusTypeId === statusTypeId)
+        ),
+        shareReplay(1),
+        catchError((error) => {
+          this.statusItemCache.delete(statusTypeId);
+          return this.handleError(error);
+        })
+      );
+      this.statusItemCache.set(statusTypeId, request$);
+    }
+    return this.statusItemCache.get(statusTypeId)!;
   }
 
   getParentEnumTypes(parentEnumId: string): Observable<any> {
-    return this.apiService.get<any[]>('/oms/api/common/enumeration-types').pipe(
-      map((items) =>
-        (items || []).filter((item) => item?.parentTypeId === parentEnumId)
-      ),
-      catchError(this.handleError)
-    );
+    if (!this.parentEnumTypeCache.has(parentEnumId)) {
+      const request$ = this.apiService.get<any[]>('/oms/api/common/enumeration-types').pipe(
+        map((items) =>
+          (items || []).filter((item) => item?.parentTypeId === parentEnumId)
+        ),
+        shareReplay(1),
+        catchError((error) => {
+          this.parentEnumTypeCache.delete(parentEnumId);
+          return this.handleError(error);
+        })
+      );
+      this.parentEnumTypeCache.set(parentEnumId, request$);
+    }
+    return this.parentEnumTypeCache.get(parentEnumId)!;
   }
 
   getUoms(uomTypeEnumId: string): Observable<any> {
-    return this.apiService.get<any[]>('/oms/api/common/uoms').pipe(
-      map((items) =>
-        (items || []).filter((item) => item?.uomTypeId === uomTypeEnumId)
-      ),
-      catchError(this.handleError)
-    );
+    if (!this.uomCache.has(uomTypeEnumId)) {
+      const request$ = this.apiService.get<any[]>('/oms/api/common/uoms').pipe(
+        map((items) =>
+          (items || []).filter((item) => item?.uomTypeId === uomTypeEnumId)
+        ),
+        shareReplay(1),
+        catchError((error) => {
+          this.uomCache.delete(uomTypeEnumId);
+          return this.handleError(error);
+        })
+      );
+      this.uomCache.set(uomTypeEnumId, request$);
+    }
+    return this.uomCache.get(uomTypeEnumId)!;
   }
 
   getGeoList(geoTypeEnumId: string): Observable<any> {
@@ -56,14 +95,22 @@ export class CommonService {
   }
 
   getRoleTypes(enumTypeId: string): Observable<any> {
-    return this.apiService.get<any[]>('/party/api/role-types').pipe(
-      map((items) =>
-        (items || []).filter((item) =>
-          enumTypeId ? item?.parentTypeId === enumTypeId : true
-        )
-      ),
-      catchError(this.handleError)
-    );
+    if (!this.roleTypeCache.has(enumTypeId)) {
+      const request$ = this.apiService.get<any[]>('/party/api/role-types').pipe(
+        map((items) =>
+          (items || []).filter((item) =>
+            enumTypeId ? item?.parentTypeId === enumTypeId : true
+          )
+        ),
+        shareReplay(1),
+        catchError((error) => {
+          this.roleTypeCache.delete(enumTypeId);
+          return this.handleError(error);
+        })
+      );
+      this.roleTypeCache.set(enumTypeId, request$);
+    }
+    return this.roleTypeCache.get(enumTypeId)!;
   }
 
   getGeos(): Observable<any[]> {
@@ -179,16 +226,23 @@ export class CommonService {
 // this.getLookupResults({ field: 'geo_type_id', value: 'COUNTRY' }, 'geo');
 
   private fetchGeosWithAssocs(): Observable<any[]> {
-    return forkJoin({
-      geos: this.apiService.get<any[]>('/oms/api/common/geos'),
-      assocs: this.apiService.get<any[]>('/oms/api/common/geo-assocs'),
-    }).pipe(
-      map(({ geos, assocs }) => {
-        const assocMap = this.buildGeoCountryMap(assocs || []);
-        return this.normalizeGeos(geos || [], assocMap);
-      }),
-      catchError(this.handleError)
-    );
+    if (!this.geosCache$) {
+      this.geosCache$ = forkJoin({
+        geos: this.apiService.get<any[]>('/oms/api/common/geos'),
+        assocs: this.apiService.get<any[]>('/oms/api/common/geo-assocs'),
+      }).pipe(
+        map(({ geos, assocs }) => {
+          const assocMap = this.buildGeoCountryMap(assocs || []);
+          return this.normalizeGeos(geos || [], assocMap);
+        }),
+        shareReplay(1),
+        catchError((error) => {
+          this.geosCache$ = null;
+          return this.handleError(error);
+        })
+      );
+    }
+    return this.geosCache$;
   }
 
   private buildGeoCountryMap(assocs: any[]): Map<string, string> {

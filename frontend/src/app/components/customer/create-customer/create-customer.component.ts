@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
@@ -8,7 +8,8 @@ import { loadGeos } from 'src/app/store/geo/geo.actions';
 import { selectGeoList } from 'src/app/store/geo/geo.selector';
 import { GeoState } from 'src/app/store/geo/geo.state';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
-import { finalize } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -16,12 +17,13 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './create-customer.component.html',
   styleUrls: ['./create-customer.component.css'],
 })
-export class CreateCustomerComponent implements OnInit {
+export class CreateCustomerComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   createCustomerForm: FormGroup;
   states: any[] = [];
   filteredStates: any[] = [];
   countries: any[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -38,7 +40,7 @@ export class CreateCustomerComponent implements OnInit {
       lastName: ['', Validators.required],
       emailAddress: ['', [Validators.required, Validators.email]],
       contactNumber: ['', [Validators.required, Validators.minLength(10)]],
-      roleTypeId: ['Customer'],
+      roleTypeId: ['CUSTOMER'],
       address1: ['', [requiredValidator]],
       address2: [''],
       city: ['', [requiredValidator]],
@@ -50,74 +52,74 @@ export class CreateCustomerComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(loadGeos());
-    this.store.pipe(select(selectGeoList)).subscribe((geoListObject: any) => {
-      console.log('geoListObject', geoListObject);
-
+    this.store.pipe(select(selectGeoList), takeUntil(this.destroy$)).subscribe((geoListObject: any) => {
       if (geoListObject) {
         this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
         this.states = filterGeoRecords(geoListObject, 'STATE');
-        this.filteredStates = this.filterStates(this.states, 'USA');
-        console.log('this.countries', this.countries);
-        console.log('this.filteredStates', this.filteredStates);
-        console.log('this.states', this.states);
-      }
-    });
-
-    this.createCustomerForm.get('countryGeoId')?.valueChanges.subscribe(() => {
-      if (this.states) {
         this.filteredStates = this.filterStatesByCountry(this.states);
       }
-      this.createCustomerForm.get('stateProvinceGeoId')?.setValue('');
     });
+
+    this.createCustomerForm.get('countryGeoId')?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.filteredStates = this.filterStatesByCountry(this.states);
+      this.createCustomerForm.get('stateProvinceGeoId')?.setValue('');
+      });
   }
 
-  filterStatesByCountry(states: any[]): any[] {
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  filterStatesByCountry(states: any[] = []): any[] {
     const selectedCountryGeoId =
       this.createCustomerForm.get('countryGeoId')?.value || 'USA';
-      console.log(selectedCountryGeoId)
-    return states.filter((state: any) =>
-      state.country_geo_id === (`${selectedCountryGeoId}`)
-    );
-  }
-
-  filterStates(states: any[], countryGeoId: string): any[] {
-    return states.filter((state: any) =>
-      state.country_geo_id === (`${countryGeoId}`)
-    );
+    return states.filter((state: any) => {
+      const countryId = state.country_geo_id ?? state.countryGeoId;
+      return !countryId || countryId === `${selectedCountryGeoId}`;
+    });
   }
 
   createCustomer(): void {
-    if (this.createCustomerForm.valid) {
-      this.isLoading = true;
-      const values = this.createCustomerForm.value;
-      const payload = {
-        ...values,
-        toName: `${values.firstName} ${values.lastName}`.trim(),
-      };
-
-      this.partyService
-        .createCustomer(payload)
-        .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe({
-          next: (data) => {
-            if (data?.partyId) {
-              this.snackbarService.showSuccess(
-                this.translate.instant('CUSTOMER.CREATED_SUCCESS')
-              );
-              this.router.navigate([`/customers/${data.partyId}`]);
-              this.createCustomerForm.reset();
-            } else {
-              this.snackbarService.showError(
-                this.translate.instant('CUSTOMER.FAILED_CREATE')
-              );
-            }
-          },
-          error: (error) => {
-            this.snackbarService.showError(
-              this.translate.instant('CUSTOMER.ERROR_CREATE')
-            );
-          },
-        });
+    if (this.createCustomerForm.invalid) {
+      this.createCustomerForm.markAllAsTouched();
+      return;
     }
+    this.isLoading = true;
+    const values = this.createCustomerForm.value;
+    const payload = {
+      ...values,
+      toName: `${values.firstName} ${values.lastName}`.trim(),
+    };
+
+    this.partyService
+      .createCustomer(payload)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: (data) => {
+          if (data?.partyId) {
+            this.snackbarService.showSuccess(
+              this.translate.instant('CUSTOMER.CREATED_SUCCESS')
+            );
+            this.router.navigate([`/customers/${data.partyId}`]);
+            this.createCustomerForm.reset({
+              roleTypeId: 'CUSTOMER',
+              countryGeoId: 'USA',
+              stateProvinceGeoId: 'UT',
+            });
+          } else {
+            this.snackbarService.showError(
+              this.translate.instant('CUSTOMER.FAILED_CREATE')
+            );
+          }
+        },
+        error: () => {
+          this.snackbarService.showError(
+            this.translate.instant('CUSTOMER.ERROR_CREATE')
+          );
+        },
+      });
   }
 }
