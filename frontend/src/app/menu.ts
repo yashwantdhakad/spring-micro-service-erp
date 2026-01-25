@@ -319,7 +319,7 @@ export const menuItems = [
           }
         },
         {
-          path: '/facility/create',
+          path: '/facilities/create',
           name: 'Create Facility',
           nav: ['side'],
           meta: {

@@ -36,68 +36,87 @@ describe('CommonService', () => {
   });
 
   it('should fetch enum types', async () => {
-    const mockResponse = { enumId: 'TEST_ENUM', description: 'Test Enum' };
     const enumTypeId = 'TEST_ENUM_TYPE';
+    const mockResponse = [
+      { enumId: 'TEST_ENUM', enumTypeId: 'TEST_ENUM_TYPE', description: 'Test Enum' },
+      { enumId: 'OTHER', enumTypeId: 'OTHER_TYPE', description: 'Other' },
+    ];
 
     service.getEnumTypes(enumTypeId).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/getEnumTypes');
-    expect(req.request.method).toBe('POST');
+    const req = httpMock.expectOne('/oms/api/common/enumerations');
+    expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
   it('should fetch status items', async () => {
-    const mockResponse = { statusId: 'TEST_STATUS', description: 'Test Status' };
     const statusTypeId = 'TEST_STATUS_TYPE';
+    const mockResponse = [
+      { statusId: 'TEST_STATUS', statusTypeId: 'TEST_STATUS_TYPE', description: 'Test Status' },
+      { statusId: 'OTHER', statusTypeId: 'OTHER_TYPE', description: 'Other' },
+    ];
 
     service.getStatusItems(statusTypeId).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/getStatusItems');
-    expect(req.request.method).toBe('POST');
+    const req = httpMock.expectOne('/oms/api/common/status-items');
+    expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
   it('should fetch parent enum types', async () => {
-    const mockResponse = [{ enumId: 'PARENT_ENUM', description: 'Parent Enum' }];
     const parentEnumId = 'PARENT_ENUM_ID';
+    const mockResponse = [
+      { enumTypeId: 'PARENT_ENUM', parentTypeId: 'PARENT_ENUM_ID', description: 'Parent Enum' },
+      { enumTypeId: 'OTHER', parentTypeId: 'OTHER', description: 'Other' },
+    ];
 
     service.getParentEnumTypes(parentEnumId).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne(`/api/rest/s1/moqui/basic/enums?pageNoLimit=true&parentEnumId=${parentEnumId}`);
+    const req = httpMock.expectOne('/oms/api/common/enumeration-types');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
   it('should fetch UOMs', async () => {
-    const mockResponse = [{ uomId: 'UOM', description: 'Unit of Measure' }];
     const uomTypeEnumId = 'UOM_TYPE_ENUM_ID';
+    const mockResponse = [
+      { uomId: 'UOM', uomTypeId: 'UOM_TYPE_ENUM_ID', description: 'Unit of Measure' },
+      { uomId: 'OTHER', uomTypeId: 'OTHER', description: 'Other' },
+    ];
 
     service.getUoms(uomTypeEnumId).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne(`/api/rest/s1/moqui/basic/uoms?pageNoLimit=true&uomTypeEnumId=${uomTypeEnumId}`);
+    const req = httpMock.expectOne('/oms/api/common/uoms');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
   it('should fetch geo list', async () => {
-    const mockResponse = [{ geoId: 'GEO', description: 'Geography' }];
     const geoTypeEnumId = 'TEST_GEO_TYPE';
+    const mockResponse = [
+      { geoId: 'GEO', geoTypeId: 'TEST_GEO_TYPE', description: 'Geography' },
+      { geoId: 'OTHER', geoTypeId: 'OTHER', description: 'Other' },
+    ];
+    const mockAssocs = [];
 
     service.getGeoList(geoTypeEnumId).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne(`/api/rest/s1/moqui/basic/geos?pageNoLimit=true&geoTypeEnumId=${geoTypeEnumId}`);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+    const geoReq = httpMock.expectOne('/oms/api/common/geos');
+    const assocReq = httpMock.expectOne('/oms/api/common/geo-assocs');
+    expect(geoReq.request.method).toBe('GET');
+    expect(assocReq.request.method).toBe('GET');
+    geoReq.flush(mockResponse);
+    assocReq.flush(mockAssocs);
   });
 
   it('should handle getGeos error', () => {
@@ -111,8 +130,10 @@ describe('CommonService', () => {
       }
     );
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/getGeos');
-    req.error(mockError);
+    const geoReq = httpMock.expectOne('/oms/api/common/geos');
+    const assocReq = httpMock.expectOne('/oms/api/common/geo-assocs');
+    geoReq.error(mockError);
+    assocReq.flush([]);
   });
 
   it('should fetch facilities', async () => {
@@ -150,34 +171,44 @@ describe('CommonService', () => {
       }
     });
 
-    const req = httpMock.expectOne('/api/rest/s1/commerce/getEnumTypes');
+    const req = httpMock.expectOne('/oms/api/common/enumerations');
     req.error(mockError);
   });
 
   it('should fetch role types', async () => {
-    const mockResponse = [{ roleTypeId: 'ROLE_TYPE', description: 'Role Type' }];
     const enumTypeId = 'ROLE_ENUM_ID';
+    const mockResponse = [
+      { roleTypeId: 'ROLE_TYPE', parentTypeId: 'ROLE_ENUM_ID', description: 'Role Type' },
+      { roleTypeId: 'OTHER', parentTypeId: 'OTHER', description: 'Other' },
+    ];
 
     service.getRoleTypes(enumTypeId).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne(`/api/rest/s1/commerce/roleTypes?enumTypeId=${enumTypeId}`);
+    const req = httpMock.expectOne('/party/api/role-types');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
 
   it('should fetch lookup results', async () => {
-    const mockResponse = { result: 'LOOKUP_RESULT' };
-    const params = { param1: 'value1' };
-    const lookupFor = 'LOOKUP_TYPE';
+    const mockResponse = [
+      { geoId: 'USA', geoTypeId: 'COUNTRY' },
+      { geoId: 'CA', geoTypeId: 'STATE' },
+    ];
+    const params = { field: 'geo_type_id', value: 'COUNTRY' };
+    const lookupFor = 'geo';
+    const mockAssocs = [{ geoId: 'USA', geoIdTo: 'CA', geoAssocTypeId: 'REGIONS' }];
 
     service.getLookupResults(params, lookupFor).subscribe(response => {
-      expect(response).toEqual(mockResponse);
+      expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne(`/api/rest/s1/lookup/${lookupFor}`);
-    expect(req.request.method).toBe('POST');
-    req.flush(mockResponse);
+    const geoReq = httpMock.expectOne('/oms/api/common/geos');
+    const assocReq = httpMock.expectOne('/oms/api/common/geo-assocs');
+    expect(geoReq.request.method).toBe('GET');
+    expect(assocReq.request.method).toBe('GET');
+    geoReq.flush(mockResponse);
+    assocReq.flush(mockAssocs);
   });
 });

@@ -23,6 +23,7 @@
         <module>wms-service</module>
         <module>mfg-service</module>
         <module>party-service</module>
+        <module>kafka-service</module>
     </modules>
 
     <properties>

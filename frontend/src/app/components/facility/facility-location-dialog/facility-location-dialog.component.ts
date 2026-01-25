@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-facility-location-dialog',
@@ -9,9 +10,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class FacilityLocationDialogComponent {
   form: FormGroup;
+  locationTypes: any[] = [];
 
   constructor(
     private fb: FormBuilder,
+    private commonService: CommonService,
     public dialogRef: MatDialogRef<FacilityLocationDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -20,6 +23,16 @@ export class FacilityLocationDialogComponent {
       locationSeqId: [data.locationSeqId || '', Validators.required],
       locationTypeEnumId: [data.locationTypeEnumId || '', Validators.required],
       areaId: [data.areaId || '']
+    });
+
+    this.loadLocationTypes();
+  }
+
+  private loadLocationTypes(): void {
+    this.commonService.getEnumTypes('FACLOC_TYPE').subscribe({
+      next: (data) => {
+        this.locationTypes = Array.isArray(data) ? data : [data];
+      },
     });
   }
 

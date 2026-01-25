@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
+import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
@@ -17,8 +18,9 @@ export class SODetailComponent implements OnInit {
   orderId: string | undefined;
   orderHeader: any;
   statusItem: any;
-  vendorAddress: any;
+  vendorAddresses: any[] = [];
   firstPartInfo: any;
+  customerPartyId: string | undefined;
 
   addPOItemDialog: boolean = false;
   createOrderNoteDialog: boolean = false;
@@ -83,7 +85,8 @@ export class SODetailComponent implements OnInit {
 
         const customerPartyId = displayInfo?.firstPart?.customerPartyId;
         if (customerPartyId) {
-          this.getPartyPostalContactMechByPurpose(customerPartyId, 'PostalShippingOrigin');
+          this.customerPartyId = customerPartyId;
+          this.loadVendorAddresses(customerPartyId);
         }
       },
       error: (error) => {
@@ -134,13 +137,39 @@ export class SODetailComponent implements OnInit {
     });
   }
 
-  getPartyPostalContactMechByPurpose(partyId: string, purpose: string): void {
-    this.partyService.getPartyPostalContactMechByPurpose(partyId, purpose).subscribe({
+  loadVendorAddresses(partyId: string): void {
+    this.partyService.getPartyPostalContactMechByPurpose(partyId, 'PostalShippingOrigin', 'customer').subscribe({
       next: (data) => {
-        this.vendorAddress = data;
+        this.vendorAddresses = Array.isArray(data) ? data : [];
       },
       error: (err) => {
       },
+    });
+  }
+
+  editVendorAddress(address: any = null): void {
+    if (!this.customerPartyId) {
+      return;
+    }
+    const addressData = {
+      partyId: this.customerPartyId,
+      contactMechId: address?.contactMechId,
+      contactMechPurposeId: address?.contactMechPurposeId || 'PostalShippingOrigin',
+      toName: address?.toName,
+      address1: address?.address1,
+      address2: address?.address2,
+      city: address?.city,
+      postalCode: address?.postalCode,
+      countryGeoId: address?.countryGeoId,
+      stateProvinceGeoId: address?.stateProvinceGeoId,
+    };
+
+    this.dialog.open(AddEditAddressComponent, {
+      data: { addressData },
+    }).afterClosed().subscribe(() => {
+      if (this.customerPartyId) {
+        this.loadVendorAddresses(this.customerPartyId);
+      }
     });
   }
 }

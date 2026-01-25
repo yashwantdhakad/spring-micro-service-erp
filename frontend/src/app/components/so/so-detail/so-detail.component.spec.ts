@@ -62,14 +62,14 @@ describe('SODetailComponent', () => {
 
     orderService.getOrder.and.returnValue(of(mockOrderResponse));
     orderService.getPODisplayInfo.and.returnValue(of(mockDisplayInfo));
-    partyService.getPartyPostalContactMechByPurpose.and.returnValue(of({ address1: '123 Main St' }));
+    partyService.getPartyPostalContactMechByPurpose.and.returnValue(of([{ address1: '123 Main St' }]));
 
     fixture.detectChanges(); // triggers ngOnInit
     tick();
 
     expect(orderService.getOrder).toHaveBeenCalledWith('ORDER123');
     expect(orderService.getPODisplayInfo).toHaveBeenCalledWith('ORDER123');
-    expect(partyService.getPartyPostalContactMechByPurpose).toHaveBeenCalledWith('CUST123', 'PostalShippingOrigin');
+    expect(partyService.getPartyPostalContactMechByPurpose).toHaveBeenCalledWith('CUST123', 'PostalShippingOrigin', 'customer');
     expect(component.parts.length).toBe(1);
     expect(component.orderHeader.orderId).toBe('ORDER123');
     expect(component.isLoading).toBeFalse();
@@ -127,10 +127,10 @@ describe('SODetailComponent', () => {
     expect(orderService.getOrder).toHaveBeenCalledWith('ORDER123');
   }));
 
-  it('should call getPartyPostalContactMechByPurpose directly', fakeAsync(() => {
-    partyService.getPartyPostalContactMechByPurpose.and.returnValue(of({ geoId: 'USA_CA' }));
-    component.getPartyPostalContactMechByPurpose('PARTY001', 'PostalBilling');
+  it('should load vendor addresses directly', fakeAsync(() => {
+    partyService.getPartyPostalContactMechByPurpose.and.returnValue(of([{ city: 'Test' }]));
+    component.loadVendorAddresses('PARTY001');
     tick();
-    expect(component.vendorAddress.geoId).toBe('USA_CA');
+    expect(component.vendorAddresses.length).toBe(1);
   }));
 });

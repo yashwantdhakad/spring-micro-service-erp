@@ -77,7 +77,7 @@ export class ProductAssocComponent implements OnInit {
   }
 
   getEnumTypes(): void {
-    this.commonService.getEnumTypes('ProductAssocType').subscribe({
+    this.productService.getProductAssocTypes().subscribe({
       next: (data) => {
         this.enumTypes = Array.isArray(data) ? data : [data];
       },

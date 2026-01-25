@@ -60,6 +60,12 @@ spring:
             - Path=/mfg/**
           filters:
             - StripPrefix=1
+        - id: kafka-service
+          uri: lb://kafka-service
+          predicates:
+            - Path=/kafka/**
+          filters:
+            - StripPrefix=1
 
 eureka:
   client:

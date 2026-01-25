@@ -375,13 +375,19 @@ describe('PartyService', () => {
   });
 
   it('should get party postal contact mech by purpose', async () => {
-    const mockResponse = of({ contactMechs: [{ id: '1', address: '123 Main St' }] });
+    const mockResponse = {
+      customerDetail: {
+        postalAddressList: [
+          { contactMechPurposeId: 'purposeId', address1: '123 Main St' },
+        ],
+      },
+    };
 
     const response = await service.getPartyPostalContactMechByPurpose('1', 'purposeId');
-    const req = httpTestingController.expectOne('/api/rest/s1/mantle/parties/1/contactMechs/infoList?contactMechPurposeId=purposeId&getAll=false');
+    const req = httpTestingController.expectOne('/party/api/customers/1');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
 
-    expect(response).toEqual(mockResponse);
+    expect(response).toEqual([{ contactMechPurposeId: 'purposeId', address1: '123 Main St' }]);
   });
 });

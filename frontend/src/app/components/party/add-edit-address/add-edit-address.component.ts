@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { forkJoin, of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { PartyService } from 'src/app/services/party/party.service';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-add-edit-address',
@@ -17,15 +19,15 @@ export class AddEditAddressComponent implements OnInit {
 
   constructor(
     private partyService: PartyService,
+    private commonService: CommonService,
     public dialogRef: MatDialogRef<AddEditAddressComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { addressData: any },
     private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
-    this.countries = this.data.addressData.countries || [];
-    this.states = this.filterStatesByCountry(this.data.addressData.states || []);
     this.initializeForm();
+    this.loadGeoOptions();
   }
 
   initializeForm(): void {
@@ -57,7 +59,28 @@ export class AddEditAddressComponent implements OnInit {
       return [];
     }
     const selectedCountry = this.addEditAddressForm.get('countryGeoId')?.value || 'USA';
-    return states.filter((state) => state.country_geo_id === (`${selectedCountry}`));
+    return states.filter((state) => {
+      const countryId = state.country_geo_id ?? state.countryGeoId;
+      return !countryId || countryId === `${selectedCountry}`;
+    });
+  }
+
+  private loadGeoOptions(): void {
+    const providedCountries = this.data.addressData.countries || [];
+    const providedStates = this.data.addressData.states || [];
+    const countries$ = providedCountries.length
+      ? of(providedCountries)
+      : this.commonService.getLookupResults({ field: 'geo_type_id', value: 'COUNTRY' }, 'geo');
+    const states$ = providedStates.length
+      ? of(providedStates)
+      : this.commonService.getLookupResults({ field: 'geo_type_id', value: 'STATE' }, 'geo');
+
+    forkJoin({ countries: countries$, states: states$ }).subscribe({
+      next: ({ countries, states }) => {
+        this.countries = countries || [];
+        this.states = this.filterStatesByCountry(states || []);
+      },
+    });
   }
 
   addEditAddress(): void {

@@ -5,6 +5,7 @@ import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
@@ -19,7 +20,8 @@ export class PODetailComponent implements OnInit {
   orderId: string | undefined;
   orderHeader: any;
   statusItem: any;
-  vendorAddress: any;
+  vendorAddresses: any[] = [];
+  vendorPartyId: string | undefined;
 
   addPOItemDialog: boolean = false;
   createOrderNoteDialog: boolean = false;
@@ -107,7 +109,8 @@ export class PODetailComponent implements OnInit {
             ];
 
             if (displayResponse?.firstPart?.vendorPartyId) {
-              this.getPartyPostalContactMechByPurpose(displayResponse.firstPart.vendorPartyId, 'PostalShippingOrigin');
+              this.vendorPartyId = displayResponse.firstPart.vendorPartyId;
+              this.loadVendorAddresses(displayResponse.firstPart.vendorPartyId);
             }
           },
           error: (error) => {
@@ -174,12 +177,38 @@ export class PODetailComponent implements OnInit {
       });
   }
 
-  getPartyPostalContactMechByPurpose(partyId: string, purpose: string): void {
-    this.partyService.getPartyPostalContactMechByPurpose(partyId, purpose).subscribe({
+  loadVendorAddresses(partyId: string): void {
+    this.partyService.getPartyPostalContactMechByPurpose(partyId, 'PostalShippingOrigin', 'supplier').subscribe({
       next: (data) => {
-        this.vendorAddress = data;
+        this.vendorAddresses = Array.isArray(data) ? data : [];
       },
       error: (error) => {
+      }
+    });
+  }
+
+  editVendorAddress(address: any = null): void {
+    if (!this.vendorPartyId) {
+      return;
+    }
+    const addressData = {
+      partyId: this.vendorPartyId,
+      contactMechId: address?.contactMechId,
+      contactMechPurposeId: address?.contactMechPurposeId || 'PostalShippingOrigin',
+      toName: address?.toName,
+      address1: address?.address1,
+      address2: address?.address2,
+      city: address?.city,
+      postalCode: address?.postalCode,
+      countryGeoId: address?.countryGeoId,
+      stateProvinceGeoId: address?.stateProvinceGeoId,
+    };
+
+    this.dialog.open(AddEditAddressComponent, {
+      data: { addressData },
+    }).afterClosed().subscribe(() => {
+      if (this.vendorPartyId) {
+        this.loadVendorAddresses(this.vendorPartyId);
       }
     });
   }

@@ -69,13 +69,13 @@ describe('PODetailComponent', () => {
 
     orderServiceSpy.getOrder.and.returnValue(of(mockOrder));
     orderServiceSpy.getPODisplayInfo.and.returnValue(of(mockDisplay));
-    partyServiceSpy.getPartyPostalContactMechByPurpose.and.returnValue(of({ address: '123 Main St' }));
+    partyServiceSpy.getPartyPostalContactMechByPurpose.and.returnValue(of([{ address1: '123 Main St' }]));
 
     fixture.detectChanges(); // triggers ngOnInit()
 
     expect(orderServiceSpy.getOrder).toHaveBeenCalledWith('PO-123');
     expect(orderServiceSpy.getPODisplayInfo).toHaveBeenCalledWith('PO-123');
-    expect(partyServiceSpy.getPartyPostalContactMechByPurpose).toHaveBeenCalledWith('VENDOR-1', 'PostalShippingOrigin');
+    expect(partyServiceSpy.getPartyPostalContactMechByPurpose).toHaveBeenCalledWith('VENDOR-1', 'PostalShippingOrigin', 'supplier');
 
     expect(component.parts.length).toBe(1);
     expect(component.contents.length).toBe(1);

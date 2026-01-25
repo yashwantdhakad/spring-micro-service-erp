@@ -269,8 +269,25 @@ export class PartyService {
     return this.apiService.postFormData(`/api/rest/s1/commerce/PartyContent`, params);
   }
 
-  getPartyPostalContactMechByPurpose(partyId: string, contactMechPurposeId: string): Observable<any> {
-    const url = `/api/rest/s1/mantle/parties/${partyId}/contactMechs/infoList?contactMechPurposeId=${contactMechPurposeId}&getAll=false`;
-    return this.apiService.get(url);
+  getPartyPostalContactMechByPurpose(
+    partyId: string,
+    contactMechPurposeId: string,
+    partyType: 'customer' | 'supplier' = 'customer'
+  ): Observable<any[]> {
+    const basePath = partyType === 'supplier' ? '/party/api/suppliers' : '/party/api/customers';
+    const url = `${basePath}/${encodeURIComponent(partyId)}`;
+    return this.apiService.get(url).pipe(
+      map((response: any) => {
+        const detail =
+          partyType === 'supplier' ? response?.supplierDetail : response?.customerDetail;
+        const list = Array.isArray(detail?.postalAddressList) ? detail.postalAddressList : [];
+        if (!contactMechPurposeId) {
+          return list;
+        }
+        return list.filter(
+          (address: any) => address?.contactMechPurposeId === contactMechPurposeId
+        );
+      })
+    );
   }
 }

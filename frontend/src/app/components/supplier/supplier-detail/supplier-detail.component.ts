@@ -84,8 +84,8 @@ export class SupplierDetailComponent {
     this.store.dispatch(loadGeos());
     this.store.pipe(select(selectGeoList)).subscribe((geoListObject: any) => {
       if (geoListObject) {
-        this.countries = filterGeoRecords(geoListObject, 'GEOT_COUNTRY');
-        this.states = filterGeoRecords(geoListObject, 'GEOT_STATE');
+        this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
+        this.states = filterGeoRecords(geoListObject, 'STATE');
       }
     });
   }

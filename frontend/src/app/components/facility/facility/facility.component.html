@@ -7,9 +7,6 @@
       <mat-card-title>{{ 'FACILITY.TITLE' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <button mat-raised-button color="primary" routerLink="/facilities/create">
-        {{ 'FACILITY.CREATE_TITLE' | translate }}
-      </button>
       <table mat-table [dataSource]="items">
         <ng-container matColumnDef="facilityId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.ID' | translate }}</th>

@@ -4,12 +4,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
 import { PartyService } from 'src/app/services/party/party.service';
+import { CommonService } from 'src/app/services/common/common.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddEditAddressComponent', () => {
   let component: AddEditAddressComponent;
   let fixture: ComponentFixture<AddEditAddressComponent>;
   let mockPartyService: jasmine.SpyObj<PartyService>;
+  let mockCommonService: jasmine.SpyObj<CommonService>;
   let mockDialogRef: jasmine.SpyObj<MatDialogRef<AddEditAddressComponent>>;
 
   const mockAddressData = {
@@ -32,6 +34,7 @@ describe('AddEditAddressComponent', () => {
 
   beforeEach(async () => {
     mockPartyService = jasmine.createSpyObj('PartyService', ['updatePostalAddress', 'addPostalAddress']);
+    mockCommonService = jasmine.createSpyObj('CommonService', ['getLookupResults']);
     mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
 
     await TestBed.configureTestingModule({
@@ -39,6 +42,7 @@ describe('AddEditAddressComponent', () => {
       declarations: [AddEditAddressComponent],
       providers: [
         { provide: PartyService, useValue: mockPartyService },
+        { provide: CommonService, useValue: mockCommonService },
         { provide: MAT_DIALOG_DATA, useValue: { addressData: mockAddressData } },
         { provide: MatDialogRef, useValue: mockDialogRef },
       ],

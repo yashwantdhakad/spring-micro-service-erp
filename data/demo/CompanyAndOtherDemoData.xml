@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <Party partyId="COMPANY" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="COMPANY" groupName="Hermeus Corporation" officeSiteName="www.hermeus.com" logoImageUrl="/resources/images/hermeus-logo-white.png" pdfLogoImageUrl="/resources/images/hermeus-logo-black.png"/>
+    <PartyRole partyId="COMPANY" roleTypeId="BILL_FROM_VENDOR"/>
+    <PartyRole partyId="COMPANY" roleTypeId="BILL_TO_CUSTOMER"/>
+    <PartyRole partyId="COMPANY" roleTypeId="INTERNAL_ORGANIZATIO"/>
+    <PartyRole partyId="COMPANY" roleTypeId="SUPPLIER_AGENT"/>
+    <PartyRole partyId="COMPANY" roleTypeId="SUPPLIER"/>
+    <PartyRole partyId="COMPANY" roleTypeId="VENDOR"/>
+    <PartyRole partyId="COMPANY" roleTypeId="CONTACT"/>
+    <PartyRole partyId="COMPANY" roleTypeId="CUSTOMER"/>
+    <PartyRole partyId="COMPANY" roleTypeId="_NA_"/>
+    <PartyRole partyId="COMPANY" roleTypeId="END_USER_CUSTOMER"/>
+    <PartyRole partyId="COMPANY" roleTypeId="SHIP_TO_CUSTOMER"/>
+    <PartyRole partyId="COMPANY" roleTypeId="PLACING_CUSTOMER"/>
+
+    <ContactMech contactMechId="9000" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="COMPANY" contactMechTypeId="EMAIL_ADDRESS" infoString="info@hermeus.com"/>
+    <ContactMech contactMechId="9001" contactMechTypeId="TELECOM_NUMBER"/>
+    <TelecomNumber contactMechId="9001" countryCode="1" areaCode="470" contactNumber="223-4927"/>
+    <PartyContactMech partyId="COMPANY" contactMechId="9000" fromDate="2014-01-01 00:00:00" allowSolicitation="Y"/>
+    <PartyContactMech partyId="COMPANY" contactMechId="COMPANY" fromDate="2014-01-01 00:00:00" allowSolicitation="Y" verified="Y"/>
+    <PartyContactMech partyId="COMPANY" contactMechId="9001" fromDate="2014-05-13 00:00:00" allowSolicitation="Y"/>
+    <PostalAddress contactMechId="9000" toName="Hermeus" address1="3960 Dekalb Technology Parkway" city="Doraville" postalCode="30340" countryGeoId="USA" stateProvinceGeoId="GA"/>
+    <PartyContactMechPurpose contactMechPurposeTypeId="PRIMARY_EMAIL" partyId="COMPANY" contactMechId="COMPANY" fromDate="2015-01-01 00:00:00"/>
+    <PartyContactMechPurpose partyId="COMPANY" contactMechId="9000" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2014-01-01 00:00:00"/>
+    <PartyContactMechPurpose partyId="COMPANY" contactMechId="9000" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2014-01-01 00:00:00"/>
+    <PartyContactMechPurpose partyId="COMPANY" contactMechId="9000" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2014-01-01 00:00:00"/>
+    <PartyContactMechPurpose partyId="COMPANY" contactMechId="9000" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2006-06-21 00:00:00"/>
+    <PartyContactMechPurpose partyId="COMPANY" contactMechId="9001" contactMechPurposeTypeId="PHONE_BILLING" fromDate="2014-05-13 00:00:00"/>
+    
+    <GlJournal organizationPartyId="COMPANY" glJournalId="ERROR_JOURNAL" glJournalName="Suspense transactions"/>
+    <PartyAcctgPreference partyId="COMPANY" taxFormId="" cogsMethodId="COGS_AVG_COST" baseCurrencyUomId="USD" invoiceSeqCustMethId="INV_HOOK_ENF_SEQ" invoiceIdPrefix="CI" quoteIdPrefix="CQ" orderSeqCustMethID="ORDER_HOOK_ENF_SEQ" orderIdPrefix="" errorGlJournalId="ERROR_JOURNAL" enableAccounting="Y"/>
+
+    <Facility facilityId="FAC_01" facilityName="The Factory" facilityTypeId="WAREHOUSE" ownerPartyId="COMPANY" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM"  defaultDaysToShip="25" description="The Factory Store" defaultWeightUomId="WT_lb" doPicking="Y"/>
+    <FacilityLocation facilityId="FAC_01" locationSeqId="INTRANSIT" locationTypeEnumId="FLT_PICKLOC"/>
+    <ContactMech contactMechId="WH_TN" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="WH_PA" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="WH_EA" contactMechTypeId="EMAIL_ADDRESS" infoString="info@hermeus.com"/>
+    <PostalAddress contactMechId="WH_PA" toName="The Factory" address1="3960 Dekalb Technology Parkway" city="Doraville" postalCode="30340" countryGeoId="USA" stateProvinceGeoId="GA"/>
+    <TelecomNumber contactMechId="WH_TN" countryCode="1" areaCode="470" contactNumber="223-4927"/>
+    <FacilityContactMech facilityId="FAC_01" contactMechId="WH_PA" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="FAC_01" contactMechId="WH_EA" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="FAC_01" contactMechId="WH_TN" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="FAC_01" contactMechId="WH_PA" contactMechPurposeTypeId="PRIMARY_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="FAC_01" contactMechId="WH_PA" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="FAC_01" contactMechId="WH_PA" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="FAC_01" contactMechId="WH_EA" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="FAC_01" contactMechId="WH_TN" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="FAC_01" contactMechId="WH_TN" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Facility facilityId="SITE_ND" facilityName="Site ND" facilityTypeId="WAREHOUSE" ownerPartyId="COMPANY" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM"  defaultDaysToShip="25" description="Site ND Store" defaultWeightUomId="WT_lb" doPicking="Y"/>
+    <FacilityLocation facilityId="SITE_ND" locationSeqId="INTRANSIT" locationTypeEnumId="FLT_PICKLOC"/>
+    <ContactMech contactMechId="WH_TN_1" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="WH_PA_1" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="WH_EA_1" contactMechTypeId="EMAIL_ADDRESS" infoString="info@hermeus.com"/>
+    <PostalAddress contactMechId="WH_PA_1" toName="Site ND" address1="1165 Franklin St" city="South Bend" postalCode="46601" countryGeoId="USA" stateProvinceGeoId="IN"/>
+    <TelecomNumber contactMechId="WH_TN_1" countryCode="1" areaCode="470" contactNumber="223-4927"/>
+    <FacilityContactMech facilityId="SITE_ND" contactMechId="WH_PA_1" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="SITE_ND" contactMechId="WH_EA_1" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="SITE_ND" contactMechId="WH_TN_1" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_ND" contactMechId="WH_PA_1" contactMechPurposeTypeId="PRIMARY_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_ND" contactMechId="WH_PA_1" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_ND" contactMechId="WH_PA_1" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_ND" contactMechId="WH_EA_1" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_ND" contactMechId="WH_TN_1" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_ND" contactMechId="WH_TN_1" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Facility facilityId="SITE_27" facilityName="Site 27" facilityTypeId="WAREHOUSE" ownerPartyId="COMPANY" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM"  defaultDaysToShip="25" description="Site 27 Store" defaultWeightUomId="WT_lb" doPicking="Y"/>
+    <FacilityLocation facilityId="SITE_27" locationSeqId="INTRANSIT" locationTypeEnumId="FLT_PICKLOC"/>
+    <ContactMech contactMechId="WH_TN_2" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="WH_PA_2" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="WH_EA_2" contactMechTypeId="EMAIL_ADDRESS" infoString="info@hermeus.com"/>
+    <PostalAddress contactMechId="WH_PA_2" toName="Site 27" address1="1954 Airport Rd" city="Atlanta" postalCode="84101" countryGeoId="USA" stateProvinceGeoId="GA"/>
+    <TelecomNumber contactMechId="WH_TN_2" countryCode="1" areaCode="470" contactNumber="223-4927"/>
+    <FacilityContactMech facilityId="SITE_27" contactMechId="WH_PA_2" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="SITE_27" contactMechId="WH_EA_2" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="SITE_27" contactMechId="WH_TN_2" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_27" contactMechId="WH_PA_2" contactMechPurposeTypeId="PRIMARY_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_27" contactMechId="WH_PA_2" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_27" contactMechId="WH_PA_2" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_27" contactMechId="WH_EA_2" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_27" contactMechId="WH_TN_2" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="SITE_27" contactMechId="WH_TN_2" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Facility facilityId="THE_SHOP" facilityName="The Shop" facilityTypeId="WAREHOUSE" ownerPartyId="COMPANY" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM"  defaultDaysToShip="25" description="The Shop Store" defaultWeightUomId="WT_lb" doPicking="Y"/>
+    <FacilityLocation facilityId="THE_SHOP" locationSeqId="INTRANSIT" locationTypeEnumId="FLT_PICKLOC"/>
+    <ContactMech contactMechId="WH_TN_3" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="WH_PA_3" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="WH_EA_3" contactMechTypeId="EMAIL_ADDRESS" infoString="info@hermeus.com"/>
+    <PostalAddress contactMechId="WH_PA_3" toName="The Shop" address1="3401 Jack Northrop Ave" city="Hawthorne" postalCode="90250" countryGeoId="USA" stateProvinceGeoId="CA"/>
+    <TelecomNumber contactMechId="WH_TN_3" countryCode="1" areaCode="470" contactNumber="223-4927"/>
+    <FacilityContactMech facilityId="THE_SHOP" contactMechId="WH_PA_3" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="THE_SHOP" contactMechId="WH_EA_3" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="THE_SHOP" contactMechId="WH_TN_3" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_SHOP" contactMechId="WH_PA_3" contactMechPurposeTypeId="PRIMARY_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_SHOP" contactMechId="WH_PA_3" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_SHOP" contactMechId="WH_PA_3" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_SHOP" contactMechId="WH_EA_3" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_SHOP" contactMechId="WH_TN_3" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_SHOP" contactMechId="WH_TN_3" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
+
+    <Facility facilityId="THE_VAN" facilityName="The Vanguard" facilityTypeId="WAREHOUSE" ownerPartyId="COMPANY" defaultInventoryItemTypeId="NON_SERIAL_INV_ITEM"  defaultDaysToShip="25" description="The Vanguard" defaultWeightUomId="WT_lb" doPicking="Y"/>
+    <FacilityLocation facilityId="THE_VAN" locationSeqId="INTRANSIT" locationTypeEnumId="FLT_PICKLOC"/>
+    <ContactMech contactMechId="THE_VAN_TN" contactMechTypeId="TELECOM_NUMBER"/>
+    <ContactMech contactMechId="THE_VAN_PA" contactMechTypeId="POSTAL_ADDRESS"/>
+    <ContactMech contactMechId="THE_VAN_EA" contactMechTypeId="EMAIL_ADDRESS" infoString="info@hermeus.com"/>
+    <PostalAddress contactMechId="THE_VAN_PA" toName="The Vanguard" address1="1700 N Moore St Suite 1800" city="Arlington" postalCode="22209" countryGeoId="USA" stateProvinceGeoId="VA"/>
+    <TelecomNumber contactMechId="THE_VAN_TN" countryCode="1" areaCode="470" contactNumber="223-4927"/>
+    <FacilityContactMech facilityId="THE_VAN" contactMechId="THE_VAN_PA" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="THE_VAN" contactMechId="THE_VAN_EA" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMech facilityId="THE_VAN" contactMechId="THE_VAN_TN" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_VAN" contactMechId="THE_VAN_PA" contactMechPurposeTypeId="PRIMARY_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_VAN" contactMechId="THE_VAN_PA" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_VAN" contactMechId="THE_VAN_PA" contactMechPurposeTypeId="SHIP_ORIG_LOCATION" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_VAN" contactMechId="THE_VAN_EA" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_VAN" contactMechId="THE_VAN_TN" contactMechPurposeTypeId="PHONE_SHIPPING" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityContactMechPurpose facilityId="THE_VAN" contactMechId="THE_VAN_TN" contactMechPurposeTypeId="PHONE_SHIP_ORIG" fromDate="2001-05-13 12:00:00.0"/>
+    <FacilityGroupMember facilityId="THE_VAN" facilityGroupId="OMS_FULFILLMENT" fromDate="2001-05-13 12:00:00.0" />
+
+    <FacilityGroupMember facilityId="FAC_01" facilityGroupId="OMS_FULFILLMENT" fromDate="2001-05-13 12:00:00.0" />
+    <FacilityGroupMember facilityId="SITE_ND" facilityGroupId="OMS_FULFILLMENT" fromDate="2001-05-13 12:00:00.0" />
+    <FacilityGroupMember facilityId="SITE_27" facilityGroupId="OMS_FULFILLMENT" fromDate="2001-05-13 12:00:00.0" />
+    <FacilityGroupMember facilityId="THE_SHOP" facilityGroupId="OMS_FULFILLMENT" fromDate="2001-05-13 12:00:00.0" />
+
+    <ProductStoreGroup productStoreGroupName="Hermeus Store Group" description="Hermeus Store Group" productStoreGroupId="STORE_GROUP"/>
+    <ProductStore productStoreId="STORE" storeName="Hermeus" primaryStoreGroupId="STORE_GROUP" companyName="Hermeus" title="Hermeus" subtitle="Hermeus" payToPartyId="COMPANY"
+                  viewCartOnAdd="N" autoSaveCart="Y" inventoryFacilityId="FAC_01" oneInventoryFacility="N" checkInventory="N" reserveInventory="Y" reserveOrderEnumId="INVRO_FIFO_REC" allowSplit="Y" prorateShipping="Y" prorateTaxes="Y"
+                  requireInventory="N" balanceResOnOrderCreation="N" orderNumberPrefix="H" defaultLocaleString="en_IN" defaultCurrencyUomId="USD" catalogUrlMountPoint="products" defaultSalesChannelEnumId="WEB_SALES_CHANNEL"
+                  allowPassword="Y" explodeOrderItems="N" retryFailedAuths="Y" headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
+                  itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" autoSetFacility="Y" authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
+                  authFraudMessage="Your order has been rejected and your account has been disabled due to fraud." authErrorMessage="Problem connecting to payment processor; we will continue to retry and notify you by email."
+                  usePrimaryEmailUsername="Y" prodSearchExcludeVariants="Y" storeCreditValidDays="90" autoApproveInvoice="Y" autoApproveOrder="N" shipIfCaptureFails="N" reqReturnInventoryReceive="N"/>
+
+    <ProdCatalog prodCatalogId="CATALOG" catalogName="Hermeus Catalog" useQuickAdd="Y"/>
+
+    <WebSite webSiteId="WEBSTORE" siteName="Hermeus" productStoreId="STORE" allowProductStoreChange="N" isDefault="Y" prodCatalogId="CATALOG" salesChannel="WEB_SALES_CHANNEL"/>
+    <ProductStoreCatalog productStoreId="STORE" prodCatalogId="CATALOG" fromDate="2018-01-01 12:00:00.000" sequenceNum="2"/>
+
+    <Content contentId="PT_TRUNK" contentTypeId="WEB_SITE_PUB_PT" contentName="Webstore Site's Publish Point" description="Root publish point for WebStore website" statusId="CTNT_PUBLISHED"/>
+    <WebSiteContent webSiteId="WEBSTORE" contentId="PT_TRUNK" webSiteContentTypeId="PUBLISH_POINT" fromDate="2018-01-01 12:00:00.000"/>
+    <Content contentId="KYWRD_SEARCH" contentTypeId="DOCUMENT" statusId="CTNT_PUBLISHED" contentName="Content for category decorator"/>
+    <WebSiteContent webSiteId="WEBSTORE" contentId="KYWRD_SEARCH" fromDate="2018-01-01 12:00:00.000" webSiteContentTypeId="KYWRD_SEARCH"/>
+
+    <ProductStoreFacility productStoreId="STORE" facilityId="FAC_01" fromDate="2018-01-01 12:00:00.000" sequenceNum="1"/>
+    <ProductStoreFacility productStoreId="STORE" facilityId="SITE_27" fromDate="2018-01-01 12:00:00.000" sequenceNum="2"/>
+    <ProductStoreFacility productStoreId="STORE" facilityId="SITE_ND" fromDate="2018-01-01 12:00:00.000" sequenceNum="3"/>
+    <ProductStoreFacility productStoreId="STORE" facilityId="THE_SHOP" fromDate="2018-01-01 12:00:00.000" sequenceNum="4"/>
+    <ProductStoreFacility productStoreId="STORE" facilityId="THE_VAN" fromDate="2018-01-01 12:00:00.000" sequenceNum="5"/>
+
+
+    <!-- Local delivery -->
+    <ProductStoreShipmentMeth productStoreShipMethId="SHIP_METH" productStoreId="STORE" shipmentMethodTypeId="LOCAL_DELIVERY" partyId="_NA_" roleTypeId="CARRIER"/>
+    <CarrierShipmentMethBoxType partyId="_NA_" shipmentBoxTypeId="YOURPACKNG" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    <CarrierShipmentMethod partyId="_NA_" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="1"/>
+
+    <ProductStoreEmailSetting productStoreId="STORE" emailType="PRDS_ODR_COMPLETE" subject="Order Complete Notification for Order #${orderId}" xslfoAttachScreenLocation="component://hwmapps/widget/customerservice/OrderPrintScreens.xml#OrderPDF" fromAddress="no-reply@hermeus.com"/>
+    <EmailTemplateSetting emailTemplateSettingId="PRDS_ODR_COMPLETE" emailType="PRDS_ODR_COMPLETE" templateContentId="PurchaseCompleted" subject="Order Complete Notification for Order #${orderId}" xslfoAttachScreenLocation="component://hwmapps/widget/customerservice/OrderPrintScreens.xml#OrderPDF" fromAddress="no-reply@hermeus.com"/>
+
+    <!--    Hold location data-->
+    <Enumeration description="Hold" enumCode="HOLDLOC" enumId="FLT_HOLDLOC" enumTypeId="FACLOC_TYPE" sequenceId="03"/>
+    <FacilityLocation facilityId="FAC_01" locationSeqId="WH_LOC_HL1" locationTypeEnumId="FLT_HOLDLOC" areaId="01-HL"/>
+    <FacilityLocation facilityId="FAC_01" locationSeqId="WH_LOC_HL2" locationTypeEnumId="FLT_HOLDLOC" areaId="02-HL"/>
+
+</entity-engine-xml>

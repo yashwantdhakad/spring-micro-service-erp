@@ -189,31 +189,37 @@
               </li>
             </ul>
 
-            <ul
-              class="custom-list"
-              *ngFor="let primaryAddress of vendorAddress?.postalAddressList"
-            >
-              <li
-                class="custom-list-item"
-                *ngIf="
-                  primaryAddress.contactMechPurposeId ==
-                  'PostalShippingOrigin'
-                "
-              >
+            <ul class="custom-list" *ngIf="vendorAddresses?.length; else noVendorAddress">
+              <li class="custom-list-item" *ngFor="let primaryAddress of vendorAddresses">
                 <strong>Address:</strong>
+                <mat-icon
+                  matListIcon
+                  class="custom-mat-icon custom-icon-align"
+                  color="primary"
+                  (click)="editVendorAddress(primaryAddress)"
+                >edit</mat-icon>
+                <div>{{ primaryAddress.toName }}</div>
+                <div>{{ primaryAddress.address1 }}</div>
+                <div>{{ primaryAddress.address2 }}</div>
                 <div>
-                  {{ primaryAddress.postalAddress.toName }}
-                </div>
-                <div>{{ primaryAddress.postalAddress.address1 }}</div>
-                <div>{{ primaryAddress.postalAddress.address2 }}</div>
-                <div>
-                  {{ primaryAddress.postalAddress.city }},
-                  {{ primaryAddress.postalAddressStateGeo.geoName }}
-                  {{ primaryAddress.postalAddress.postalCode }}
-                  {{ primaryAddress.postalAddress.countryGeoId }}
+                  {{ primaryAddress.city }},
+                  {{ primaryAddress.stateProvinceGeoId }}
+                  {{ primaryAddress.postalCode }}
+                  {{ primaryAddress.countryGeoId }}
                 </div>
               </li>
             </ul>
+            <ng-template #noVendorAddress>
+              <div class="custom-list-item">
+                <strong>Address:</strong>
+                <mat-icon
+                  matListIcon
+                  class="custom-mat-icon custom-icon-align"
+                  color="primary"
+                  (click)="editVendorAddress()"
+                >add</mat-icon>
+              </div>
+            </ng-template>
           </mat-card-content>
         </mat-card>
       </div>

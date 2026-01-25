@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProductAssocComponent } from './product-assoc.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonService } from 'src/app/services/common/common.service';
 import { ProductService } from 'src/app/services/product/product.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { of, throwError } from 'rxjs';
@@ -12,8 +11,7 @@ describe('ProductAssocComponent', () => {
   let component: ProductAssocComponent;
   let fixture: ComponentFixture<ProductAssocComponent>;
 
-  const mockCommonService = jasmine.createSpyObj('CommonService', ['getEnumTypes']);
-  const mockProductService = jasmine.createSpyObj('ProductService', ['getProducts', 'createProductAssoc']);
+  const mockProductService = jasmine.createSpyObj('ProductService', ['getProducts', 'createProductAssoc', 'getProductAssocTypes']);
   const mockSnackbarService = jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']);
   const mockDialogRef = jasmine.createSpyObj('MatDialogRef', ['close']);
 
@@ -34,7 +32,6 @@ describe('ProductAssocComponent', () => {
       providers: [
         { provide: MatDialogRef, useValue: mockDialogRef },
         { provide: MAT_DIALOG_DATA, useValue: mockData },
-        { provide: CommonService, useValue: mockCommonService },
         { provide: ProductService, useValue: mockProductService },
         { provide: SnackbarService, useValue: mockSnackbarService },
         TranslateService,
@@ -45,6 +42,7 @@ describe('ProductAssocComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ProductAssocComponent);
     component = fixture.componentInstance;
+    mockProductService.getProductAssocTypes.and.returnValue(of([]));
     fixture.detectChanges();
   });
 
@@ -54,10 +52,10 @@ describe('ProductAssocComponent', () => {
   });
 
   it('should call getEnumTypes and populate enumTypes', () => {
-    const mockEnum = [{ enumId: 'PA_COMP', description: 'Component' }];
-    mockCommonService.getEnumTypes.and.returnValue(of(mockEnum));
+    const mockEnum = [{ productAssocTypeId: 'PA_COMP', description: 'Component' }];
+    mockProductService.getProductAssocTypes.and.returnValue(of(mockEnum));
     component.getEnumTypes();
-    expect(mockCommonService.getEnumTypes).toHaveBeenCalledWith('ProductAssocType');
+    expect(mockProductService.getProductAssocTypes).toHaveBeenCalled();
   });
 
   it('should call createProductAssoc() and submit form successfully', () => {

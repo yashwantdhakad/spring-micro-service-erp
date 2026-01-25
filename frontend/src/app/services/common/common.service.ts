@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, throwError } from 'rxjs';
+import { Observable, forkJoin, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import * as GeoActions from 'src/app/store/geo/geo.actions';
 import * as EnumActions from 'src/app/store/enum/enum.actions';
@@ -13,47 +13,61 @@ export class CommonService {
   constructor(private apiService: ApiService, private store: Store) {}
 
   getEnumTypes(enumTypeId: string): Observable<any> {
-    return this.apiService.post('/api/rest/s1/commerce/getEnumTypes', { enumTypeId }).pipe(
+    return this.apiService.get<any[]>('/oms/api/common/enumerations').pipe(
+      map((items) =>
+        (items || []).filter((item) => item?.enumTypeId === enumTypeId)
+      ),
       catchError(this.handleError)
     );
   }
 
   getStatusItems(statusTypeId: string): Observable<any> {
-    return this.apiService.post('/api/rest/s1/commerce/getStatusItems', { statusTypeId }).pipe(
+    return this.apiService.get<any[]>('/oms/api/common/status-items').pipe(
+      map((items) =>
+        (items || []).filter((item) => item?.statusTypeId === statusTypeId)
+      ),
       catchError(this.handleError)
     );
   }
 
   getParentEnumTypes(parentEnumId: string): Observable<any> {
-    const url = `/api/rest/s1/moqui/basic/enums?pageNoLimit=true&parentEnumId=${parentEnumId}`;
-    return this.apiService.get(url).pipe(
+    return this.apiService.get<any[]>('/oms/api/common/enumeration-types').pipe(
+      map((items) =>
+        (items || []).filter((item) => item?.parentTypeId === parentEnumId)
+      ),
       catchError(this.handleError)
     );
   }
 
   getUoms(uomTypeEnumId: string): Observable<any> {
-    const url = `/api/rest/s1/moqui/basic/uoms?pageNoLimit=true&uomTypeEnumId=${uomTypeEnumId}`;
-    return this.apiService.get(url).pipe(
+    return this.apiService.get<any[]>('/oms/api/common/uoms').pipe(
+      map((items) =>
+        (items || []).filter((item) => item?.uomTypeId === uomTypeEnumId)
+      ),
       catchError(this.handleError)
     );
   }
 
   getGeoList(geoTypeEnumId: string): Observable<any> {
-    const url = `/api/rest/s1/moqui/basic/geos?pageNoLimit=true&geoTypeEnumId=${geoTypeEnumId}`;
-    return this.apiService.get(url).pipe(
+    return this.fetchGeosWithAssocs().pipe(
+      map((items) => items.filter((item) => item?.geoTypeId === geoTypeEnumId)),
       catchError(this.handleError)
     );
   }
 
   getRoleTypes(enumTypeId: string): Observable<any> {
-    const url = `/api/rest/s1/commerce/roleTypes?enumTypeId=${enumTypeId}`;
-    return this.apiService.get(url).pipe(
+    return this.apiService.get<any[]>('/party/api/role-types').pipe(
+      map((items) =>
+        (items || []).filter((item) =>
+          enumTypeId ? item?.parentTypeId === enumTypeId : true
+        )
+      ),
       catchError(this.handleError)
     );
   }
 
   getGeos(): Observable<any[]> {
-    return this.apiService.post('/api/rest/s1/commerce/getGeos', { geoTypeEnumId: '', geoId: '' }).pipe(
+    return this.fetchGeosWithAssocs().pipe(
       tap((geos: any) => this.store.dispatch(GeoActions.loadGeosSuccess({ geos }))),
       catchError((error) => {
         this.store.dispatch(GeoActions.loadGeosFailure({ error: error.message }));
@@ -63,7 +77,7 @@ export class CommonService {
   }
 
   getEnums(): Observable<any[]> {
-    return this.apiService.get('/api/rest/s1/moqui/basic/enums?pageNoLimit=true').pipe(
+    return this.apiService.get<any[]>('/oms/api/common/enumerations').pipe(
       tap((enums: any) => this.store.dispatch(EnumActions.loadEnumsSuccess({ enums }))),
       catchError((error) => {
         this.store.dispatch(EnumActions.loadEnumsFailure({ error: error.message }));
@@ -94,32 +108,134 @@ export class CommonService {
   params: { field?: string; value?: string | number | string[] } = {},
   table: string
 ): Observable<any> {
-  const q: string[] = [`table=${encodeURIComponent(table)}`];
+  const tableKey = table?.toLowerCase() || '';
+  const filterParams = (items: any[]) => {
+    if (!params.field) {
+      return items;
+    }
+    const rawField = params.field;
+    const camelField = rawField.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
+    const field = rawField in (items[0] || {}) ? rawField : camelField;
+    const rawValue = params.value;
+    const values = Array.isArray(rawValue)
+      ? rawValue.map(String)
+      : rawValue !== undefined && rawValue !== null
+        ? String(rawValue).split(',').map((val) => val.trim()).filter(Boolean)
+        : [];
 
-  if (params.field) {
-    q.push(`field=${encodeURIComponent(params.field)}`);
+    return items.filter((item) => {
+      const itemValue = item?.[field];
+      if (values.length === 0) {
+        return true;
+      }
+      return values.includes(String(itemValue));
+    });
+  };
+
+  if (tableKey === 'geo') {
+    return this.fetchGeosWithAssocs().pipe(
+      map((items) => filterParams(items)),
+      catchError(this.handleError)
+    );
+  }
+  if (tableKey === 'product_type' || tableKey === 'producttype') {
+    return this.apiService.get<any[]>('/wms/api/product-types').pipe(
+      map((items) => filterParams(items || [])),
+      catchError(this.handleError)
+    );
+  }
+  if (tableKey === 'product_category_type' || tableKey === 'productcategorytype') {
+    return this.apiService.get<any[]>('/wms/api/product-category-types').pipe(
+      map((items) => filterParams(items || [])),
+      catchError(this.handleError)
+    );
+  }
+  if (tableKey === 'productpricetype') {
+    return this.apiService.get<any[]>('/wms/api/product-price-types').pipe(
+      map((items) => filterParams(items || [])),
+      catchError(this.handleError)
+    );
+  }
+  if (tableKey === 'productpricepurpose') {
+    const purposes = [
+      { productPricePurposeId: 'DEPOSIT', description: 'Deposit price' },
+      { productPricePurposeId: 'PURCHASE', description: 'Purchase/Initial' },
+      { productPricePurposeId: 'RECURRING_CHARGE', description: 'Recurring Charge' },
+      { productPricePurposeId: 'USAGE_CHARGE', description: 'Usage Charge' },
+      { productPricePurposeId: 'COMPONENT_PRICE', description: 'Component Price' },
+    ];
+    return of(filterParams(purposes));
+  }
+  if (tableKey === 'roletypes') {
+    return this.apiService.get<any[]>('/party/api/role-types').pipe(
+      map((items) => filterParams(items || [])),
+      catchError(this.handleError)
+    );
   }
 
-  if (params.value !== undefined && params.value !== null && params.value !== '') {
-    const val =
-      Array.isArray(params.value)
-        ? params.value.join(',')              // e.g. A,B,C
-        : String(params.value);               // no auto-quoting
-    q.push(`value=${encodeURIComponent(val)}`);
-  }
-
-  const url = `/api/lookup?${q.join('&')}`;
-  return this.apiService.get(url).pipe(catchError(this.handleError));
+  return of([]);
 }
 
-// /api/lookup?table=geo&field=geo_type_id&value=COUNTRY
 // this.getLookupResults({ field: 'geo_type_id', value: 'COUNTRY' }, 'geo');
 
-// /api/lookup?table=producttype
-// this.getLookupResults({}, 'producttype');
+  private fetchGeosWithAssocs(): Observable<any[]> {
+    return forkJoin({
+      geos: this.apiService.get<any[]>('/oms/api/common/geos'),
+      assocs: this.apiService.get<any[]>('/oms/api/common/geo-assocs'),
+    }).pipe(
+      map(({ geos, assocs }) => {
+        const assocMap = this.buildGeoCountryMap(assocs || []);
+        return this.normalizeGeos(geos || [], assocMap);
+      }),
+      catchError(this.handleError)
+    );
+  }
 
-// /api/lookup?table=geo&field=country_geo_id&value=IN,US
-// this.getLookupResults({ field: 'country_geo_id', value: ['IN','US'] }, 'geo');
+  private buildGeoCountryMap(assocs: any[]): Map<string, string> {
+    const map = new Map<string, string>();
+    (assocs || []).forEach((assoc) => {
+      const assocType = assoc?.geoAssocTypeId ?? assoc?.geo_assoc_type_id;
+      if (assocType && assocType !== 'REGIONS') {
+        return;
+      }
+      const countryId = assoc?.geoId ?? assoc?.geo_id;
+      const regionId = assoc?.geoIdTo ?? assoc?.geo_id_to;
+      if (countryId && regionId) {
+        map.set(String(regionId), String(countryId));
+      }
+    });
+    return map;
+  }
+
+  private normalizeGeos(items: any[], assocMap: Map<string, string>): any[] {
+    return (items || []).map((geo) => {
+      const geoId = geo?.geoId ?? geo?.geo_id;
+      const geoTypeId = geo?.geoTypeId ?? geo?.geo_type_id;
+      const geoName = geo?.geoName ?? geo?.geo_name;
+      const geoCode = geo?.geoCode ?? geo?.geo_code;
+      const geoSecCode = geo?.geoSecCode ?? geo?.geo_sec_code;
+      const assocCountry = assocMap.get(String(geoId));
+      const countryGeoId =
+        geo?.country_geo_id ||
+        assocCountry ||
+        (typeof geoId === 'string' && geoId.includes('_') ? geoId.split('_')[0] : null);
+
+      return {
+        ...geo,
+        geoId,
+        geoTypeId,
+        geoName,
+        geoCode,
+        geoSecCode,
+        geo_id: geoId,
+        geo_type_id: geoTypeId,
+        geo_name: geoName,
+        geo_code: geoCode,
+        geo_sec_code: geoSecCode,
+        country_geo_id: countryGeoId,
+      };
+    });
+  }
 
 
   setSnackbar(setValue: any): void {
