@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { POComponent } from './po/po.component';
 import { CreatePOComponent } from './create-po/create-po.component';
 import { PODetailComponent } from './po-detail/po-detail.component';
+import { POReceiveComponent } from './po-receive/po-receive.component';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -20,6 +21,7 @@ import { MaterialModule } from '../../components/common/material/material.module
     POComponent,
     CreatePOComponent,
     PODetailComponent,
+    POReceiveComponent,
   ],
   imports: [
     CommonModule,

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
@@ -15,4 +16,8 @@ public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
             String primaryOrderId,
             Pageable pageable
     );
+
+    List<Shipment> findByPrimaryOrderId(String primaryOrderId);
+
+    Optional<Shipment> findByPicklistBinId(String picklistBinId);
 }

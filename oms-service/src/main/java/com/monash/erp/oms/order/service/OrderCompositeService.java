@@ -9,6 +9,8 @@ import com.monash.erp.oms.order.dto.FacilityDto;
 import com.monash.erp.oms.order.dto.FirstPartDto;
 import com.monash.erp.oms.order.dto.FirstPartInfoDto;
 import com.monash.erp.oms.order.dto.GeoDto;
+import com.monash.erp.oms.order.dto.InvoiceItemSummaryDto;
+import com.monash.erp.oms.order.dto.InvoiceSummaryDto;
 import com.monash.erp.oms.order.dto.ItemTypeDto;
 import com.monash.erp.oms.order.dto.OrderAdjustmentDto;
 import com.monash.erp.oms.order.dto.OrderAddressRequest;
@@ -31,15 +33,30 @@ import com.monash.erp.oms.order.dto.OrderStatusDto;
 import com.monash.erp.oms.order.dto.OrganizationDto;
 import com.monash.erp.oms.order.dto.PostalAddressDto;
 import com.monash.erp.oms.order.dto.ProductDto;
+import com.monash.erp.oms.order.dto.PurchaseOrderReceiveItemRequest;
+import com.monash.erp.oms.order.dto.PurchaseOrderReceiveRequest;
+import com.monash.erp.oms.order.dto.PurchaseOrderReceiveResponse;
+import com.monash.erp.oms.order.dto.PurchaseOrderReceiptDto;
+import com.monash.erp.oms.order.dto.ReservationStatusDto;
+import com.monash.erp.oms.accounting.entity.AcctgTrans;
+import com.monash.erp.oms.accounting.entity.AcctgTransEntry;
+import com.monash.erp.oms.accounting.entity.Invoice;
+import com.monash.erp.oms.accounting.entity.InvoiceItem;
+import com.monash.erp.oms.accounting.repository.AcctgTransEntryRepository;
+import com.monash.erp.oms.accounting.repository.AcctgTransRepository;
+import com.monash.erp.oms.accounting.repository.InvoiceItemRepository;
+import com.monash.erp.oms.accounting.repository.InvoiceRepository;
 import com.monash.erp.oms.order.entity.OrderAdjustment;
 import com.monash.erp.oms.order.entity.OrderContactMech;
 import com.monash.erp.oms.order.entity.OrderContent;
 import com.monash.erp.oms.order.entity.OrderContentInfo;
 import com.monash.erp.oms.order.entity.OrderHeader;
 import com.monash.erp.oms.order.entity.OrderItem;
+import com.monash.erp.oms.order.entity.OrderItemShipGrpInvRes;
 import com.monash.erp.oms.order.entity.OrderItemShipGroup;
 import com.monash.erp.oms.order.entity.OrderItemShipGroupAssoc;
 import com.monash.erp.oms.order.entity.OrderNote;
+import com.monash.erp.oms.order.entity.OrderItemBilling;
 import com.monash.erp.oms.order.entity.OrderRole;
 import com.monash.erp.oms.order.entity.OrderStatus;
 import com.monash.erp.oms.order.entity.PostalAddress;
@@ -49,12 +66,14 @@ import com.monash.erp.oms.order.repository.OrderContentInfoRepository;
 import com.monash.erp.oms.order.repository.OrderContentRepository;
 import com.monash.erp.oms.order.repository.OrderHeaderRepository;
 import com.monash.erp.oms.order.repository.OrderItemRepository;
+import com.monash.erp.oms.order.repository.OrderItemShipGrpInvResRepository;
 import com.monash.erp.oms.order.repository.OrderItemShipGroupAssocRepository;
 import com.monash.erp.oms.order.repository.OrderItemShipGroupRepository;
 import com.monash.erp.oms.order.repository.OrderNoteRepository;
 import com.monash.erp.oms.order.repository.OrderRoleRepository;
 import com.monash.erp.oms.order.repository.OrderStatusRepository;
 import com.monash.erp.oms.order.repository.PostalAddressRepository;
+import com.monash.erp.oms.order.repository.OrderItemBillingRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -62,13 +81,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -88,11 +113,27 @@ public class OrderCompositeService {
     private static final String ROLE_SUPPLIER_AGENT = "SUPPLIER_AGENT";
     private static final String PURPOSE_SHIPPING = "SHIPPING_LOCATION";
     private static final String PURPOSE_BILLING = "BILLING_LOCATION";
+    private static final String STATUS_APPROVED = "ORDER_APPROVED";
+    private static final String STATUS_COMPLETED = "ORDER_COMPLETED";
+    private static final String ITEM_APPROVED = "ITEM_APPROVED";
+    private static final String ITEM_COMPLETED = "ITEM_COMPLETED";
+    private static final String RESERVE_ORDER_ENUM = "INVRO_FIFO_REC";
+    private static final String INVOICE_TYPE_PURCHASE = "PURCHASE_INVOICE";
+    private static final String INVOICE_STATUS_READY = "INVOICE_READY";
+    private static final String ACCTG_TRANS_TYPE_PURCHASE = "PURCHASE_INVOICE";
+    private static final String INVOICE_TYPE_SALES = "SALES_INVOICE";
+    private static final String ACCTG_TRANS_TYPE_SALES = "SALES_INVOICE";
+    private static final String GL_ACCOUNT_UNINVOICED = "214000";
+    private static final String GL_ACCOUNT_AP = "210000";
+    private static final String GL_ACCOUNT_AR = "120000";
+    private static final String GL_ACCOUNT_SALES = "400000";
+    private static final String ORG_PARTY_ID = "Company";
 
     private final OrderHeaderRepository orderHeaderRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderItemShipGroupRepository orderItemShipGroupRepository;
     private final OrderItemShipGroupAssocRepository orderItemShipGroupAssocRepository;
+    private final OrderItemShipGrpInvResRepository orderItemShipGrpInvResRepository;
     private final OrderRoleRepository orderRoleRepository;
     private final OrderContentRepository orderContentRepository;
     private final OrderContentInfoRepository orderContentInfoRepository;
@@ -103,6 +144,13 @@ public class OrderCompositeService {
     private final OrderStatusRepository orderStatusRepository;
     private final PostalAddressRepository postalAddressRepository;
     private final GeoRepository geoRepository;
+    private final OrderItemBillingRepository orderItemBillingRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final InvoiceItemRepository invoiceItemRepository;
+    private final AcctgTransRepository acctgTransRepository;
+    private final AcctgTransEntryRepository acctgTransEntryRepository;
+    private final RestTemplate restTemplate;
+    private final String wmsBaseUrl;
 
     public OrderCompositeService(
             OrderHeaderRepository orderHeaderRepository,
@@ -118,12 +166,21 @@ public class OrderCompositeService {
             OrderContactMechRepository orderContactMechRepository,
             OrderStatusRepository orderStatusRepository,
             PostalAddressRepository postalAddressRepository,
-            GeoRepository geoRepository
+            GeoRepository geoRepository,
+            OrderItemBillingRepository orderItemBillingRepository,
+            OrderItemShipGrpInvResRepository orderItemShipGrpInvResRepository,
+            InvoiceRepository invoiceRepository,
+            InvoiceItemRepository invoiceItemRepository,
+            AcctgTransRepository acctgTransRepository,
+            AcctgTransEntryRepository acctgTransEntryRepository,
+            RestTemplate restTemplate,
+            @Value("${wms.base-url}") String wmsBaseUrl
     ) {
         this.orderHeaderRepository = orderHeaderRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderItemShipGroupRepository = orderItemShipGroupRepository;
         this.orderItemShipGroupAssocRepository = orderItemShipGroupAssocRepository;
+        this.orderItemShipGrpInvResRepository = orderItemShipGrpInvResRepository;
         this.orderRoleRepository = orderRoleRepository;
         this.orderContentRepository = orderContentRepository;
         this.orderContentInfoRepository = orderContentInfoRepository;
@@ -134,6 +191,13 @@ public class OrderCompositeService {
         this.orderStatusRepository = orderStatusRepository;
         this.postalAddressRepository = postalAddressRepository;
         this.geoRepository = geoRepository;
+        this.orderItemBillingRepository = orderItemBillingRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.invoiceItemRepository = invoiceItemRepository;
+        this.acctgTransRepository = acctgTransRepository;
+        this.acctgTransEntryRepository = acctgTransEntryRepository;
+        this.restTemplate = restTemplate;
+        this.wmsBaseUrl = wmsBaseUrl;
     }
 
     public OrderListResponse listOrders(int page, int size, String queryString, String orderTypeId) {
@@ -162,7 +226,9 @@ public class OrderCompositeService {
                 .map(this::toContentDto)
                 .collect(Collectors.toList());
 
-        List<OrderPartDto> parts = buildParts(orderId, header);
+        Map<String, BigDecimal> receivedQuantities = fetchReceivedQuantities(orderId);
+        Map<String, BigDecimal> pickedQuantities = fetchPickedQuantities(orderId);
+        List<OrderPartDto> parts = buildParts(orderId, header, receivedQuantities, pickedQuantities);
         List<OrderAdjustmentDto> adjustments = orderAdjustmentRepository.findByOrderId(orderId).stream()
                 .map(this::toAdjustmentDto)
                 .collect(Collectors.toList());
@@ -322,7 +388,7 @@ public class OrderCompositeService {
         header.setGrandTotal(header.getGrandTotal().add(item.getUnitPrice().multiply(item.getQuantity())));
         orderHeaderRepository.save(header);
 
-        return toItemDto(item);
+        return toItemDto(item, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     public OrderNoteDto addNote(String orderId, OrderNoteRequest request) {
@@ -349,6 +415,380 @@ public class OrderCompositeService {
             note.setUserId(request.getUserId());
         }
         return toNoteDto(orderNoteRepository.save(note));
+    }
+
+    public OrderHeaderDto approvePurchaseOrder(String orderId) {
+        OrderHeader header = getOrderHeader(orderId);
+        header.setStatusId(STATUS_APPROVED);
+        orderHeaderRepository.save(header);
+
+        OrderStatus status = new OrderStatus();
+        status.setOrderId(orderId);
+        status.setStatusId(STATUS_APPROVED);
+        status.setStatusDatetime(LocalDateTime.now());
+        status.setStatusUserLogin("system");
+        orderStatusRepository.save(status);
+
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        for (OrderItem item : items) {
+            item.setStatusId(ITEM_APPROVED);
+        }
+        orderItemRepository.saveAll(items);
+
+        for (OrderItem item : items) {
+            OrderStatus itemStatus = new OrderStatus();
+            itemStatus.setOrderId(orderId);
+            itemStatus.setOrderItemSeqId(item.getOrderItemSeqId());
+            itemStatus.setStatusId(ITEM_APPROVED);
+            itemStatus.setStatusDatetime(LocalDateTime.now());
+            itemStatus.setStatusUserLogin("system");
+            orderStatusRepository.save(itemStatus);
+        }
+
+        return toHeaderDto(header);
+    }
+
+    public OrderHeaderDto approveSalesOrder(String orderId) {
+        OrderHeader header = getOrderHeader(orderId);
+        header.setStatusId(STATUS_APPROVED);
+        orderHeaderRepository.save(header);
+        createOrderStatus(orderId, STATUS_APPROVED);
+
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        for (OrderItem item : items) {
+            item.setStatusId(ITEM_APPROVED);
+        }
+        orderItemRepository.saveAll(items);
+
+        for (OrderItem item : items) {
+            createItemStatus(orderId, item.getOrderItemSeqId(), ITEM_APPROVED);
+        }
+
+        reserveInventoryForOrder(orderId);
+        return toHeaderDto(header);
+    }
+
+    public ReservationStatusDto getReservationStatus(String orderId) {
+        getOrderHeader(orderId);
+        return buildReservationStatus(orderId);
+    }
+
+    public ReservationStatusDto reserveBackorders() {
+        List<OrderItemShipGrpInvRes> backorders = orderItemShipGrpInvResRepository
+                .findByQuantityNotAvailableGreaterThan(BigDecimal.ZERO);
+        if (backorders.isEmpty()) {
+            return new ReservationStatusDto(true, false);
+        }
+
+        List<String> orderIds = backorders.stream()
+                .map(OrderItemShipGrpInvRes::getOrderId)
+                .filter(value -> !isBlank(value))
+                .distinct()
+                .collect(Collectors.toList());
+
+        for (String orderId : orderIds) {
+            reserveInventoryForOrder(orderId);
+        }
+
+        boolean anyBackorder = orderIds.stream()
+                .map(this::buildReservationStatus)
+                .anyMatch(ReservationStatusDto::isHasBackorder);
+        return new ReservationStatusDto(!anyBackorder, anyBackorder);
+    }
+
+    @Transactional
+    public void clearReservations(String orderId) {
+        getOrderHeader(orderId);
+        orderItemShipGrpInvResRepository.deleteByOrderId(orderId);
+    }
+
+    public Map<String, String> createSalesPicklist(String orderId) {
+        OrderHeader header = getOrderHeader(orderId);
+        ReservationStatusDto status = buildReservationStatus(orderId);
+        if (!status.isFullyReserved()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order has backordered items");
+        }
+
+        String facilityId = resolveFacility(orderId);
+        if (isBlank(facilityId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "facilityId is required");
+        }
+
+        List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+        if (reservations.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No reservations found");
+        }
+
+        List<WmsPicklistItem> items = reservations.stream()
+                .filter(res -> !isBlank(res.getInventoryItemId()))
+                .map(res -> {
+                    OrderItem item = orderItemRepository.findByOrderIdAndOrderItemSeqId(orderId, res.getOrderItemSeqId())
+                            .orElse(null);
+                    if (item == null) {
+                        return null;
+                    }
+                    WmsPicklistItem pickItem = new WmsPicklistItem();
+                    pickItem.setOrderItemSeqId(res.getOrderItemSeqId());
+                    pickItem.setProductId(item.getProductId());
+                    pickItem.setInventoryItemId(res.getInventoryItemId());
+                    pickItem.setQuantity(defaultIfNull(res.getQuantity(), BigDecimal.ZERO));
+                    return pickItem;
+                })
+                .filter(value -> value != null)
+                .collect(Collectors.toList());
+
+        if (items.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No reservable inventory found");
+        }
+
+        WmsPicklistRequest request = new WmsPicklistRequest();
+        request.setOrderId(orderId);
+        request.setFacilityId(facilityId);
+        request.setShipGroupSeqId(firstNonBlank(resolveShipGroup(orderId), "00001"));
+        request.setShipmentMethodTypeId(null);
+        request.setItems(items);
+
+        String url = wmsBaseUrl + "/api/fulfillment/sales-orders/" + orderId + "/picklist";
+        WmsPicklistResponse response = restTemplate.postForObject(url, request, WmsPicklistResponse.class);
+        if (response == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create picklist");
+        }
+
+        Map<String, String> result = new HashMap<>();
+        result.put("picklistId", response.getPicklistId());
+        result.put("picklistBinId", response.getPicklistBinId());
+        result.put("shipmentId", response.getShipmentId());
+        return result;
+    }
+
+    public OrderHeaderDto completeSalesOrder(String orderId) {
+        OrderHeader header = getOrderHeader(orderId);
+        header.setStatusId(STATUS_COMPLETED);
+        orderHeaderRepository.save(header);
+        createOrderStatus(orderId, STATUS_COMPLETED);
+
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        for (OrderItem item : items) {
+            item.setStatusId(ITEM_COMPLETED);
+        }
+        orderItemRepository.saveAll(items);
+
+        for (OrderItem item : items) {
+            createItemStatus(orderId, item.getOrderItemSeqId(), ITEM_COMPLETED);
+        }
+
+        return toHeaderDto(header);
+    }
+
+    public InvoiceSummaryDto createSalesInvoice(String orderId) {
+        OrderHeader header = getOrderHeader(orderId);
+        if (!orderItemBillingRepository.findByOrderId(orderId).isEmpty()) {
+            List<InvoiceSummaryDto> invoices = listInvoices(orderId);
+            return invoices.isEmpty() ? null : invoices.get(0);
+        }
+
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        if (items.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No order items found");
+        }
+
+        String invoiceId = "INV" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(invoiceId);
+        invoice.setInvoiceTypeId(INVOICE_TYPE_SALES);
+        invoice.setPartyIdFrom(ORG_PARTY_ID);
+        invoice.setPartyId(resolveRole(orderId, ROLE_BILL_TO_CUSTOMER));
+        invoice.setRoleTypeId(ROLE_BILL_TO_CUSTOMER);
+        invoice.setStatusId(INVOICE_STATUS_READY);
+        invoice.setInvoiceDate(LocalDateTime.now());
+        invoice.setCurrencyUomId(firstNonBlank(header.getCurrencyUom(), DEFAULT_CURRENCY));
+        invoiceRepository.save(invoice);
+
+        int seq = 1;
+        for (OrderItem item : items) {
+            InvoiceItem invoiceItem = new InvoiceItem();
+            invoiceItem.setInvoiceId(invoiceId);
+            invoiceItem.setInvoiceItemSeqId(String.format("%05d", seq++));
+            invoiceItem.setInvoiceItemTypeId("INV_FPROD_ITEM");
+            invoiceItem.setProductId(item.getProductId());
+            invoiceItem.setQuantity(defaultIfNull(item.getQuantity(), BigDecimal.ZERO));
+            BigDecimal amount = defaultIfNull(item.getUnitPrice(), BigDecimal.ZERO)
+                    .multiply(defaultIfNull(item.getQuantity(), BigDecimal.ZERO));
+            invoiceItem.setAmount(amount);
+            invoiceItem.setDescription(item.getItemDescription());
+            invoiceItemRepository.save(invoiceItem);
+
+            OrderItemBilling billing = new OrderItemBilling();
+            billing.setOrderId(orderId);
+            billing.setOrderItemSeqId(item.getOrderItemSeqId());
+            billing.setInvoiceId(invoiceId);
+            billing.setInvoiceItemSeqId(invoiceItem.getInvoiceItemSeqId());
+            billing.setQuantity(defaultIfNull(item.getQuantity(), BigDecimal.ZERO));
+            billing.setAmount(amount);
+            orderItemBillingRepository.save(billing);
+        }
+
+        AcctgTrans trans = new AcctgTrans();
+        trans.setAcctgTransId("AT" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT));
+        trans.setAcctgTransTypeId(ACCTG_TRANS_TYPE_SALES);
+        trans.setTransactionDate(LocalDateTime.now());
+        trans.setIsPosted(Boolean.TRUE);
+        trans.setPostedDate(LocalDateTime.now());
+        trans.setGlFiscalTypeId("ACTUAL");
+        trans.setPartyId(resolveRole(orderId, ROLE_BILL_TO_CUSTOMER));
+        trans.setRoleTypeId(ROLE_BILL_TO_CUSTOMER);
+        trans.setInvoiceId(invoiceId);
+        acctgTransRepository.save(trans);
+
+        BigDecimal totalAmount = items.stream()
+                .map(item -> defaultIfNull(item.getUnitPrice(), BigDecimal.ZERO)
+                        .multiply(defaultIfNull(item.getQuantity(), BigDecimal.ZERO)))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        createAcctgEntry(trans.getAcctgTransId(), "00001", GL_ACCOUNT_AR, totalAmount, Boolean.TRUE);
+        createAcctgEntry(trans.getAcctgTransId(), "00002", GL_ACCOUNT_SALES, totalAmount, Boolean.FALSE);
+
+        List<InvoiceSummaryDto> summaries = listInvoices(orderId);
+        return summaries.isEmpty() ? null : summaries.get(0);
+    }
+
+    public PurchaseOrderReceiveResponse receivePurchaseOrder(String orderId, PurchaseOrderReceiveRequest request) {
+        OrderHeader header = getOrderHeader(orderId);
+        if (request == null || request.getItems() == null || request.getItems().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "items are required");
+        }
+        if (!STATUS_APPROVED.equals(header.getStatusId()) && !STATUS_COMPLETED.equals(header.getStatusId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase order must be approved before receiving");
+        }
+
+        String shipGroupSeqId = firstNonBlank(request.getShipGroupSeqId(), "00001");
+        String facilityId = firstNonBlank(request.getFacilityId(), resolveFacility(orderId));
+        String vendorPartyId = firstNonBlank(request.getVendorPartyId(), resolveVendor(orderId));
+
+        if (isBlank(facilityId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "facilityId is required");
+        }
+
+        Map<String, BigDecimal> receivedTotals = fetchReceivedQuantities(orderId);
+        Map<String, OrderItem> itemMap = orderItemRepository.findByOrderId(orderId).stream()
+                .collect(Collectors.toMap(OrderItem::getOrderItemSeqId, item -> item));
+
+        List<WmsReceiveItem> wmsItems = new ArrayList<>();
+        for (PurchaseOrderReceiveItemRequest itemRequest : request.getItems()) {
+            OrderItem orderItem = itemMap.get(itemRequest.getOrderItemSeqId());
+            if (orderItem == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid orderItemSeqId: " + itemRequest.getOrderItemSeqId());
+            }
+            BigDecimal orderedQty = defaultIfNull(orderItem.getQuantity(), BigDecimal.ZERO);
+            BigDecimal receivedQty = receivedTotals.getOrDefault(orderItem.getOrderItemSeqId(), BigDecimal.ZERO);
+            BigDecimal remaining = orderedQty.subtract(receivedQty);
+            if (itemRequest.getQuantity() == null || itemRequest.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "quantity must be greater than zero");
+            }
+            if (itemRequest.getQuantity().compareTo(remaining) > 0) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "receive quantity exceeds remaining for item " + orderItem.getOrderItemSeqId());
+            }
+            WmsReceiveItem wmsItem = new WmsReceiveItem();
+            wmsItem.setOrderItemSeqId(orderItem.getOrderItemSeqId());
+            wmsItem.setProductId(orderItem.getProductId());
+            wmsItem.setQuantity(itemRequest.getQuantity().toPlainString());
+            wmsItem.setUnitCost(defaultIfNull(orderItem.getUnitPrice(), BigDecimal.ZERO).toPlainString());
+            wmsItems.add(wmsItem);
+        }
+
+        WmsReceiveRequest wmsRequest = new WmsReceiveRequest();
+        wmsRequest.setOrderId(orderId);
+        wmsRequest.setFacilityId(facilityId);
+        wmsRequest.setVendorPartyId(vendorPartyId);
+        wmsRequest.setOwnerPartyId(ORG_PARTY_ID);
+        wmsRequest.setShipGroupSeqId(shipGroupSeqId);
+        wmsRequest.setCurrencyUomId(firstNonBlank(header.getCurrencyUom(), DEFAULT_CURRENCY));
+        wmsRequest.setReceivedDate(request.getReceivedDate());
+        wmsRequest.setItems(wmsItems);
+
+        String wmsUrl = wmsBaseUrl + "/api/purchase-orders/" + orderId + "/receive";
+        WmsReceiveResponse wmsResponse = restTemplate.postForObject(wmsUrl, wmsRequest, WmsReceiveResponse.class);
+        if (wmsResponse == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to receive purchase order");
+        }
+
+        Map<String, BigDecimal> updatedReceivedTotals = fetchReceivedQuantities(orderId);
+        boolean allReceived = true;
+        for (OrderItem item : itemMap.values()) {
+            BigDecimal orderedQty = defaultIfNull(item.getQuantity(), BigDecimal.ZERO);
+            BigDecimal receivedQty = updatedReceivedTotals.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
+            if (receivedQty.compareTo(orderedQty) < 0) {
+                allReceived = false;
+                item.setStatusId(ITEM_APPROVED);
+            } else {
+                item.setStatusId(ITEM_COMPLETED);
+                createItemStatus(orderId, item.getOrderItemSeqId(), ITEM_COMPLETED);
+            }
+        }
+        orderItemRepository.saveAll(itemMap.values());
+
+        if (allReceived) {
+            header.setStatusId(STATUS_COMPLETED);
+            orderHeaderRepository.save(header);
+            createOrderStatus(orderId, STATUS_COMPLETED);
+            createInvoiceForOrder(header, itemMap.values(), wmsResponse);
+        }
+
+        List<PurchaseOrderReceiptDto> receipts = new ArrayList<>();
+        if (wmsResponse.getReceipts() != null) {
+            for (WmsReceipt receipt : wmsResponse.getReceipts()) {
+                receipts.add(new PurchaseOrderReceiptDto(
+                        receipt.getOrderItemSeqId(),
+                        receipt.getReceiptId(),
+                        receipt.getInventoryItemId(),
+                        toBigDecimal(receipt.getQuantityAccepted())
+                ));
+            }
+        }
+
+        return new PurchaseOrderReceiveResponse(wmsResponse.getShipmentId(), receipts);
+    }
+
+    public List<InvoiceSummaryDto> listInvoices(String orderId) {
+        getOrderHeader(orderId);
+        List<OrderItemBilling> billings = orderItemBillingRepository.findByOrderId(orderId);
+        if (billings.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, InvoiceSummaryDto> summaries = new LinkedHashMap<>();
+        for (OrderItemBilling billing : billings) {
+            String invoiceId = billing.getInvoiceId();
+            if (isBlank(invoiceId)) {
+                continue;
+            }
+            InvoiceSummaryDto summary = summaries.get(invoiceId);
+            if (summary == null) {
+                Invoice invoice = invoiceRepository.findByInvoiceId(invoiceId).orElse(null);
+                summary = new InvoiceSummaryDto();
+                summary.setInvoiceId(invoiceId);
+                if (invoice != null) {
+                    summary.setStatusId(invoice.getStatusId());
+                    summary.setInvoiceDate(invoice.getInvoiceDate());
+                    summary.setCurrencyUomId(invoice.getCurrencyUomId());
+                }
+                summary.setItems(new ArrayList<>());
+                summaries.put(invoiceId, summary);
+            }
+        }
+
+        for (InvoiceSummaryDto summary : summaries.values()) {
+            List<InvoiceItemSummaryDto> items = invoiceItemRepository.findByInvoiceId(summary.getInvoiceId()).stream()
+                    .map(item -> new InvoiceItemSummaryDto(
+                            item.getProductId(),
+                            defaultIfNull(item.getQuantity(), BigDecimal.ZERO),
+                            defaultIfNull(item.getAmount(), BigDecimal.ZERO)
+                    ))
+                    .collect(Collectors.toList());
+            summary.setItems(items);
+        }
+
+        return new ArrayList<>(summaries.values());
     }
 
     public OrderContentDto addContent(String orderId, String description, MultipartFile contentFile) {
@@ -425,7 +865,12 @@ public class OrderCompositeService {
         return dto;
     }
 
-    private List<OrderPartDto> buildParts(String orderId, OrderHeader header) {
+    private List<OrderPartDto> buildParts(
+            String orderId,
+            OrderHeader header,
+            Map<String, BigDecimal> receivedQuantities,
+            Map<String, BigDecimal> pickedQuantities
+    ) {
         List<OrderItemShipGroup> shipGroups = orderItemShipGroupRepository.findByOrderId(orderId);
         if (shipGroups.isEmpty()) {
             OrderItemShipGroup fallback = new OrderItemShipGroup();
@@ -446,7 +891,13 @@ public class OrderCompositeService {
             part.setStatus(resolveStatus(header.getStatusId()));
             part.setFacility(new FacilityDto(shipGroup.getFacilityId(), shipGroup.getFacilityId()));
             part.setCustomer(buildCustomer(orderId));
-            part.setItems(partItems.stream().map(this::toItemDto).collect(Collectors.toList()));
+            part.setItems(partItems.stream()
+                    .map(item -> toItemDto(
+                            item,
+                            receivedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO),
+                            pickedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO)
+                    ))
+                    .collect(Collectors.toList()));
             part.setPartTotal(calculatePartTotal(partItems));
             parts.add(part);
         }
@@ -480,15 +931,21 @@ public class OrderCompositeService {
                 .findFirst();
     }
 
-    private OrderItemDto toItemDto(OrderItem item) {
+    private OrderItemDto toItemDto(OrderItem item, BigDecimal receivedQuantity, BigDecimal pickedQuantity) {
         OrderItemDto dto = new OrderItemDto();
+        dto.setOrderItemSeqId(item.getOrderItemSeqId());
         dto.setProductId(item.getProductId());
         dto.setProduct(new ProductDto(item.getProductId()));
         dto.setItemDescription(item.getItemDescription());
         dto.setItemType(new ItemTypeDto(item.getOrderItemTypeId()));
         dto.setRequiredByDate(item.getShipBeforeDate());
         dto.setUnitAmount(item.getUnitPrice());
-        dto.setQuantity(item.getQuantity());
+        BigDecimal quantity = defaultIfNull(item.getQuantity(), BigDecimal.ZERO);
+        dto.setQuantity(quantity);
+        BigDecimal received = defaultIfNull(receivedQuantity, BigDecimal.ZERO);
+        dto.setReceivedQuantity(received);
+        dto.setRemainingQuantity(quantity.subtract(received).max(BigDecimal.ZERO));
+        dto.setPickedQuantity(defaultIfNull(pickedQuantity, BigDecimal.ZERO));
         return dto;
     }
 
@@ -508,6 +965,12 @@ public class OrderCompositeService {
         String vendorPartyId = resolveRole(orderId, ROLE_BILL_FROM_VENDOR);
         firstPart.setCustomerPartyId(customerPartyId);
         firstPart.setVendorPartyId(vendorPartyId);
+        orderItemShipGroupRepository.findByOrderId(orderId).stream()
+                .findFirst()
+                .ifPresent(shipGroup -> {
+                    firstPart.setFacilityId(shipGroup.getFacilityId());
+                    firstPart.setOrderPartSeqId(shipGroup.getShipGroupSeqId());
+                });
         return firstPart;
     }
 
@@ -704,6 +1167,790 @@ public class OrderCompositeService {
         dto.setOrderItemSeqId(status.getOrderItemSeqId());
         dto.setStatusDatetime(status.getStatusDatetime());
         return dto;
+    }
+
+    private void createOrderStatus(String orderId, String statusId) {
+        OrderStatus status = new OrderStatus();
+        status.setOrderId(orderId);
+        status.setStatusId(statusId);
+        status.setStatusDatetime(LocalDateTime.now());
+        status.setStatusUserLogin("system");
+        orderStatusRepository.save(status);
+    }
+
+    private void createItemStatus(String orderId, String orderItemSeqId, String statusId) {
+        OrderStatus status = new OrderStatus();
+        status.setOrderId(orderId);
+        status.setOrderItemSeqId(orderItemSeqId);
+        status.setStatusId(statusId);
+        status.setStatusDatetime(LocalDateTime.now());
+        status.setStatusUserLogin("system");
+        orderStatusRepository.save(status);
+    }
+
+    private String resolveFacility(String orderId) {
+        return orderItemShipGroupRepository.findByOrderId(orderId).stream()
+                .map(OrderItemShipGroup::getFacilityId)
+                .filter(value -> !isBlank(value))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private String resolveVendor(String orderId) {
+        return orderItemShipGroupRepository.findByOrderId(orderId).stream()
+                .map(OrderItemShipGroup::getVendorPartyId)
+                .filter(value -> !isBlank(value))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Map<String, BigDecimal> fetchReceivedQuantities(String orderId) {
+        Map<String, BigDecimal> totals = new HashMap<>();
+        try {
+            String url = wmsBaseUrl + "/api/purchase-orders/" + orderId + "/receipts";
+            WmsReceipt[] receipts = restTemplate.getForObject(url, WmsReceipt[].class);
+            if (receipts == null) {
+                return totals;
+            }
+            for (WmsReceipt receipt : receipts) {
+                String key = receipt.getOrderItemSeqId();
+                BigDecimal qty = toBigDecimal(receipt.getQuantityAccepted());
+                totals.put(key, totals.getOrDefault(key, BigDecimal.ZERO).add(qty));
+            }
+        } catch (Exception ignored) {
+            return totals;
+        }
+        return totals;
+    }
+
+    private Map<String, BigDecimal> fetchPickedQuantities(String orderId) {
+        Map<String, BigDecimal> totals = new HashMap<>();
+        try {
+            String url = wmsBaseUrl + "/api/picklists/by-order/" + orderId;
+            WmsPicklistSummary[] picklists = restTemplate.getForObject(url, WmsPicklistSummary[].class);
+            if (picklists == null) {
+                return totals;
+            }
+            for (WmsPicklistSummary picklist : picklists) {
+                if (picklist.getItems() == null) {
+                    continue;
+                }
+                for (WmsPicklistItemSummary item : picklist.getItems()) {
+                    if (item.getOrderItemSeqId() == null) {
+                        continue;
+                    }
+                    totals.put(item.getOrderItemSeqId(),
+                            totals.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO)
+                                    .add(defaultIfNull(item.getQuantity(), BigDecimal.ZERO)));
+                }
+            }
+        } catch (Exception ignored) {
+            return totals;
+        }
+        return totals;
+    }
+
+    private void reserveInventoryForOrder(String orderId) {
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        if (items.isEmpty()) {
+            return;
+        }
+
+        String facilityId = resolveFacility(orderId);
+        if (isBlank(facilityId)) {
+            return;
+        }
+
+        Map<String, BigDecimal> reservedByItem = new HashMap<>();
+        Map<String, BigDecimal> backorderByItem = new HashMap<>();
+        List<OrderItemShipGrpInvRes> existingReservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+        for (OrderItemShipGrpInvRes res : existingReservations) {
+            if (!isBlank(res.getInventoryItemId())) {
+                reservedByItem.merge(res.getOrderItemSeqId(), defaultIfNull(res.getQuantity(), BigDecimal.ZERO), BigDecimal::add);
+            }
+            if (res.getQuantityNotAvailable() != null && res.getQuantityNotAvailable().compareTo(BigDecimal.ZERO) > 0) {
+                backorderByItem.merge(res.getOrderItemSeqId(), res.getQuantityNotAvailable(), BigDecimal::add);
+            }
+        }
+
+        List<WmsReserveItem> requestItems = new ArrayList<>();
+        for (OrderItem item : items) {
+            BigDecimal ordered = defaultIfNull(item.getQuantity(), BigDecimal.ZERO);
+            BigDecimal reserved = reservedByItem.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
+            BigDecimal remaining = ordered.subtract(reserved);
+            if (remaining.compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
+            }
+            WmsReserveItem requestItem = new WmsReserveItem();
+            requestItem.setOrderItemSeqId(item.getOrderItemSeqId());
+            requestItem.setProductId(item.getProductId());
+            requestItem.setQuantity(remaining);
+            requestItems.add(requestItem);
+        }
+
+        if (requestItems.isEmpty()) {
+            return;
+        }
+
+        WmsReserveRequest request = new WmsReserveRequest();
+        request.setOrderId(orderId);
+        request.setFacilityId(facilityId);
+        request.setShipGroupSeqId(firstNonBlank(resolveShipGroup(orderId), "00001"));
+        request.setItems(requestItems);
+
+        String url = wmsBaseUrl + "/api/fulfillment/inventory/reserve";
+        WmsReserveResponse response = restTemplate.postForObject(url, request, WmsReserveResponse.class);
+        if (response == null || response.getItems() == null) {
+            return;
+        }
+
+        for (WmsReserveItemResponse itemResponse : response.getItems()) {
+            if (itemResponse.getAllocations() != null) {
+                for (WmsReserveAllocation allocation : itemResponse.getAllocations()) {
+                    OrderItemShipGrpInvRes reservation = new OrderItemShipGrpInvRes();
+                    reservation.setOrderId(orderId);
+                    reservation.setShipGroupSeqId(request.getShipGroupSeqId());
+                    reservation.setOrderItemSeqId(itemResponse.getOrderItemSeqId());
+                    reservation.setInventoryItemId(allocation.getInventoryItemId());
+                    reservation.setReserveOrderEnumId(RESERVE_ORDER_ENUM);
+                    reservation.setQuantity(allocation.getQuantity());
+                    reservation.setCreatedDatetime(LocalDateTime.now());
+                    reservation.setReservedDatetime(LocalDateTime.now());
+                    orderItemShipGrpInvResRepository.save(reservation);
+                }
+            }
+
+            BigDecimal notAvailable = defaultIfNull(itemResponse.getNotAvailableQuantity(), BigDecimal.ZERO);
+            if (notAvailable.compareTo(BigDecimal.ZERO) > 0) {
+                OrderItemShipGrpInvRes backorder = existingReservations.stream()
+                        .filter(res -> itemResponse.getOrderItemSeqId().equals(res.getOrderItemSeqId())
+                                && isBlank(res.getInventoryItemId()))
+                        .findFirst()
+                        .orElse(null);
+                if (backorder == null) {
+                    backorder = new OrderItemShipGrpInvRes();
+                    backorder.setOrderId(orderId);
+                    backorder.setShipGroupSeqId(request.getShipGroupSeqId());
+                    backorder.setOrderItemSeqId(itemResponse.getOrderItemSeqId());
+                    backorder.setReserveOrderEnumId(RESERVE_ORDER_ENUM);
+                    backorder.setCreatedDatetime(LocalDateTime.now());
+                }
+                backorder.setQuantityNotAvailable(notAvailable);
+                backorder.setReservedDatetime(LocalDateTime.now());
+                orderItemShipGrpInvResRepository.save(backorder);
+            } else if (backorderByItem.containsKey(itemResponse.getOrderItemSeqId())) {
+                existingReservations.stream()
+                        .filter(res -> itemResponse.getOrderItemSeqId().equals(res.getOrderItemSeqId())
+                                && isBlank(res.getInventoryItemId())
+                                && res.getQuantityNotAvailable() != null
+                                && res.getQuantityNotAvailable().compareTo(BigDecimal.ZERO) > 0)
+                        .forEach(res -> {
+                            res.setQuantityNotAvailable(BigDecimal.ZERO);
+                            orderItemShipGrpInvResRepository.save(res);
+                        });
+            }
+        }
+    }
+
+    private ReservationStatusDto buildReservationStatus(String orderId) {
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        if (items.isEmpty()) {
+            return new ReservationStatusDto(true, false);
+        }
+        List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+        Map<String, BigDecimal> reservedByItem = new HashMap<>();
+        Map<String, BigDecimal> backorderByItem = new HashMap<>();
+        for (OrderItemShipGrpInvRes res : reservations) {
+            if (!isBlank(res.getInventoryItemId())) {
+                reservedByItem.merge(res.getOrderItemSeqId(), defaultIfNull(res.getQuantity(), BigDecimal.ZERO), BigDecimal::add);
+            }
+            if (res.getQuantityNotAvailable() != null && res.getQuantityNotAvailable().compareTo(BigDecimal.ZERO) > 0) {
+                backorderByItem.merge(res.getOrderItemSeqId(), res.getQuantityNotAvailable(), BigDecimal::add);
+            }
+        }
+
+        boolean fullyReserved = true;
+        boolean hasBackorder = false;
+        for (OrderItem item : items) {
+            BigDecimal ordered = defaultIfNull(item.getQuantity(), BigDecimal.ZERO);
+            BigDecimal reserved = reservedByItem.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
+            BigDecimal notAvailable = backorderByItem.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
+            if (reserved.compareTo(ordered) < 0) {
+                fullyReserved = false;
+            }
+            if (notAvailable.compareTo(BigDecimal.ZERO) > 0) {
+                hasBackorder = true;
+            }
+        }
+        return new ReservationStatusDto(fullyReserved, hasBackorder);
+    }
+
+    private String resolveShipGroup(String orderId) {
+        return orderItemShipGroupRepository.findByOrderId(orderId).stream()
+                .map(OrderItemShipGroup::getShipGroupSeqId)
+                .filter(value -> !isBlank(value))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void createInvoiceForOrder(OrderHeader header, Iterable<OrderItem> items, WmsReceiveResponse wmsResponse) {
+        if (!orderItemBillingRepository.findByOrderId(header.getOrderId()).isEmpty()) {
+            return;
+        }
+
+        String invoiceId = "INV" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(invoiceId);
+        invoice.setInvoiceTypeId(INVOICE_TYPE_PURCHASE);
+        invoice.setPartyIdFrom(resolveVendor(header.getOrderId()));
+        invoice.setPartyId(ORG_PARTY_ID);
+        invoice.setRoleTypeId(ROLE_BILL_FROM_VENDOR);
+        invoice.setStatusId(INVOICE_STATUS_READY);
+        invoice.setInvoiceDate(LocalDateTime.now());
+        invoice.setCurrencyUomId(firstNonBlank(header.getCurrencyUom(), DEFAULT_CURRENCY));
+        invoiceRepository.save(invoice);
+
+        int seq = 1;
+        for (OrderItem item : items) {
+            InvoiceItem invoiceItem = new InvoiceItem();
+            invoiceItem.setInvoiceId(invoiceId);
+            invoiceItem.setInvoiceItemSeqId(String.format("%05d", seq++));
+            invoiceItem.setInvoiceItemTypeId("PINV_FPROD_ITEM");
+            invoiceItem.setProductId(item.getProductId());
+            invoiceItem.setQuantity(defaultIfNull(item.getQuantity(), BigDecimal.ZERO));
+            BigDecimal amount = defaultIfNull(item.getUnitPrice(), BigDecimal.ZERO)
+                    .multiply(defaultIfNull(item.getQuantity(), BigDecimal.ZERO));
+            invoiceItem.setAmount(amount);
+            invoiceItem.setDescription(item.getItemDescription());
+            invoiceItemRepository.save(invoiceItem);
+
+            OrderItemBilling billing = new OrderItemBilling();
+            billing.setOrderId(header.getOrderId());
+            billing.setOrderItemSeqId(item.getOrderItemSeqId());
+            billing.setInvoiceId(invoiceId);
+            billing.setInvoiceItemSeqId(invoiceItem.getInvoiceItemSeqId());
+            billing.setQuantity(defaultIfNull(item.getQuantity(), BigDecimal.ZERO));
+            billing.setAmount(amount);
+            if (wmsResponse != null && wmsResponse.getReceipts() != null) {
+                wmsResponse.getReceipts().stream()
+                        .filter(receipt -> item.getOrderItemSeqId().equals(receipt.getOrderItemSeqId()))
+                        .findFirst()
+                        .ifPresent(receipt -> billing.setShipmentReceiptId(receipt.getReceiptId()));
+            }
+            orderItemBillingRepository.save(billing);
+        }
+
+        AcctgTrans trans = new AcctgTrans();
+        trans.setAcctgTransId("AT" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT));
+        trans.setAcctgTransTypeId(ACCTG_TRANS_TYPE_PURCHASE);
+        trans.setTransactionDate(LocalDateTime.now());
+        trans.setIsPosted(Boolean.TRUE);
+        trans.setPostedDate(LocalDateTime.now());
+        trans.setGlFiscalTypeId("ACTUAL");
+        trans.setPartyId(resolveVendor(header.getOrderId()));
+        trans.setRoleTypeId(ROLE_BILL_FROM_VENDOR);
+        trans.setInvoiceId(invoiceId);
+        acctgTransRepository.save(trans);
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+        for (OrderItem item : items) {
+            totalAmount = totalAmount.add(defaultIfNull(item.getUnitPrice(), BigDecimal.ZERO)
+                    .multiply(defaultIfNull(item.getQuantity(), BigDecimal.ZERO)));
+        }
+
+        createAcctgEntry(trans.getAcctgTransId(), "00001", GL_ACCOUNT_UNINVOICED, totalAmount, Boolean.TRUE);
+        createAcctgEntry(trans.getAcctgTransId(), "00002", GL_ACCOUNT_AP, totalAmount, Boolean.FALSE);
+    }
+
+    private void createAcctgEntry(String acctgTransId, String seqId, String glAccountId, BigDecimal amount, boolean debit) {
+        AcctgTransEntry entry = new AcctgTransEntry();
+        entry.setAcctgTransId(acctgTransId);
+        entry.setAcctgTransEntrySeqId(seqId);
+        entry.setAcctgTransEntryTypeId("_NA_");
+        entry.setGlAccountId(glAccountId);
+        entry.setOrganizationPartyId(ORG_PARTY_ID);
+        entry.setAmount(amount);
+        entry.setCurrencyUomId(DEFAULT_CURRENCY);
+        entry.setOrigAmount(amount);
+        entry.setOrigCurrencyUomId(DEFAULT_CURRENCY);
+        entry.setDebitCreditFlag(debit);
+        acctgTransEntryRepository.save(entry);
+    }
+
+    private BigDecimal toBigDecimal(String value) {
+        if (isBlank(value)) {
+            return BigDecimal.ZERO;
+        }
+        try {
+            return new BigDecimal(value);
+        } catch (NumberFormatException e) {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    private static class WmsReceiveRequest {
+        private String orderId;
+        private String facilityId;
+        private String vendorPartyId;
+        private String ownerPartyId;
+        private String shipGroupSeqId;
+        private String currencyUomId;
+        private LocalDateTime receivedDate;
+        private List<WmsReceiveItem> items;
+
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(String orderId) {
+            this.orderId = orderId;
+        }
+
+        public String getFacilityId() {
+            return facilityId;
+        }
+
+        public void setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
+        }
+
+        public String getVendorPartyId() {
+            return vendorPartyId;
+        }
+
+        public void setVendorPartyId(String vendorPartyId) {
+            this.vendorPartyId = vendorPartyId;
+        }
+
+        public String getOwnerPartyId() {
+            return ownerPartyId;
+        }
+
+        public void setOwnerPartyId(String ownerPartyId) {
+            this.ownerPartyId = ownerPartyId;
+        }
+
+        public String getShipGroupSeqId() {
+            return shipGroupSeqId;
+        }
+
+        public void setShipGroupSeqId(String shipGroupSeqId) {
+            this.shipGroupSeqId = shipGroupSeqId;
+        }
+
+        public String getCurrencyUomId() {
+            return currencyUomId;
+        }
+
+        public void setCurrencyUomId(String currencyUomId) {
+            this.currencyUomId = currencyUomId;
+        }
+
+        public LocalDateTime getReceivedDate() {
+            return receivedDate;
+        }
+
+        public void setReceivedDate(LocalDateTime receivedDate) {
+            this.receivedDate = receivedDate;
+        }
+
+        public List<WmsReceiveItem> getItems() {
+            return items;
+        }
+
+        public void setItems(List<WmsReceiveItem> items) {
+            this.items = items;
+        }
+    }
+
+    private static class WmsReceiveItem {
+        private String orderItemSeqId;
+        private String productId;
+        private String quantity;
+        private String unitCost;
+
+        public String getOrderItemSeqId() {
+            return orderItemSeqId;
+        }
+
+        public void setOrderItemSeqId(String orderItemSeqId) {
+            this.orderItemSeqId = orderItemSeqId;
+        }
+
+        public String getProductId() {
+            return productId;
+        }
+
+        public void setProductId(String productId) {
+            this.productId = productId;
+        }
+
+        public String getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(String quantity) {
+            this.quantity = quantity;
+        }
+
+        public String getUnitCost() {
+            return unitCost;
+        }
+
+        public void setUnitCost(String unitCost) {
+            this.unitCost = unitCost;
+        }
+    }
+
+    private static class WmsReceiveResponse {
+        private String shipmentId;
+        private List<WmsReceipt> receipts;
+
+        public String getShipmentId() {
+            return shipmentId;
+        }
+
+        public void setShipmentId(String shipmentId) {
+            this.shipmentId = shipmentId;
+        }
+
+        public List<WmsReceipt> getReceipts() {
+            return receipts;
+        }
+
+        public void setReceipts(List<WmsReceipt> receipts) {
+            this.receipts = receipts;
+        }
+    }
+
+    private static class WmsReceipt {
+        private String orderItemSeqId;
+        private String receiptId;
+        private String inventoryItemId;
+        private String quantityAccepted;
+
+        public String getOrderItemSeqId() {
+            return orderItemSeqId;
+        }
+
+        public void setOrderItemSeqId(String orderItemSeqId) {
+            this.orderItemSeqId = orderItemSeqId;
+        }
+
+        public String getReceiptId() {
+            return receiptId;
+        }
+
+        public void setReceiptId(String receiptId) {
+            this.receiptId = receiptId;
+        }
+
+        public String getInventoryItemId() {
+            return inventoryItemId;
+        }
+
+        public void setInventoryItemId(String inventoryItemId) {
+            this.inventoryItemId = inventoryItemId;
+        }
+
+        public String getQuantityAccepted() {
+            return quantityAccepted;
+        }
+
+        public void setQuantityAccepted(String quantityAccepted) {
+            this.quantityAccepted = quantityAccepted;
+        }
+    }
+
+    private static class WmsPicklistSummary {
+        private String picklistId;
+        private List<WmsPicklistItemSummary> items;
+
+        public String getPicklistId() {
+            return picklistId;
+        }
+
+        public void setPicklistId(String picklistId) {
+            this.picklistId = picklistId;
+        }
+
+        public List<WmsPicklistItemSummary> getItems() {
+            return items;
+        }
+
+        public void setItems(List<WmsPicklistItemSummary> items) {
+            this.items = items;
+        }
+    }
+
+    private static class WmsPicklistItemSummary {
+        private String orderItemSeqId;
+        private BigDecimal quantity;
+
+        public String getOrderItemSeqId() {
+            return orderItemSeqId;
+        }
+
+        public void setOrderItemSeqId(String orderItemSeqId) {
+            this.orderItemSeqId = orderItemSeqId;
+        }
+
+        public BigDecimal getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(BigDecimal quantity) {
+            this.quantity = quantity;
+        }
+    }
+
+    private static class WmsReserveRequest {
+        private String orderId;
+        private String shipGroupSeqId;
+        private String facilityId;
+        private List<WmsReserveItem> items;
+
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(String orderId) {
+            this.orderId = orderId;
+        }
+
+        public String getShipGroupSeqId() {
+            return shipGroupSeqId;
+        }
+
+        public void setShipGroupSeqId(String shipGroupSeqId) {
+            this.shipGroupSeqId = shipGroupSeqId;
+        }
+
+        public String getFacilityId() {
+            return facilityId;
+        }
+
+        public void setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
+        }
+
+        public List<WmsReserveItem> getItems() {
+            return items;
+        }
+
+        public void setItems(List<WmsReserveItem> items) {
+            this.items = items;
+        }
+    }
+
+    private static class WmsReserveItem {
+        private String orderItemSeqId;
+        private String productId;
+        private BigDecimal quantity;
+
+        public String getOrderItemSeqId() {
+            return orderItemSeqId;
+        }
+
+        public void setOrderItemSeqId(String orderItemSeqId) {
+            this.orderItemSeqId = orderItemSeqId;
+        }
+
+        public String getProductId() {
+            return productId;
+        }
+
+        public void setProductId(String productId) {
+            this.productId = productId;
+        }
+
+        public BigDecimal getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(BigDecimal quantity) {
+            this.quantity = quantity;
+        }
+    }
+
+    private static class WmsReserveResponse {
+        private List<WmsReserveItemResponse> items;
+
+        public List<WmsReserveItemResponse> getItems() {
+            return items;
+        }
+
+        public void setItems(List<WmsReserveItemResponse> items) {
+            this.items = items;
+        }
+    }
+
+    private static class WmsReserveItemResponse {
+        private String orderItemSeqId;
+        private BigDecimal notAvailableQuantity;
+        private List<WmsReserveAllocation> allocations;
+
+        public String getOrderItemSeqId() {
+            return orderItemSeqId;
+        }
+
+        public void setOrderItemSeqId(String orderItemSeqId) {
+            this.orderItemSeqId = orderItemSeqId;
+        }
+
+        public BigDecimal getNotAvailableQuantity() {
+            return notAvailableQuantity;
+        }
+
+        public void setNotAvailableQuantity(BigDecimal notAvailableQuantity) {
+            this.notAvailableQuantity = notAvailableQuantity;
+        }
+
+        public List<WmsReserveAllocation> getAllocations() {
+            return allocations;
+        }
+
+        public void setAllocations(List<WmsReserveAllocation> allocations) {
+            this.allocations = allocations;
+        }
+    }
+
+    private static class WmsReserveAllocation {
+        private String inventoryItemId;
+        private BigDecimal quantity;
+
+        public String getInventoryItemId() {
+            return inventoryItemId;
+        }
+
+        public void setInventoryItemId(String inventoryItemId) {
+            this.inventoryItemId = inventoryItemId;
+        }
+
+        public BigDecimal getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(BigDecimal quantity) {
+            this.quantity = quantity;
+        }
+    }
+
+    private static class WmsPicklistRequest {
+        private String orderId;
+        private String facilityId;
+        private String shipGroupSeqId;
+        private String shipmentMethodTypeId;
+        private List<WmsPicklistItem> items;
+
+        public String getOrderId() {
+            return orderId;
+        }
+
+        public void setOrderId(String orderId) {
+            this.orderId = orderId;
+        }
+
+        public String getFacilityId() {
+            return facilityId;
+        }
+
+        public void setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
+        }
+
+        public String getShipGroupSeqId() {
+            return shipGroupSeqId;
+        }
+
+        public void setShipGroupSeqId(String shipGroupSeqId) {
+            this.shipGroupSeqId = shipGroupSeqId;
+        }
+
+        public String getShipmentMethodTypeId() {
+            return shipmentMethodTypeId;
+        }
+
+        public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
+            this.shipmentMethodTypeId = shipmentMethodTypeId;
+        }
+
+        public List<WmsPicklistItem> getItems() {
+            return items;
+        }
+
+        public void setItems(List<WmsPicklistItem> items) {
+            this.items = items;
+        }
+    }
+
+    private static class WmsPicklistItem {
+        private String orderItemSeqId;
+        private String productId;
+        private String inventoryItemId;
+        private BigDecimal quantity;
+
+        public String getOrderItemSeqId() {
+            return orderItemSeqId;
+        }
+
+        public void setOrderItemSeqId(String orderItemSeqId) {
+            this.orderItemSeqId = orderItemSeqId;
+        }
+
+        public String getProductId() {
+            return productId;
+        }
+
+        public void setProductId(String productId) {
+            this.productId = productId;
+        }
+
+        public String getInventoryItemId() {
+            return inventoryItemId;
+        }
+
+        public void setInventoryItemId(String inventoryItemId) {
+            this.inventoryItemId = inventoryItemId;
+        }
+
+        public BigDecimal getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(BigDecimal quantity) {
+            this.quantity = quantity;
+        }
+    }
+
+    private static class WmsPicklistResponse {
+        private String picklistId;
+        private String picklistBinId;
+        private String shipmentId;
+
+        public String getPicklistId() {
+            return picklistId;
+        }
+
+        public void setPicklistId(String picklistId) {
+            this.picklistId = picklistId;
+        }
+
+        public String getPicklistBinId() {
+            return picklistBinId;
+        }
+
+        public void setPicklistBinId(String picklistBinId) {
+            this.picklistBinId = picklistBinId;
+        }
+
+        public String getShipmentId() {
+            return shipmentId;
+        }
+
+        public void setShipmentId(String shipmentId) {
+            this.shipmentId = shipmentId;
+        }
     }
 
     private String firstNonBlank(String value, String fallback) {

@@ -10,6 +10,8 @@ public interface ShipmentReceiptRepository extends JpaRepository<ShipmentReceipt
 
     List<ShipmentReceipt> findByInventoryItemId(String inventoryItemId);
 
+    List<ShipmentReceipt> findByOrderId(String orderId);
+
     void deleteByShipmentId(String shipmentId);
 
     void deleteByInventoryItemId(String inventoryItemId);

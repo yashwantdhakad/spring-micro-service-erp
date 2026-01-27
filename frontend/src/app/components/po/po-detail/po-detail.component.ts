@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
 import { DatePipe } from '@angular/common';
@@ -22,6 +22,8 @@ export class PODetailComponent implements OnInit {
   statusItem: any;
   vendorAddresses: any[] = [];
   vendorPartyId: string | undefined;
+  canApprove = false;
+  canReceive = false;
 
   addPOItemDialog: boolean = false;
   createOrderNoteDialog: boolean = false;
@@ -49,6 +51,8 @@ export class PODetailComponent implements OnInit {
     { key: 'requiredByDate', label: this.translate.instant('PO.REQUIRED_BY_DATE') },
     { key: 'unitAmount', label: this.translate.instant('PO.PRICE') },
     { key: 'quantity', label: this.translate.instant('PO.QUANTITY') },
+    { key: 'receivedQuantity', label: this.translate.instant('PO.RECEIVED_QTY') },
+    { key: 'remainingQuantity', label: this.translate.instant('PO.REMAINING_QTY') },
     { key: 'totalAmount', label: this.translate.instant('PO.TOTAL_AMOUNT') },
   ];
   partColumnKeys: string[] = this.partColumns.map(c => c.key);
@@ -61,6 +65,24 @@ export class PODetailComponent implements OnInit {
   ];
   contentColumnKeys: string[] = this.contentColumns.map(c => c.key);
 
+  shipments: any[] = [];
+  shipmentColumns = [
+    { key: 'shipmentId', label: 'Shipment' },
+    { key: 'shipmentTypeId', label: 'Type' },
+    { key: 'statusId', label: 'Status' },
+    { key: 'createdDate', label: 'Created' }
+  ];
+  shipmentColumnKeys: string[] = this.shipmentColumns.map(c => c.key);
+
+  invoiceItems: any[] = [];
+  invoiceColumns = [
+    { key: 'invoiceId', label: 'Invoice' },
+    { key: 'productId', label: 'Product' },
+    { key: 'quantity', label: 'Qty' },
+    { key: 'amount', label: 'Amount' }
+  ];
+  invoiceColumnKeys: string[] = this.invoiceColumns.map(c => c.key);
+
   contentData: any;
   productItemData: any;
 
@@ -71,6 +93,7 @@ export class PODetailComponent implements OnInit {
     private orderService: OrderService,
     private partyService: PartyService,
     private dialog: MatDialog,
+    private router: Router,
     private datePipe: DatePipe,
     private translate: TranslateService
   ) { }
@@ -90,6 +113,8 @@ export class PODetailComponent implements OnInit {
 
     const order$ = this.orderService.getOrder(orderId);
     const display$ = this.orderService.getPODisplayInfo(orderId);
+    const shipments$ = this.orderService.getOrderShipments(orderId);
+    const invoices$ = this.orderService.getOrderInvoices(orderId);
 
     order$.subscribe({
       next: (orderResponse) => {
@@ -101,6 +126,8 @@ export class PODetailComponent implements OnInit {
             this.orderHeader = displayResponse.orderHeader;
             this.statusItem = displayResponse.statusItem;
             this.orderNotes = displayResponse.orderNoteList;
+            this.canApprove = this.statusItem?.statusId === 'ORDER_CREATED';
+            this.canReceive = this.statusItem?.statusId === 'ORDER_APPROVED';
 
             this.overviewFields = [
               { label: 'Order #', value: this.orderHeader?.orderId },
@@ -118,6 +145,33 @@ export class PODetailComponent implements OnInit {
           },
           complete: () => {
             this.isLoading = false;
+          }
+        });
+
+        shipments$.subscribe({
+          next: (shipmentResponse) => {
+            this.shipments = Array.isArray(shipmentResponse) ? shipmentResponse : [];
+          },
+          error: () => {
+            this.shipments = [];
+          }
+        });
+
+        invoices$.subscribe({
+          next: (invoiceResponse) => {
+            const invoices = Array.isArray(invoiceResponse) ? invoiceResponse : [];
+            this.invoiceItems = invoices.flatMap((invoice: any) =>
+              (invoice.items || []).map((item: any) => ({
+                invoiceId: invoice.invoiceId,
+                currencyUomId: invoice.currencyUomId,
+                productId: item.productId,
+                quantity: item.quantity,
+                amount: item.amount
+              }))
+            );
+          },
+          error: () => {
+            this.invoiceItems = [];
           }
         });
       },
@@ -211,5 +265,23 @@ export class PODetailComponent implements OnInit {
         this.loadVendorAddresses(this.vendorPartyId);
       }
     });
+  }
+
+  approveOrder(): void {
+    if (!this.orderId) {
+      return;
+    }
+    this.orderService.approvePurchaseOrder(this.orderId).subscribe({
+      next: () => {
+        this.getOrder(this.orderId as string);
+      },
+    });
+  }
+
+  goToReceive(): void {
+    if (!this.orderId) {
+      return;
+    }
+    this.router.navigate([`/pos/${this.orderId}/receive`]);
   }
 }

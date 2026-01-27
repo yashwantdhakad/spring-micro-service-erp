@@ -54,6 +54,56 @@ export class OrderService {
     return this.apiService.post('/oms/api/orders', params);
   }
 
+  approvePurchaseOrder(orderId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/approve`;
+    return this.apiService.post(url, {});
+  }
+
+  approveSalesOrder(orderId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/approve-sales`;
+    return this.apiService.post(url, {});
+  }
+
+  receivePurchaseOrder(orderId: string, payload: any): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/receive`;
+    return this.apiService.post(url, payload);
+  }
+
+  getOrderInvoices(orderId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/invoices`;
+    return this.apiService.get(url);
+  }
+
+  getOrderShipments(orderId: string): Observable<any> {
+    const url = `/wms/api/shipments/by-order/${encodeURIComponent(orderId)}`;
+    return this.apiService.get(url);
+  }
+
+  getOrderPicklists(orderId: string): Observable<any> {
+    const url = `/wms/api/picklists/by-order/${encodeURIComponent(orderId)}`;
+    return this.apiService.get(url);
+  }
+
+  getReservationStatus(orderId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/reservation-status`;
+    return this.apiService.get(url);
+  }
+
+  createPicklist(orderId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/picklist`;
+    return this.apiService.post(url, {});
+  }
+
+  markPicklistPicked(picklistId: string): Observable<any> {
+    const url = `/wms/api/picklists/${encodeURIComponent(picklistId)}/mark-picked`;
+    return this.apiService.post(url, {});
+  }
+
+  shipShipment(shipmentId: string): Observable<any> {
+    const url = `/wms/api/shipments/${encodeURIComponent(shipmentId)}/ship`;
+    return this.apiService.post(url, {});
+  }
+
   addOrderAddress(orderId: string, payload: any): Observable<any> {
     const url = `/oms/api/orders/${encodeURIComponent(orderId)}/addresses`;
     return this.apiService.post(url, payload);

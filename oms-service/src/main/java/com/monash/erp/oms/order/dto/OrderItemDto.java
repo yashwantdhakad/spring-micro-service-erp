@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public class OrderItemDto {
 
+    private String orderItemSeqId;
     private String productId;
     private ProductDto product;
     private String itemDescription;
@@ -12,6 +13,17 @@ public class OrderItemDto {
     private LocalDateTime requiredByDate;
     private BigDecimal unitAmount;
     private BigDecimal quantity;
+    private BigDecimal receivedQuantity;
+    private BigDecimal remainingQuantity;
+    private BigDecimal pickedQuantity;
+
+    public String getOrderItemSeqId() {
+        return orderItemSeqId;
+    }
+
+    public void setOrderItemSeqId(String orderItemSeqId) {
+        this.orderItemSeqId = orderItemSeqId;
+    }
 
     public String getProductId() {
         return productId;
@@ -67,5 +79,29 @@ public class OrderItemDto {
 
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
+    }
+
+    public BigDecimal getReceivedQuantity() {
+        return receivedQuantity;
+    }
+
+    public void setReceivedQuantity(BigDecimal receivedQuantity) {
+        this.receivedQuantity = receivedQuantity;
+    }
+
+    public BigDecimal getRemainingQuantity() {
+        return remainingQuantity;
+    }
+
+    public void setRemainingQuantity(BigDecimal remainingQuantity) {
+        this.remainingQuantity = remainingQuantity;
+    }
+
+    public BigDecimal getPickedQuantity() {
+        return pickedQuantity;
+    }
+
+    public void setPickedQuantity(BigDecimal pickedQuantity) {
+        this.pickedQuantity = pickedQuantity;
     }
 }

@@ -12,6 +12,10 @@ import com.monash.erp.oms.order.dto.OrderItemRequest;
 import com.monash.erp.oms.order.dto.OrderListResponse;
 import com.monash.erp.oms.order.dto.OrderNoteDto;
 import com.monash.erp.oms.order.dto.OrderNoteRequest;
+import com.monash.erp.oms.order.dto.PurchaseOrderReceiveRequest;
+import com.monash.erp.oms.order.dto.PurchaseOrderReceiveResponse;
+import com.monash.erp.oms.order.dto.InvoiceSummaryDto;
+import com.monash.erp.oms.order.dto.ReservationStatusDto;
 import com.monash.erp.oms.order.service.OrderCompositeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -85,6 +89,60 @@ public class OrderCompositeController {
             @RequestBody OrderItemRequest request
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.addItem(orderId, request));
+    }
+
+    @PostMapping("/{orderId}/approve")
+    public OrderHeaderDto approve(@PathVariable String orderId) {
+        return orderCompositeService.approvePurchaseOrder(orderId);
+    }
+
+    @PostMapping("/{orderId}/approve-sales")
+    public OrderHeaderDto approveSales(@PathVariable String orderId) {
+        return orderCompositeService.approveSalesOrder(orderId);
+    }
+
+    @PostMapping("/{orderId}/receive")
+    public ResponseEntity<PurchaseOrderReceiveResponse> receive(
+            @PathVariable String orderId,
+            @RequestBody PurchaseOrderReceiveRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.receivePurchaseOrder(orderId, request));
+    }
+
+    @GetMapping("/{orderId}/reservation-status")
+    public ReservationStatusDto reservationStatus(@PathVariable String orderId) {
+        return orderCompositeService.getReservationStatus(orderId);
+    }
+
+    @PostMapping("/backorders/reserve")
+    public ReservationStatusDto reserveBackorders() {
+        return orderCompositeService.reserveBackorders();
+    }
+
+    @PostMapping("/{orderId}/reservations/clear")
+    public ResponseEntity<Void> clearReservations(@PathVariable String orderId) {
+        orderCompositeService.clearReservations(orderId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{orderId}/picklist")
+    public java.util.Map<String, String> createPicklist(@PathVariable String orderId) {
+        return orderCompositeService.createSalesPicklist(orderId);
+    }
+
+    @PostMapping("/{orderId}/invoice-sales")
+    public InvoiceSummaryDto createSalesInvoice(@PathVariable String orderId) {
+        return orderCompositeService.createSalesInvoice(orderId);
+    }
+
+    @PostMapping("/{orderId}/complete-sales")
+    public OrderHeaderDto completeSalesOrder(@PathVariable String orderId) {
+        return orderCompositeService.completeSalesOrder(orderId);
+    }
+
+    @GetMapping("/{orderId}/invoices")
+    public java.util.List<InvoiceSummaryDto> listInvoices(@PathVariable String orderId) {
+        return orderCompositeService.listInvoices(orderId);
     }
 
     @PostMapping("/{orderId}/notes")

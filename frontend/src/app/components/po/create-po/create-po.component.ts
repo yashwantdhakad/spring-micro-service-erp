@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormGroup,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import {
   startWith,
   switchMap,
@@ -19,6 +20,7 @@ import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ProductService } from 'src/app/services/product/product.service';
 
 @Component({
   selector: 'app-create-po',
@@ -31,13 +33,20 @@ export class CreatePOComponent implements OnInit {
   customerParties: any[] = [];
   facilities: any[] = [];
   filteredSuppliers$: Observable<any[]> = of([]);
+  filteredProducts: Observable<any[]>[] = [];
+  itemTypes = [
+    { id: 'INVENTORY_ORDER_ITEM', label: 'Inventory' },
+    { id: 'SUPPLIES_ORDER_ITEM', label: 'Supplies' },
+    { id: 'ASSET_ORDER_ITEM', label: 'Asset' },
+  ];
 
   constructor(
     private formBuilder: FormBuilder,
     private orderService: OrderService,
     private router: Router,
     private partyService: PartyService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private productService: ProductService
   ) {
     const validators = Validators.required;
 
@@ -48,12 +57,14 @@ export class CreatePOComponent implements OnInit {
       shipBeforeDate: ['', validators],
       estimatedDeliveryDate: [''],
       vendorPartyId: ['', validators], // This is the control we’ll use for autocomplete!
+      items: this.formBuilder.array([this.buildItemGroup()]),
     });
   }
 
   ngOnInit(): void {
     this.getFacilities();
     this.getCustomerParties();
+    this.initProductAutocomplete(0);
 
     // Autocomplete supplier using the vendorPartyId control
     this.filteredSuppliers$ = this.poForm.get('vendorPartyId')!.valueChanges.pipe(
@@ -81,26 +92,45 @@ export class CreatePOComponent implements OnInit {
     this.poForm.get('vendorPartyId')?.setValue(supplier.partyId || supplier);
   }
 
+  get items(): FormArray {
+    return this.poForm.get('items') as FormArray;
+  }
+
+  addItemRow(): void {
+    this.items.push(this.buildItemGroup());
+    this.initProductAutocomplete(this.items.length - 1);
+  }
+
+  removeItemRow(index: number): void {
+    if (this.items.length > 1) {
+      this.items.removeAt(index);
+      this.filteredProducts.splice(index, 1);
+    }
+  }
+
   createPO(): void {
     if (!this.poForm.valid) return;
+    if (this.items.length === 0) {
+      this.snackbarService.showError('Add at least one item.');
+      return;
+    }
 
     this.isLoading = true;
     const values = this.poForm.value;
 
     this.orderService
       .createOrder(values)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (data) => {
           if (!data || !data.orderId) {
+            this.isLoading = false;
             this.snackbarService.showError('Failed to create a purchase order.');
             return;
           }
-          this.poForm.reset();
-          this.router.navigate([`/pos/${data.orderId}`]);
-          this.snackbarService.showSuccess('Purchase order created successfully.');
+          this.addOrderItems(data.orderId);
         },
         error: () => {
+          this.isLoading = false;
           this.snackbarService.showError('Error in creating purchase order');
         },
       });
@@ -124,5 +154,64 @@ export class CreatePOComponent implements OnInit {
       error: (error) => {
       },
     });
+  }
+
+  private buildItemGroup(): FormGroup {
+    return this.formBuilder.group({
+      productId: ['', Validators.required],
+      quantity: [1, Validators.required],
+      unitAmount: [0, Validators.required],
+      itemTypeEnumId: ['INVENTORY_ORDER_ITEM', Validators.required],
+    });
+  }
+
+  private initProductAutocomplete(index: number): void {
+    const control = this.items.at(index)?.get('productId');
+    if (!control) {
+      return;
+    }
+    this.filteredProducts[index] = control.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value) =>
+        this.productService.getProducts(0, typeof value === 'string' ? value : value?.productId ?? '').pipe(
+          map((response: any) => response?.documentList || []),
+          catchError(() => of([]))
+        )
+      )
+    );
+  }
+
+  private addOrderItems(orderId: string): void {
+    const requests = this.items.controls.map((control) => {
+      const value = control.value;
+      return this.orderService.addItem({
+        orderId,
+        orderPartSeqId: '00001',
+        productId: value.productId,
+        quantity: value.quantity,
+        unitAmount: value.unitAmount,
+        itemTypeEnumId: value.itemTypeEnumId,
+      });
+    });
+
+    requests.length
+      ? forkJoin(requests).pipe(finalize(() => (this.isLoading = false))).subscribe({
+          next: () => {
+            this.poForm.reset();
+            this.items.clear();
+            this.items.push(this.buildItemGroup());
+            this.filteredProducts = [];
+            this.initProductAutocomplete(0);
+            this.router.navigate([`/pos/${orderId}`]);
+            this.snackbarService.showSuccess('Purchase order created successfully.');
+          },
+          error: () => {
+            this.snackbarService.showError('Purchase order created, but items failed.');
+            this.router.navigate([`/pos/${orderId}`]);
+          },
+        })
+      : this.router.navigate([`/pos/${orderId}`]);
   }
 }

@@ -5,6 +5,10 @@ import com.monash.erp.wms.dto.ShipmentDetailResponse;
 import com.monash.erp.wms.dto.ShipmentListItem;
 import com.monash.erp.wms.dto.ShipmentListResponse;
 import com.monash.erp.wms.dto.ShipmentListResponseMap;
+import com.monash.erp.wms.entity.InventoryItem;
+import com.monash.erp.wms.entity.InventoryItemDetail;
+import com.monash.erp.wms.entity.ItemIssuance;
+import com.monash.erp.wms.entity.PicklistItem;
 import com.monash.erp.wms.entity.Shipment;
 import com.monash.erp.wms.entity.ShipmentItem;
 import com.monash.erp.wms.entity.ShipmentPackage;
@@ -13,6 +17,10 @@ import com.monash.erp.wms.entity.ShipmentPackageRouteSeg;
 import com.monash.erp.wms.entity.ShipmentReceipt;
 import com.monash.erp.wms.entity.ShipmentRouteSegment;
 import com.monash.erp.wms.entity.ShipmentStatus;
+import com.monash.erp.wms.repository.InventoryItemDetailRepository;
+import com.monash.erp.wms.repository.InventoryItemRepository;
+import com.monash.erp.wms.repository.ItemIssuanceRepository;
+import com.monash.erp.wms.repository.PicklistItemRepository;
 import com.monash.erp.wms.repository.ShipmentItemRepository;
 import com.monash.erp.wms.repository.ShipmentPackageContentRepository;
 import com.monash.erp.wms.repository.ShipmentPackageRepository;
@@ -24,14 +32,18 @@ import com.monash.erp.wms.repository.ShipmentStatusRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -47,6 +59,12 @@ public class ShipmentCompositeService {
     private final ShipmentPackageContentRepository shipmentPackageContentRepository;
     private final ShipmentPackageRouteSegRepository shipmentPackageRouteSegRepository;
     private final ShipmentReceiptRepository shipmentReceiptRepository;
+    private final InventoryItemRepository inventoryItemRepository;
+    private final InventoryItemDetailRepository inventoryItemDetailRepository;
+    private final ItemIssuanceRepository itemIssuanceRepository;
+    private final PicklistItemRepository picklistItemRepository;
+    private final RestTemplate restTemplate;
+    private final String omsBaseUrl;
 
     public ShipmentCompositeService(
             ShipmentRepository shipmentRepository,
@@ -56,7 +74,13 @@ public class ShipmentCompositeService {
             ShipmentPackageRepository shipmentPackageRepository,
             ShipmentPackageContentRepository shipmentPackageContentRepository,
             ShipmentPackageRouteSegRepository shipmentPackageRouteSegRepository,
-            ShipmentReceiptRepository shipmentReceiptRepository
+            ShipmentReceiptRepository shipmentReceiptRepository,
+            InventoryItemRepository inventoryItemRepository,
+            InventoryItemDetailRepository inventoryItemDetailRepository,
+            ItemIssuanceRepository itemIssuanceRepository,
+            PicklistItemRepository picklistItemRepository,
+            RestTemplate restTemplate,
+            @Value("${oms.base-url}") String omsBaseUrl
     ) {
         this.shipmentRepository = shipmentRepository;
         this.shipmentItemRepository = shipmentItemRepository;
@@ -66,6 +90,12 @@ public class ShipmentCompositeService {
         this.shipmentPackageContentRepository = shipmentPackageContentRepository;
         this.shipmentPackageRouteSegRepository = shipmentPackageRouteSegRepository;
         this.shipmentReceiptRepository = shipmentReceiptRepository;
+        this.inventoryItemRepository = inventoryItemRepository;
+        this.inventoryItemDetailRepository = inventoryItemDetailRepository;
+        this.itemIssuanceRepository = itemIssuanceRepository;
+        this.picklistItemRepository = picklistItemRepository;
+        this.restTemplate = restTemplate;
+        this.omsBaseUrl = omsBaseUrl;
     }
 
     public ShipmentListResponse listShipments(int page, int size, String queryString) {
@@ -84,6 +114,21 @@ public class ShipmentCompositeService {
 
         ShipmentListResponseMap responseMap = new ShipmentListResponseMap(items, shipments.getTotalElements());
         return new ShipmentListResponse(responseMap);
+    }
+
+    public List<ShipmentListItem> listShipmentsByOrder(String orderId) {
+        if (isBlank(orderId)) {
+            return List.of();
+        }
+        return shipmentRepository.findByPrimaryOrderId(orderId).stream()
+                .sorted((left, right) -> {
+                    if (left.getId() == null || right.getId() == null) {
+                        return 0;
+                    }
+                    return right.getId().compareTo(left.getId());
+                })
+                .map(this::toListItem)
+                .collect(Collectors.toList());
     }
 
     public ShipmentDetailResponse getShipment(String shipmentId) {
@@ -199,6 +244,26 @@ public class ShipmentCompositeService {
                 packageRouteSegments,
                 receipts
         );
+    }
+
+    public ShipmentDetailResponse markShipped(String shipmentId) {
+        Shipment shipment = findShipment(shipmentId);
+        shipment.setStatusId("SHIPMENT_SHIPPED");
+        shipment.setLastModifiedDate(LocalDateTime.now());
+        Shipment saved = shipmentRepository.save(shipment);
+
+        ShipmentStatus status = new ShipmentStatus();
+        status.setShipmentId(saved.getShipmentId());
+        status.setStatusId("SHIPMENT_SHIPPED");
+        status.setStatusDate(LocalDateTime.now());
+        shipmentStatusRepository.save(status);
+
+        recordItemIssuances(saved);
+        triggerSalesInvoice(saved.getPrimaryOrderId());
+        clearReservations(saved.getPrimaryOrderId());
+        completeSalesOrder(saved.getPrimaryOrderId());
+
+        return getShipment(saved.getShipmentId());
     }
 
     public void deleteShipment(String shipmentId) {
@@ -365,5 +430,125 @@ public class ShipmentCompositeService {
             }
         }
         return true;
+    }
+
+    private void recordItemIssuances(Shipment shipment) {
+        if (isBlank(shipment.getPicklistBinId())) {
+            return;
+        }
+
+        List<PicklistItem> picklistItems = picklistItemRepository.findByPicklistBinId(shipment.getPicklistBinId());
+        if (picklistItems.isEmpty()) {
+            return;
+        }
+
+        List<ShipmentItem> shipmentItems = shipmentItemRepository.findByShipmentId(shipment.getShipmentId());
+        Map<String, String> shipmentItemByProduct = new HashMap<>();
+        for (ShipmentItem item : shipmentItems) {
+            if (!isBlank(item.getProductId()) && !shipmentItemByProduct.containsKey(item.getProductId())) {
+                shipmentItemByProduct.put(item.getProductId(), item.getShipmentItemSeqId());
+            }
+        }
+
+        for (PicklistItem picklistItem : picklistItems) {
+            InventoryItem inventoryItem = inventoryItemRepository.findByInventoryItemId(picklistItem.getInventoryItemId())
+                    .orElse(null);
+            if (inventoryItem == null) {
+                continue;
+            }
+
+            String shipmentItemSeqId = shipmentItemByProduct.get(inventoryItem.getProductId());
+            ItemIssuance issuance = new ItemIssuance();
+            issuance.setItemIssuanceId(generateItemIssuanceId());
+            issuance.setInventoryItemId(inventoryItem.getInventoryItemId());
+            issuance.setShipmentId(shipment.getShipmentId());
+            issuance.setShipmentItemSeqId(shipmentItemSeqId);
+            issuance.setOrderId(picklistItem.getOrderId());
+            issuance.setOrderItemSeqId(picklistItem.getOrderItemSeqId());
+            issuance.setShipGroupSeqId(picklistItem.getShipGroupSeqId());
+            issuance.setIssuedDateTime(LocalDateTime.now());
+            issuance.setQuantity(picklistItem.getQuantity());
+            itemIssuanceRepository.save(issuance);
+
+            updateInventoryItemOnHand(inventoryItem, picklistItem.getQuantity());
+
+            InventoryItemDetail detail = new InventoryItemDetail();
+            detail.setInventoryItemId(inventoryItem.getInventoryItemId());
+            detail.setInventoryItemDetailSeqId("SHP-" + UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase(Locale.ROOT));
+            detail.setEffectiveDate(LocalDateTime.now());
+            detail.setQuantityOnHandDiff(negate(picklistItem.getQuantity()));
+            detail.setAvailableToPromiseDiff("0");
+            detail.setAccountingQuantityDiff(negate(picklistItem.getQuantity()));
+            detail.setOrderId(picklistItem.getOrderId());
+            detail.setOrderItemSeqId(picklistItem.getOrderItemSeqId());
+            detail.setShipGroupSeqId(picklistItem.getShipGroupSeqId());
+            detail.setShipmentId(shipment.getShipmentId());
+            detail.setShipmentItemSeqId(shipmentItemSeqId);
+            detail.setItemIssuanceId(issuance.getItemIssuanceId());
+            detail.setDescription("Ship order");
+            inventoryItemDetailRepository.save(detail);
+        }
+    }
+
+    private void updateInventoryItemOnHand(InventoryItem inventoryItem, String quantity) {
+        java.math.BigDecimal onHand = toBigDecimal(inventoryItem.getQuantityOnHandTotal());
+        java.math.BigDecimal accounting = toBigDecimal(inventoryItem.getAccountingQuantityTotal());
+        java.math.BigDecimal issued = toBigDecimal(quantity);
+        inventoryItem.setQuantityOnHandTotal(onHand.subtract(issued).toPlainString());
+        inventoryItem.setAccountingQuantityTotal(accounting.subtract(issued).toPlainString());
+        inventoryItemRepository.save(inventoryItem);
+    }
+
+    private String negate(String value) {
+        java.math.BigDecimal qty = toBigDecimal(value);
+        return qty.negate().toPlainString();
+    }
+
+    private java.math.BigDecimal toBigDecimal(String value) {
+        if (isBlank(value)) {
+            return java.math.BigDecimal.ZERO;
+        }
+        try {
+            return new java.math.BigDecimal(value);
+        } catch (NumberFormatException e) {
+            return java.math.BigDecimal.ZERO;
+        }
+    }
+
+    private String generateItemIssuanceId() {
+        return "ISS-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
+    }
+
+    private void triggerSalesInvoice(String orderId) {
+        if (isBlank(orderId)) {
+            return;
+        }
+        try {
+            String url = omsBaseUrl + "/api/orders/" + orderId + "/invoice-sales";
+            restTemplate.postForObject(url, null, Object.class);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void completeSalesOrder(String orderId) {
+        if (isBlank(orderId)) {
+            return;
+        }
+        try {
+            String url = omsBaseUrl + "/api/orders/" + orderId + "/complete-sales";
+            restTemplate.postForObject(url, null, Object.class);
+        } catch (Exception ignored) {
+        }
+    }
+
+    private void clearReservations(String orderId) {
+        if (isBlank(orderId)) {
+            return;
+        }
+        try {
+            String url = omsBaseUrl + "/api/orders/" + orderId + "/reservations/clear";
+            restTemplate.postForObject(url, null, Object.class);
+        } catch (Exception ignored) {
+        }
     }
 }

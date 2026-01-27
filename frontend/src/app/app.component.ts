@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { menuItems } from './menu';
 import { AuthService } from './services/common/auth.service';
@@ -21,7 +21,8 @@ export class AppComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('en');
@@ -38,7 +39,14 @@ export class AppComponent {
 
 
   checkLoggedInStatus(): void {
-    this.isLoggedIn = this.authService.isAuthenticated();
+    setTimeout(() => {
+      this.isLoggedIn = this.authService.isAuthenticated();
+      if (!this.isLoggedIn) {
+        this.navBarToggleOpened = false;
+        this.submenuOpenStates = [];
+      }
+      this.cdr.markForCheck();
+    });
   }
 
   toggleNavBar() {
@@ -58,6 +66,8 @@ export class AppComponent {
   }
 
   logout(): void {
+    this.navBarToggleOpened = false;
+    this.submenuOpenStates = [];
     this.authService.logout();
   }
 }

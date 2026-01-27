@@ -23,6 +23,14 @@
           <span matListItemLine>{{ field.value }}</span>
         </mat-list-item>
       </mat-list>
+      <div fxLayout="row" fxLayoutGap="12px">
+        <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
+          Approve
+        </button>
+        <button mat-raised-button color="accent" *ngIf="canReceive" (click)="goToReceive()">
+          Receive
+        </button>
+      </div>
     </mat-card-content>
   </mat-card>
   <br />
@@ -236,6 +244,14 @@
               <th mat-header-cell *matHeaderCellDef>Quantity</th>
               <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
             </ng-container>
+            <ng-container matColumnDef="receivedQuantity">
+              <th mat-header-cell *matHeaderCellDef>Received</th>
+              <td mat-cell *matCellDef="let item">{{ item.receivedQuantity }}</td>
+            </ng-container>
+            <ng-container matColumnDef="remainingQuantity">
+              <th mat-header-cell *matHeaderCellDef>Remaining</th>
+              <td mat-cell *matCellDef="let item">{{ item.remainingQuantity }}</td>
+            </ng-container>
             <ng-container matColumnDef="totalAmount">
               <th mat-header-cell *matHeaderCellDef>Total Amount</th>
               <td mat-cell *matCellDef="let item">
@@ -284,6 +300,68 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="contentColumnKeys"></tr>
         <tr mat-row *matRowDef="let row; columns: contentColumnKeys"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>Shipments</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="shipments">
+        <ng-container matColumnDef="shipmentId">
+          <th mat-header-cell *matHeaderCellDef>Shipment</th>
+          <td mat-cell *matCellDef="let item">
+            <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="shipmentTypeId">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let item">{{ item.shipmentTypeId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="statusId">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let item">{{ item.statusId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="createdDate">
+          <th mat-header-cell *matHeaderCellDef>Created</th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.createdDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="shipmentColumnKeys"></tr>
+        <tr mat-row *matRowDef="let row; columns: shipmentColumnKeys"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>Invoices</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="invoiceItems">
+        <ng-container matColumnDef="invoiceId">
+          <th mat-header-cell *matHeaderCellDef>Invoice</th>
+          <td mat-cell *matCellDef="let item">{{ item.invoiceId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell *matHeaderCellDef>Product</th>
+          <td mat-cell *matCellDef="let item">{{ item.productId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Qty</th>
+          <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+        </ng-container>
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.amount | currency : (item.currencyUomId || orderHeader?.currencyUomId) }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="invoiceColumnKeys"></tr>
+        <tr mat-row *matRowDef="let row; columns: invoiceColumnKeys"></tr>
       </table>
     </mat-card-content>
   </mat-card>

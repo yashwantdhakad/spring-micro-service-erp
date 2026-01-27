@@ -2,3 +2,6 @@ spring:
   sql:
     init:
       data-locations: classpath:seed/*.sql,classpath:demo/*.sql
+
+oms:
+  base-url: ${OMS_BASE_URL:http://localhost:8081}

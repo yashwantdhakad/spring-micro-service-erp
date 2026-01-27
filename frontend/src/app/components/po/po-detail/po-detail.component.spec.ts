@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PODetailComponent } from './po-detail.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderService } from 'src/app/services/order/order.service';
@@ -14,11 +14,13 @@ describe('PODetailComponent', () => {
   let orderServiceSpy: jasmine.SpyObj<OrderService>;
   let partyServiceSpy: jasmine.SpyObj<PartyService>;
   let dialogSpy: jasmine.SpyObj<MatDialog>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
     const orderSpy = jasmine.createSpyObj('OrderService', ['getOrder', 'getPODisplayInfo']);
     const partySpy = jasmine.createSpyObj('PartyService', ['getPartyPostalContactMechByPurpose']);
     const dialogMock = jasmine.createSpyObj('MatDialog', ['open']);
+    const routerMock = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       declarations: [PODetailComponent],
@@ -27,6 +29,7 @@ describe('PODetailComponent', () => {
         { provide: OrderService, useValue: orderSpy },
         { provide: PartyService, useValue: partySpy },
         { provide: MatDialog, useValue: dialogMock },
+        { provide: Router, useValue: routerMock },
         {
           provide: ActivatedRoute,
           useValue: {
@@ -48,6 +51,7 @@ describe('PODetailComponent', () => {
     orderServiceSpy = TestBed.inject(OrderService) as jasmine.SpyObj<OrderService>;
     partyServiceSpy = TestBed.inject(PartyService) as jasmine.SpyObj<PartyService>;
     dialogSpy = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
+    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });
 
   it('should create component', () => {

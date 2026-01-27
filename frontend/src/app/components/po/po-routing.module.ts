@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { POComponent } from './po/po.component';
 import { CreatePOComponent } from './create-po/create-po.component';
 import { PODetailComponent } from './po-detail/po-detail.component';
+import { POReceiveComponent } from './po-receive/po-receive.component';
 
 const routes: Routes = [
   {
@@ -10,6 +11,7 @@ const routes: Routes = [
     children: [
       { path: '', component: POComponent, data: { title: 'PO List' } },
       { path: 'create', component: CreatePOComponent, data: { title: 'Create PO' } },
+      { path: ':orderId/receive', component: POReceiveComponent, data: { title: 'Receive PO' } },
       { path: ':orderId', component: PODetailComponent, data: { title: 'PO Details' } },
     ],
   },

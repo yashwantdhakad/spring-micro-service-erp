@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, of, Subject, forkJoin } from 'rxjs';
 import {
@@ -18,6 +18,7 @@ import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ProductService } from 'src/app/services/product/product.service';
 
 @Component({
   selector: 'app-create-so',
@@ -32,8 +33,15 @@ export class CreateSOComponent implements OnInit, OnDestroy {
   facilities: any[] = [];
   filteredParties: any[] = [];
   filteredCustomers$: Observable<any[]> = of([]);
+  filteredProducts: Observable<any[]>[] = [];
   customerAddresses: any[] = [];
   destroy$ = new Subject<void>();
+  itemTypes = [
+    { id: 'PRODUCT_ORDER_ITEM', label: 'Product' },
+    { id: 'WORK_ORDER_ITEM', label: 'Work' },
+    { id: 'RENTAL_ORDER_ITEM', label: 'Rental' },
+    { id: 'BULK_ORDER_ITEM', label: 'Bulk' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -41,7 +49,8 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     private router: Router,
     private partyService: PartyService,
     private snackbarService: SnackbarService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private productService: ProductService
   ) {
     this.orderForm = this.fb.group({
       orderTypeEnumId: ['SALES_ORDER'],
@@ -52,11 +61,13 @@ export class CreateSOComponent implements OnInit, OnDestroy {
       shipBeforeDate: [''],
       estimatedDeliveryDate: [''],
       shippingAddress: [null],
+      items: this.fb.array([this.buildItemGroup()]),
     });
   }
 
   ngOnInit(): void {
     this.fetchData();
+    this.initProductAutocomplete(0);
 
     // Live customer autocomplete
     this.filteredCustomers$ = this.orderForm.get('customerPartyId')!.valueChanges.pipe(
@@ -128,8 +139,28 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     this.getVendorParties(selectedStoreId);
   }
 
+  get items(): FormArray {
+    return this.orderForm.get('items') as FormArray;
+  }
+
+  addItemRow(): void {
+    this.items.push(this.buildItemGroup());
+    this.initProductAutocomplete(this.items.length - 1);
+  }
+
+  removeItemRow(index: number): void {
+    if (this.items.length > 1) {
+      this.items.removeAt(index);
+      this.filteredProducts.splice(index, 1);
+    }
+  }
+
   createOrder(): void {
     if (this.orderForm.invalid) return;
+    if (this.items.length === 0) {
+      this.snackbarService.showError('Add at least one item.');
+      return;
+    }
     this.isLoading = true;
     const values = this.orderForm.value;
     const shippingAddress = this.buildOrderAddress(values.shippingAddress);
@@ -140,18 +171,17 @@ export class CreateSOComponent implements OnInit, OnDestroy {
 
     this.orderService
       .createOrder(payload)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (data) => {
           if (data?.orderId) {
-            this.snackbarService.showSuccess('Sales order created successfully.');
-            this.router.navigate([`/orders/${data.orderId}`]);
+            this.addOrderItems(data.orderId);
           } else {
+            this.isLoading = false;
             this.snackbarService.showError('Failed to create sales order.');
           }
-          this.orderForm.reset();
         },
         error: () => {
+          this.isLoading = false;
           this.snackbarService.showError('Error creating sales order.');
         },
       });
@@ -221,6 +251,66 @@ export class CreateSOComponent implements OnInit, OnDestroy {
       countryGeoId: address.countryGeoId,
       stateProvinceGeoId: address.stateProvinceGeoId,
     };
+  }
+
+  private buildItemGroup(): FormGroup {
+    return this.fb.group({
+      productId: ['', Validators.required],
+      quantity: [1, Validators.required],
+      unitAmount: [0, Validators.required],
+      itemTypeEnumId: ['PRODUCT_ORDER_ITEM', Validators.required],
+    });
+  }
+
+  private initProductAutocomplete(index: number): void {
+    const control = this.items.at(index)?.get('productId');
+    if (!control) {
+      return;
+    }
+    this.filteredProducts[index] = control.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value) =>
+        this.productService.getProducts(0, typeof value === 'string' ? value : value?.productId ?? '').pipe(
+          map((response: any) => response?.documentList || []),
+          catchError(() => of([]))
+        )
+      ),
+      takeUntil(this.destroy$)
+    );
+  }
+
+  private addOrderItems(orderId: string): void {
+    const requests = this.items.controls.map((control) => {
+      const value = control.value;
+      return this.orderService.addItem({
+        orderId,
+        orderPartSeqId: '00001',
+        productId: value.productId,
+        quantity: value.quantity,
+        unitAmount: value.unitAmount,
+        itemTypeEnumId: value.itemTypeEnumId,
+      });
+    });
+
+    forkJoin(requests)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe({
+        next: () => {
+          this.snackbarService.showSuccess('Sales order created successfully.');
+          this.orderForm.reset();
+          this.items.clear();
+          this.items.push(this.buildItemGroup());
+          this.filteredProducts = [];
+          this.initProductAutocomplete(0);
+          this.router.navigate([`/orders/${orderId}`]);
+        },
+        error: () => {
+          this.snackbarService.showError('Sales order created, but items failed.');
+          this.router.navigate([`/orders/${orderId}`]);
+        },
+      });
   }
 
   ngOnDestroy(): void {

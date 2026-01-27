@@ -29,6 +29,14 @@
           <span><strong>{{ 'SO.STATUS' | translate }}:</strong> {{ statusItem?.description }}</span>
         </li>
       </ul>
+      <div fxLayout="row" fxLayoutGap="12px">
+        <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
+          Approve
+        </button>
+        <button mat-raised-button color="accent" *ngIf="canPicklist" (click)="createPicklist()">
+          Create Picklist
+        </button>
+      </div>
     </mat-card-content>
   </mat-card>
   <br />
@@ -293,6 +301,14 @@
                 {{ item.quantity }}
               </td>
             </ng-container>
+            <ng-container matColumnDef="pickedQuantity">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>
+                Picked Qty
+              </th>
+              <td mat-cell class="text-right" *matCellDef="let item">
+                {{ item.pickedQuantity || 0 }}
+              </td>
+            </ng-container>
             <ng-container matColumnDef="totalAmount">
               <th mat-header-cell class="text-left" *matHeaderCellDef>
                 {{ 'SO.TOTAL_AMOUNT' | translate }}
@@ -351,6 +367,123 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: contentColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>Shipments</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="shipments">
+        <ng-container matColumnDef="shipmentId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Shipment</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="shipmentTypeId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentTypeId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="statusId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="createdDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Created</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.createdDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="shipmentColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: shipmentColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>Invoices</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="invoiceItems">
+        <ng-container matColumnDef="invoiceId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Invoice</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.invoiceId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Product</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.productId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Qty</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.quantity }}</td>
+        </ng-container>
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Amount</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.amount | currency : (item.currencyUomId || orderHeader?.currencyUomId) }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="invoiceColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: invoiceColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>Picklists</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="picklists">
+        <ng-container matColumnDef="picklistId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Picklist</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.picklistId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="statusId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="shipmentId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Shipment</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <a *ngIf="item.shipmentId" [routerLink]="['/shipments', item.shipmentId]">
+              {{ item.shipmentId }}
+            </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="createdDate">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Created</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.createdDate | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Action</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <button
+              mat-button
+              color="primary"
+              *ngIf="item.statusId !== 'PICKLIST_PICKED'"
+              (click)="markPicklistPicked(item.picklistId)"
+            >
+              Mark Picked
+            </button>
+            <button
+              mat-button
+              color="accent"
+              *ngIf="item.shipmentId && getShipmentStatus(item.shipmentId) !== 'SHIPMENT_SHIPPED'"
+              (click)="shipShipment(item.shipmentId)"
+            >
+              Ship
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="picklistColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: picklistColumns"></tr>
       </table>
     </mat-card-content>
   </mat-card>

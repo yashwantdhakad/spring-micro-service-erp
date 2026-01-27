@@ -35,6 +35,11 @@ public class ShipmentController {
         return service.listShipments(page, size, queryString);
     }
 
+    @GetMapping("/by-order/{orderId}")
+    public java.util.List<com.monash.erp.wms.dto.ShipmentListItem> listByOrder(@PathVariable String orderId) {
+        return service.listShipmentsByOrder(orderId);
+    }
+
     @GetMapping("/{shipmentId}")
     public ShipmentDetailResponse get(@PathVariable String shipmentId) {
         return service.getShipment(shipmentId);
@@ -49,6 +54,11 @@ public class ShipmentController {
     @PutMapping("/{shipmentId}")
     public ShipmentDetailResponse update(@PathVariable String shipmentId, @RequestBody ShipmentCreateRequest request) {
         return service.updateShipment(shipmentId, request);
+    }
+
+    @PostMapping("/{shipmentId}/ship")
+    public ShipmentDetailResponse ship(@PathVariable String shipmentId) {
+        return service.markShipped(shipmentId);
     }
 
     @DeleteMapping("/{shipmentId}")
