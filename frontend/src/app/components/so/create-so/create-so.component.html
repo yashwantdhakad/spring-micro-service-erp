@@ -92,19 +92,6 @@
         <mat-datepicker #deliveryPicker></mat-datepicker>
       </mat-form-field>
 
-      <!-- Submit Button -->
-      <div fxFlex="100%" fxLayoutAlign="start">
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          class="me-4"
-          [disabled]="isLoading"
-        >
-          <span *ngIf="!isLoading">{{ 'SO.SUBMIT' | translate }}</span>
-          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
-        </button>
-      </div>
     </form>
   </mat-card-content>
 </mat-card>
@@ -161,4 +148,19 @@
       </div>
     </div>
   </mat-card-content>
+  <mat-card-actions>
+    <!-- Submit Button -->
+    <div fxFlex="100%" fxLayoutAlign="start">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="me-4"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">{{ 'SO.SUBMIT' | translate }}</span>
+        <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+      </button>
+    </div>
+  </mat-card-actions>
 </mat-card>
