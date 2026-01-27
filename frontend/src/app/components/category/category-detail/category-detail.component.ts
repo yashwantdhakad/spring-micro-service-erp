@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from 'src/app/services/category/category.service';
+import { CommonService } from 'src/app/services/common/common.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { AddEditProductComponent } from '../add-edit-product/add-edit-product.component';
@@ -18,6 +19,8 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
   isLoading: boolean = false;
   productCategoryId: string | undefined;
   categoryDetail: any;
+  categoryTypeLabel: string | undefined;
+  categoryTypeMap = new Map<string, string>();
   products: any[] = [];
   productColumns = [
     { key: 'productId', header: 'CATEGORY.ID' },
@@ -35,6 +38,7 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
     private readonly categoryService: CategoryService,
     private readonly route: ActivatedRoute,
     private dialog: MatDialog,
+    private commonService: CommonService,
     private snackbarService: SnackbarService // Inject SnackbarService
   ) { }
 
@@ -48,6 +52,7 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
         this.getCategory(this.productCategoryId);
       }
     });
+    this.loadCategoryTypes();
   }
 
   ngOnDestroy(): void {
@@ -63,6 +68,7 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (response) => {
         this.categoryDetail = response.category;
+        this.categoryTypeLabel = this.categoryTypeMap.get(this.categoryDetail?.productCategoryTypeId);
         this.products = response.products;
       },
       error: (error) => {
@@ -137,6 +143,23 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
 
   getProductColumnKeys(): string[] {
     return this.productColumns.map(col => col.key);
+  }
+
+  private loadCategoryTypes(): void {
+    this.commonService.getLookupResults({}, 'product_category_type').pipe(takeUntil(this.destroy$)).subscribe({
+      next: (types: any[]) => {
+        const list = Array.isArray(types) ? types : [];
+        this.categoryTypeMap = new Map(
+          list.map((type: any) => [
+            type.productCategoryTypeId,
+            type.description || type.productCategoryTypeId,
+          ])
+        );
+        if (this.categoryDetail?.productCategoryTypeId) {
+          this.categoryTypeLabel = this.categoryTypeMap.get(this.categoryDetail.productCategoryTypeId);
+        }
+      },
+    });
   }
 
   getValue(element: any, key: string): any {

@@ -5,7 +5,13 @@
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form [formGroup]="orderForm" (ngSubmit)="createOrder()" fxLayout="row wrap" fxLayoutAlign="start">
+    <form
+      id="soCreateForm"
+      [formGroup]="orderForm"
+      (ngSubmit)="createOrder()"
+      fxLayout="row wrap"
+      fxLayoutAlign="start"
+    >
       <!-- Store -->
       <mat-form-field fxFlex="70%">
         <mat-label>{{ 'SO.STORE' | translate }}</mat-label>
@@ -105,6 +111,7 @@
       </button>
     </mat-card-title>
   </mat-card-header>
+  <br/>
   <mat-card-content>
     <div [formGroup]="orderForm">
       <div formArrayName="items">
@@ -117,7 +124,7 @@
           <mat-form-field fxFlex="35%">
             <mat-label>Product</mat-label>
             <input matInput formControlName="productId" [matAutocomplete]="productAuto" />
-            <mat-autocomplete #productAuto="matAutocomplete">
+            <mat-autocomplete #productAuto="matAutocomplete" (optionSelected)="onProductSelected($event, i)">
               <mat-option *ngFor="let product of filteredProducts[i] | async" [value]="product.productId">
                 {{ product.productId }} - {{ product.productName }}
               </mat-option>
@@ -155,6 +162,7 @@
         mat-raised-button
         color="primary"
         type="submit"
+        form="soCreateForm"
         class="me-4"
         [disabled]="isLoading"
       >

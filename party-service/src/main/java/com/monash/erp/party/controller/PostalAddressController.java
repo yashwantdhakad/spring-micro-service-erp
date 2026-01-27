@@ -35,6 +35,11 @@ public class PostalAddressController {
         return service.get(id);
     }
 
+    @GetMapping("/by-contact-mech/{contactMechId}")
+    public PostalAddress getByContactMechId(@PathVariable String contactMechId) {
+        return service.getByContactMechId(contactMechId);
+    }
+
     @PostMapping
     public ResponseEntity<PostalAddress> create(@RequestBody PostalAddress entity) {
         PostalAddress created = service.create(entity);

@@ -27,6 +27,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   productId: string | undefined;
 
   productDetail: any;
+  productTypeLabel: string | undefined;
+  productTypeMap = new Map<string, string>();
 
   prices: any[] = [];
   displayedColumns: string[] = [
@@ -35,6 +37,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     'price',
     'action',
   ];
+  priceTypeMap = new Map<string, string>();
+  pricePurposeMap = new Map<string, string>();
 
   categories: any[] = [];
   categoryColumns: string[] = [
@@ -42,6 +46,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     'productCategoryTypeId',
     'fromDate',
   ];
+  categoryTypeMap = new Map<string, string>();
 
   contents: any[] = [];
   contentColumns: string[] = [
@@ -60,6 +65,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   toAssocs: any[] = [];
   toAssocColumns: string[] = ['productName', 'description', 'fromDate'];
+  inventorySummary: any[] = [];
+  inventorySummaryColumns: string[] = ['facility', 'atpTotal', 'qohTotal'];
 
   productPriceData: any;
   productCategoryData: any;
@@ -88,6 +95,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.getProduct(this.productId);
       }
     });
+    this.loadProductTypes();
+    this.loadCategoryTypes();
     this.fetchProductPriceTypes();
     this.fetchProductPricePurposeTypes();
 
@@ -104,6 +113,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       .subscribe({
       next: (data: any) => {
         this.priceTypeEnums = Array.isArray(data) ? data : [data];
+        this.priceTypeMap = new Map(
+          (this.priceTypeEnums || []).map((item: any) => [
+            item.productPriceTypeId,
+            item.description || item.productPriceTypeId,
+          ])
+        );
       },
       error: () => {
         this.snackbarService.showError(
@@ -120,6 +135,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       .subscribe({
       next: (data: any) => {
         this.pricePurposeEnums = Array.isArray(data) ? data : [data];
+        this.pricePurposeMap = new Map(
+          (this.pricePurposeEnums || []).map((item: any) => [
+            item.productPricePurposeId,
+            item.description || item.productPricePurposeId,
+          ])
+        );
       },
       error: () => {
         this.snackbarService.showError(
@@ -139,15 +160,71 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         const { product, prices, categories, contents, assocs, toAssocs } = response;
 
         this.productDetail = product;
+        this.productTypeLabel = this.productTypeMap.get(product?.productTypeId);
         this.prices = prices;
         this.categories = categories;
         this.contents = contents;
         this.assocs = assocs;
         this.toAssocs = toAssocs;
+        this.loadInventorySummary(productId);
       },
       error: () => {
       },
     });
+  }
+
+  loadInventorySummary(productId: string): void {
+    this.productService.getInventorySummary(productId).subscribe({
+      next: (summary) => {
+        this.inventorySummary = Array.isArray(summary) ? summary : [];
+      },
+      error: () => {
+        this.inventorySummary = [];
+      },
+    });
+  }
+
+  loadProductTypes(): void {
+    this.commonService.getLookupResults({}, 'product_type').pipe(takeUntil(this.destroy$)).subscribe({
+      next: (types: any[]) => {
+        const list = Array.isArray(types) ? types : [];
+        this.productTypeMap = new Map(
+          list.map((type: any) => [
+            type.productTypeId,
+            type.description || type.productTypeId,
+          ])
+        );
+        if (this.productDetail?.productTypeId) {
+          this.productTypeLabel = this.productTypeMap.get(this.productDetail.productTypeId);
+        }
+      },
+    });
+  }
+
+  loadCategoryTypes(): void {
+    this.commonService.getLookupResults({}, 'product_category_type').pipe(takeUntil(this.destroy$)).subscribe({
+      next: (types: any[]) => {
+        const list = Array.isArray(types) ? types : [];
+        this.categoryTypeMap = new Map(
+          list.map((type: any) => [
+            type.productCategoryTypeId,
+            type.description || type.productCategoryTypeId,
+          ])
+        );
+      },
+    });
+  }
+
+  getCategoryTypeDescription(typeId: string): string {
+    return this.categoryTypeMap.get(typeId) || typeId;
+  }
+
+  getPriceTypeDescription(typeId: string): string {
+    return this.priceTypeMap.get(typeId) || typeId;
+  }
+
+  getPricePurposeDescription(purposeId: string): string {
+    return this.pricePurposeMap.get(purposeId) || purposeId;
   }
 
 

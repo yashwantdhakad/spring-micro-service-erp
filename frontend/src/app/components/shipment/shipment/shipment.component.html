@@ -32,11 +32,15 @@
         </ng-container>
         <ng-container matColumnDef="statusId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getStatusDescription(item.statusId) }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="shipmentTypeId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentTypeId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getShipmentTypeDescription(item.shipmentTypeId) }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="destinationFacilityId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Destination Facility</th>

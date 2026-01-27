@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service'; // Import SnackbarService
+import { CommonService } from 'src/app/services/common/common.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
@@ -25,14 +26,17 @@ export class CategoryComponent implements OnInit, OnDestroy {
     { key: 'categoryName', header: 'CATEGORY.NAME' },
     { key: 'productCategoryTypeId', header: 'CATEGORY.TYPE' },
   ];
+  categoryTypeMap = new Map<string, string>();
   private destroy$ = new Subject<void>();
 
   constructor(
     private categoryService: CategoryService,
-    private snackbarService: SnackbarService // Inject SnackbarService
+    private snackbarService: SnackbarService, // Inject SnackbarService
+    private commonService: CommonService
   ) { }
 
   ngOnInit(): void {
+    this.loadCategoryTypes();
     this.searchControl.valueChanges
       .pipe(
         startWith(''),
@@ -93,5 +97,27 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   getColumnKeys(): string[] {
     return this.displayedColumns.map(col => col.key);
+  }
+
+  getValue(item: any, key: string): any {
+    if (key === 'productCategoryTypeId') {
+      const typeId = item?.productCategoryTypeId;
+      return this.categoryTypeMap.get(typeId) || typeId;
+    }
+    return item?.[key];
+  }
+
+  private loadCategoryTypes(): void {
+    this.commonService.getLookupResults({}, 'product_category_type').subscribe({
+      next: (types: any[]) => {
+        const list = Array.isArray(types) ? types : [];
+        this.categoryTypeMap = new Map(
+          list.map((type: any) => [
+            type.productCategoryTypeId,
+            type.description || type.productCategoryTypeId,
+          ])
+        );
+      },
+    });
   }
 }

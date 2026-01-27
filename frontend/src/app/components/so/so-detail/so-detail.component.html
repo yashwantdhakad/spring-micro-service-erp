@@ -262,7 +262,7 @@
                 {{ 'SO.PRODUCT_NAME' | translate }}
               </th>
               <td mat-cell class="text-left" *matCellDef="let item">
-                {{ item?.product?.productName }}
+                {{ getProductName(item) }}
               </td>
             </ng-container>
             <ng-container matColumnDef="itemDescription">
@@ -276,7 +276,13 @@
             <ng-container matColumnDef="description">
               <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.TYPE' | translate }}</th>
               <td mat-cell class="text-left" *matCellDef="let item">
-                {{ item.itemType.description }}
+                {{
+                  getOrderItemTypeDescription(
+                    item.itemType?.description ||
+                      item.orderItemTypeId ||
+                      item.itemTypeEnumId
+                  )
+                }}
               </td>
             </ng-container>
             <ng-container matColumnDef="requiredByDate">
@@ -385,11 +391,15 @@
         </ng-container>
         <ng-container matColumnDef="shipmentTypeId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentTypeId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getShipmentTypeDescription(item.shipmentTypeId) }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="statusId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getStatusDescription(item.statusId) }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="createdDate">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Created</th>
@@ -445,7 +455,9 @@
         </ng-container>
         <ng-container matColumnDef="statusId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.statusId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getStatusDescription(item.statusId) }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="shipmentId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Shipment</th>

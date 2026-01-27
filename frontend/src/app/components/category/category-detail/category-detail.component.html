@@ -30,7 +30,7 @@
         </li>
         <li class="custom-list-item">
           <strong>{{ 'CATEGORY.TYPE' | translate }}:</strong>
-          {{ categoryDetail?.productCategoryTypeId }}
+          {{ categoryTypeLabel || categoryDetail?.productCategoryTypeId }}
         </li>
         <li class="custom-list-item">
           <strong>{{ 'CATEGORY.DESCRIPTION' | translate }}:</strong>

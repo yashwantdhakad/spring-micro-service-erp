@@ -29,7 +29,41 @@
             >edit</mat-icon
           >
         </li>
+        <li class="custom-list-item">
+          <strong>Type:</strong>
+          {{ productTypeLabel || productDetail?.productTypeId }}
+        </li>
       </ul>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>Inventory Summary</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="inventorySummary">
+        <ng-container matColumnDef="facility">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Facility</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.facilityName || item.facilityId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="atpTotal">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>ATP</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.atpTotal }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="qohTotal">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>QOH</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.qohTotal }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="inventorySummaryColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: inventorySummaryColumns"></tr>
+      </table>
     </mat-card-content>
   </mat-card>
   <br />
@@ -53,7 +87,7 @@
             {{ 'PRODUCT.PRICE_TYPE' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item?.productPriceTypeId }}
+            {{ getPriceTypeDescription(item?.productPriceTypeId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="description">
@@ -61,7 +95,7 @@
             {{ 'PRODUCT.PRICE_PURPOSE' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item?.productPricePurposeId }}
+            {{ getPricePurposeDescription(item?.productPricePurposeId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="price">
@@ -129,7 +163,7 @@
             {{ 'CATEGORY.TYPE' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item?.productCategoryTypeId }}
+            {{ getCategoryTypeDescription(item?.productCategoryTypeId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="fromDate">

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,8 +27,23 @@ public class SupplierProductController {
     }
 
     @GetMapping
-    public List<SupplierProduct> list() {
+    public List<SupplierProduct> list(@RequestParam(required = false) String partyId) {
+        if (partyId != null && !partyId.isBlank()) {
+            return service.listByPartyId(partyId);
+        }
         return service.list();
+    }
+
+    @GetMapping("/by-party-product")
+    public SupplierProduct getByPartyAndProduct(
+            @RequestParam String partyId,
+            @RequestParam String productId
+    ) {
+        return service.findLatestByPartyAndProduct(partyId, productId)
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "SupplierProduct not found"
+                ));
     }
 
     @GetMapping("/{id}")

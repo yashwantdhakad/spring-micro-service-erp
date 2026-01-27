@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ProductService } from 'src/app/services/product/product.service';
+import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
   selector: 'app-product',
@@ -26,10 +27,15 @@ export class ProductComponent implements OnInit, OnDestroy {
     { key: 'productName', header: 'PRODUCT.NAME' },
     { key: 'productTypeId', header: 'PRODUCT.TYPE' },
   ];
+  productTypeMap = new Map<string, string>();
 
-  constructor(private productService: ProductService) { }
+  constructor(
+    private productService: ProductService,
+    private commonService: CommonService
+  ) { }
 
   ngOnInit(): void {
+    this.loadProductTypes();
     this.searchControl.valueChanges
       .pipe(
         startWith(''),
@@ -93,7 +99,25 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   getValue(element: any, key: string): any {
+    if (key === 'productTypeId') {
+      const typeId = element?.productTypeId;
+      return this.productTypeMap.get(typeId) || typeId;
+    }
     return key.split('.').reduce((acc, part) => acc && acc[part], element);
+  }
+
+  private loadProductTypes(): void {
+    this.commonService.getLookupResults({}, 'product_type').subscribe({
+      next: (types: any[]) => {
+        const list = Array.isArray(types) ? types : [];
+        this.productTypeMap = new Map(
+          list.map((type: any) => [
+            type.productTypeId,
+            type.description || type.productTypeId,
+          ])
+        );
+      },
+    });
   }
 
   private destroy$ = new Subject<void>();

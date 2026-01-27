@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, of, Subject, forkJoin } from 'rxjs';
+import { Observable, of, Subject, from, forkJoin } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -11,6 +11,8 @@ import {
   catchError,
   startWith,
   finalize,
+  concatMap,
+  toArray,
 } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { OrderService } from 'src/app/services/order/order.service';
@@ -121,6 +123,18 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     }
   }
 
+  onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
+    const productId = event.option.value;
+    if (!productId) {
+      return;
+    }
+    const productControl = this.items.at(index)?.get('productId');
+    if (productControl) {
+      productControl.setValue(productId);
+    }
+    this.applyProductPrice(index, productId);
+  }
+
 
   getVendorParties(productStoreId: string): void {
     this.orderService.getVendorParties(productStoreId).subscribe({
@@ -192,7 +206,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     const shipping$ = this.partyService.getPartyPostalContactMechByPurpose(partyId, 'SHIPPING_LOCATION', 'customer');
 
     forkJoin({ primary: primary$, shipping: shipping$ }).subscribe({
-      next: ({ primary, shipping }) => {
+      next: ({ primary, shipping }: { primary: any; shipping: any }) => {
         const primaryList = Array.isArray(primary) ? primary : [];
         const shippingList = Array.isArray(shipping) ? shipping : [];
         const addresses = ([] as any[]).concat(primaryList, shippingList);
@@ -242,7 +256,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     }
     return {
       contactMechId: address.contactMechId,
-      contactMechPurposeTypeId: address.contactMechPurposeId || 'SHIPPING_LOCATION',
+      contactMechPurposeTypeId: 'SHIPPING_LOCATION',
       toName: address.toName,
       address1: address.address1,
       address2: address.address2,
@@ -281,21 +295,46 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     );
   }
 
-  private addOrderItems(orderId: string): void {
-    const requests = this.items.controls.map((control) => {
-      const value = control.value;
-      return this.orderService.addItem({
-        orderId,
-        orderPartSeqId: '00001',
-        productId: value.productId,
-        quantity: value.quantity,
-        unitAmount: value.unitAmount,
-        itemTypeEnumId: value.itemTypeEnumId,
-      });
-    });
+  private applyProductPrice(index: number, productId: string): void {
+    const unitAmountControl = this.items.at(index)?.get('unitAmount');
+    if (!unitAmountControl) {
+      return;
+    }
 
-    forkJoin(requests)
-      .pipe(finalize(() => (this.isLoading = false)))
+    this.productService.getProduct(productId).subscribe({
+      next: (response: any) => {
+        const prices = Array.isArray(response?.prices) ? response.prices : [];
+        const preferred =
+          prices.find((price: any) => price?.productPriceTypeId === 'DEFAULT_PRICE') ||
+          prices.find((price: any) => price?.productPriceTypeId === 'LIST_PRICE') ||
+          prices[0];
+        const priceValue = preferred?.price;
+        const numeric = priceValue != null ? Number(priceValue) : NaN;
+        if (!Number.isNaN(numeric)) {
+          unitAmountControl.setValue(numeric);
+        }
+      },
+    });
+  }
+
+  private addOrderItems(orderId: string): void {
+    from(this.items.controls)
+      .pipe(
+        concatMap((control) => {
+          const value = control.value;
+          const productId = value?.productId?.productId ?? value.productId;
+          return this.orderService.addItem({
+            orderId,
+            orderPartSeqId: '00001',
+            productId,
+            quantity: value.quantity,
+            unitAmount: value.unitAmount,
+            itemTypeEnumId: value.itemTypeEnumId,
+          });
+        }),
+        toArray(),
+        finalize(() => (this.isLoading = false))
+      )
       .subscribe({
         next: () => {
           this.snackbarService.showSuccess('Sales order created successfully.');

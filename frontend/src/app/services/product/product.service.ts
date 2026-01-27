@@ -40,6 +40,11 @@ export class ProductService {
     return this.apiService.get(url);
   }
 
+  getInventorySummary(productId: string): Observable<any[]> {
+    const url = `/wms/api/inventory-items/summary?productId=${encodeURIComponent(productId)}`;
+    return this.apiService.get<any[]>(url);
+  }
+
   updateProduct(params: any): Observable<any> {
     const url = `/wms/api/products/${encodeURIComponent(params.productId)}`;
     return this.apiService.put(url, params);

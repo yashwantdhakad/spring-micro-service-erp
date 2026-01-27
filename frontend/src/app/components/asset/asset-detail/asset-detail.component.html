@@ -23,7 +23,15 @@
             <ul class="custom-list">
               <li class="custom-list-item">
                 <strong>{{ 'ASSET.FACILITY' | translate }}</strong>
-                {{ assetDetail?.facilityId }}
+                <ng-container *ngIf="assetDetail?.facilityId; else noFacility">
+                  <a [routerLink]="['/facilities', assetDetail.facilityId]">
+                    {{ facilityName || assetDetail.facilityId }}
+                  </a>
+                  <span *ngIf="facilityName && facilityName !== assetDetail.facilityId">
+                    ({{ assetDetail.facilityId }})
+                  </span>
+                </ng-container>
+                <ng-template #noFacility>--</ng-template>
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'ASSET.LOCATION' | translate }}</strong>
@@ -35,11 +43,11 @@
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'ASSET.TYPE' | translate }}</strong>
-                {{ assetDetail?.inventoryItemTypeId }}
+                {{ getInventoryItemTypeLabel(assetDetail?.inventoryItemTypeId || assetDetail?.inventoryItemTypeEnumId) }}
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'ASSET.STATUS' | translate }}</strong>
-                {{ assetDetail?.statusId }}
+                {{ getStatusLabel(assetDetail?.statusId) }}
               </li>
               <li *ngIf="assetDetail?.serialNumber" class="custom-list-item">
                 <strong>{{ 'ASSET.SERIAL_NUMBER' | translate }}</strong>
@@ -146,6 +154,15 @@
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.receiptId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="shipmentId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Shipment Id</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <ng-container *ngIf="item.shipmentId; else noShipment">
+              <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>
+            </ng-container>
+            <ng-template #noShipment>--</ng-template>
           </td>
         </ng-container>
         <ng-container matColumnDef="productId">

@@ -11,11 +11,19 @@
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
           <mat-label>Shipment Type</mat-label>
-          <input matInput formControlName="shipmentTypeId" required />
+          <mat-select formControlName="shipmentTypeId" required>
+            <mat-option *ngFor="let type of shipmentTypes" [value]="type.shipmentTypeId">
+              {{ type.description || type.shipmentTypeId }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
           <mat-label>Status</mat-label>
-          <input matInput formControlName="statusId" required />
+          <mat-select formControlName="statusId" required>
+            <mat-option *ngFor="let status of shipmentStatuses" [value]="status.statusId">
+              {{ status.description || status.statusId }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
           <mat-label>Primary Order</mat-label>
@@ -114,7 +122,11 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Method</mat-label>
-            <input matInput formControlName="shipmentMethodTypeId" />
+            <mat-select formControlName="shipmentMethodTypeId">
+              <mat-option *ngFor="let method of shipmentMethodTypes" [value]="method.shipmentMethodTypeId">
+                {{ method.description || method.shipmentMethodTypeId }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Carrier</mat-label>
@@ -122,7 +134,11 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Status</mat-label>
-            <input matInput formControlName="carrierServiceStatusId" />
+            <mat-select formControlName="carrierServiceStatusId">
+              <mat-option *ngFor="let status of carrierServiceStatuses" [value]="status.statusId">
+                {{ status.description || status.statusId }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
           <button
             mat-icon-button

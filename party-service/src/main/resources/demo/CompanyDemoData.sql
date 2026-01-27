@@ -110,10 +110,6 @@ INSERT INTO party_contact_mech_purpose (contact_mech_id, contact_mech_purpose_ty
 SELECT '9001', 'PHONE_BILLING', '2014-05-13 00:00:00', 'COMPANY'
 WHERE NOT EXISTS (SELECT 1 FROM party_contact_mech_purpose WHERE contact_mech_id = '9001' AND contact_mech_purpose_type_id = 'PHONE_BILLING' AND from_date = '2014-05-13 00:00:00' AND party_id = 'COMPANY');
 
-INSERT INTO party_acctg_preference (base_currency_uom_id, cogs_method_id, enable_accounting, error_gl_journal_id, invoice_id_prefix, invoice_seq_cust_meth_id, order_id_prefix, party_id, quote_id_prefix, tax_form_id)
-SELECT 'USD', 'COGS_AVG_COST', 1, 'ERROR_JOURNAL', 'CI', 'INV_HOOK_ENF_SEQ', '', 'COMPANY', 'CQ', ''
-WHERE NOT EXISTS (SELECT 1 FROM party_acctg_preference WHERE base_currency_uom_id = 'USD' AND cogs_method_id = 'COGS_AVG_COST' AND enable_accounting = 1 AND error_gl_journal_id = 'ERROR_JOURNAL' AND invoice_id_prefix = 'CI' AND invoice_seq_cust_meth_id = 'INV_HOOK_ENF_SEQ' AND order_id_prefix = '' AND party_id = 'COMPANY' AND quote_id_prefix = 'CQ' AND tax_form_id = '');
-
 INSERT INTO contact_mech (contact_mech_id, contact_mech_type_id)
 SELECT 'WH_TN', 'TELECOM_NUMBER'
 WHERE NOT EXISTS (SELECT 1 FROM contact_mech WHERE contact_mech_id = 'WH_TN' AND contact_mech_type_id = 'TELECOM_NUMBER');

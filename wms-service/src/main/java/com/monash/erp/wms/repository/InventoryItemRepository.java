@@ -18,4 +18,6 @@ public interface InventoryItemRepository extends JpaRepository<InventoryItem, Lo
     );
 
     List<InventoryItem> findByProductIdAndFacilityId(String productId, String facilityId);
+
+    List<InventoryItem> findByProductId(String productId);
 }

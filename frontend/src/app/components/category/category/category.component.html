@@ -29,7 +29,7 @@
             <ng-container *ngIf="column.key === 'productCategoryId'; else defaultCell">
               <a [routerLink]="['/category', item[column.key]]">{{ item[column.key] }}</a>
             </ng-container>
-            <ng-template #defaultCell>{{ item[column.key] }}</ng-template>
+            <ng-template #defaultCell>{{ getValue(item, column.key) }}</ng-template>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="getColumnKeys()"></tr>

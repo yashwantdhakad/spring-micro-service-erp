@@ -6,6 +6,7 @@
   </mat-card-header>
   <mat-card-content>
     <form
+      id="poCreateForm"
       [formGroup]="poForm"
       (ngSubmit)="createPO()"
       fxLayout="row wrap"
@@ -105,6 +106,7 @@
       </button>
     </mat-card-title>
   </mat-card-header>
+  <br/>
   <mat-card-content>
     <div [formGroup]="poForm">
       <div formArrayName="items">
@@ -117,7 +119,7 @@
           <mat-form-field fxFlex="35%">
             <mat-label>Product</mat-label>
             <input matInput formControlName="productId" [matAutocomplete]="productAuto" />
-            <mat-autocomplete #productAuto="matAutocomplete">
+            <mat-autocomplete #productAuto="matAutocomplete" (optionSelected)="onProductSelected($event, i)">
               <mat-option *ngFor="let product of filteredProducts[i] | async" [value]="product.productId">
                 {{ product.productId }} - {{ product.productName }}
               </mat-option>
@@ -154,6 +156,7 @@
         mat-raised-button
         color="primary"
         type="submit"
+        form="poCreateForm"
         class="me-4"
         [disabled]="isLoading"
       >

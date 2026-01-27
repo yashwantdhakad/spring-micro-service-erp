@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import { CommonService } from 'src/app/services/common/common.service';
 import { ShipmentService } from 'src/app/services/shipment/shipment.service';
 import { finalize } from 'rxjs/operators';
 
@@ -16,6 +18,8 @@ export class ShipmentComponent implements OnInit {
   };
   items: any[] = [];
   pages: number = 0;
+  statusMap = new Map<string, string>();
+  shipmentTypeMap = new Map<string, string>();
   displayedColumns: string[] = [
     'shipmentId',
     'statusId',
@@ -25,11 +29,41 @@ export class ShipmentComponent implements OnInit {
     'estimatedShipDate',
   ];
 
-  constructor(private shipmentService: ShipmentService) {}
+  constructor(
+    private shipmentService: ShipmentService,
+    private commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
+    this.loadLookups();
     this.isLoading = true;
     this.getShipments(1, '');
+  }
+
+  private loadLookups(): void {
+    forkJoin({
+      statuses: this.commonService.getAllStatusItems(),
+      shipmentTypes: this.commonService.getShipmentTypes(),
+    }).subscribe({
+      next: ({ statuses, shipmentTypes }) => {
+        this.statusMap = new Map(
+          (statuses || []).map((item: any) => [
+            item.statusId,
+            item.description || item.statusId,
+          ])
+        );
+        this.shipmentTypeMap = new Map(
+          (shipmentTypes || []).map((item: any) => [
+            item.shipmentTypeId,
+            item.description || item.shipmentTypeId,
+          ])
+        );
+      },
+      error: () => {
+        this.statusMap = new Map();
+        this.shipmentTypeMap = new Map();
+      },
+    });
   }
 
   getShipments(page: number, queryString: string): void {
@@ -45,5 +79,19 @@ export class ShipmentComponent implements OnInit {
         error: (err) => {
         },
       });
+  }
+
+  getStatusDescription(statusId?: string): string {
+    if (!statusId) {
+      return '';
+    }
+    return this.statusMap.get(statusId) || statusId;
+  }
+
+  getShipmentTypeDescription(shipmentTypeId?: string): string {
+    if (!shipmentTypeId) {
+      return '';
+    }
+    return this.shipmentTypeMap.get(shipmentTypeId) || shipmentTypeId;
   }
 }

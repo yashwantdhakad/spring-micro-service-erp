@@ -25,6 +25,11 @@ export class AssetService {
     return this.apiService.get(url);
   }
 
+  getInventoryItemTypes(): Observable<any> {
+    const url = '/wms/api/inventory-item-types';
+    return this.apiService.get(url);
+  }
+
   receiveAsset(params: any): Observable<any> {
     const url = '/wms/api/assets/receive';
     return this.apiService.post(url, params);

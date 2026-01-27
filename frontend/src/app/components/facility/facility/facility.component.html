@@ -20,7 +20,9 @@
         </ng-container>
         <ng-container matColumnDef="facilityTypeId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.TYPE' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.facilityTypeId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getFacilityTypeDescription(item.facilityTypeId) }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="ownerPartyId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.OWNER' | translate }}</th>

@@ -211,6 +211,47 @@
 </mat-card>
 <br />
 
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>{{ 'SUPPLIER.SUPPLIER_PRODUCTS' | translate }}
+      <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+        (click)="addSupplierProductDialog()">add</mat-icon>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="supplierProducts">
+      <ng-container matColumnDef="productId">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>Product</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          {{ item.productId }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="supplierProductName">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>Name</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          {{ item.supplierProductName }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="lastPrice">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>Last Price</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          {{ item.lastPrice }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>Action</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn"
+            (click)="deleteSupplierProduct(item)">delete</mat-icon>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="supplierProductColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: supplierProductColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
+<br />
+
 <mat-card class="mat-card mat-elevation-z10">
   <mat-card-header>
     <mat-card-title>{{ 'SUPPLIER.SHIPPING' | translate }}</mat-card-title>

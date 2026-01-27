@@ -1,7 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { AddEditEmailComponent } from 'src/app/components/party/add-edit-email/add-edit-email.component';
 import { AddEditPhoneComponent } from 'src/app/components/party/add-edit-phone/add-edit-phone.component';
@@ -9,6 +12,8 @@ import { AddIdentificationComponent } from 'src/app/components/party/add-identif
 import { AddRoleComponent } from 'src/app/components/party/add-role/add-role.component';
 import { filterGeoRecords } from 'src/app/helpers/geo-type-helper';
 import { PartyService } from 'src/app/services/party/party.service';
+import { SnackbarService } from 'src/app/services/common/snackbar.service';
+import { SupplierProductService } from 'src/app/services/supplier-product/supplier-product.service';
 import { loadGeos } from 'src/app/store/geo/geo.actions';
 import { selectGeoList } from 'src/app/store/geo/geo.selector';
 import { GeoState } from 'src/app/store/geo/geo.state';
@@ -17,8 +22,7 @@ import { EditSupplierComponent } from '../edit-supplier/edit-supplier.component'
 import { AddEditCreditCardComponent } from '../../party/add-edit-credit-card/add-edit-credit-card.component';
 import { AddEditBankAccountComponent } from '../../party/add-edit-bank-account/add-edit-bank-account.component';
 import { PartyNoteComponent } from '../../party/party-note/party-note.component';
-import { Subject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { SupplierProductDialogComponent } from '../supplier-product-dialog/supplier-product-dialog.component';
 
 @Component({
   selector: 'app-supplier-detail',
@@ -65,12 +69,17 @@ export class SupplierDetailComponent implements OnDestroy {
 
   partyNotes: any;
   noteColumns: string[] = ['noteText', 'noteDate', 'userId', 'action'];
+  supplierProductColumns: string[] = ['productId', 'supplierProductName', 'lastPrice', 'action'];
+  supplierProducts: any[] = [];
 
   constructor(
+    private fb: FormBuilder,
     private partyService: PartyService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private store: Store<GeoState>
+    private store: Store<GeoState>,
+    private supplierProductService: SupplierProductService,
+    private snackbarService: SnackbarService
   ) {}
 
   private destroy$ = new Subject<void>();
@@ -81,6 +90,7 @@ export class SupplierDetailComponent implements OnDestroy {
       if (this.partyId) {
         this.isLoading = true;
         this.getSupplier(this.partyId);
+        this.loadSupplierProducts(this.partyId);
       }
     });
 
@@ -93,6 +103,7 @@ export class SupplierDetailComponent implements OnDestroy {
         this.states = filterGeoRecords(geoListObject, 'STATE');
       }
     });
+
   }
 
   ngOnDestroy(): void {
@@ -130,6 +141,53 @@ export class SupplierDetailComponent implements OnDestroy {
       },
       error: () => {
       },
+    });
+  }
+
+  loadSupplierProducts(partyId: string): void {
+    this.supplierProductService.listByParty(partyId).subscribe({
+      next: (items) => {
+        this.supplierProducts = Array.isArray(items) ? items : [];
+      },
+      error: () => {
+        this.supplierProducts = [];
+      },
+    });
+  }
+
+  addSupplierProductDialog(): void {
+    if (!this.partyId) {
+      return;
+    }
+    this.dialog
+      .open(SupplierProductDialogComponent, {
+        data: { partyId: this.partyId },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result && this.partyId) {
+          this.loadSupplierProducts(this.partyId);
+        }
+      });
+  }
+
+  deleteSupplierProduct(item: any): void {
+    if (!item?.id) {
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Supplier Product',
+        message: 'Are you sure you want to delete this supplier product?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.supplierProductService.delete(item.id).subscribe({
+          next: () => this.loadSupplierProducts(this.partyId || ''),
+        });
+      }
     });
   }
 

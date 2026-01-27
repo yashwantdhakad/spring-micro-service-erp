@@ -30,6 +30,11 @@ public class FacilityContactMechController {
         return service.list();
     }
 
+    @GetMapping("/by-facility/{facilityId}")
+    public List<FacilityContactMech> listByFacility(@PathVariable String facilityId) {
+        return service.listByFacilityId(facilityId);
+    }
+
     @GetMapping("/{id}")
     public FacilityContactMech get(@PathVariable Long id) {
         return service.get(id);

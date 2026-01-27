@@ -26,6 +26,11 @@ public class PostalAddressService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "PostalAddress %d not found".formatted(id)));
     }
 
+    public PostalAddress getByContactMechId(String contactMechId) {
+        return repository.findByContactMechId(contactMechId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "PostalAddress %s not found".formatted(contactMechId)));
+    }
+
     public PostalAddress create(PostalAddress entity) {
         entity.setId(null);
         return repository.save(entity);

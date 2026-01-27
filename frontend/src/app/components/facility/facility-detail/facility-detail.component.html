@@ -7,22 +7,52 @@
       <a [routerLink]="['/facilities']">{{ 'FACILITY.TITLE' | translate }}</a> / {{ facilityDetail?.facilityId }}
     </mat-list-item>
   </mat-list>
-  <mat-card class="mat-elevation-z10">
+  <mat-card class="mat-card mat-elevation-z10">
     <mat-card-header>
       <mat-card-title>{{ 'FACILITY.OVERVIEW' | translate }}</mat-card-title>
     </mat-card-header>
-    <mat-card-content>
-      <ul class="custom-list">
-        <li class="custom-list-item">
-          <strong>{{ 'FACILITY.NAME' | translate }}:</strong> {{ facilityDetail?.facilityName }}
-        </li>
-        <li class="custom-list-item">
-          <strong>{{ 'FACILITY.TYPE' | translate }}:</strong> {{ facilityDetail?.facilityTypeId }}
-        </li>
-      </ul>
-    </mat-card-content>
+    <div fxLayout="row wrap" fxLayout.xs="column">
+      <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+        <mat-card-header>
+          <mat-card-title>{{ 'FACILITY.DETAILS' | translate }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="custom-list">
+            <li class="custom-list-item">
+              <strong>{{ 'FACILITY.NAME' | translate }}:</strong> {{ facilityDetail?.facilityName }}
+            </li>
+            <li class="custom-list-item">
+              <strong>{{ 'FACILITY.TYPE' | translate }}:</strong> {{ facilityTypeLabel || facilityDetail?.facilityTypeId }}
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+      <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+        <mat-card-header>
+          <mat-card-title>{{ 'FACILITY.ADDRESS' | translate }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="custom-list" *ngIf="facilityAddress; else noFacilityAddress">
+            <li class="custom-list-item">
+              <div>{{ facilityAddress?.toName }}</div>
+              <div>{{ facilityAddress?.address1 }}</div>
+              <div>{{ facilityAddress?.address2 }}</div>
+              <div>
+                {{ facilityAddress?.city }},
+                {{ getGeoLabel(facilityAddress?.stateProvinceGeoId) }}
+                {{ facilityAddress?.postalCode }}
+                {{ getGeoLabel(facilityAddress?.countryGeoId) }}
+              </div>
+            </li>
+          </ul>
+          <ng-template #noFacilityAddress>
+            <div class="custom-list-item">Not available</div>
+          </ng-template>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </mat-card>
-  <br />
+  <br/>
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
       <mat-card-title>{{ 'FACILITY.LOCATIONS' | translate }}</mat-card-title>
@@ -37,6 +67,12 @@
           <ng-container matColumnDef="locationSeqId">
             <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.LOCATION_ID' | translate }}</th>
             <td mat-cell class="text-left" *matCellDef="let item">{{ item.locationSeqId }}</td>
+          </ng-container>
+          <ng-container matColumnDef="locationType">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ getLocationTypeLabel(item.locationTypeEnumId) }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="areaId">
             <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FACILITY.LOCATION_NAME' | translate }}</th>

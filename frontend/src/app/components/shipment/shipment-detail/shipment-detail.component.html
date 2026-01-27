@@ -27,11 +27,11 @@
               </li>
               <li class="custom-list-item">
                 <strong>Type:</strong>
-                {{ shipmentDetail?.shipmentTypeId }}
+                {{ getShipmentTypeDescription(shipmentDetail?.shipmentTypeId) }}
               </li>
               <li class="custom-list-item">
                 <strong>Status:</strong>
-                {{ shipmentDetail?.statusId }}
+                {{ getStatusDescription(shipmentDetail?.statusId) }}
               </li>
               <li class="custom-list-item">
                 <strong>Primary Order:</strong>
@@ -130,7 +130,9 @@
         </ng-container>
         <ng-container matColumnDef="shipmentMethodTypeId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Method</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentMethodTypeId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getShipmentMethodDescription(item.shipmentMethodTypeId) }}
+          </td>
         </ng-container>
         <ng-container matColumnDef="carrierPartyId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Carrier</th>
@@ -138,7 +140,9 @@
         </ng-container>
         <ng-container matColumnDef="carrierServiceStatusId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.carrierServiceStatusId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ getStatusDescription(item.carrierServiceStatusId) }}
+          </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="['shipmentRouteSegmentId', 'originFacilityId', 'destFacilityId', 'shipmentMethodTypeId', 'carrierPartyId', 'carrierServiceStatusId']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['shipmentRouteSegmentId', 'originFacilityId', 'destFacilityId', 'shipmentMethodTypeId', 'carrierPartyId', 'carrierServiceStatusId']"></tr>

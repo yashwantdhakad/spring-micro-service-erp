@@ -3,12 +3,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
+import { FacilityService } from 'src/app/services/facility/facility.service';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { CommonService } from 'src/app/services/common/common.service';
+import { ProductService } from 'src/app/services/product/product.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-po-detail',
@@ -21,7 +26,10 @@ export class PODetailComponent implements OnInit {
   orderHeader: any;
   statusItem: any;
   vendorAddresses: any[] = [];
+  facilityAddress: any;
+  orderShipToAddress: any;
   vendorPartyId: string | undefined;
+  facilityId: string | undefined;
   canApprove = false;
   canReceive = false;
 
@@ -87,18 +95,26 @@ export class PODetailComponent implements OnInit {
   productItemData: any;
 
   overviewFields: { label: string, value: any }[] = [];
+  statusDescriptionMap = new Map<string, string>();
+  shipmentTypeMap = new Map<string, string>();
+  orderItemTypeMap = new Map<string, string>();
+  productNameMap = new Map<string, string>();
 
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
     private partyService: PartyService,
+    private facilityService: FacilityService,
     private dialog: MatDialog,
     private router: Router,
     private datePipe: DatePipe,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private commonService: CommonService,
+    private productService: ProductService
   ) { }
 
   ngOnInit(): void {
+    this.loadLookupData();
     this.route.params.subscribe((params) => {
       this.orderId = params['orderId'];
       if (this.orderId) {
@@ -119,6 +135,7 @@ export class PODetailComponent implements OnInit {
     order$.subscribe({
       next: (orderResponse) => {
         this.parts = orderResponse.parts;
+        this.primeProductNames(this.parts || []);
         this.contents = orderResponse.contents;
 
         display$.subscribe({
@@ -139,6 +156,15 @@ export class PODetailComponent implements OnInit {
               this.vendorPartyId = displayResponse.firstPart.vendorPartyId;
               this.loadVendorAddresses(displayResponse.firstPart.vendorPartyId);
             }
+
+            this.facilityId = displayResponse?.firstPart?.facilityId || this.orderHeader?.originFacilityId;
+            if (this.facilityId) {
+              this.loadFacilityAddress(this.facilityId);
+            }
+
+            const shippingContacts = (displayResponse?.orderContactMechList || [])
+              .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
+            this.orderShipToAddress = shippingContacts.length ? shippingContacts[0]?.postalAddress : null;
           },
           error: (error) => {
             this.isLoading = false;
@@ -178,6 +204,108 @@ export class PODetailComponent implements OnInit {
       error: (error) => {
         this.isLoading = false;
       }
+    });
+  }
+
+  loadLookupData(): void {
+    this.commonService.getAllStatusItems().subscribe({
+      next: (items) => {
+        const list = Array.isArray(items) ? items : [];
+        this.statusDescriptionMap = new Map(
+          list.map((item: any) => [item.statusId, item.description || item.statusId])
+        );
+      },
+    });
+    this.commonService.getShipmentTypes().subscribe({
+      next: (items) => {
+        const list = Array.isArray(items) ? items : [];
+        this.shipmentTypeMap = new Map(
+          list.map((item: any) => [item.shipmentTypeId, item.description || item.shipmentTypeId])
+        );
+      },
+    });
+    this.commonService.getOrderItemTypes().subscribe({
+      next: (items) => {
+        const list = Array.isArray(items) ? items : [];
+        this.orderItemTypeMap = new Map(
+          list.map((item: any) => [
+            item.orderItemTypeId,
+            item.description || item.orderItemTypeId,
+          ])
+        );
+      },
+    });
+  }
+
+  getStatusDescription(statusId: string): string {
+    return this.statusDescriptionMap.get(statusId) || statusId;
+  }
+
+  getShipmentTypeDescription(shipmentTypeId: string): string {
+    return this.shipmentTypeMap.get(shipmentTypeId) || shipmentTypeId;
+  }
+
+  getOrderItemTypeDescription(orderItemTypeId?: string): string {
+    if (!orderItemTypeId) {
+      return '';
+    }
+    return this.orderItemTypeMap.get(orderItemTypeId) || orderItemTypeId;
+  }
+
+  getProductName(item: any): string {
+    const productId = item?.productId;
+    return (
+      this.productNameMap.get(productId) ||
+      item?.product?.productName ||
+      item?.productName ||
+      item?.itemDescription ||
+      productId ||
+      ''
+    );
+  }
+
+  private primeProductNames(parts: any[]): void {
+    const ids = new Set<string>();
+    (parts || []).forEach((part: any) => {
+      (part.items || []).forEach((item: any) => {
+        const productId = item?.productId;
+        if (!productId) {
+          return;
+        }
+        const name = item?.product?.productName || item?.productName;
+        if (name) {
+          this.productNameMap.set(productId, name);
+        } else {
+          ids.add(productId);
+        }
+      });
+    });
+
+    const missing = Array.from(ids).filter((id) => !this.productNameMap.has(id));
+    if (missing.length === 0) {
+      return;
+    }
+    const requests = missing.map((productId) =>
+      this.productService.getProduct(productId).pipe(
+        map((response) => {
+          const product = response?.product || response;
+          return {
+            productId,
+            productName: product?.productName || productId,
+          };
+        }),
+        catchError(() => of({ productId, productName: productId }))
+      )
+    );
+
+    forkJoin(requests).subscribe({
+      next: (results) => {
+        results.forEach((result) => {
+          if (result?.productId) {
+            this.productNameMap.set(result.productId, result.productName || result.productId);
+          }
+        });
+      },
     });
   }
 
@@ -237,6 +365,72 @@ export class PODetailComponent implements OnInit {
         this.vendorAddresses = Array.isArray(data) ? data : [];
       },
       error: (error) => {
+      }
+    });
+  }
+
+  loadFacilityAddress(facilityId: string): void {
+    forkJoin({
+      contactMechs: this.facilityService.getFacilityContactMechs(facilityId),
+      purposes: this.facilityService.getFacilityContactMechPurposes(facilityId),
+    }).subscribe({
+      next: ({ contactMechs, purposes }) => {
+        const mechList = Array.isArray(contactMechs) ? contactMechs : [];
+        const purposeList = Array.isArray(purposes) ? purposes : [];
+        const purposeMap = new Map<string, string[]>();
+        purposeList.forEach((purpose: any) => {
+          const list = purposeMap.get(purpose.contactMechId) || [];
+          list.push(purpose.contactMechPurposeTypeId);
+          purposeMap.set(purpose.contactMechId, list);
+        });
+
+        const preferredPurposeOrder = ['SHIPPING_LOCATION', 'PRIMARY_LOCATION', 'SHIP_ORIG_LOCATION'];
+        let contactMechId: string | undefined;
+        for (const purpose of preferredPurposeOrder) {
+          const match = mechList.find((mech: any) =>
+            (purposeMap.get(mech.contactMechId) || []).includes(purpose)
+          );
+          if (match?.contactMechId) {
+            contactMechId = match.contactMechId;
+            break;
+          }
+        }
+        if (!contactMechId && mechList.length) {
+          contactMechId = mechList[0].contactMechId;
+        }
+        if (!contactMechId) {
+          this.facilityAddress = null;
+          return;
+        }
+        this.partyService.getPostalAddressByContactMechId(contactMechId).subscribe({
+          next: (address) => {
+            this.facilityAddress = address;
+          },
+          error: () => {
+            this.facilityAddress = null;
+          },
+        });
+      },
+      error: () => {
+        this.facilityAddress = null;
+      },
+    });
+  }
+
+  addShipToAddress(): void {
+    if (!this.orderId) {
+      return;
+    }
+    const addressData = {
+      orderId: this.orderId,
+      contactMechPurposeId: 'SHIPPING_LOCATION',
+    };
+
+    this.dialog.open(AddEditAddressComponent, {
+      data: { addressData },
+    }).afterClosed().subscribe(() => {
+      if (this.orderId) {
+        this.getOrder(this.orderId);
       }
     });
   }

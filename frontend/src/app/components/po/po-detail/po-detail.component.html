@@ -128,16 +128,25 @@
               <li class="custom-list-item">
                 <strong>{{ 'PO.ADDRESS' | translate }}:</strong>
                 <div>
-                  {{ part?.postal?.postalAddress?.toName }}
+                  {{ facilityAddress?.toName || orderShipToAddress?.toName }}
                 </div>
-                <div>{{ part?.postal?.postalAddress?.address1 }}</div>
-                <div>{{ part?.postal?.postalAddress?.address2 }}</div>
+                <div>{{ facilityAddress?.address1 || orderShipToAddress?.address1 }}</div>
+                <div>{{ facilityAddress?.address2 || orderShipToAddress?.address2 }}</div>
                 <div>
-                  {{ part?.postal?.postalAddress?.city }},
-                  {{ part?.postal?.postalAddress?.stateProvinceGeo?.geoName }}
-                  {{ part?.postal?.postalAddress?.postalCode }}
-                  {{ part?.postal?.postalAddress?.countryGeoId }}
+                  {{ facilityAddress?.city || orderShipToAddress?.city }},
+                  {{ facilityAddress?.stateProvinceGeoId || orderShipToAddress?.stateProvinceGeoId }}
+                  {{ facilityAddress?.postalCode || orderShipToAddress?.postalCode }}
+                  {{ facilityAddress?.countryGeoId || orderShipToAddress?.countryGeoId }}
                 </div>
+              </li>
+              <li class="custom-list-item" *ngIf="!facilityAddress && !orderShipToAddress">
+                <strong>{{ 'PO.ADDRESS' | translate }}:</strong>
+                <mat-icon
+                  matListIcon
+                  class="custom-mat-icon custom-icon-align"
+                  color="primary"
+                  (click)="addShipToAddress()"
+                >add</mat-icon>
               </li>
             </ul>
           </mat-card-content>
@@ -213,7 +222,7 @@
             <ng-container matColumnDef="productName">
               <th mat-header-cell *matHeaderCellDef>Product Name</th>
               <td mat-cell *matCellDef="let item">
-                {{ item?.product?.productName }}
+                {{ getProductName(item) }}
               </td>
             </ng-container>
             <ng-container matColumnDef="itemDescription">
@@ -225,7 +234,13 @@
             <ng-container matColumnDef="description">
               <th mat-header-cell *matHeaderCellDef>Type</th>
               <td mat-cell *matCellDef="let item">
-                {{ item.itemType.description }}
+                {{
+                  getOrderItemTypeDescription(
+                    item.itemType?.description ||
+                      item.orderItemTypeId ||
+                      item.itemTypeEnumId
+                  )
+                }}
               </td>
             </ng-container>
             <ng-container matColumnDef="requiredByDate">
@@ -318,11 +333,11 @@
         </ng-container>
         <ng-container matColumnDef="shipmentTypeId">
           <th mat-header-cell *matHeaderCellDef>Type</th>
-          <td mat-cell *matCellDef="let item">{{ item.shipmentTypeId }}</td>
+          <td mat-cell *matCellDef="let item">{{ getShipmentTypeDescription(item.shipmentTypeId) }}</td>
         </ng-container>
         <ng-container matColumnDef="statusId">
           <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let item">{{ item.statusId }}</td>
+          <td mat-cell *matCellDef="let item">{{ getStatusDescription(item.statusId) }}</td>
         </ng-container>
         <ng-container matColumnDef="createdDate">
           <th mat-header-cell *matHeaderCellDef>Created</th>

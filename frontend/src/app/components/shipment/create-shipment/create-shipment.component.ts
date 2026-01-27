@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { CommonService } from 'src/app/services/common/common.service';
 import { ShipmentService } from 'src/app/services/shipment/shipment.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
@@ -13,12 +15,17 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 export class CreateShipmentComponent implements OnInit {
   isLoading = false;
   shipmentForm: FormGroup;
+  shipmentTypes: any[] = [];
+  shipmentStatuses: any[] = [];
+  carrierServiceStatuses: any[] = [];
+  shipmentMethodTypes: any[] = [];
 
   constructor(
     private fb: FormBuilder,
     private shipmentService: ShipmentService,
     private router: Router,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private commonService: CommonService
   ) {
     this.shipmentForm = this.fb.group({
       shipmentId: [''],
@@ -39,6 +46,7 @@ export class CreateShipmentComponent implements OnInit {
   ngOnInit(): void {
     this.addItem();
     this.addRouteSegment();
+    this.loadLookups();
   }
 
   get items(): FormArray {
@@ -79,6 +87,31 @@ export class CreateShipmentComponent implements OnInit {
 
   removeRouteSegment(index: number): void {
     this.routeSegments.removeAt(index);
+  }
+
+  private loadLookups(): void {
+    forkJoin({
+      statuses: this.commonService.getAllStatusItems(),
+      shipmentTypes: this.commonService.getShipmentTypes(),
+      shipmentMethodTypes: this.commonService.getShipmentMethodTypes(),
+    }).subscribe({
+      next: ({ statuses, shipmentTypes, shipmentMethodTypes }) => {
+        const statusList = statuses || [];
+        const shipmentStatuses = statusList.filter(
+          (item: any) => item.statusTypeId === 'SHIPMENT_STATUS'
+        );
+        this.shipmentStatuses = shipmentStatuses.length ? shipmentStatuses : statusList;
+        this.carrierServiceStatuses = statusList;
+        this.shipmentTypes = shipmentTypes || [];
+        this.shipmentMethodTypes = shipmentMethodTypes || [];
+      },
+      error: () => {
+        this.shipmentStatuses = [];
+        this.carrierServiceStatuses = [];
+        this.shipmentTypes = [];
+        this.shipmentMethodTypes = [];
+      },
+    });
   }
 
   createShipment(): void {

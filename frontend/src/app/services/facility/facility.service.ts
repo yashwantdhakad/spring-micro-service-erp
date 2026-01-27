@@ -37,4 +37,14 @@ export class FacilityService {
     const url = `/wms/api/facility-locations/${id}`;
     return this.apiService.put(url, payload);
   }
+
+  getFacilityContactMechs(facilityId: string): Observable<any> {
+    const url = `/wms/api/facility-contact-mechs/by-facility/${encodeURIComponent(facilityId)}`;
+    return this.apiService.get(url);
+  }
+
+  getFacilityContactMechPurposes(facilityId: string): Observable<any> {
+    const url = `/wms/api/facility-contact-mech-purposes/by-facility/${encodeURIComponent(facilityId)}`;
+    return this.apiService.get(url);
+  }
 }

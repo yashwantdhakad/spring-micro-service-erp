@@ -2,11 +2,11 @@ package com.monash.erp.wms.service;
 
 import com.monash.erp.wms.entity.SupplierProduct;
 import com.monash.erp.wms.repository.SupplierProductRepository;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.List;
 
 @Service
 public class SupplierProductService {
@@ -19,6 +19,14 @@ public class SupplierProductService {
 
     public List<SupplierProduct> list() {
         return repository.findAll();
+    }
+
+    public List<SupplierProduct> listByPartyId(String partyId) {
+        return repository.findByPartyId(partyId);
+    }
+
+    public Optional<SupplierProduct> findLatestByPartyAndProduct(String partyId, String productId) {
+        return repository.findTopByPartyIdAndProductIdOrderByIdDesc(partyId, productId);
     }
 
     public SupplierProduct get(Long id) {

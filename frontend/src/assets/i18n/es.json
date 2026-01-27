@@ -64,6 +64,8 @@
   },
   "FACILITY": {
     "TITLE": "Instalaciones",
+    "DETAILS": "Detalles de la Instalación",
+    "ADDRESS": "Dirección",
     "SEARCH": "Buscar",
     "ID": "ID",
     "NAME": "Nombre",
@@ -329,6 +331,13 @@
   "SUPPLIER": {
     "TITLE": "Proveedores",
     "SEARCH": "Buscar",
+    "SUPPLIER_PRODUCTS": "Productos del Proveedor",
+    "ADD_SUPPLIER_PRODUCT_TITLE": "Agregar producto del proveedor",
+    "PRODUCT": "Producto",
+    "SUPPLIER_PRODUCT_NAME": "Nombre del producto del proveedor",
+    "LAST_PRICE": "Ultimo precio",
+    "ADD": "Agregar",
+    "CANCEL": "Cancelar",
     "ID": "ID",
     "NAME": "Nombre",
     "PHONE": "Teléfono",

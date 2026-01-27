@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AssetService } from 'src/app/services/asset/asset.service';
+import { CommonService } from 'src/app/services/common/common.service';
 import { Subject, finalize, takeUntil } from 'rxjs';
 
 @Component({
@@ -16,6 +17,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
   };
   items: any[] = [];
   pages: number = 0;
+  inventoryItemTypeMap = new Map<string, string>();
+  statusMap = new Map<string, string>();
 
   displayedColumns = [
     { key: 'inventoryItemId', header: 'ASSET.ASSET_ID' },
@@ -35,10 +38,14 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private assetService: AssetService) {}
+  constructor(
+    private assetService: AssetService,
+    private commonService: CommonService
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
+    this.loadLookups();
     this.getAssets(this.pagination.page, this.queryString);
   }
 
@@ -57,6 +64,56 @@ export class AssetsComponent implements OnInit, OnDestroy {
         error: (error) => {
         }
       });
+  }
+
+  private loadLookups(): void {
+    this.assetService.getInventoryItemTypes()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (types) => {
+          const list = Array.isArray(types) ? types : [];
+          this.inventoryItemTypeMap = new Map(
+            list.map((type: any) => [
+              type.inventoryItemTypeId,
+              type.description || type.inventoryItemTypeId,
+            ])
+          );
+        },
+        error: () => {
+          this.inventoryItemTypeMap = new Map();
+        }
+      });
+
+    this.commonService.getAllStatusItems()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (items) => {
+          const list = Array.isArray(items) ? items : [];
+          this.statusMap = new Map(
+            list.map((item: any) => [
+              item.statusId,
+              item.description || item.statusId,
+            ])
+          );
+        },
+        error: () => {
+          this.statusMap = new Map();
+        }
+      });
+  }
+
+  getInventoryItemTypeLabel(typeId?: string): string {
+    if (!typeId) {
+      return '';
+    }
+    return this.inventoryItemTypeMap.get(typeId) || typeId;
+  }
+
+  getStatusLabel(statusId?: string): string {
+    if (!statusId) {
+      return '';
+    }
+    return this.statusMap.get(statusId) || statusId;
   }
 
   ngOnDestroy(): void {

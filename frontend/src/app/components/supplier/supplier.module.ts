@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { SupplierComponent } from './supplier/supplier.component';
 import { CreateSupplierComponent } from './create-supplier/create-supplier.component';
 import { SupplierDetailComponent } from './supplier-detail/supplier-detail.component';
+import { SupplierProductDialogComponent } from './supplier-product-dialog/supplier-product-dialog.component';
 import { SharedModule } from '../common/shared/shared-module';
 
 // Angular Material Modules
@@ -21,6 +22,7 @@ import { MaterialModule } from '../../components/common/material/material.module
         SupplierComponent,
         CreateSupplierComponent,
         SupplierDetailComponent,
+        SupplierProductDialogComponent,
     ],
     imports: [
         CommonModule,

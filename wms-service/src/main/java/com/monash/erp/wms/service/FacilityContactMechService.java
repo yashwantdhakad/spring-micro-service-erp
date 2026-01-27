@@ -21,6 +21,10 @@ public class FacilityContactMechService {
         return repository.findAll();
     }
 
+    public List<FacilityContactMech> listByFacilityId(String facilityId) {
+        return repository.findByFacilityId(facilityId);
+    }
+
     public FacilityContactMech get(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "FacilityContactMech %d not found".formatted(id)));

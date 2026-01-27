@@ -1,5 +1,6 @@
 package com.monash.erp.wms.controller;
 
+import com.monash.erp.wms.dto.InventorySummaryDto;
 import com.monash.erp.wms.entity.InventoryItem;
 import com.monash.erp.wms.service.InventoryItemService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,6 +30,11 @@ public class InventoryItemController {
     @GetMapping
     public List<InventoryItem> list() {
         return service.list();
+    }
+
+    @GetMapping("/summary")
+    public List<InventorySummaryDto> summarize(@RequestParam String productId) {
+        return service.summarizeByProduct(productId);
     }
 
     @GetMapping("/{id}")

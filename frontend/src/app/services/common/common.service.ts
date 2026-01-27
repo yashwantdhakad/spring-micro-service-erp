@@ -14,9 +14,12 @@ export class CommonService {
 
   private enumTypeCache = new Map<string, Observable<any[]>>();
   private statusItemCache = new Map<string, Observable<any[]>>();
+  private statusAllCache$: Observable<any[]> | null = null;
   private parentEnumTypeCache = new Map<string, Observable<any[]>>();
   private uomCache = new Map<string, Observable<any[]>>();
   private roleTypeCache = new Map<string, Observable<any[]>>();
+  private shipmentTypeCache$: Observable<any[]> | null = null;
+  private shipmentMethodTypeCache$: Observable<any[]> | null = null;
   private geosCache$: Observable<any[]> | null = null;
 
   getEnumTypes(enumTypeId: string): Observable<any> {
@@ -51,6 +54,19 @@ export class CommonService {
       this.statusItemCache.set(statusTypeId, request$);
     }
     return this.statusItemCache.get(statusTypeId)!;
+  }
+
+  getAllStatusItems(): Observable<any[]> {
+    if (!this.statusAllCache$) {
+      this.statusAllCache$ = this.apiService.get<any[]>('/oms/api/common/status-items').pipe(
+        shareReplay(1),
+        catchError((error) => {
+          this.statusAllCache$ = null;
+          return this.handleError(error);
+        })
+      );
+    }
+    return this.statusAllCache$;
   }
 
   getParentEnumTypes(parentEnumId: string): Observable<any> {
@@ -111,6 +127,45 @@ export class CommonService {
       this.roleTypeCache.set(enumTypeId, request$);
     }
     return this.roleTypeCache.get(enumTypeId)!;
+  }
+
+  getShipmentTypes(): Observable<any[]> {
+    if (!this.shipmentTypeCache$) {
+      this.shipmentTypeCache$ = this.apiService.get<any[]>('/wms/api/shipment-types').pipe(
+        shareReplay(1),
+        catchError((error) => {
+          this.shipmentTypeCache$ = null;
+          return this.handleError(error);
+        })
+      );
+    }
+    return this.shipmentTypeCache$;
+  }
+
+  getShipmentMethodTypes(): Observable<any[]> {
+    if (!this.shipmentMethodTypeCache$) {
+      this.shipmentMethodTypeCache$ = this.apiService.get<any[]>('/wms/api/shipment-method-types').pipe(
+        shareReplay(1),
+        catchError((error) => {
+          this.shipmentMethodTypeCache$ = null;
+          return this.handleError(error);
+        })
+      );
+    }
+    return this.shipmentMethodTypeCache$;
+  }
+
+  getOrderItemTypes(): Observable<any[]> {
+    const itemTypes = [
+      { orderItemTypeId: 'INVENTORY_ORDER_ITEM', description: 'PO: Inventory' },
+      { orderItemTypeId: 'SUPPLIES_ORDER_ITEM', description: 'PO: Supplies (to Expense)' },
+      { orderItemTypeId: 'ASSET_ORDER_ITEM', description: 'PO: Fixed Asset' },
+      { orderItemTypeId: 'PRODUCT_ORDER_ITEM', description: 'Product Item' },
+      { orderItemTypeId: 'WORK_ORDER_ITEM', description: 'Work Item' },
+      { orderItemTypeId: 'RENTAL_ORDER_ITEM', description: 'Rental Item' },
+      { orderItemTypeId: 'BULK_ORDER_ITEM', description: 'Bulk Item' },
+    ];
+    return of(itemTypes);
   }
 
   getGeos(): Observable<any[]> {

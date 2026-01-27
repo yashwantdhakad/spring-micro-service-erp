@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { OrderService } from 'src/app/services/order/order.service';
+import { CommonService } from 'src/app/services/common/common.service';
+import { ProductService } from 'src/app/services/product/product.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
@@ -55,6 +58,10 @@ export class SODetailComponent implements OnInit {
   shipments: any[] = [];
   shipmentColumns: string[] = ['shipmentId', 'shipmentTypeId', 'statusId', 'createdDate'];
   shipmentStatusById = new Map<string, string>();
+  statusDescriptionMap = new Map<string, string>();
+  shipmentTypeMap = new Map<string, string>();
+  orderItemTypeMap = new Map<string, string>();
+  productNameMap = new Map<string, string>();
 
   invoiceItems: any[] = [];
   invoiceColumns: string[] = ['invoiceId', 'productId', 'quantity', 'amount'];
@@ -67,10 +74,13 @@ export class SODetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
+    private commonService: CommonService,
+    private productService: ProductService,
     private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
+    this.loadLookupData();
     this.route.params.subscribe((params) => {
       this.orderId = params['orderId'];
       if (this.orderId) {
@@ -92,6 +102,7 @@ export class SODetailComponent implements OnInit {
     }).subscribe({
       next: ({ orderResponse, displayInfo, shipments, invoices, reservationStatus, picklists }) => {
         this.parts = orderResponse.parts;
+        this.primeProductNames(this.parts || []);
         this.contents = orderResponse?.contents;
         this.orderHeader = displayInfo.orderHeader;
         this.statusItem = displayInfo.statusItem;
@@ -131,6 +142,108 @@ export class SODetailComponent implements OnInit {
       },
       complete: () => {
         this.isLoading = false;
+      },
+    });
+  }
+
+  loadLookupData(): void {
+    this.commonService.getAllStatusItems().subscribe({
+      next: (items) => {
+        const list = Array.isArray(items) ? items : [];
+        this.statusDescriptionMap = new Map(
+          list.map((item: any) => [item.statusId, item.description || item.statusId])
+        );
+      },
+    });
+    this.commonService.getShipmentTypes().subscribe({
+      next: (items) => {
+        const list = Array.isArray(items) ? items : [];
+        this.shipmentTypeMap = new Map(
+          list.map((item: any) => [item.shipmentTypeId, item.description || item.shipmentTypeId])
+        );
+      },
+    });
+    this.commonService.getOrderItemTypes().subscribe({
+      next: (items) => {
+        const list = Array.isArray(items) ? items : [];
+        this.orderItemTypeMap = new Map(
+          list.map((item: any) => [
+            item.orderItemTypeId,
+            item.description || item.orderItemTypeId,
+          ])
+        );
+      },
+    });
+  }
+
+  getStatusDescription(statusId: string): string {
+    return this.statusDescriptionMap.get(statusId) || statusId;
+  }
+
+  getShipmentTypeDescription(shipmentTypeId: string): string {
+    return this.shipmentTypeMap.get(shipmentTypeId) || shipmentTypeId;
+  }
+
+  getOrderItemTypeDescription(orderItemTypeId?: string): string {
+    if (!orderItemTypeId) {
+      return '';
+    }
+    return this.orderItemTypeMap.get(orderItemTypeId) || orderItemTypeId;
+  }
+
+  getProductName(item: any): string {
+    const productId = item?.productId;
+    return (
+      this.productNameMap.get(productId) ||
+      item?.product?.productName ||
+      item?.productName ||
+      item?.itemDescription ||
+      productId ||
+      ''
+    );
+  }
+
+  private primeProductNames(parts: any[]): void {
+    const ids = new Set<string>();
+    (parts || []).forEach((part: any) => {
+      (part.items || []).forEach((item: any) => {
+        const productId = item?.productId;
+        if (!productId) {
+          return;
+        }
+        const name = item?.product?.productName || item?.productName;
+        if (name) {
+          this.productNameMap.set(productId, name);
+        } else {
+          ids.add(productId);
+        }
+      });
+    });
+
+    const missing = Array.from(ids).filter((id) => !this.productNameMap.has(id));
+    if (missing.length === 0) {
+      return;
+    }
+    const requests = missing.map((productId) =>
+      this.productService.getProduct(productId).pipe(
+        map((response) => {
+          const product = response?.product || response;
+          return {
+            productId,
+            productName: product?.productName || productId,
+          };
+        }),
+        catchError(() => of({ productId, productName: productId }))
+      )
+    );
+
+    forkJoin(requests).subscribe({
+      next: (results) => {
+        results.forEach((result) => {
+          if (result?.productId) {
+            this.productNameMap.set(result.productId, result.productName || result.productId);
+          }
+        });
       },
     });
   }

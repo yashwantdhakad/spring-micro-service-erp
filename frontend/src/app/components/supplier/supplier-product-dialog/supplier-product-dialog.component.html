@@ -1,0 +1,39 @@
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    <h1>{{ 'SUPPLIER.ADD_SUPPLIER_PRODUCT_TITLE' | translate }}</h1>
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <mat-dialog-content>
+      <form [formGroup]="supplierProductForm" fxLayout="column" fxLayoutGap="16px">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'SUPPLIER.PRODUCT' | translate }}</mat-label>
+          <input matInput formControlName="productId" [matAutocomplete]="supplierProductAuto" />
+          <mat-autocomplete #supplierProductAuto="matAutocomplete"
+            (optionSelected)="onSupplierProductSelected($event.option.value)">
+            <mat-option *ngFor="let product of filteredProducts$ | async" [value]="product.productId">
+              {{ product.productId }} - {{ product.productName }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'SUPPLIER.SUPPLIER_PRODUCT_NAME' | translate }}</mat-label>
+          <input matInput formControlName="supplierProductName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'SUPPLIER.LAST_PRICE' | translate }}</mat-label>
+          <input matInput type="number" formControlName="lastPrice" />
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-stroked-button type="button" (click)="cancel()">
+        {{ 'SUPPLIER.CANCEL' | translate }}
+      </button>
+      <button mat-raised-button color="primary" type="button" [disabled]="isLoading" (click)="save()">
+        {{ 'SUPPLIER.ADD' | translate }}
+      </button>
+    </mat-dialog-actions>
+  </mat-card-content>
+</mat-card>

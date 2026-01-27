@@ -6,7 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, of, forkJoin } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import {
   startWith,
   switchMap,
@@ -15,12 +15,15 @@ import {
   distinctUntilChanged,
   catchError,
   finalize,
+  concatMap,
+  toArray,
 } from 'rxjs/operators';
 import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ProductService } from 'src/app/services/product/product.service';
+import { SupplierProductService } from 'src/app/services/supplier-product/supplier-product.service';
 
 @Component({
   selector: 'app-create-po',
@@ -46,7 +49,8 @@ export class CreatePOComponent implements OnInit {
     private router: Router,
     private partyService: PartyService,
     private snackbarService: SnackbarService,
-    private productService: ProductService
+    private productService: ProductService,
+    private supplierProductService: SupplierProductService
   ) {
     const validators = Validators.required;
 
@@ -90,6 +94,18 @@ export class CreatePOComponent implements OnInit {
     const supplier: any = event.option.value;
     // If value is an object, set the partyId; if just string, keep as is
     this.poForm.get('vendorPartyId')?.setValue(supplier.partyId || supplier);
+  }
+
+  onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
+    const productId = event.option.value;
+    if (!productId) {
+      return;
+    }
+    const productControl = this.items.at(index)?.get('productId');
+    if (productControl) {
+      productControl.setValue(productId);
+    }
+    this.applySupplierPrice(index, productId);
   }
 
   get items(): FormArray {
@@ -183,35 +199,60 @@ export class CreatePOComponent implements OnInit {
     );
   }
 
-  private addOrderItems(orderId: string): void {
-    const requests = this.items.controls.map((control) => {
-      const value = control.value;
-      return this.orderService.addItem({
-        orderId,
-        orderPartSeqId: '00001',
-        productId: value.productId,
-        quantity: value.quantity,
-        unitAmount: value.unitAmount,
-        itemTypeEnumId: value.itemTypeEnumId,
-      });
-    });
+  private applySupplierPrice(index: number, productId: string): void {
+    const vendorPartyId = this.poForm.get('vendorPartyId')?.value;
+    const unitAmountControl = this.items.at(index)?.get('unitAmount');
+    if (!vendorPartyId || !unitAmountControl) {
+      return;
+    }
 
-    requests.length
-      ? forkJoin(requests).pipe(finalize(() => (this.isLoading = false))).subscribe({
-          next: () => {
-            this.poForm.reset();
-            this.items.clear();
-            this.items.push(this.buildItemGroup());
-            this.filteredProducts = [];
-            this.initProductAutocomplete(0);
-            this.router.navigate([`/pos/${orderId}`]);
-            this.snackbarService.showSuccess('Purchase order created successfully.');
-          },
-          error: () => {
-            this.snackbarService.showError('Purchase order created, but items failed.');
-            this.router.navigate([`/pos/${orderId}`]);
-          },
-        })
+    this.supplierProductService.getLatestByPartyAndProduct(vendorPartyId, productId).subscribe({
+      next: (supplierProduct: any) => {
+        const priceValue = supplierProduct?.lastPrice;
+        const numeric = priceValue != null ? Number(priceValue) : NaN;
+        if (!Number.isNaN(numeric)) {
+          unitAmountControl.setValue(numeric);
+        }
+      },
+      error: () => {
+      },
+    });
+  }
+
+  private addOrderItems(orderId: string): void {
+    this.items.length
+      ? from(this.items.controls)
+          .pipe(
+            concatMap((control) => {
+              const value = control.value;
+              const productId = value?.productId?.productId ?? value.productId;
+              return this.orderService.addItem({
+                orderId,
+                orderPartSeqId: '00001',
+                productId,
+                quantity: value.quantity,
+                unitAmount: value.unitAmount,
+                itemTypeEnumId: value.itemTypeEnumId,
+              });
+            }),
+            toArray(),
+            finalize(() => (this.isLoading = false))
+          )
+          .subscribe({
+            next: () => {
+              this.poForm.reset();
+              this.items.clear();
+              this.items.push(this.buildItemGroup());
+              this.filteredProducts = [];
+              this.initProductAutocomplete(0);
+              this.router.navigate([`/pos/${orderId}`]);
+              this.snackbarService.showSuccess('Purchase order created successfully.');
+            },
+            error: () => {
+              this.snackbarService.showError('Purchase order created, but items failed.');
+              this.router.navigate([`/pos/${orderId}`]);
+            },
+          })
       : this.router.navigate([`/pos/${orderId}`]);
   }
 }

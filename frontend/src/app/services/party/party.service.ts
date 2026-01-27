@@ -190,6 +190,11 @@ export class PartyService {
     return this.apiService.delete(url);
   }
 
+  getPostalAddressByContactMechId(contactMechId: string): Observable<any> {
+    const url = `/party/api/postal-addresses/by-contact-mech/${encodeURIComponent(contactMechId)}`;
+    return this.apiService.get(url);
+  }
+
 
   addRole(params: any): Observable<any> {
     return this.apiService.post('/party/api/party-roles', params);

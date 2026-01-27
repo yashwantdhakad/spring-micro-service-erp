@@ -32,6 +32,12 @@
                 <ng-container *ngSwitchCase="'expireDate'">
                   {{ item.expireDate | date: 'MMMM d, y' }}
                 </ng-container>
+                <ng-container *ngSwitchCase="'inventoryItemTypeId'">
+                  {{ getInventoryItemTypeLabel(item.inventoryItemTypeId || item.inventoryItemTypeEnumId) }}
+                </ng-container>
+                <ng-container *ngSwitchCase="'statusId'">
+                  {{ getStatusLabel(item.statusId) }}
+                </ng-container>
                 <ng-container *ngSwitchDefault>
                   {{ item[column.key] }}
                 </ng-container>
