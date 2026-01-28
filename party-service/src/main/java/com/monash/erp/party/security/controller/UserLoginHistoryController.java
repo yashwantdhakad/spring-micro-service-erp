@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/security/user-login-historys")
+@RequestMapping("/security/user-login-histories")
 public class UserLoginHistoryController {
 
     private final UserLoginHistoryService service;

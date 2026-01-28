@@ -1,0 +1,45 @@
+package com.monash.erp.wms.service;
+
+import com.monash.erp.wms.entity.X509IssuerProvision;
+import com.monash.erp.wms.repository.X509IssuerProvisionRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+public class X509IssuerProvisionService {
+
+    private final X509IssuerProvisionRepository repository;
+
+    public X509IssuerProvisionService(X509IssuerProvisionRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<X509IssuerProvision> list() {
+        return repository.findAll();
+    }
+
+    public X509IssuerProvision get(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "X509IssuerProvision %d not found".formatted(id)));
+    }
+
+    public X509IssuerProvision create(X509IssuerProvision entity) {
+        entity.setId(null);
+        return repository.save(entity);
+    }
+
+    public X509IssuerProvision update(Long id, X509IssuerProvision entity) {
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "X509IssuerProvision %d not found".formatted(id));
+        }
+        entity.setId(id);
+        return repository.save(entity);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+}

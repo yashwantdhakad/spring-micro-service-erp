@@ -1,0 +1,45 @@
+package com.monash.erp.oms.service;
+
+import com.monash.erp.oms.entity.GlAccountCategory;
+import com.monash.erp.oms.repository.GlAccountCategoryRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@Service
+public class GlAccountCategoryService {
+
+    private final GlAccountCategoryRepository repository;
+
+    public GlAccountCategoryService(GlAccountCategoryRepository repository) {
+        this.repository = repository;
+    }
+
+    public List<GlAccountCategory> list() {
+        return repository.findAll();
+    }
+
+    public GlAccountCategory get(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "GlAccountCategory %d not found".formatted(id)));
+    }
+
+    public GlAccountCategory create(GlAccountCategory entity) {
+        entity.setId(null);
+        return repository.save(entity);
+    }
+
+    public GlAccountCategory update(Long id, GlAccountCategory entity) {
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "GlAccountCategory %d not found".formatted(id));
+        }
+        entity.setId(id);
+        return repository.save(entity);
+    }
+
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+}

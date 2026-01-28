@@ -1,0 +1,54 @@
+package com.monash.erp.party.controller;
+
+import com.monash.erp.party.entity.JobRequisition;
+import com.monash.erp.party.service.JobRequisitionService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/job-requisitions")
+public class JobRequisitionController {
+
+    private final JobRequisitionService service;
+
+    public JobRequisitionController(JobRequisitionService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<JobRequisition> list() {
+        return service.list();
+    }
+
+    @GetMapping("/{id}")
+    public JobRequisition get(@PathVariable Long id) {
+        return service.get(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<JobRequisition> create(@RequestBody JobRequisition entity) {
+        JobRequisition created = service.create(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    public JobRequisition update(@PathVariable Long id, @RequestBody JobRequisition entity) {
+        return service.update(id, entity);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}
