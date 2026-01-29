@@ -69,6 +69,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./components/manufacturing/manufacturing.module').then((m) => m.ManufacturingModule),
   },
+  {
+    path: 'picklists',
+    loadChildren: () =>
+      import('./components/picklist/picklist.module').then((m) => m.PicklistModule),
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' },
 ];
 

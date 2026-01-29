@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from 'src/app/services/order/order.service';
+import { CommonService } from 'src/app/services/common/common.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { forkJoin } from 'rxjs';
 
@@ -18,12 +19,14 @@ export class POReceiveComponent implements OnInit {
   vendorPartyId: string | undefined;
   facilityId: string | undefined;
   shipGroupSeqId: string | undefined;
+  allFacilityLocations: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private orderService: OrderService,
     private fb: FormBuilder,
+    private commonService: CommonService,
     private snackbarService: SnackbarService
   ) {
     this.itemsForm = this.fb.group({
@@ -49,15 +52,20 @@ export class POReceiveComponent implements OnInit {
     forkJoin({
       orderResponse: this.orderService.getOrder(orderId),
       displayInfo: this.orderService.getPODisplayInfo(orderId),
+      facilityLocations: this.commonService.getFacilityLocations(),
     }).subscribe({
-      next: ({ orderResponse, displayInfo }) => {
+      next: ({ orderResponse, displayInfo, facilityLocations }) => {
         this.orderHeader = displayInfo.orderHeader;
         this.vendorPartyId = displayInfo?.firstPart?.vendorPartyId;
         this.facilityId = displayInfo?.firstPart?.facilityId;
         this.shipGroupSeqId = displayInfo?.firstPart?.orderPartSeqId || '00001';
+        this.allFacilityLocations = facilityLocations || [];
 
         const items = (orderResponse?.parts || [])
-          .flatMap((part: any) => part.items || []);
+          .flatMap((part: any) => (part.items || []).map((item: any) => ({
+            ...item,
+            facilityId: part?.facility?.facilityId || part?.facilityId || this.facilityId,
+          })));
         this.items.clear();
         items.forEach((item: any) => {
           this.items.push(this.fb.group({
@@ -68,6 +76,8 @@ export class POReceiveComponent implements OnInit {
             receivedQuantity: [item.receivedQuantity || 0],
             remainingQuantity: [item.remainingQuantity || 0],
             receiveQuantity: [item.remainingQuantity || 0, [Validators.required, Validators.min(0)]],
+            locationSeqId: [null],
+            facilityId: [item.facilityId],
           }));
         });
       },
@@ -92,6 +102,7 @@ export class POReceiveComponent implements OnInit {
       .map((item) => ({
         orderItemSeqId: item.orderItemSeqId,
         quantity: item.receiveQuantity,
+        locationSeqId: item.locationSeqId,
       }));
 
     if (!payloadItems.length) {
@@ -117,5 +128,15 @@ export class POReceiveComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  getLocationsForItem(row: any): any[] {
+    const facilityId = row?.value?.facilityId || this.facilityId;
+    if (!facilityId) {
+      return this.allFacilityLocations;
+    }
+    return this.allFacilityLocations.filter((location: any) =>
+      location.facilityId === facilityId
+    );
   }
 }

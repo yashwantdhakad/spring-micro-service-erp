@@ -12,6 +12,7 @@ public class SupplierDetail {
     private List<AddressDto> postalAddressList;
     private List<Object> payments;
     private List<NoteDto> partyNoteList;
+    private List<PartyContentDto> contentList;
 
     public SupplierDetail(SupplierProfile party,
                           List<RoleSummary> partyRoleList,
@@ -27,6 +28,7 @@ public class SupplierDetail {
         this.partyIdentificationList = List.of();
         this.payments = List.of();
         this.partyNoteList = partyNoteList;
+        this.contentList = List.of();
     }
 
     public SupplierProfile getParty() {
@@ -91,5 +93,13 @@ public class SupplierDetail {
 
     public void setPartyNoteList(List<NoteDto> partyNoteList) {
         this.partyNoteList = partyNoteList;
+    }
+
+    public List<PartyContentDto> getContentList() {
+        return contentList;
+    }
+
+    public void setContentList(List<PartyContentDto> contentList) {
+        this.contentList = contentList;
     }
 }

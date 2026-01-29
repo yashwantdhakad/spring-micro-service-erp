@@ -6,6 +6,7 @@ public class PurchaseOrderReceiveItemRequest {
     private String productId;
     private String quantity;
     private String unitCost;
+    private String locationSeqId;
 
     public String getOrderItemSeqId() {
         return orderItemSeqId;
@@ -37,5 +38,13 @@ public class PurchaseOrderReceiveItemRequest {
 
     public void setUnitCost(String unitCost) {
         this.unitCost = unitCost;
+    }
+
+    public String getLocationSeqId() {
+        return locationSeqId;
+    }
+
+    public void setLocationSeqId(String locationSeqId) {
+        this.locationSeqId = locationSeqId;
     }
 }

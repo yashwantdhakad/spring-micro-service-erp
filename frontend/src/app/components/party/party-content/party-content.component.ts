@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CommonService } from 'src/app/services/common/common.service';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,7 +14,6 @@ import { finalize } from 'rxjs/operators';
 export class PartyContentComponent implements OnInit {
   fileForm!: FormGroup;
   isLoading: boolean = false;
-  enumTypes: any[] | undefined;
 
   constructor(
     public dialogRef: MatDialogRef<PartyContentComponent>,
@@ -23,33 +21,19 @@ export class PartyContentComponent implements OnInit {
     private fb: FormBuilder,
     private partyService: PartyService,
     private snackbarService: SnackbarService,
-    private commonService: CommonService,
     private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     this.fileForm = this.fb.group({
       contentFile: [null, Validators.required],
-      partyContentTypeEnumId: ['', Validators.required],
       description: [''],
     });
-
-    this.getEnumTypes();
   }
 
   onFileChange(event: any): void {
     const contentFile = event.target.files[0];
     this.fileForm.get('contentFile')?.setValue(contentFile);
-  }
-
-  getEnumTypes(): void {
-    this.commonService.getEnumTypes('PartyContentType').subscribe({
-      next: (data) => {
-        this.enumTypes = Array.isArray(data) ? data : [data];
-      },
-      error: (error) => {
-      }
-    });
   }
 
   createPartyContent(): void {
@@ -65,7 +49,6 @@ export class PartyContentComponent implements OnInit {
         formData.append('contentFile', fileInputElement.files[0]);
       }
 
-      formData.append('partyContentTypeEnumId', this.fileForm.get('partyContentTypeEnumId')?.value);
       formData.append('description', this.fileForm.get('description')?.value || '');
 
       this.partyService.createPartyContent(formData).pipe(

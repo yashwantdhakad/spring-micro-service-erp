@@ -30,6 +30,28 @@ export class PartyService {
     );
   }
 
+  getPartyRoles(roleTypeId?: string): Observable<any> {
+    const params = new URLSearchParams();
+    if (roleTypeId) {
+      params.append('roleTypeId', roleTypeId);
+    }
+    const suffix = params.toString();
+    const url = suffix ? `/party/api/party-roles?${suffix}` : '/party/api/party-roles';
+    return this.apiService.get(url);
+  }
+
+  getPartyRoleSummaries(roleTypeId?: string): Observable<any> {
+    const params = new URLSearchParams();
+    if (roleTypeId) {
+      params.append('roleTypeId', roleTypeId);
+    }
+    const suffix = params.toString();
+    const url = suffix
+      ? `/party/api/party-roles/summary?${suffix}`
+      : '/party/api/party-roles/summary';
+    return this.apiService.get(url);
+  }
+
   getParties(page: number, pageSize: number, keyword: string): Observable<any> {
     const params = new URLSearchParams({
       page: page.toString(),
@@ -269,7 +291,14 @@ export class PartyService {
   // }
 
   createPartyContent(params: any): Observable<any> {
-    return this.apiService.postFormData(`/api/rest/s1/commerce/PartyContent`, params);
+    const partyId = params.get('partyId');
+    const url = `/party/api/parties/${encodeURIComponent(partyId)}/contents`;
+    return this.apiService.postFormData(url, params);
+  }
+
+  downloadPartyContent(partyId: string, contentId: string): Observable<Blob> {
+    const url = `/party/api/parties/${encodeURIComponent(partyId)}/contents/${encodeURIComponent(contentId)}`;
+    return this.apiService.getBlob(url);
   }
 
   getPartyPostalContactMechByPurpose(

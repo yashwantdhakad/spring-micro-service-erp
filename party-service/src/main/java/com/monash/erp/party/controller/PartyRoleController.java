@@ -1,5 +1,6 @@
 package com.monash.erp.party.controller;
 
+import com.monash.erp.party.dto.PartyRoleSummary;
 import com.monash.erp.party.entity.PartyRole;
 import com.monash.erp.party.service.PartyRoleService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,8 +28,15 @@ public class PartyRoleController {
     }
 
     @GetMapping
-    public List<PartyRole> list() {
-        return service.list();
+    public List<PartyRole> list(@RequestParam(name = "roleTypeId", required = false) String roleTypeId) {
+        return service.list(roleTypeId);
+    }
+
+    @GetMapping("/summary")
+    public List<PartyRoleSummary> listSummary(
+            @RequestParam(name = "roleTypeId", required = false) String roleTypeId
+    ) {
+        return service.listSummaries(roleTypeId);
     }
 
     @GetMapping("/{id}")

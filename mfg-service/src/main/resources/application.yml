@@ -19,7 +19,7 @@ spring:
   sql:
     init:
       mode: always
-      data-locations: classpath:seed/*.sql
+      data-locations: classpath:seed/*.sql,optional:classpath:demo/*.sql
 
 eureka:
   client:

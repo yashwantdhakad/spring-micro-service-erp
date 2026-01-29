@@ -13,7 +13,7 @@ public class CustomerDetail {
     private List<AddressDto> postalAddressList;
     private List<Object> payments;
     private List<NoteDto> partyNoteList;
-    private List<Object> contentList;
+    private List<PartyContentDto> contentList;
 
     public CustomerDetail(CustomerProfile party,
                           List<RoleSummary> partyRoleList,
@@ -105,11 +105,11 @@ public class CustomerDetail {
         this.partyNoteList = partyNoteList;
     }
 
-    public List<Object> getContentList() {
+    public List<PartyContentDto> getContentList() {
         return contentList;
     }
 
-    public void setContentList(List<Object> contentList) {
+    public void setContentList(List<PartyContentDto> contentList) {
         this.contentList = contentList;
     }
 }

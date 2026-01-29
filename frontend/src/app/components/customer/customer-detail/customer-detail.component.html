@@ -520,7 +520,6 @@
     </mat-card>
   </div>
 </mat-card>
-<!--
 <br />
 
 <mat-card class="mat-elevation-z10">
@@ -547,7 +546,12 @@
       <ng-container matColumnDef="contentLocation">
         <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'CUSTOMER.MIME_TYPE' | translate }}</th>
         <td mat-cell class="text-left" *matCellDef="let item">
-          {{ item.contentLocation }}
+          <ng-container *ngIf="item.contentId; else noContentFile">
+            <a href="#" (click)="$event.preventDefault(); openPartyContent(item)">
+              {{ item.contentLocation }}
+            </a>
+          </ng-container>
+          <ng-template #noContentFile>--</ng-template>
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
@@ -555,4 +559,3 @@
     </table>
   </mat-card-content>
 </mat-card>
--->

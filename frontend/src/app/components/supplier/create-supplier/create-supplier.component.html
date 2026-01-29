@@ -15,7 +15,7 @@
         <mat-label>{{ 'SUPPLIER.SUPPLIER_NAME' | translate }}</mat-label>
         <input
           matInput
-          placeholder="Supplier Name"
+          [placeholder]="'SUPPLIER.SUPPLIER_NAME' | translate"
           formControlName="groupName"
         />
         <mat-error
@@ -28,7 +28,7 @@
         <mat-label>{{ 'SUPPLIER.CONTACT_NUMBER' | translate }}</mat-label>
         <input
           matInput
-          placeholder="Contact Number"
+          [placeholder]="'SUPPLIER.CONTACT_NUMBER' | translate"
           formControlName="contactNumber"
         />
         <mat-error
@@ -37,19 +37,19 @@
         >
         <mat-error
           *ngIf="supplierForm.get('contactNumber')?.hasError('minlength')"
-          >Contact Number should be 10 numbers.</mat-error
+          >{{ 'COMMON.CONTACT_NUMBER_LENGTH' | translate }}</mat-error
         >
       </mat-form-field>
 
       <mat-form-field fxFlex="70%">
         <mat-label>{{ 'SUPPLIER.EMAIL' | translate }}</mat-label>
-        <input matInput placeholder="Email" formControlName="emailAddress" />
+        <input matInput [placeholder]="'SUPPLIER.EMAIL' | translate" formControlName="emailAddress" />
         <mat-error
           *ngIf="supplierForm.get('emailAddress')?.hasError('required')"
           >{{ 'SUPPLIER.EMAIL_REQUIRED' | translate }}</mat-error
         >
         <mat-error *ngIf="supplierForm.get('emailAddress')?.hasError('email')"
-          >Email is not valid.</mat-error
+          >{{ 'COMMON.EMAIL_INVALID' | translate }}</mat-error
         >
       </mat-form-field>
 
@@ -61,7 +61,7 @@
           class="me-4"
           [disabled]="isLoading"
         >
-          <span *ngIf="!isLoading">{{ 'SUPPLIER.SAVE' | translate }}</span>
+          <span *ngIf="!isLoading">{{ 'COMMON.SAVE' | translate }}</span>
           <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
         </button>
       </div>

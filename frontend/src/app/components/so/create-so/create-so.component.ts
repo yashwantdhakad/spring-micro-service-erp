@@ -33,7 +33,6 @@ export class CreateSOComponent implements OnInit, OnDestroy {
 
   productStores: any[] = [];
   facilities: any[] = [];
-  filteredParties: any[] = [];
   filteredCustomers$: Observable<any[]> = of([]);
   filteredProducts: Observable<any[]>[] = [];
   customerAddresses: any[] = [];
@@ -93,6 +92,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     this.orderService.getProductStores().subscribe({
       next: (res) => {
         this.productStores = Array.isArray(res) ? res : [res];
+        this.syncVendorPartyFromStore();
       },
     });
 
@@ -102,7 +102,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
       },
     });
 
-    this.getVendorParties('');
+    this.syncVendorPartyFromStore();
   }
 
   getCustomersFromService(value: string): Observable<any[]> {
@@ -133,24 +133,21 @@ export class CreateSOComponent implements OnInit, OnDestroy {
       productControl.setValue(productId);
     }
     this.applyProductPrice(index, productId);
+    this.applyProductAtp(index, productId);
   }
 
-
-  getVendorParties(productStoreId: string): void {
-    this.orderService.getVendorParties(productStoreId).subscribe({
-      next: (data) => {
-        this.filteredParties = data;
-        // Optionally auto-select the first vendor
-        if (this.filteredParties.length > 0) {
-          this.orderForm.get('vendorPartyId')?.setValue(this.filteredParties[0].value);
-        }
-      },
-    });
-  }
 
   updateVendorParty(): void {
+    this.syncVendorPartyFromStore();
+  }
+
+  private syncVendorPartyFromStore(): void {
     const selectedStoreId = this.orderForm.get('productStoreId')?.value;
-    this.getVendorParties(selectedStoreId);
+    const store = this.productStores.find(
+      (item) => item?.productStoreId === selectedStoreId
+    );
+    const payToPartyId = store?.payToPartyId || null;
+    this.orderForm.get('vendorPartyId')?.setValue(payToPartyId);
   }
 
   get items(): FormArray {
@@ -272,6 +269,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
       productId: ['', Validators.required],
       quantity: [1, Validators.required],
       unitAmount: [0, Validators.required],
+      atpTotal: [{ value: 0, disabled: true }],
       itemTypeEnumId: ['PRODUCT_ORDER_ITEM', Validators.required],
     });
   }
@@ -313,6 +311,26 @@ export class CreateSOComponent implements OnInit, OnDestroy {
         if (!Number.isNaN(numeric)) {
           unitAmountControl.setValue(numeric);
         }
+      },
+    });
+  }
+
+  private applyProductAtp(index: number, productId: string): void {
+    const atpControl = this.items.at(index)?.get('atpTotal');
+    if (!atpControl) {
+      return;
+    }
+
+    this.productService.getInventorySummary(productId).subscribe({
+      next: (summary: any[]) => {
+        const total = (Array.isArray(summary) ? summary : []).reduce((acc, row) => {
+          const value = Number(row?.atpTotal ?? row?.availableToPromiseTotal ?? 0);
+          return acc + (Number.isNaN(value) ? 0 : value);
+        }, 0);
+        atpControl.setValue(total);
+      },
+      error: () => {
+        atpControl.setValue(0);
       },
     });
   }

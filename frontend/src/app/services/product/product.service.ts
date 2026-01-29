@@ -85,6 +85,11 @@ export class ProductService {
     return this.apiService.postFormData(url, formData);
   }
 
+  downloadProductContent(productId: string, contentId: string): Observable<Blob> {
+    const url = `/wms/api/products/${encodeURIComponent(productId)}/contents/${encodeURIComponent(contentId)}`;
+    return this.apiService.getBlob(url);
+  }
+
   getProductAssocTypes(): Observable<any> {
     return this.apiService.get<any[]>('/wms/api/product-assoc-types').pipe(
       map((items) =>

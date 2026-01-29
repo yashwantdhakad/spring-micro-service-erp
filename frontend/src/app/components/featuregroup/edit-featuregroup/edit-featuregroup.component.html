@@ -31,10 +31,10 @@
           class="me-4"
           [disabled]="isLoading"
         >
-          <span *ngIf="!isLoading">{{ 'FEATUREGROUP.SAVE' | translate }}</span>
+          <span *ngIf="!isLoading">{{ 'COMMON.SAVE' | translate }}</span>
           <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
         </button>
-        <button mat-button mat-dialog-close color="primary">{{ 'FEATUREGROUP.CLOSE' | translate }}</button>
+        <button mat-button mat-dialog-close color="primary">{{ 'COMMON.CANCEL' | translate }}</button>
       </div>
     </form>
   </mat-card-content>

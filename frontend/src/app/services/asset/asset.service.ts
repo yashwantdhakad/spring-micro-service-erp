@@ -30,6 +30,16 @@ export class AssetService {
     return this.apiService.get(url);
   }
 
+  getOrderReservations(inventoryItemId: string): Observable<any> {
+    const url = `/oms/api/order-item-ship-grp-inv-res?inventoryItemId=${encodeURIComponent(inventoryItemId)}`;
+    return this.apiService.get(url);
+  }
+
+  getWorkEffortReservations(inventoryItemId: string): Observable<any> {
+    const url = `/mfg/api/work-effort-inv-reservations?inventoryItemId=${encodeURIComponent(inventoryItemId)}`;
+    return this.apiService.get(url);
+  }
+
   receiveAsset(params: any): Observable<any> {
     const url = '/wms/api/assets/receive';
     return this.apiService.post(url, params);

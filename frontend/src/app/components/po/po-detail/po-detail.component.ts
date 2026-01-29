@@ -26,6 +26,7 @@ export class PODetailComponent implements OnInit {
   orderHeader: any;
   statusItem: any;
   vendorAddresses: any[] = [];
+  vendorName: string | undefined;
   facilityAddress: any;
   orderShipToAddress: any;
   vendorPartyId: string | undefined;
@@ -154,7 +155,7 @@ export class PODetailComponent implements OnInit {
 
             if (displayResponse?.firstPart?.vendorPartyId) {
               this.vendorPartyId = displayResponse.firstPart.vendorPartyId;
-              this.loadVendorAddresses(displayResponse.firstPart.vendorPartyId);
+              this.loadVendorDetails(displayResponse.firstPart.vendorPartyId);
             }
 
             this.facilityId = displayResponse?.firstPart?.facilityId || this.orderHeader?.originFacilityId;
@@ -359,13 +360,34 @@ export class PODetailComponent implements OnInit {
       });
   }
 
-  loadVendorAddresses(partyId: string): void {
-    this.partyService.getPartyPostalContactMechByPurpose(partyId, 'PostalShippingOrigin', 'supplier').subscribe({
-      next: (data) => {
-        this.vendorAddresses = Array.isArray(data) ? data : [];
+  openOrderContent(item: any): void {
+    if (!this.orderId || !item?.contentId) {
+      return;
+    }
+    this.orderService.downloadOrderContent(this.orderId, item.contentId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank', 'noopener');
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
       },
-      error: (error) => {
-      }
+      error: () => {
+      },
+    });
+  }
+
+  loadVendorDetails(partyId: string): void {
+    this.partyService.getSupplier(partyId).subscribe({
+      next: (response) => {
+        const supplierDetail = response?.supplierDetail;
+        this.vendorName = supplierDetail?.party?.groupName || partyId;
+        this.vendorAddresses = Array.isArray(supplierDetail?.postalAddressList)
+          ? supplierDetail.postalAddressList
+          : [];
+      },
+      error: () => {
+        this.vendorName = partyId;
+        this.vendorAddresses = [];
+      },
     });
   }
 
@@ -442,7 +464,7 @@ export class PODetailComponent implements OnInit {
     const addressData = {
       partyId: this.vendorPartyId,
       contactMechId: address?.contactMechId,
-      contactMechPurposeId: address?.contactMechPurposeId || 'PostalShippingOrigin',
+      contactMechPurposeId: address?.contactMechPurposeId || 'PRIMARY_LOCATION',
       toName: address?.toName,
       address1: address?.address1,
       address2: address?.address2,
@@ -456,7 +478,7 @@ export class PODetailComponent implements OnInit {
       data: { addressData },
     }).afterClosed().subscribe(() => {
       if (this.vendorPartyId) {
-        this.loadVendorAddresses(this.vendorPartyId);
+        this.loadVendorDetails(this.vendorPartyId);
       }
     });
   }
@@ -477,5 +499,18 @@ export class PODetailComponent implements OnInit {
       return;
     }
     this.router.navigate([`/pos/${this.orderId}/receive`]);
+  }
+
+  openPdf(): void {
+    if (!this.orderId) {
+      return;
+    }
+    this.orderService.getOrderPdf(this.orderId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      },
+    });
   }
 }

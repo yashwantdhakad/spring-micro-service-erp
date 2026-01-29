@@ -6,6 +6,7 @@ public class PurchaseOrderReceiveItemRequest {
 
     private String orderItemSeqId;
     private BigDecimal quantity;
+    private String locationSeqId;
 
     public String getOrderItemSeqId() {
         return orderItemSeqId;
@@ -21,5 +22,13 @@ public class PurchaseOrderReceiveItemRequest {
 
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
+    }
+
+    public String getLocationSeqId() {
+        return locationSeqId;
+    }
+
+    public void setLocationSeqId(String locationSeqId) {
+        this.locationSeqId = locationSeqId;
     }
 }

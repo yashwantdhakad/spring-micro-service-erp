@@ -79,6 +79,11 @@ export class OrderService {
     return this.apiService.get(url);
   }
 
+  getOrderPdf(orderId: string): Observable<Blob> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/pdf`;
+    return this.apiService.getBlob(url);
+  }
+
   getOrderPicklists(orderId: string): Observable<any> {
     const url = `/wms/api/picklists/by-order/${encodeURIComponent(orderId)}`;
     return this.apiService.get(url);
@@ -195,5 +200,10 @@ export class OrderService {
     const orderId = params.get('orderId');
     const url = `/oms/api/orders/${encodeURIComponent(orderId)}/contents`;
     return this.apiService.postFormData(url, params);
+  }
+
+  downloadOrderContent(orderId: string, contentId: string): Observable<Blob> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/contents/${encodeURIComponent(contentId)}`;
+    return this.apiService.getBlob(url);
   }
 }

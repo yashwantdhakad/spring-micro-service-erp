@@ -86,6 +86,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -128,6 +132,7 @@ public class OrderCompositeService {
     private static final String GL_ACCOUNT_AR = "120000";
     private static final String GL_ACCOUNT_SALES = "400000";
     private static final String ORG_PARTY_ID = "Company";
+    private static final Path ORDER_CONTENT_DIR = Paths.get("data", "uploads", "order-contents");
 
     private final OrderHeaderRepository orderHeaderRepository;
     private final OrderItemRepository orderItemRepository;
@@ -693,6 +698,7 @@ public class OrderCompositeService {
             wmsItem.setProductId(orderItem.getProductId());
             wmsItem.setQuantity(itemRequest.getQuantity().toPlainString());
             wmsItem.setUnitCost(defaultIfNull(orderItem.getUnitPrice(), BigDecimal.ZERO).toPlainString());
+            wmsItem.setLocationSeqId(itemRequest.getLocationSeqId());
             wmsItems.add(wmsItem);
         }
 
@@ -799,6 +805,8 @@ public class OrderCompositeService {
         }
 
         String contentId = "OCN" + UUID.randomUUID().toString().replace("-", "").toUpperCase(Locale.ROOT);
+        storeOrderContentFile(contentId, contentFile);
+
         OrderContent orderContent = new OrderContent();
         orderContent.setOrderId(orderId);
         orderContent.setContentId(contentId);
@@ -814,6 +822,22 @@ public class OrderCompositeService {
         orderContentInfoRepository.save(info);
 
         return toContentDto(info);
+    }
+
+    public OrderContentDownload loadOrderContent(String orderId, String contentId) {
+        if (isBlank(orderId) || isBlank(contentId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "orderId and contentId are required");
+        }
+
+        OrderContentInfo info = orderContentInfoRepository.findByOrderIdAndContentId(orderId, contentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Content not found"));
+
+        Path filePath = resolveOrderContentPath(contentId);
+        if (!Files.exists(filePath)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Content file not found");
+        }
+
+        return new OrderContentDownload(filePath, info.getContentLocation());
     }
 
     private OrderHeader getOrderHeader(String orderId) {
@@ -976,10 +1000,43 @@ public class OrderCompositeService {
 
     private OrderContentDto toContentDto(OrderContentInfo info) {
         OrderContentDto dto = new OrderContentDto();
+        dto.setContentId(info.getContentId());
         dto.setDescription(info.getDescription());
         dto.setContentDate(info.getContentDate());
         dto.setContentLocation(info.getContentLocation());
         return dto;
+    }
+
+    private void storeOrderContentFile(String contentId, MultipartFile contentFile) {
+        try {
+            Files.createDirectories(ORDER_CONTENT_DIR);
+            Path destination = resolveOrderContentPath(contentId);
+            Files.copy(contentFile.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to store content file");
+        }
+    }
+
+    private Path resolveOrderContentPath(String contentId) {
+        return ORDER_CONTENT_DIR.resolve(contentId);
+    }
+
+    public static class OrderContentDownload {
+        private final Path filePath;
+        private final String fileName;
+
+        public OrderContentDownload(Path filePath, String fileName) {
+            this.filePath = filePath;
+            this.fileName = fileName;
+        }
+
+        public Path getFilePath() {
+            return filePath;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
     }
 
     private OrderNoteDto toNoteDto(OrderNote note) {
@@ -1568,6 +1625,7 @@ public class OrderCompositeService {
         private String productId;
         private String quantity;
         private String unitCost;
+        private String locationSeqId;
 
         public String getOrderItemSeqId() {
             return orderItemSeqId;
@@ -1599,6 +1657,14 @@ public class OrderCompositeService {
 
         public void setUnitCost(String unitCost) {
             this.unitCost = unitCost;
+        }
+
+        public String getLocationSeqId() {
+            return locationSeqId;
+        }
+
+        public void setLocationSeqId(String locationSeqId) {
+            this.locationSeqId = locationSeqId;
         }
     }
 

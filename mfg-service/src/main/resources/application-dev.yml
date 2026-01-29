@@ -1,4 +1,4 @@
 spring:
   sql:
     init:
-      data-locations: classpath:seed/*.sql,classpath:demo/*.sql
+      data-locations: classpath:seed/*.sql,optional:classpath:demo/*.sql

@@ -5,45 +5,58 @@
 <ng-template #content>
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Receive Purchase Order {{ orderId }}</mat-card-title>
+      <mat-card-title>{{ 'PO.RECEIVE_TITLE' | translate:{orderId: orderId} }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="itemsForm" (ngSubmit)="receiveItems()">
         <div formArrayName="items">
         <table mat-table [dataSource]="items.controls">
           <ng-container matColumnDef="productId">
-            <th mat-header-cell *matHeaderCellDef>Product</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
             <td mat-cell *matCellDef="let row">
               {{ row.value.productId }} - {{ row.value.productName }}
             </td>
           </ng-container>
           <ng-container matColumnDef="quantity">
-            <th mat-header-cell *matHeaderCellDef>Ordered</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.ORDERED' | translate }}</th>
             <td mat-cell *matCellDef="let row">{{ row.value.quantity }}</td>
           </ng-container>
           <ng-container matColumnDef="receivedQuantity">
-            <th mat-header-cell *matHeaderCellDef>Received</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.RECEIVED' | translate }}</th>
             <td mat-cell *matCellDef="let row">{{ row.value.receivedQuantity }}</td>
           </ng-container>
           <ng-container matColumnDef="remainingQuantity">
-            <th mat-header-cell *matHeaderCellDef>Remaining</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.REMAINING' | translate }}</th>
             <td mat-cell *matCellDef="let row">{{ row.value.remainingQuantity }}</td>
           </ng-container>
           <ng-container matColumnDef="receiveQuantity">
-            <th mat-header-cell *matHeaderCellDef>Receive Now</th>
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.RECEIVE_NOW' | translate }}</th>
             <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
               <mat-form-field>
                 <input matInput type="number" formControlName="receiveQuantity" />
               </mat-form-field>
             </td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="['productId','quantity','receivedQuantity','remainingQuantity','receiveQuantity']"></tr>
-          <tr mat-row *matRowDef="let row; columns: ['productId','quantity','receivedQuantity','remainingQuantity','receiveQuantity']"></tr>
+          <ng-container matColumnDef="locationSeqId">
+            <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.LOCATION' | translate }}</th>
+            <td mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+              <mat-form-field>
+                <mat-select formControlName="locationSeqId" [placeholder]="'COMMON.SELECT_LOCATION' | translate">
+                  <mat-option [value]="null">{{ 'COMMON.NONE' | translate }}</mat-option>
+                  <mat-option *ngFor="let location of getLocationsForItem(row)" [value]="location.locationSeqId">
+                    {{ location.locationSeqId }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['productId','quantity','receivedQuantity','remainingQuantity','receiveQuantity','locationSeqId']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['productId','quantity','receivedQuantity','remainingQuantity','receiveQuantity','locationSeqId']"></tr>
         </table>
         </div>
 
         <div style="margin-top: 16px;">
-          <button mat-raised-button color="primary" type="submit">Receive</button>
+          <button mat-raised-button color="primary" type="submit">{{ 'COMMON.RECEIVE' | translate }}</button>
         </div>
       </form>
     </mat-card-content>

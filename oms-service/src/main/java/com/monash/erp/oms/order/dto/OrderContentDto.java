@@ -4,9 +4,18 @@ import java.time.LocalDateTime;
 
 public class OrderContentDto {
 
+    private String contentId;
     private String description;
     private LocalDateTime contentDate;
     private String contentLocation;
+
+    public String getContentId() {
+        return contentId;
+    }
+
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
 
     public String getDescription() {
         return description;

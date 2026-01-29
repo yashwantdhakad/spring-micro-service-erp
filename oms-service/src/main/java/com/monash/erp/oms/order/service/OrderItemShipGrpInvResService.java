@@ -17,8 +17,11 @@ public class OrderItemShipGrpInvResService {
         this.repository = repository;
     }
 
-    public List<OrderItemShipGrpInvRes> list() {
-        return repository.findAll();
+    public List<OrderItemShipGrpInvRes> list(String inventoryItemId) {
+        if (isBlank(inventoryItemId)) {
+            return repository.findAll();
+        }
+        return repository.findByInventoryItemId(inventoryItemId);
     }
 
     public OrderItemShipGrpInvRes get(Long id) {
@@ -41,5 +44,9 @@ public class OrderItemShipGrpInvResService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

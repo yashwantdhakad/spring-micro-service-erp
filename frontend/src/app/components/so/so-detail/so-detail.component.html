@@ -13,8 +13,19 @@
     </mat-list-item>
   </mat-list>
   <mat-card class="mat-elevation-z10">
-    <mat-card-header>
+    <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
       <mat-card-title>{{ 'SO.OVERVIEW' | translate }} </mat-card-title>
+      <div fxLayout="row" fxLayoutGap="12px">
+        <button mat-icon-button color="primary" (click)="openPdf()" aria-label="Open PDF">
+          <mat-icon>picture_as_pdf</mat-icon>
+        </button>
+        <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
+          Approve
+        </button>
+        <button mat-raised-button color="accent" *ngIf="canPicklist" (click)="createPicklist()">
+          Create Picklist
+        </button>
+      </div>
     </mat-card-header>
     <mat-card-content>
       <ul class="custom-list">
@@ -29,14 +40,6 @@
           <span><strong>{{ 'SO.STATUS' | translate }}:</strong> {{ statusItem?.description }}</span>
         </li>
       </ul>
-      <div fxLayout="row" fxLayoutGap="12px">
-        <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
-          Approve
-        </button>
-        <button mat-raised-button color="accent" *ngIf="canPicklist" (click)="createPicklist()">
-          Create Picklist
-        </button>
-      </div>
     </mat-card-content>
   </mat-card>
   <br />
@@ -139,39 +142,35 @@
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'SO.ADDRESS' | translate }}:</strong>
-                <span *ngIf="firstPartInfo?.facilityContactInfo">
+                <span *ngIf="facilityAddress || firstPartInfo?.facilityContactInfo">
                   <div>
                     {{
-                      firstPartInfo?.facilityContactInfo?.postalAddress?.toName
+                      facilityAddress?.toName || firstPartInfo?.facilityContactInfo?.postalAddress?.toName
                     }}
                   </div>
                   <div>
                     {{
-                      firstPartInfo?.facilityContactInfo?.postalAddress
-                        ?.address1
+                      facilityAddress?.address1 || firstPartInfo?.facilityContactInfo?.postalAddress?.address1
                     }}
                   </div>
                   <div>
                     {{
-                      firstPartInfo?.facilityContactInfo?.postalAddress
-                        ?.address2
+                      facilityAddress?.address2 || firstPartInfo?.facilityContactInfo?.postalAddress?.address2
                     }}
                   </div>
                   <div>
                     {{
-                      firstPartInfo?.facilityContactInfo?.postalAddress?.city
+                      facilityAddress?.city || firstPartInfo?.facilityContactInfo?.postalAddress?.city
                     }},
                     {{
-                      firstPartInfo?.facilityContactInfo?.postalAddress
-                        ?.stateProvinceGeo?.geoName
+                      facilityAddress?.stateProvinceGeo?.geoName
+                        || firstPartInfo?.facilityContactInfo?.postalAddress?.stateProvinceGeo?.geoName
                     }}
                     {{
-                      firstPartInfo?.facilityContactInfo?.postalAddress
-                        ?.postalCode
+                      facilityAddress?.postalCode || firstPartInfo?.facilityContactInfo?.postalAddress?.postalCode
                     }}
                     {{
-                      firstPartInfo?.facilityContactInfo?.postalAddress
-                        ?.countryGeoId
+                      facilityAddress?.countryGeoId || firstPartInfo?.facilityContactInfo?.postalAddress?.countryGeoId
                     }}
                   </div>
                 </span>
@@ -309,7 +308,7 @@
             </ng-container>
             <ng-container matColumnDef="pickedQuantity">
               <th mat-header-cell class="text-left" *matHeaderCellDef>
-                Picked Qty
+                {{ 'COMMON.PICKED_QTY' | translate }}
               </th>
               <td mat-cell class="text-right" *matCellDef="let item">
                 {{ item.pickedQuantity || 0 }}
@@ -368,7 +367,12 @@
         <ng-container matColumnDef="contentLocation">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.MIME_TYPE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.contentLocation }}
+            <ng-container *ngIf="item.contentId; else noContentFile">
+              <a href="#" (click)="$event.preventDefault(); openOrderContent(item)">
+                {{ item.contentLocation }}
+              </a>
+            </ng-container>
+            <ng-template #noContentFile>--</ng-template>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
@@ -415,24 +419,24 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Invoices</mat-card-title>
+      <mat-card-title>{{ 'COMMON.INVOICES' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="invoiceItems">
         <ng-container matColumnDef="invoiceId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Invoice</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.INVOICE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.invoiceId }}</td>
         </ng-container>
         <ng-container matColumnDef="productId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Product</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.productId }}</td>
         </ng-container>
         <ng-container matColumnDef="quantity">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Qty</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.QTY' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.quantity }}</td>
         </ng-container>
         <ng-container matColumnDef="amount">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Amount</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.AMOUNT' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.amount | currency : (item.currencyUomId || orderHeader?.currencyUomId) }}
           </td>
@@ -445,22 +449,22 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Picklists</mat-card-title>
+      <mat-card-title>{{ 'COMMON.PICKLISTS' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="picklists">
         <ng-container matColumnDef="picklistId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Picklist</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PICKLIST' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.picklistId }}</td>
         </ng-container>
         <ng-container matColumnDef="statusId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getStatusDescription(item.statusId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="shipmentId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Shipment</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.SHIPMENT' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <a *ngIf="item.shipmentId" [routerLink]="['/shipments', item.shipmentId]">
               {{ item.shipmentId }}
@@ -468,13 +472,13 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="createdDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Created</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.CREATED' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.createdDate | date : "MMMM d, y" }}
           </td>
         </ng-container>
         <ng-container matColumnDef="action">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Action</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <button
               mat-button
@@ -482,7 +486,7 @@
               *ngIf="item.statusId !== 'PICKLIST_PICKED'"
               (click)="markPicklistPicked(item.picklistId)"
             >
-              Mark Picked
+              {{ 'COMMON.MARK_PICKED' | translate }}
             </button>
             <button
               mat-button
@@ -490,7 +494,7 @@
               *ngIf="item.shipmentId && getShipmentStatus(item.shipmentId) !== 'SHIPMENT_SHIPPED'"
               (click)="shipShipment(item.shipmentId)"
             >
-              Ship
+              {{ 'COMMON.SHIP' | translate }}
             </button>
           </td>
         </ng-container>

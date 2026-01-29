@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class RateLimitFilter implements GlobalFilter, Ordered {
 
-    private static final int REQUEST_LIMIT = 50;
+    private static final int REQUEST_LIMIT = 5000;
     private static final long WINDOW_MILLIS = 60_000L;
 
     private final Map<String, Window> windows = new ConcurrentHashMap<>();

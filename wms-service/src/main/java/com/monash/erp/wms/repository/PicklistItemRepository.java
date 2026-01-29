@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PicklistItemRepository extends JpaRepository<PicklistItem, Long> {
     List<PicklistItem> findByPicklistBinId(String picklistBinId);
+
+    List<PicklistItem> findByPicklistBinIdIn(List<String> picklistBinIds);
 }

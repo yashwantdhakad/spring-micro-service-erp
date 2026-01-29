@@ -30,6 +30,24 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
     'effectiveDate',
   ];
 
+  orderReservations: any[] = [];
+  orderReservationColumns: string[] = [
+    'orderId',
+    'orderItemSeqId',
+    'shipGroupSeqId',
+    'quantity',
+    'quantityNotAvailable',
+    'reservedDatetime',
+  ];
+
+  workEffortReservations: any[] = [];
+  workEffortReservationColumns: string[] = [
+    'workEffortId',
+    'quantity',
+    'quantityNotAvailable',
+    'reservedDatetime',
+  ];
+
   receipts: any[] = [];
   receiptColumns: string[] = [
     'receiptId',
@@ -76,10 +94,14 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
           this.assetDetail = response?.asset || response;
           this.details = response?.details || [];
           this.receipts = response?.receipts || [];
+          this.orderReservations = [];
+          this.workEffortReservations = [];
           this.facilityName = null;
           if (this.assetDetail?.facilityId) {
             this.loadFacilityName(this.assetDetail.facilityId);
           }
+          const inventoryItemId = this.assetDetail?.inventoryItemId || assetId;
+          this.loadReservations(inventoryItemId);
         },
         error: (error) => {
           this.snackbarService.showError('Error fetching asset details.');
@@ -148,6 +170,38 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
         },
         error: () => {
           this.facilityName = facilityId;
+        },
+      });
+  }
+
+  private loadReservations(inventoryItemId?: string): void {
+    if (!inventoryItemId) {
+      this.orderReservations = [];
+      this.workEffortReservations = [];
+      return;
+    }
+
+    this.assetService
+      .getOrderReservations(inventoryItemId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.orderReservations = Array.isArray(response) ? response : [];
+        },
+        error: () => {
+          this.orderReservations = [];
+        },
+      });
+
+    this.assetService
+      .getWorkEffortReservations(inventoryItemId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.workEffortReservations = Array.isArray(response) ? response : [];
+        },
+        error: () => {
+          this.workEffortReservations = [];
         },
       });
   }

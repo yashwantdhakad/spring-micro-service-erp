@@ -8,11 +8,11 @@
 <ng-template #content>
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Shipments</mat-card-title>
+      <mat-card-title>{{ 'SHIPMENT.TITLE' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-actions>
       <mat-form-field>
-        <mat-label>Search</mat-label>
+        <mat-label>{{ 'SHIPMENT.SEARCH' | translate }}</mat-label>
         <input
           matInput
           [(ngModel)]="queryString"
@@ -25,33 +25,33 @@
     <mat-card-content>
       <table mat-table [dataSource]="items">
         <ng-container matColumnDef="shipmentId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>ID</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ID' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>
           </td>
         </ng-container>
         <ng-container matColumnDef="statusId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getStatusDescription(item.statusId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="shipmentTypeId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.TYPE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getShipmentTypeDescription(item.shipmentTypeId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="destinationFacilityId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Destination Facility</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.DESTINATION_FACILITY' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.destinationFacilityId }}</td>
         </ng-container>
         <ng-container matColumnDef="primaryOrderId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Order</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.ORDER' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.primaryOrderId }}</td>
         </ng-container>
         <ng-container matColumnDef="estimatedShipDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Estimated Ship Date</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.EST_SHIP_DATE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.estimatedShipDate | date : 'MMMM d, y' }}</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

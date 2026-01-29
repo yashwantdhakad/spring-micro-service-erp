@@ -5,7 +5,6 @@ import { of, throwError } from 'rxjs';
 import { PartyContentComponent } from './party-content.component';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
-import { CommonService } from 'src/app/services/common/common.service';
 import { TranslateService } from '@ngx-translate/core';
 
 describe('PartyContentComponent', () => {
@@ -13,7 +12,6 @@ describe('PartyContentComponent', () => {
   let fixture: ComponentFixture<PartyContentComponent>;
   let partyService: jasmine.SpyObj<PartyService>;
   let snackbarService: jasmine.SpyObj<SnackbarService>;
-  let commonService: jasmine.SpyObj<CommonService>;
   let dialogRef: jasmine.SpyObj<MatDialogRef<PartyContentComponent>>;
   let translateService: jasmine.SpyObj<TranslateService>;
 
@@ -25,7 +23,6 @@ describe('PartyContentComponent', () => {
 
   beforeEach(async () => {
     const partySpy = jasmine.createSpyObj('PartyService', ['createPartyContent']);
-    const commonSpy = jasmine.createSpyObj('CommonService', ['getEnumTypes']);
     const snackbarSpy = jasmine.createSpyObj('SnackbarService', ['showSuccess', 'showError']);
     const dialogSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
     const translateSpy = jasmine.createSpyObj('TranslateService', ['instant']);
@@ -35,7 +32,6 @@ describe('PartyContentComponent', () => {
       imports: [ReactiveFormsModule],
       providers: [
         { provide: PartyService, useValue: partySpy },
-        { provide: CommonService, useValue: commonSpy },
         { provide: SnackbarService, useValue: snackbarSpy },
         { provide: TranslateService, useValue: translateSpy },
         { provide: MatDialogRef, useValue: dialogSpy },
@@ -44,7 +40,6 @@ describe('PartyContentComponent', () => {
     }).compileComponents();
 
     partyService = TestBed.inject(PartyService) as jasmine.SpyObj<PartyService>;
-    commonService = TestBed.inject(CommonService) as jasmine.SpyObj<CommonService>;
     snackbarService = TestBed.inject(SnackbarService) as jasmine.SpyObj<SnackbarService>;
     dialogRef = TestBed.inject(MatDialogRef) as jasmine.SpyObj<MatDialogRef<PartyContentComponent>>;
     translateService = TestBed.inject(TranslateService) as jasmine.SpyObj<TranslateService>;
@@ -62,7 +57,6 @@ describe('PartyContentComponent', () => {
 
   it('should initialize fileForm with required controls', () => {
     expect(component.fileForm.contains('contentFile')).toBeTrue();
-    expect(component.fileForm.contains('partyContentTypeEnumId')).toBeTrue();
     expect(component.fileForm.contains('description')).toBeTrue();
   });
 
@@ -73,25 +67,6 @@ describe('PartyContentComponent', () => {
     component.onFileChange(event);
 
     expect(component.fileForm.get('contentFile')?.value).toBe(file);
-  });
-
-  it('should fetch enum types on init', () => {
-    const mockEnums = [{ enumId: 'TYPE1', description: 'Type 1' }];
-    commonService.getEnumTypes.and.returnValue(of(mockEnums));
-
-    component.getEnumTypes();
-
-    expect(commonService.getEnumTypes).toHaveBeenCalledWith('PartyContentType');
-  });
-
-  it('should handle error when fetching enum types', () => {
-    const error = new Error('Enum fetch failed');
-    spyOn(console, 'error');
-    commonService.getEnumTypes.and.returnValue(throwError(() => error));
-
-    component.getEnumTypes();
-
-    expect(console.error).toHaveBeenCalledWith('Error fetching enum types:', error);
   });
 
   it('should call createPartyContent on valid form submission', fakeAsync(() => {
@@ -111,7 +86,6 @@ describe('PartyContentComponent', () => {
 
     component.fileForm.setValue({
       contentFile: fakeFile,
-      partyContentTypeEnumId: 'TYPE1',
       description: 'Some note',
     });
 
@@ -143,7 +117,6 @@ describe('PartyContentComponent', () => {
 
     component.fileForm.setValue({
       contentFile: fakeFile,
-      partyContentTypeEnumId: 'TYPE1',
       description: 'Desc',
     });
 

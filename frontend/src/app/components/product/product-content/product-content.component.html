@@ -18,7 +18,7 @@
         class="me-4"
         [disabled]="isLoading || !fileForm.valid"
       >
-        <span *ngIf="!isLoading">{{ 'PRODUCT.SUBMIT' | translate }}</span>
+        <span *ngIf="!isLoading">{{ 'COMMON.SUBMIT' | translate }}</span>
         <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
       </button>
     </form>

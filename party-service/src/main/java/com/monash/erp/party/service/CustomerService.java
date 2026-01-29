@@ -5,6 +5,7 @@ import com.monash.erp.party.dto.AddressRequest;
 import com.monash.erp.party.dto.CustomerCreateRequest;
 import com.monash.erp.party.dto.CustomerDetail;
 import com.monash.erp.party.dto.CustomerDetailResponse;
+import com.monash.erp.party.dto.PartyContentDto;
 import com.monash.erp.party.dto.CustomerListResponse;
 import com.monash.erp.party.dto.CustomerProfile;
 import com.monash.erp.party.dto.CustomerSummary;
@@ -23,6 +24,7 @@ import com.monash.erp.party.entity.PartyContactMechPurpose;
 import com.monash.erp.party.entity.PartyNote;
 import com.monash.erp.party.entity.PartyRole;
 import com.monash.erp.party.entity.Person;
+import com.monash.erp.party.entity.PartyContentInfo;
 import com.monash.erp.party.entity.PostalAddress;
 import com.monash.erp.party.entity.TelecomNumber;
 import com.monash.erp.party.repository.ContactMechRepository;
@@ -31,6 +33,7 @@ import com.monash.erp.party.repository.PartyContactMechRepository;
 import com.monash.erp.party.repository.PartyNoteRepository;
 import com.monash.erp.party.repository.PartyRepository;
 import com.monash.erp.party.repository.PartyRoleRepository;
+import com.monash.erp.party.repository.PartyContentInfoRepository;
 import com.monash.erp.party.repository.PersonRepository;
 import com.monash.erp.party.repository.PostalAddressRepository;
 import com.monash.erp.party.repository.TelecomNumberRepository;
@@ -69,6 +72,7 @@ public class CustomerService {
     private final TelecomNumberRepository telecomNumberRepository;
     private final PostalAddressRepository postalAddressRepository;
     private final PartyRoleRepository partyRoleRepository;
+    private final PartyContentInfoRepository partyContentInfoRepository;
     private final PartyNoteRepository partyNoteRepository;
 
     public CustomerService(PartyRepository partyRepository,
@@ -79,6 +83,7 @@ public class CustomerService {
                            TelecomNumberRepository telecomNumberRepository,
                            PostalAddressRepository postalAddressRepository,
                            PartyRoleRepository partyRoleRepository,
+                           PartyContentInfoRepository partyContentInfoRepository,
                            PartyNoteRepository partyNoteRepository) {
         this.partyRepository = partyRepository;
         this.personRepository = personRepository;
@@ -88,6 +93,7 @@ public class CustomerService {
         this.telecomNumberRepository = telecomNumberRepository;
         this.postalAddressRepository = postalAddressRepository;
         this.partyRoleRepository = partyRoleRepository;
+        this.partyContentInfoRepository = partyContentInfoRepository;
         this.partyNoteRepository = partyNoteRepository;
     }
 
@@ -272,10 +278,12 @@ public class CustomerService {
         postalAddressRepository.save(address);
 
         linkContactMech(partyId, contactMech.getContactMechId());
-        upsertPurpose(partyId, contactMech.getContactMechId(), request.getContactMechPurposeId(), DEFAULT_ADDRESS_PURPOSE);
+        String purposeId = resolvePurpose(request.getContactMechPurposeId(), DEFAULT_ADDRESS_PURPOSE);
+        expireAddressPurposes(partyId, purposeId);
+        upsertPurpose(partyId, contactMech.getContactMechId(), purposeId, DEFAULT_ADDRESS_PURPOSE);
 
         return new AddressDto(contactMech.getContactMechId(),
-                resolvePurpose(request.getContactMechPurposeId(), DEFAULT_ADDRESS_PURPOSE),
+                purposeId,
                 address.getToName(),
                 address.getAddress1(),
                 address.getAddress2(),
@@ -366,7 +374,24 @@ public class CustomerService {
                 .map(note -> new NoteDto(note.getNoteId(), note.getNoteText(), note.getNoteDate(), note.getCreatedBy()))
                 .toList();
 
-        return new CustomerDetail(profile, roles, emails, phones, addresses, notes);
+        CustomerDetail detail = new CustomerDetail(profile, roles, emails, phones, addresses, notes);
+        detail.setContentList(resolveContents(party.getPartyId()));
+        return detail;
+    }
+
+    private List<PartyContentDto> resolveContents(String partyId) {
+        return partyContentInfoRepository.findByPartyId(partyId).stream()
+                .map(this::toContentDto)
+                .toList();
+    }
+
+    private PartyContentDto toContentDto(PartyContentInfo info) {
+        PartyContentDto dto = new PartyContentDto();
+        dto.setContentId(info.getContentId());
+        dto.setDescription(info.getDescription());
+        dto.setContentDate(info.getContentDate());
+        dto.setContentLocation(info.getContentLocation());
+        return dto;
     }
 
     @Transactional
@@ -514,11 +539,32 @@ public class CustomerService {
 
     private Map<String, List<String>> loadPurposeMap(String partyId) {
         Map<String, List<String>> map = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
         for (PartyContactMechPurpose purpose : partyContactMechPurposeRepository.findByPartyId(partyId)) {
+            LocalDateTime thruDate = purpose.getThruDate();
+            if (thruDate != null && !thruDate.isAfter(now)) {
+                continue;
+            }
             map.computeIfAbsent(purpose.getContactMechId(), ignored -> new ArrayList<>())
                     .add(purpose.getContactMechPurposeTypeId());
         }
         return map;
+    }
+
+    private void expireAddressPurposes(String partyId, String purposeId) {
+        if (!StringUtils.hasText(purposeId)) {
+            return;
+        }
+        List<PartyContactMechPurpose> purposes = partyContactMechPurposeRepository
+                .findByPartyIdAndContactMechPurposeTypeIdAndThruDateIsNull(partyId, purposeId);
+        if (purposes.isEmpty()) {
+            return;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        for (PartyContactMechPurpose purpose : purposes) {
+            purpose.setThruDate(now);
+        }
+        partyContactMechPurposeRepository.saveAll(purposes);
     }
 
     private List<String> toPurposeEntries(String contactMechId, Map<String, List<String>> purposes, String fallback) {

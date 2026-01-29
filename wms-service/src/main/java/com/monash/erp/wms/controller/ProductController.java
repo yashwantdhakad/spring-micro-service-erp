@@ -14,6 +14,9 @@ import com.monash.erp.wms.dto.ProductPriceRequest;
 import com.monash.erp.wms.dto.ProductUpdateRequest;
 import com.monash.erp.wms.entity.Product;
 import com.monash.erp.wms.service.ProductCompositeService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.net.URLConnection;
 
 @RestController
 @RequestMapping("/api/products")
@@ -126,5 +131,25 @@ public class ProductController {
             @RequestPart("contentFile") MultipartFile contentFile
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.addContent(productId, contentFile));
+    }
+
+    @GetMapping("/{productId}/contents/{contentId}")
+    public ResponseEntity<Resource> getContent(
+            @PathVariable String productId,
+            @PathVariable String contentId
+    ) throws Exception {
+        ProductCompositeService.ProductContentDownload download = service.loadProductContent(productId, contentId);
+        Resource resource = new UrlResource(download.getFilePath().toUri());
+        String fileName = download.getFileName();
+        if (fileName == null || fileName.isBlank()) {
+            fileName = contentId;
+        }
+        String contentType = URLConnection.guessContentTypeFromName(fileName);
+        MediaType mediaType = contentType != null ? MediaType.parseMediaType(contentType) : MediaType.APPLICATION_OCTET_STREAM;
+
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                .body(resource);
     }
 }

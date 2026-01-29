@@ -166,6 +166,10 @@ export class CreatePOComponent implements OnInit {
     this.orderService.getCustomerParties().subscribe({
       next: (data) => {
         this.customerParties = Array.isArray(data) ? data : [data];
+        if (this.customerParties.length && !this.poForm.get('customerPartyId')?.value) {
+          const first = this.customerParties[0];
+          this.poForm.get('customerPartyId')?.setValue(first.value ?? first.partyId ?? first);
+        }
       },
       error: (error) => {
       },

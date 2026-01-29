@@ -122,6 +122,7 @@ public class PurchaseOrderReceiveService {
             inventoryItem.setInventoryItemTypeId(DEFAULT_INVENTORY_ITEM_TYPE);
             inventoryItem.setProductId(itemRequest.getProductId());
             inventoryItem.setFacilityId(request.getFacilityId());
+            inventoryItem.setLocationSeqId(itemRequest.getLocationSeqId());
             inventoryItem.setOwnerPartyId(defaultValue(request.getOwnerPartyId(), DEFAULT_OWNER_PARTY));
             inventoryItem.setPartyId(request.getVendorPartyId());
             inventoryItem.setDatetimeReceived(defaultDate(request.getReceivedDate()));

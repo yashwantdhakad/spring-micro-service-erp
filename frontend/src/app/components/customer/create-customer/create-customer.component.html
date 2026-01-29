@@ -16,7 +16,7 @@
         <input matInput [placeholder]="'CUSTOMER.FIRST_NAME' | translate" formControlName="firstName" />
         <mat-error
           *ngIf="createCustomerForm.get('firstName')?.hasError('required')"
-          >{{ 'CUSTOMER.FIRST_NAME' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.FIRST_NAME' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 
@@ -27,7 +27,7 @@
         <input matInput [placeholder]="'CUSTOMER.LAST_NAME' | translate" formControlName="lastName" />
         <mat-error
           *ngIf="createCustomerForm.get('lastName')?.hasError('required')"
-          >{{ 'CUSTOMER.LAST_NAME' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.LAST_NAME' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 
@@ -42,7 +42,7 @@
         />
         <mat-error
           *ngIf="createCustomerForm.get('contactNumber')?.hasError('required')"
-          >{{ 'CUSTOMER.CONTACT_NUMBER' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.CONTACT_NUMBER' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
         <mat-error
           *ngIf="createCustomerForm.get('contactNumber')?.hasError('minlength')"
@@ -57,7 +57,7 @@
         <input matInput [placeholder]="'CUSTOMER.EMAIL_ADDRESS' | translate" formControlName="emailAddress" />
         <mat-error
           *ngIf="createCustomerForm.get('emailAddress')?.hasError('required')"
-          >{{ 'CUSTOMER.EMAIL_ADDRESS' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.EMAIL_ADDRESS' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
         <mat-error
           *ngIf="createCustomerForm.get('emailAddress')?.hasError('email')"
@@ -72,7 +72,7 @@
         <input matInput [placeholder]="'CUSTOMER.ADDRESS1' | translate" formControlName="address1" />
         <mat-error
           *ngIf="createCustomerForm.get('address1')?.hasError('required')"
-          >{{ 'CUSTOMER.ADDRESS1' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.ADDRESS1' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 
@@ -89,7 +89,7 @@
         <mat-label>{{ 'CUSTOMER.CITY' | translate }}</mat-label>
         <input matInput [placeholder]="'CUSTOMER.CITY' | translate" formControlName="city" />
         <mat-error *ngIf="createCustomerForm.get('city')?.hasError('required')"
-          >{{ 'CUSTOMER.CITY' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.CITY' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
       <span fxFlex="2%"></span>
@@ -103,7 +103,7 @@
         />
         <mat-error
           *ngIf="createCustomerForm.get('postalCode')?.hasError('required')"
-          >{{ 'CUSTOMER.POSTAL_CODE' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.POSTAL_CODE' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 
@@ -120,7 +120,7 @@
         </mat-select>
         <mat-error
           *ngIf="createCustomerForm.get('countryGeoId')?.hasError('required')"
-          >{{ 'CUSTOMER.COUNTRY' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.COUNTRY' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
       <span fxFlex="2%"></span>
@@ -141,7 +141,7 @@
           *ngIf="
             createCustomerForm.get('stateProvinceGeoId')?.hasError('required')
           "
-          >{{ 'CUSTOMER.STATE' | translate }} {{ 'CUSTOMER.REQUIRED' | translate }}</mat-error
+          >{{ 'CUSTOMER.STATE' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 
@@ -153,7 +153,7 @@
           class="me-4"
           [disabled]="isLoading"
         >
-          <span *ngIf="!isLoading">{{ 'CUSTOMER.SAVE' | translate }}</span>
+          <span *ngIf="!isLoading">{{ 'COMMON.SAVE' | translate }}</span>
           <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
         </button>
       </div>

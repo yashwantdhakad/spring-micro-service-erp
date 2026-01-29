@@ -17,9 +17,10 @@ describe('CreateSOComponent', () => {
 
   beforeEach(async () => {
     mockOrderService = {
-      getProductStores: jasmine.createSpy().and.returnValue(of([])),
+      getProductStores: jasmine.createSpy().and.returnValue(of([
+        { productStoreId: 'STORE1', payToPartyId: 'VENDOR1' }
+      ])),
       getFacilities: jasmine.createSpy().and.returnValue(of([])),
-      getVendorParties: jasmine.createSpy().and.returnValue(of([{ value: 'VENDOR1' }])),
       createOrder: jasmine.createSpy().and.returnValue(of({ orderId: 'ORDER123' }))
     };
 
@@ -58,13 +59,11 @@ describe('CreateSOComponent', () => {
   it('should call fetchData on init', () => {
     expect(mockOrderService.getProductStores).toHaveBeenCalled();
     expect(mockOrderService.getFacilities).toHaveBeenCalled();
-    expect(mockOrderService.getVendorParties).toHaveBeenCalled();
   });
 
   it('should create order and navigate on success', () => {
     component.orderForm.patchValue({
       productStoreId: 'STORE1',
-      vendorPartyId: 'VENDOR1',
       facilityId: 'FAC1',
       customerPartyId: 'CUST1',
       shippingAddress: {
@@ -72,6 +71,7 @@ describe('CreateSOComponent', () => {
         address1: '123 Main',
       }
     });
+    component.updateVendorParty();
 
     component.createOrder();
 
@@ -84,10 +84,10 @@ describe('CreateSOComponent', () => {
     
     component.orderForm.patchValue({
       productStoreId: 'STORE1',
-      vendorPartyId: 'VENDOR1',
       facilityId: 'FAC1',
       customerPartyId: 'CUST1'
     });
+    component.updateVendorParty();
 
     component.createOrder();
 

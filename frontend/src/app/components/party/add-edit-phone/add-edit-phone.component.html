@@ -16,10 +16,10 @@
       </mat-form-field>
       <div fxFlex="100%" class="button-group">
         <button mat-raised-button color="primary" type="submit" [disabled]="isLoading || addEditPhoneForm.invalid">
-          <span *ngIf="!isLoading">{{ 'PARTY.SAVE' | translate }}</span>
+          <span *ngIf="!isLoading">{{ 'COMMON.SAVE' | translate }}</span>
           <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
         </button>
-        <button mat-button (click)="dialogRef.close()">{{ 'PARTY.CANCEL' | translate }}</button>
+        <button mat-button (click)="dialogRef.close()">{{ 'COMMON.CANCEL' | translate }}</button>
       </div>
     </form>
   </mat-card-content>

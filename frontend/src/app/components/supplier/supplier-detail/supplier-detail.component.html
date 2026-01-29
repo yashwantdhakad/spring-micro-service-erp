@@ -210,6 +210,45 @@
   </mat-card-content>
 </mat-card>
 <br />
+<mat-card class="mat-elevation-z10">
+  <mat-card-header>
+    <mat-card-title>
+      {{ 'SUPPLIER.CONTENTS' | translate }}
+      <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+        (click)="addUpdateContentDialog()">add</mat-icon>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="contents">
+      <ng-container matColumnDef="description">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.TITLE_COL' | translate }}</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          {{ item.description }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="contentDate">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.CONTENT_COL' | translate }}</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          {{ item.contentDate | date : "MMMM d, y" }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="contentLocation">
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.MIME_TYPE' | translate }}</th>
+        <td mat-cell class="text-left" *matCellDef="let item">
+          <ng-container *ngIf="item.contentId; else noContentFile">
+            <a href="#" (click)="$event.preventDefault(); openPartyContent(item)">
+              {{ item.contentLocation }}
+            </a>
+          </ng-container>
+          <ng-template #noContentFile>--</ng-template>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: contentColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
+<br />
 
 <mat-card class="mat-elevation-z10">
   <mat-card-header>
@@ -221,25 +260,25 @@
   <mat-card-content>
     <table mat-table [dataSource]="supplierProducts">
       <ng-container matColumnDef="productId">
-        <th mat-header-cell class="text-left" *matHeaderCellDef>Product</th>
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
         <td mat-cell class="text-left" *matCellDef="let item">
           {{ item.productId }}
         </td>
       </ng-container>
       <ng-container matColumnDef="supplierProductName">
-        <th mat-header-cell class="text-left" *matHeaderCellDef>Name</th>
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.NAME' | translate }}</th>
         <td mat-cell class="text-left" *matCellDef="let item">
           {{ item.supplierProductName }}
         </td>
       </ng-container>
       <ng-container matColumnDef="lastPrice">
-        <th mat-header-cell class="text-left" *matHeaderCellDef>Last Price</th>
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.LAST_PRICE' | translate }}</th>
         <td mat-cell class="text-left" *matCellDef="let item">
           {{ item.lastPrice }}
         </td>
       </ng-container>
       <ng-container matColumnDef="action">
-        <th mat-header-cell class="text-left" *matHeaderCellDef>Action</th>
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
         <td mat-cell class="text-left" *matCellDef="let item">
           <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn"
             (click)="deleteSupplierProduct(item)">delete</mat-icon>

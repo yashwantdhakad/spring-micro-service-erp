@@ -8,13 +8,13 @@
 <ng-template #content>
   <mat-list>
     <mat-list-item>
-      <a [routerLink]="['/shipments']">Shipments</a>
+      <a [routerLink]="['/shipments']">{{ 'SHIPMENT.TITLE' | translate }}</a>
       / {{ shipmentDetail?.shipmentId }}
     </mat-list-item>
   </mat-list>
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Shipment Overview</mat-card-title>
+      <mat-card-title>{{ 'SHIPMENT.OVERVIEW' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row wrap" fxLayout.xs="column">
@@ -22,27 +22,27 @@
           <mat-card-content>
             <ul class="custom-list">
               <li class="custom-list-item">
-                <strong>Shipment Id:</strong>
+                <strong>{{ 'SHIPMENT.ID_LABEL' | translate }}:</strong>
                 {{ shipmentDetail?.shipmentId }}
               </li>
               <li class="custom-list-item">
-                <strong>Type:</strong>
+                <strong>{{ 'COMMON.TYPE' | translate }}:</strong>
                 {{ getShipmentTypeDescription(shipmentDetail?.shipmentTypeId) }}
               </li>
               <li class="custom-list-item">
-                <strong>Status:</strong>
+                <strong>{{ 'COMMON.STATUS' | translate }}:</strong>
                 {{ getStatusDescription(shipmentDetail?.statusId) }}
               </li>
               <li class="custom-list-item">
-                <strong>Primary Order:</strong>
+                <strong>{{ 'SHIPMENT.PRIMARY_ORDER' | translate }}:</strong>
                 {{ shipmentDetail?.primaryOrderId }}
               </li>
               <li class="custom-list-item">
-                <strong>From Party:</strong>
+                <strong>{{ 'SHIPMENT.FROM_PARTY' | translate }}:</strong>
                 {{ shipmentDetail?.partyIdFrom }}
               </li>
               <li class="custom-list-item">
-                <strong>To Party:</strong>
+                <strong>{{ 'SHIPMENT.TO_PARTY' | translate }}:</strong>
                 {{ shipmentDetail?.partyIdTo }}
               </li>
             </ul>
@@ -52,23 +52,23 @@
           <mat-card-content>
             <ul class="custom-list">
               <li class="custom-list-item">
-                <strong>Origin Facility:</strong>
+                <strong>{{ 'SHIPMENT.ORIGIN_FACILITY' | translate }}:</strong>
                 {{ shipmentDetail?.originFacilityId }}
               </li>
               <li class="custom-list-item">
-                <strong>Destination Facility:</strong>
+                <strong>{{ 'SHIPMENT.DESTINATION_FACILITY' | translate }}:</strong>
                 {{ shipmentDetail?.destinationFacilityId }}
               </li>
               <li class="custom-list-item">
-                <strong>Estimated Ship Date:</strong>
+                <strong>{{ 'SHIPMENT.EST_SHIP_DATE' | translate }}:</strong>
                 {{ shipmentDetail?.estimatedShipDate | date : 'MMMM d, y' }}
               </li>
               <li class="custom-list-item">
-                <strong>Estimated Arrival Date:</strong>
+                <strong>{{ 'SHIPMENT.EST_ARRIVAL_DATE' | translate }}:</strong>
                 {{ shipmentDetail?.estimatedArrivalDate | date : 'MMMM d, y' }}
               </li>
               <li class="custom-list-item">
-                <strong>Created Date:</strong>
+                <strong>{{ 'SHIPMENT.CREATED_DATE' | translate }}:</strong>
                 {{ shipmentDetail?.createdDate | date : 'MMMM d, y' }}
               </li>
             </ul>
@@ -80,26 +80,26 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Items</mat-card-title>
+      <mat-card-title>{{ 'COMMON.ITEMS' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="items">
         <ng-container matColumnDef="shipmentItemSeqId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Item Seq ID</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.ITEM_SEQ_ID' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.shipmentItemSeqId }}
           </td>
         </ng-container>
         <ng-container matColumnDef="productId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Product ID</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.PRODUCT_ID' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.productId }}</td>
         </ng-container>
         <ng-container matColumnDef="quantity">
-          <th mat-header-cell class="text-right" *matHeaderCellDef>Quantity</th>
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.QTY' | translate }}</th>
           <td mat-cell class="text-right" *matCellDef="let item">{{ item.quantity }}</td>
         </ng-container>
         <ng-container matColumnDef="shipmentContentDescription">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Description</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.DESCRIPTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentContentDescription }}</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="['shipmentItemSeqId', 'productId', 'quantity', 'shipmentContentDescription']"></tr>
@@ -110,36 +110,36 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Shipment Route Segments</mat-card-title>
+      <mat-card-title>{{ 'SHIPMENT.ROUTE_SEGMENTS' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="shipmentRouteSegments">
         <ng-container matColumnDef="shipmentRouteSegmentId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Route Segment ID</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.ROUTE_SEGMENT_ID' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.shipmentRouteSegmentId }}
           </td>
         </ng-container>
         <ng-container matColumnDef="originFacilityId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Origin Facility</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.ORIGIN_FACILITY' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.originFacilityId }}</td>
         </ng-container>
         <ng-container matColumnDef="destFacilityId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Destination Facility</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.DESTINATION_FACILITY' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.destFacilityId }}</td>
         </ng-container>
         <ng-container matColumnDef="shipmentMethodTypeId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Method</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.METHOD' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getShipmentMethodDescription(item.shipmentMethodTypeId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="carrierPartyId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Carrier</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.CARRIER' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.carrierPartyId }}</td>
         </ng-container>
         <ng-container matColumnDef="carrierServiceStatusId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getStatusDescription(item.carrierServiceStatusId) }}
           </td>

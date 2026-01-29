@@ -9,4 +9,6 @@ public interface PicklistBinRepository extends JpaRepository<PicklistBin, Long> 
     List<PicklistBin> findByPrimaryOrderId(String primaryOrderId);
 
     List<PicklistBin> findByPicklistId(String picklistId);
+
+    List<PicklistBin> findByPicklistIdIn(List<String> picklistIds);
 }

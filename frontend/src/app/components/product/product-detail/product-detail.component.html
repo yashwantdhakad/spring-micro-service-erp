@@ -39,24 +39,24 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Inventory Summary</mat-card-title>
+      <mat-card-title>{{ 'PRODUCT.INVENTORY_SUMMARY' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="inventorySummary">
         <ng-container matColumnDef="facility">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Facility</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.FACILITY' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.facilityName || item.facilityId }}
           </td>
         </ng-container>
         <ng-container matColumnDef="atpTotal">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>ATP</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ATP' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.atpTotal }}
           </td>
         </ng-container>
         <ng-container matColumnDef="qohTotal">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>QOH</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.QOH' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.qohTotal }}
           </td>
@@ -177,7 +177,6 @@
       </table>
     </mat-card-content>
   </mat-card>
-  <!--
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
@@ -200,16 +199,15 @@
             {{ item.description }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="productContentTypeEnumId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.CONTENT_COL' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.productContentTypeEnumId }}
-          </td>
-        </ng-container>
         <ng-container matColumnDef="contentLocation">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.MIME_TYPE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.contentLocation }}
+            <ng-container *ngIf="item.contentId; else noContentFile">
+              <a href="#" (click)="$event.preventDefault(); openProductContent(item)">
+                {{ item.contentLocation }}
+              </a>
+            </ng-container>
+            <ng-template #noContentFile>--</ng-template>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="contentColumns"></tr>
@@ -217,7 +215,6 @@
       </table>
     </mat-card-content>
   </mat-card>
-  -->
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>

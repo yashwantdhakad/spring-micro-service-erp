@@ -22,6 +22,7 @@ import com.monash.erp.party.dto.EmailDto;
 import com.monash.erp.party.dto.EmailRequest;
 import com.monash.erp.party.dto.NoteDto;
 import com.monash.erp.party.dto.NoteRequest;
+import com.monash.erp.party.dto.PartyContentDto;
 import com.monash.erp.party.dto.PhoneDto;
 import com.monash.erp.party.dto.PhoneRequest;
 import com.monash.erp.party.dto.RoleSummary;
@@ -39,6 +40,7 @@ import com.monash.erp.party.entity.PartyContactMechPurpose;
 import com.monash.erp.party.entity.PartyGroup;
 import com.monash.erp.party.entity.PartyNote;
 import com.monash.erp.party.entity.PartyRole;
+import com.monash.erp.party.entity.PartyContentInfo;
 import com.monash.erp.party.entity.PostalAddress;
 import com.monash.erp.party.entity.TelecomNumber;
 import com.monash.erp.party.repository.ContactMechRepository;
@@ -48,6 +50,7 @@ import com.monash.erp.party.repository.PartyGroupRepository;
 import com.monash.erp.party.repository.PartyNoteRepository;
 import com.monash.erp.party.repository.PartyRepository;
 import com.monash.erp.party.repository.PartyRoleRepository;
+import com.monash.erp.party.repository.PartyContentInfoRepository;
 import com.monash.erp.party.repository.PostalAddressRepository;
 import com.monash.erp.party.repository.TelecomNumberRepository;
 
@@ -71,6 +74,7 @@ public class SupplierService {
     private final PostalAddressRepository postalAddressRepository;
     private final PartyRoleRepository partyRoleRepository;
     private final PartyNoteRepository partyNoteRepository;
+    private final PartyContentInfoRepository partyContentInfoRepository;
 
     public SupplierService(PartyRepository partyRepository,
                            PartyGroupRepository partyGroupRepository,
@@ -80,7 +84,8 @@ public class SupplierService {
                            TelecomNumberRepository telecomNumberRepository,
                            PostalAddressRepository postalAddressRepository,
                            PartyRoleRepository partyRoleRepository,
-                           PartyNoteRepository partyNoteRepository) {
+                           PartyNoteRepository partyNoteRepository,
+                           PartyContentInfoRepository partyContentInfoRepository) {
         this.partyRepository = partyRepository;
         this.partyGroupRepository = partyGroupRepository;
         this.contactMechRepository = contactMechRepository;
@@ -90,6 +95,7 @@ public class SupplierService {
         this.postalAddressRepository = postalAddressRepository;
         this.partyRoleRepository = partyRoleRepository;
         this.partyNoteRepository = partyNoteRepository;
+        this.partyContentInfoRepository = partyContentInfoRepository;
     }
 
     public SupplierListResponse listSuppliers(int page, int size, String query) {
@@ -269,10 +275,12 @@ public class SupplierService {
         postalAddressRepository.save(address);
 
         linkContactMech(partyId, contactMech.getContactMechId());
-        upsertPurpose(partyId, contactMech.getContactMechId(), request.getContactMechPurposeId(), DEFAULT_ADDRESS_PURPOSE);
+        String purposeId = resolvePurpose(request.getContactMechPurposeId(), DEFAULT_ADDRESS_PURPOSE);
+        expireAddressPurposes(partyId, purposeId);
+        upsertPurpose(partyId, contactMech.getContactMechId(), purposeId, DEFAULT_ADDRESS_PURPOSE);
 
         return new AddressDto(contactMech.getContactMechId(),
-                resolvePurpose(request.getContactMechPurposeId(), DEFAULT_ADDRESS_PURPOSE),
+                purposeId,
                 address.getToName(),
                 address.getAddress1(),
                 address.getAddress2(),
@@ -402,7 +410,24 @@ public class SupplierService {
                 .map(note -> new NoteDto(note.getNoteId(), note.getNoteText(), note.getNoteDate(), note.getCreatedBy()))
                 .toList();
 
-        return new SupplierDetail(profile, roles, emails, phones, addresses, notes);
+        SupplierDetail detail = new SupplierDetail(profile, roles, emails, phones, addresses, notes);
+        detail.setContentList(resolveContents(party.getPartyId()));
+        return detail;
+    }
+
+    private List<PartyContentDto> resolveContents(String partyId) {
+        return partyContentInfoRepository.findByPartyId(partyId).stream()
+                .map(this::toContentDto)
+                .toList();
+    }
+
+    private PartyContentDto toContentDto(PartyContentInfo info) {
+        PartyContentDto dto = new PartyContentDto();
+        dto.setContentId(info.getContentId());
+        dto.setDescription(info.getDescription());
+        dto.setContentDate(info.getContentDate());
+        dto.setContentLocation(info.getContentLocation());
+        return dto;
     }
 
     private List<EmailDto> resolveEmails(String partyId) {
@@ -509,11 +534,32 @@ public class SupplierService {
 
     private Map<String, List<String>> loadPurposeMap(String partyId) {
         Map<String, List<String>> map = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
         for (PartyContactMechPurpose purpose : partyContactMechPurposeRepository.findByPartyId(partyId)) {
+            LocalDateTime thruDate = purpose.getThruDate();
+            if (thruDate != null && !thruDate.isAfter(now)) {
+                continue;
+            }
             map.computeIfAbsent(purpose.getContactMechId(), ignored -> new ArrayList<>())
                     .add(purpose.getContactMechPurposeTypeId());
         }
         return map;
+    }
+
+    private void expireAddressPurposes(String partyId, String purposeId) {
+        if (!StringUtils.hasText(purposeId)) {
+            return;
+        }
+        List<PartyContactMechPurpose> purposes = partyContactMechPurposeRepository
+                .findByPartyIdAndContactMechPurposeTypeIdAndThruDateIsNull(partyId, purposeId);
+        if (purposes.isEmpty()) {
+            return;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        for (PartyContactMechPurpose purpose : purposes) {
+            purpose.setThruDate(now);
+        }
+        partyContactMechPurposeRepository.saveAll(purposes);
     }
 
     private List<String> toPurposeEntries(String contactMechId, Map<String, List<String>> purposes, String fallback) {

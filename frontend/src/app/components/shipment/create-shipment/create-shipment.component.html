@@ -1,16 +1,16 @@
 <mat-card class="mat-elevation-z10">
   <mat-card-header>
-    <mat-card-title>Create Shipment</mat-card-title>
+    <mat-card-title>{{ 'SHIPMENT.CREATE_TITLE' | translate }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="shipmentForm" (ngSubmit)="createShipment()">
       <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px">
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Shipment ID (optional)</mat-label>
+          <mat-label>{{ 'SHIPMENT.SHIPMENT_ID_OPTIONAL' | translate }}</mat-label>
           <input matInput formControlName="shipmentId" />
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Shipment Type</mat-label>
+          <mat-label>{{ 'SHIPMENT.TYPE' | translate }}</mat-label>
           <mat-select formControlName="shipmentTypeId" required>
             <mat-option *ngFor="let type of shipmentTypes" [value]="type.shipmentTypeId">
               {{ type.description || type.shipmentTypeId }}
@@ -18,7 +18,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Status</mat-label>
+          <mat-label>{{ 'COMMON.STATUS' | translate }}</mat-label>
           <mat-select formControlName="statusId" required>
             <mat-option *ngFor="let status of shipmentStatuses" [value]="status.statusId">
               {{ status.description || status.statusId }}
@@ -26,40 +26,40 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Primary Order</mat-label>
+          <mat-label>{{ 'SHIPMENT.PRIMARY_ORDER' | translate }}</mat-label>
           <input matInput formControlName="primaryOrderId" />
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Origin Facility</mat-label>
+          <mat-label>{{ 'SHIPMENT.ORIGIN_FACILITY' | translate }}</mat-label>
           <input matInput formControlName="originFacilityId" />
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Destination Facility</mat-label>
+          <mat-label>{{ 'SHIPMENT.DESTINATION_FACILITY' | translate }}</mat-label>
           <input matInput formControlName="destinationFacilityId" />
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>From Party</mat-label>
+          <mat-label>{{ 'SHIPMENT.FROM_PARTY' | translate }}</mat-label>
           <input matInput formControlName="partyIdFrom" />
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>To Party</mat-label>
+          <mat-label>{{ 'SHIPMENT.TO_PARTY' | translate }}</mat-label>
           <input matInput formControlName="partyIdTo" />
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Estimated Ship Date</mat-label>
+          <mat-label>{{ 'SHIPMENT.EST_SHIP_DATE' | translate }}</mat-label>
           <input matInput type="date" formControlName="estimatedShipDate" />
         </mat-form-field>
         <mat-form-field fxFlex.gt-xs="30%" appearance="outline">
-          <mat-label>Estimated Arrival Date</mat-label>
+          <mat-label>{{ 'SHIPMENT.EST_ARRIVAL_DATE' | translate }}</mat-label>
           <input matInput type="date" formControlName="estimatedArrivalDate" />
         </mat-form-field>
       </div>
 
       <mat-divider class="section-divider"></mat-divider>
       <div class="section-header">
-        <h3>Items</h3>
+        <h3>{{ 'COMMON.ITEMS' | translate }}</h3>
         <button mat-stroked-button type="button" (click)="addItem()">
-          Add Item
+          {{ 'COMMON.ADD_ITEM' | translate }}
         </button>
       </div>
       <div formArrayName="items">
@@ -69,19 +69,19 @@
           class="form-row"
         >
           <mat-form-field appearance="outline">
-            <mat-label>Item Seq ID</mat-label>
+            <mat-label>{{ 'SHIPMENT.ITEM_SEQ_ID' | translate }}</mat-label>
             <input matInput formControlName="shipmentItemSeqId" />
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Product ID</mat-label>
+            <mat-label>{{ 'SHIPMENT.PRODUCT_ID' | translate }}</mat-label>
             <input matInput formControlName="productId" required />
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Quantity</mat-label>
+            <mat-label>{{ 'COMMON.QTY' | translate }}</mat-label>
             <input matInput formControlName="quantity" required />
           </mat-form-field>
           <mat-form-field appearance="outline" class="wide-field">
-            <mat-label>Description</mat-label>
+            <mat-label>{{ 'COMMON.DESCRIPTION' | translate }}</mat-label>
             <input matInput formControlName="shipmentContentDescription" />
           </mat-form-field>
           <button
@@ -97,9 +97,9 @@
 
       <mat-divider class="section-divider"></mat-divider>
       <div class="section-header">
-        <h3>Route Segments</h3>
+        <h3>{{ 'SHIPMENT.ROUTE_SEGMENTS' | translate }}</h3>
         <button mat-stroked-button type="button" (click)="addRouteSegment()">
-          Add Route Segment
+          {{ 'SHIPMENT.ADD_ROUTE_SEGMENT' | translate }}
         </button>
       </div>
       <div formArrayName="routeSegments">
@@ -109,19 +109,19 @@
           class="form-row"
         >
           <mat-form-field appearance="outline">
-            <mat-label>Route Segment ID</mat-label>
+            <mat-label>{{ 'SHIPMENT.ROUTE_SEGMENT_ID' | translate }}</mat-label>
             <input matInput formControlName="shipmentRouteSegmentId" />
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Origin Facility</mat-label>
+            <mat-label>{{ 'SHIPMENT.ORIGIN_FACILITY' | translate }}</mat-label>
             <input matInput formControlName="originFacilityId" />
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Destination Facility</mat-label>
+            <mat-label>{{ 'SHIPMENT.DESTINATION_FACILITY' | translate }}</mat-label>
             <input matInput formControlName="destFacilityId" />
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Method</mat-label>
+            <mat-label>{{ 'SHIPMENT.METHOD' | translate }}</mat-label>
             <mat-select formControlName="shipmentMethodTypeId">
               <mat-option *ngFor="let method of shipmentMethodTypes" [value]="method.shipmentMethodTypeId">
                 {{ method.description || method.shipmentMethodTypeId }}
@@ -129,11 +129,11 @@
             </mat-select>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Carrier</mat-label>
+            <mat-label>{{ 'SHIPMENT.CARRIER' | translate }}</mat-label>
             <input matInput formControlName="carrierPartyId" />
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
+            <mat-label>{{ 'COMMON.STATUS' | translate }}</mat-label>
             <mat-select formControlName="carrierServiceStatusId">
               <mat-option *ngFor="let status of carrierServiceStatuses" [value]="status.statusId">
                 {{ status.description || status.statusId }}
@@ -158,7 +158,7 @@
           type="submit"
           [disabled]="isLoading"
         >
-          Create Shipment
+          {{ 'SHIPMENT.CREATE_ACTION' | translate }}
         </button>
       </div>
     </form>

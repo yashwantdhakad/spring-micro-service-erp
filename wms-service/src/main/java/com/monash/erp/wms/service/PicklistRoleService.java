@@ -6,10 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class PicklistRoleService {
+
+    private static final String ROLE_PICKER = "PICKER";
 
     private final PicklistRoleRepository repository;
 
@@ -28,6 +31,10 @@ public class PicklistRoleService {
 
     public PicklistRole create(PicklistRole entity) {
         entity.setId(null);
+        expireExistingPicker(entity);
+        if (entity.getFromDate() == null) {
+            entity.setFromDate(LocalDateTime.now());
+        }
         return repository.save(entity);
     }
 
@@ -41,5 +48,24 @@ public class PicklistRoleService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private void expireExistingPicker(PicklistRole entity) {
+        if (entity == null || entity.getPicklistId() == null) {
+            return;
+        }
+        if (!ROLE_PICKER.equalsIgnoreCase(entity.getRoleTypeId())) {
+            return;
+        }
+        List<PicklistRole> activeRoles = repository
+                .findByPicklistIdAndRoleTypeIdAndThruDateIsNull(entity.getPicklistId(), ROLE_PICKER);
+        if (activeRoles.isEmpty()) {
+            return;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        for (PicklistRole role : activeRoles) {
+            role.setThruDate(now);
+        }
+        repository.saveAll(activeRoles);
     }
 }

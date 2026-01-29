@@ -17,6 +17,10 @@ import com.monash.erp.oms.order.dto.PurchaseOrderReceiveResponse;
 import com.monash.erp.oms.order.dto.InvoiceSummaryDto;
 import com.monash.erp.oms.order.dto.ReservationStatusDto;
 import com.monash.erp.oms.order.service.OrderCompositeService;
+import com.monash.erp.oms.order.service.OrderPdfService;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +35,18 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLConnection;
+
 @RestController
 @RequestMapping("/api/orders")
 public class OrderCompositeController {
 
     private final OrderCompositeService orderCompositeService;
+    private final OrderPdfService orderPdfService;
 
-    public OrderCompositeController(OrderCompositeService orderCompositeService) {
+    public OrderCompositeController(OrderCompositeService orderCompositeService, OrderPdfService orderPdfService) {
         this.orderCompositeService = orderCompositeService;
+        this.orderPdfService = orderPdfService;
     }
 
     @GetMapping
@@ -59,6 +67,14 @@ public class OrderCompositeController {
     @GetMapping("/{orderId}/display-info")
     public OrderDisplayInfoResponse getDisplayInfo(@PathVariable String orderId) {
         return orderCompositeService.getDisplayInfo(orderId);
+    }
+
+    @GetMapping(value = "/{orderId}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getOrderPdf(@PathVariable String orderId) {
+        byte[] pdf = orderPdfService.generateOrderPdf(orderId);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
     @PostMapping
@@ -170,5 +186,25 @@ public class OrderCompositeController {
     ) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(orderCompositeService.addContent(orderId, description, contentFile));
+    }
+
+    @GetMapping("/{orderId}/contents/{contentId}")
+    public ResponseEntity<Resource> getContent(
+            @PathVariable String orderId,
+            @PathVariable String contentId
+    ) throws Exception {
+        OrderCompositeService.OrderContentDownload download = orderCompositeService.loadOrderContent(orderId, contentId);
+        Resource resource = new UrlResource(download.getFilePath().toUri());
+        String fileName = download.getFileName();
+        if (fileName == null || fileName.isBlank()) {
+            fileName = contentId;
+        }
+        String contentType = URLConnection.guessContentTypeFromName(fileName);
+        MediaType mediaType = contentType != null ? MediaType.parseMediaType(contentType) : MediaType.APPLICATION_OCTET_STREAM;
+
+        return ResponseEntity.ok()
+                .contentType(mediaType)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + fileName + "\"")
+                .body(resource);
     }
 }

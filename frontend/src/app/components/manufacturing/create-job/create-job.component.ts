@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -29,7 +30,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 export class CreateJobComponent implements OnInit {
   isLoading = false;
   facilities: any[] = [];
-  consumeItems: any[] = [];
+  filteredConsumeProducts: Observable<any[]>[] = [];
 
   createJobForm: FormGroup;
   produceProductIdControl = new FormControl('', Validators.required);
@@ -52,6 +53,7 @@ export class CreateJobComponent implements OnInit {
       produceProductId: this.produceProductIdControl,
       produceEstimatedQuantity: ['', Validators.required],
       produceEstimatedAmount: [''],
+      consumeItems: this.fb.array([]),
     });
 
     this.filteredProducts$ = this.produceProductIdControl.valueChanges.pipe(
@@ -65,21 +67,23 @@ export class CreateJobComponent implements OnInit {
   ngOnInit(): void {
     this.loadFacilities();
     this.listenForBom();
+    this.addConsumeItemRow();
+    this.listenForProduceQuantity();
   }
 
   private searchProducts(value: string | null): Observable<any[]> {
-  if (!value || typeof value !== 'string') {
-    return of([]);
-  }
-
-  return this.productService.getProducts(0, value).pipe(
-    map((response: any) => response?.documentList || []),
-    catchError(() => {
-      this.snackbarService.showError('Error fetching products');
+    if (!value || typeof value !== 'string') {
       return of([]);
-    })
-  );
-}
+    }
+
+    return this.productService.getProducts(0, value).pipe(
+      map((response: any) => response?.documentList || []),
+      catchError(() => {
+        this.snackbarService.showError('Error fetching products');
+        return of([]);
+      })
+    );
+  }
 
 
   private loadFacilities(): void {
@@ -113,17 +117,111 @@ export class CreateJobComponent implements OnInit {
         );
       })
     ).subscribe((items) => {
-      this.consumeItems = Array.isArray(items) ? items : [];
+      const list = Array.isArray(items) ? items : [];
+      this.resetConsumeItems(list);
     });
+  }
+
+  private listenForProduceQuantity(): void {
+    this.createJobForm.get('produceEstimatedQuantity')?.valueChanges.pipe(
+      debounceTime(200),
+      distinctUntilChanged()
+    ).subscribe((value) => {
+      this.updateConsumeQuantities(value);
+    });
+  }
+
+  get consumeItemsArray(): FormArray {
+    return this.createJobForm.get('consumeItems') as FormArray;
+  }
+
+  addConsumeItemRow(productId = '', estimatedQuantity = '', baseQuantity = ''): void {
+    this.consumeItemsArray.push(
+      this.fb.group({
+        productId: [productId, Validators.required],
+        estimatedQuantity: [estimatedQuantity, Validators.required],
+        baseQuantity: [baseQuantity],
+      })
+    );
+    this.initConsumeAutocomplete(this.consumeItemsArray.length - 1);
+  }
+
+  removeConsumeItemRow(index: number): void {
+    if (this.consumeItemsArray.length <= 1) {
+      return;
+    }
+    this.consumeItemsArray.removeAt(index);
+    this.filteredConsumeProducts.splice(index, 1);
+  }
+
+  private resetConsumeItems(items: any[]): void {
+    this.consumeItemsArray.clear();
+    this.filteredConsumeProducts = [];
+    if (items.length) {
+      items.forEach((item) => {
+        const baseQuantity = item?.estimatedQuantity ?? '';
+        this.addConsumeItemRow(item?.productId ?? '', baseQuantity, baseQuantity);
+      });
+      this.updateConsumeQuantities(this.createJobForm.get('produceEstimatedQuantity')?.value);
+    } else {
+      this.addConsumeItemRow();
+    }
+  }
+
+  private updateConsumeQuantities(produceQty: any): void {
+    const multiplier = Number(produceQty);
+    const effectiveMultiplier = Number.isNaN(multiplier) || multiplier <= 0 ? 1 : multiplier;
+    this.consumeItemsArray.controls.forEach((control) => {
+      const baseValue = control.get('baseQuantity')?.value;
+      if (baseValue === '' || baseValue == null) {
+        return;
+      }
+      const base = Number(baseValue);
+      if (Number.isNaN(base)) {
+        return;
+      }
+      control.get('estimatedQuantity')?.setValue(base * effectiveMultiplier, { emitEvent: false });
+    });
+  }
+
+  private initConsumeAutocomplete(index: number): void {
+    const control = this.consumeItemsArray.at(index)?.get('productId');
+    if (!control) {
+      return;
+    }
+    this.filteredConsumeProducts[index] = control.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value) =>
+        this.productService.getProducts(
+          0,
+          typeof value === 'string' ? value : value?.productId ?? ''
+        ).pipe(
+          map((response: any) => response?.documentList || []),
+          catchError(() => of([]))
+        )
+      )
+    );
   }
 
   createJob(): void {
     if (this.createJobForm.invalid) return;
 
     this.isLoading = true;
+    const consumeItems = this.consumeItemsArray.controls
+      .map((control) => {
+        const value = control.value;
+        const productId = value?.productId?.productId ?? value?.productId;
+        return {
+          productId,
+          estimatedQuantity: value?.estimatedQuantity,
+        };
+      })
+      .filter((item) => item.productId);
     const formData = {
       ...this.createJobForm.value,
-      consumeItems: this.consumeItems,
+      consumeItems,
     };
 
     this.manufacturingService
@@ -137,7 +235,10 @@ export class CreateJobComponent implements OnInit {
           }
 
           this.createJobForm.reset();
-          this.consumeItems = [];
+          this.createJobForm.get('purposeEnumId')?.setValue('WepProductionRun');
+          this.consumeItemsArray.clear();
+          this.filteredConsumeProducts = [];
+          this.addConsumeItemRow();
           this.router.navigate([`/jobs/${response.workEffortId}`]);
           this.snackbarService.showSuccess('Production run created successfully');
         },

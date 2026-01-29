@@ -50,6 +50,13 @@ export class ApiService {
     );
   }
 
+  getBlob(endpoint: string): Observable<Blob> {
+    const url = this.apiConfig.buildUrl(endpoint);
+    return this.http.get(url, { headers: this.getHeaders(), responseType: 'blob' }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   customGet<T>(endpoint: string): Observable<HttpResponse<T>> {
     const url = this.apiConfig.buildUrl(endpoint);
     return this.http.get<T>(url, { headers: this.getHeaders(), observe: 'response' }).pipe(

@@ -10,5 +10,10 @@ public interface PartyContactMechPurposeRepository extends JpaRepository<PartyCo
 
     List<PartyContactMechPurpose> findByPartyIdAndContactMechId(String partyId, String contactMechId);
 
+    List<PartyContactMechPurpose> findByPartyIdAndContactMechPurposeTypeIdAndThruDateIsNull(
+            String partyId,
+            String contactMechPurposeTypeId
+    );
+
     void deleteByPartyIdAndContactMechId(String partyId, String contactMechId);
 }

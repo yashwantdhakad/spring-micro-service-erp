@@ -144,6 +144,111 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
+      <mat-card-title>{{ 'ASSET.RESERVATIONS' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <h3>{{ 'ASSET.ORDER_RESERVATIONS' | translate }}</h3>
+      <table mat-table [dataSource]="orderReservations">
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.ORDER_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <ng-container *ngIf="item.orderId; else noOrderId">
+              <a [routerLink]="['/orders', item.orderId]">{{ item.orderId }}</a>
+            </ng-container>
+            <ng-template #noOrderId>--</ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="orderItemSeqId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.ORDER_ITEM_SEQ_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.orderItemSeqId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="shipGroupSeqId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.SHIP_GROUP_SEQ_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.shipGroupSeqId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            {{ 'ASSET.RESERVED_QTY' | translate }}
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item.quantity }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="quantityNotAvailable">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            {{ 'ASSET.NOT_AVAILABLE_QTY' | translate }}
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item.quantityNotAvailable }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="reservedDatetime">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.RESERVED_DATETIME' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.reservedDatetime | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="orderReservationColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: orderReservationColumns"></tr>
+      </table>
+      <br />
+      <h3>{{ 'ASSET.JOB_RESERVATIONS' | translate }}</h3>
+      <table mat-table [dataSource]="workEffortReservations">
+        <ng-container matColumnDef="workEffortId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.WORK_EFFORT_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <ng-container *ngIf="item.workEffortId; else noWorkEffortId">
+              <a [routerLink]="['/jobs', item.workEffortId]">{{ item.workEffortId }}</a>
+            </ng-container>
+            <ng-template #noWorkEffortId>--</ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            {{ 'ASSET.RESERVED_QTY' | translate }}
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item.quantity }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="quantityNotAvailable">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>
+            {{ 'ASSET.NOT_AVAILABLE_QTY' | translate }}
+          </th>
+          <td mat-cell class="text-right" *matCellDef="let item">
+            {{ item.quantityNotAvailable }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="reservedDatetime">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.RESERVED_DATETIME' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.reservedDatetime | date : "MMMM d, y" }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="workEffortReservationColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: workEffortReservationColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
       <mat-card-title>{{ 'ASSET.RECEIPTS' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>

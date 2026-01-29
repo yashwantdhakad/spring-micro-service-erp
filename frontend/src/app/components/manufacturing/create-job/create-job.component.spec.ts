@@ -83,7 +83,7 @@ describe('CreateJobComponent', () => {
     const mockResponse = { workEffortId: 'WE123' };
     manufacturingServiceSpy.createJob.and.returnValue(of(mockResponse));
 
-    component.createJobForm.setValue({
+    component.createJobForm.patchValue({
       purposeEnumId: 'WepProductionRun',
       workEffortName: 'Test Job',
       facilityId: 'FAC001',
@@ -91,13 +91,22 @@ describe('CreateJobComponent', () => {
       estimatedWorkDuration: '',
       produceProductId: 'PROD001',
       produceEstimatedQuantity: 10,
-      produceEstimatedAmount: ''
+      produceEstimatedAmount: '',
+    });
+    component.consumeItemsArray.at(0)?.patchValue({
+      productId: 'COMP001',
+      estimatedQuantity: 2,
     });
 
     component.createJob();
 
     expect(manufacturingServiceSpy.createJob).toHaveBeenCalledWith(jasmine.objectContaining({
-      consumeItems: [],
+      consumeItems: [
+        {
+          productId: 'COMP001',
+          estimatedQuantity: 2,
+        },
+      ],
     }));
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/jobs/WE123']);
     expect(snackbarSpy.showSuccess).toHaveBeenCalledWith('Production run created successfully');
@@ -111,6 +120,10 @@ describe('CreateJobComponent', () => {
       facilityId: 'fac1',
       produceProductId: 'prod1',
       produceEstimatedQuantity: 5,
+    });
+    component.consumeItemsArray.at(0)?.patchValue({
+      productId: 'COMP001',
+      estimatedQuantity: 1,
     });
 
     component.createJob();

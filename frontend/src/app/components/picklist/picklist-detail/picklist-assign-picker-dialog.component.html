@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{ 'PICKLIST.ASSIGN_PICKER' | translate }}</h2>
+<mat-dialog-content>
+  <ng-container *ngIf="isLoading; else pickerSelect">
+    <mat-progress-spinner [diameter]="40" mode="indeterminate"></mat-progress-spinner>
+  </ng-container>
+  <ng-template #pickerSelect>
+    <mat-form-field class="search-field">
+      <mat-label>{{ 'PICKLIST.SELECT_PICKER' | translate }}</mat-label>
+      <mat-select [(ngModel)]="selectedPartyId" cdkFocusInitial>
+        <mat-option *ngFor="let picker of pickers" [value]="picker.partyId">
+          {{ picker.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="empty-state" *ngIf="!pickers.length">
+      {{ 'PICKLIST.NO_PICKERS' | translate }}
+    </div>
+  </ng-template>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancel()">
+    {{ 'COMMON.CANCEL' | translate }}
+  </button>
+  <button mat-raised-button color="primary" (click)="assign()" [disabled]="!selectedPartyId">
+    {{ 'PICKLIST.ASSIGN_ACTION' | translate }}
+  </button>
+</mat-dialog-actions>

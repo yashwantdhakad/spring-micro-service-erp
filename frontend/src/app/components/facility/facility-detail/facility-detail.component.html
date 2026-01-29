@@ -46,7 +46,7 @@
             </li>
           </ul>
           <ng-template #noFacilityAddress>
-            <div class="custom-list-item">Not available</div>
+            <div class="custom-list-item">{{ 'COMMON.NOT_AVAILABLE' | translate }}</div>
           </ng-template>
         </mat-card-content>
       </mat-card>
@@ -69,7 +69,7 @@
             <td mat-cell class="text-left" *matCellDef="let item">{{ item.locationSeqId }}</td>
           </ng-container>
           <ng-container matColumnDef="locationType">
-            <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.TYPE' | translate }}</th>
             <td mat-cell class="text-left" *matCellDef="let item">
               {{ getLocationTypeLabel(item.locationTypeEnumId) }}
             </td>

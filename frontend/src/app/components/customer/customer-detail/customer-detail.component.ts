@@ -490,4 +490,19 @@ export class CustomerDetailComponent implements OnDestroy {
         }
       });
   }
+
+  openPartyContent(item: any): void {
+    if (!this.partyId || !item?.contentId) {
+      return;
+    }
+    this.partyService.downloadPartyContent(this.partyId, item.contentId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank', 'noopener');
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      },
+      error: () => {
+      },
+    });
+  }
 }

@@ -1,0 +1,145 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner [diameter]="100" mode="indeterminate" color="primary"></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/picklists']">{{ 'PICKLIST.TITLE' | translate }}</a>
+      / {{ picklistDetail?.picklist?.picklistId }}
+    </mat-list-item>
+  </mat-list>
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'PICKLIST.OVERVIEW' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item">
+                <strong>{{ 'PICKLIST.ID' | translate }}</strong>
+                {{ picklistDetail?.picklist?.picklistId }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'PICKLIST.FACILITY' | translate }}</strong>
+                {{ getFacilityLabel(picklistDetail?.picklist?.facilityId) }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'PICKLIST.STATUS' | translate }}</strong>
+                {{ getPicklistStatusLabel(picklistDetail?.picklist?.statusId) }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+        <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
+          <mat-card-content>
+            <ul class="custom-list">
+              <li class="custom-list-item picker-row">
+                <strong>{{ 'PICKLIST.PICKER' | translate }}</strong>
+                <span>{{ getPickerName(picklistDetail?.pickerId) || '--' }}</span>
+                <button
+                  mat-icon-button
+                  color="primary"
+                  [attr.aria-label]="picklistDetail?.pickerId ? 'Edit picker' : 'Assign picker'"
+                  (click)="openAssignPickerDialog()"
+                >
+                  <mat-icon>{{ picklistDetail?.pickerId ? 'edit' : 'add' }}</mat-icon>
+                </button>
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'PICKLIST.CREATED_DATE' | translate }}</strong>
+                {{ picklistDetail?.picklist?.createdDate | date : "MMMM d, y" }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'PICKLIST.PICKLIST_DATE' | translate }}</strong>
+                {{ picklistDetail?.picklist?.picklistDate | date : "MMMM d, y" }}
+              </li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'PICKLIST.BINS' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let bin of bins" [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ 'PICKLIST.BIN' | translate }} {{ bin.picklistBinId }}
+            </mat-panel-title>
+            <mat-panel-description>
+              <ng-container *ngIf="bin.primaryOrderId; else noOrder">
+                {{ 'PICKLIST.ORDER' | translate }}
+                <a [routerLink]="['/orders', bin.primaryOrderId]">{{ bin.primaryOrderId }}</a>
+              </ng-container>
+              <ng-template #noOrder>--</ng-template>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="table-container">
+            <table mat-table [dataSource]="bin.items || []">
+              <ng-container matColumnDef="orderId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>
+                  {{ 'PICKLIST.ORDER_ID' | translate }}
+                </th>
+                <td mat-cell class="text-left" *matCellDef="let item">
+                  <ng-container *ngIf="item.orderId; else noItemOrder">
+                    <a [routerLink]="['/orders', item.orderId]">{{ item.orderId }}</a>
+                  </ng-container>
+                  <ng-template #noItemOrder>--</ng-template>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="orderItemSeqId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>
+                  {{ 'PICKLIST.ORDER_ITEM_SEQ_ID' | translate }}
+                </th>
+                <td mat-cell class="text-left" *matCellDef="let item">
+                  {{ item.orderItemSeqId }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="shipGroupSeqId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>
+                  {{ 'PICKLIST.SHIP_GROUP_SEQ_ID' | translate }}
+                </th>
+                <td mat-cell class="text-left" *matCellDef="let item">
+                  {{ item.shipGroupSeqId }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="inventoryItemId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>
+                  {{ 'PICKLIST.INVENTORY_ITEM' | translate }}
+                </th>
+                <td mat-cell class="text-left" *matCellDef="let item">
+                  {{ item.inventoryItemId }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="itemStatusId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>
+                  {{ 'PICKLIST.ITEM_STATUS' | translate }}
+                </th>
+                <td mat-cell class="text-left" *matCellDef="let item">
+                  {{ getItemStatusLabel(item.itemStatusId) }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="quantity">
+                <th mat-header-cell class="text-right" *matHeaderCellDef>
+                  {{ 'PICKLIST.QTY' | translate }}
+                </th>
+                <td mat-cell class="text-right" *matCellDef="let item">
+                  {{ item.quantity }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="itemColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: itemColumns"></tr>
+            </table>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

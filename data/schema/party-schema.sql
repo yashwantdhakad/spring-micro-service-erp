@@ -574,6 +574,14 @@ CREATE TABLE party_content (
   IS_PUBLIC char(1)
 );
 
+CREATE TABLE party_content_info (
+  PARTY_ID varchar(20),
+  CONTENT_ID varchar(20),
+  DESCRIPTION varchar(255),
+  CONTENT_LOCATION varchar(255),
+  CONTENT_DATE datetime
+);
+
 CREATE TABLE party_content_type (
   PARTY_CONTENT_TYPE_ID varchar(20),
   PARENT_TYPE_ID varchar(20),

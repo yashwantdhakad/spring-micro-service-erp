@@ -6,6 +6,8 @@ import { catchError, map } from 'rxjs/operators';
 import { OrderService } from 'src/app/services/order/order.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { ProductService } from 'src/app/services/product/product.service';
+import { FacilityService } from 'src/app/services/facility/facility.service';
+import { PartyService } from 'src/app/services/party/party.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
@@ -25,6 +27,7 @@ export class SODetailComponent implements OnInit {
   shipToAddresses: any[] = [];
   firstPartInfo: any;
   customerPartyId: string | undefined;
+  facilityAddress: any;
 
   addPOItemDialog: boolean = false;
   createOrderNoteDialog: boolean = false;
@@ -76,6 +79,8 @@ export class SODetailComponent implements OnInit {
     private orderService: OrderService,
     private commonService: CommonService,
     private productService: ProductService,
+    private facilityService: FacilityService,
+    private partyService: PartyService,
     private dialog: MatDialog
   ) {}
 
@@ -136,12 +141,67 @@ export class SODetailComponent implements OnInit {
         if (customerPartyId) {
           this.customerPartyId = customerPartyId;
         }
+
+        const facilityId = displayInfo?.firstPart?.facilityId || this.orderHeader?.originFacilityId;
+        if (facilityId) {
+          this.loadFacilityAddress(facilityId);
+        } else {
+          this.facilityAddress = null;
+        }
       },
       error: (error) => {
         this.isLoading = false;
       },
       complete: () => {
         this.isLoading = false;
+      },
+    });
+  }
+
+  loadFacilityAddress(facilityId: string): void {
+    forkJoin({
+      contactMechs: this.facilityService.getFacilityContactMechs(facilityId),
+      purposes: this.facilityService.getFacilityContactMechPurposes(facilityId),
+    }).subscribe({
+      next: ({ contactMechs, purposes }) => {
+        const mechList = Array.isArray(contactMechs) ? contactMechs : [];
+        const purposeList = Array.isArray(purposes) ? purposes : [];
+        const purposeMap = new Map<string, string[]>();
+        purposeList.forEach((purpose: any) => {
+          const list = purposeMap.get(purpose.contactMechId) || [];
+          list.push(purpose.contactMechPurposeTypeId);
+          purposeMap.set(purpose.contactMechId, list);
+        });
+
+        const preferredPurposeOrder = ['SHIP_ORIG_LOCATION', 'SHIPPING_LOCATION', 'PRIMARY_LOCATION'];
+        let contactMechId: string | undefined;
+        for (const purpose of preferredPurposeOrder) {
+          const match = mechList.find((mech: any) =>
+            (purposeMap.get(mech.contactMechId) || []).includes(purpose)
+          );
+          if (match?.contactMechId) {
+            contactMechId = match.contactMechId;
+            break;
+          }
+        }
+        if (!contactMechId && mechList.length) {
+          contactMechId = mechList[0].contactMechId;
+        }
+        if (!contactMechId) {
+          this.facilityAddress = null;
+          return;
+        }
+        this.partyService.getPostalAddressByContactMechId(contactMechId).subscribe({
+          next: (address) => {
+            this.facilityAddress = address;
+          },
+          error: () => {
+            this.facilityAddress = null;
+          },
+        });
+      },
+      error: () => {
+        this.facilityAddress = null;
       },
     });
   }
@@ -333,6 +393,34 @@ export class SODetailComponent implements OnInit {
     this.orderService.createPicklist(this.orderId).subscribe({
       next: () => {
         this.getOrder(this.orderId as string);
+      },
+    });
+  }
+
+  openOrderContent(item: any): void {
+    if (!this.orderId || !item?.contentId) {
+      return;
+    }
+    this.orderService.downloadOrderContent(this.orderId, item.contentId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank', 'noopener');
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      },
+      error: () => {
+      }
+    });
+  }
+
+  openPdf(): void {
+    if (!this.orderId) {
+      return;
+    }
+    this.orderService.getOrderPdf(this.orderId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
       },
     });
   }

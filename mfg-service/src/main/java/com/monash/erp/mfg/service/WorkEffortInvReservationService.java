@@ -17,8 +17,11 @@ public class WorkEffortInvReservationService {
         this.repository = repository;
     }
 
-    public List<WorkEffortInvReservation> list() {
-        return repository.findAll();
+    public List<WorkEffortInvReservation> list(String inventoryItemId) {
+        if (isBlank(inventoryItemId)) {
+            return repository.findAll();
+        }
+        return repository.findByInventoryItemId(inventoryItemId);
     }
 
     public WorkEffortInvReservation get(Long id) {
@@ -41,5 +44,9 @@ public class WorkEffortInvReservationService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

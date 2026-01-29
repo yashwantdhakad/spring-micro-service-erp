@@ -299,6 +299,28 @@ export const menuItems = [
       ],
     },
     {
+      name: 'Picklists',
+      nav: ['side'],
+      meta: {
+        title: 'Picklists',
+        icon: 'list_alt',
+        requiredAuth: true,
+        permissions: ['ADMIN']
+      },
+      children: [
+        {
+          path: '/picklists',
+          name: 'Picklists',
+          nav: ['side'],
+          meta: {
+            title: 'Picklists',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
+      ],
+    },
+    {
       name: 'Facility',
       nav: ['side'],
       meta: {

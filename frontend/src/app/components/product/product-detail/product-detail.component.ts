@@ -51,7 +51,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   contents: any[] = [];
   contentColumns: string[] = [
     'description',
-    'productContentTypeEnumId',
     'contentLocation',
   ];
 
@@ -323,6 +322,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.getProduct(result.productId);
         }
       });
+  }
+
+  openProductContent(item: any): void {
+    if (!this.productId || !item?.contentId) {
+      return;
+    }
+    this.productService.downloadProductContent(this.productId, item.contentId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank', 'noopener');
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      },
+      error: () => {
+      },
+    });
   }
 
   addUpdateProductAssocDialog(params: any = null) {

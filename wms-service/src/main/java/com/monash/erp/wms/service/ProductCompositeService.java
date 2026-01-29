@@ -1,5 +1,9 @@
 package com.monash.erp.wms.service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +64,7 @@ public class ProductCompositeService {
     private static final String DEFAULT_CURRENCY = "USD";
     private static final String DEFAULT_PRODUCT_CONTENT_TYPE = "IMAGE";
     private static final String CONTENT_LOCATION_PREDICATE = "CONTENT_LOCATION";
+    private static final Path PRODUCT_CONTENT_DIR = Paths.get("data", "uploads", "product-contents");
 
     private final ProductRepository productRepository;
     private final ProductPriceRepository productPriceRepository;
@@ -293,12 +298,36 @@ public class ProductCompositeService {
         productContent.setFromDate(LocalDateTime.now());
         productContentRepository.save(productContent);
 
+        storeProductContentFile(savedContent.getContentId(), contentFile);
+
         ProductContentDto dto = new ProductContentDto();
         dto.setContentId(savedContent.getContentId());
         dto.setDescription(firstNonBlank(savedContent.getDescription(), savedContent.getContentName()));
         dto.setProductContentTypeEnumId(productContent.getProductContentTypeId());
         dto.setContentLocation(originalName);
         return dto;
+    }
+
+    public ProductContentDownload loadProductContent(String productId, String contentId) {
+        if (isBlank(productId) || isBlank(contentId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "productId and contentId are required");
+        }
+
+        productContentRepository.findByProductIdAndContentId(productId, contentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Content not found"));
+
+        String fileName = contentMetaDataRepository.findByContentId(contentId).stream()
+                .filter(meta -> CONTENT_LOCATION_PREDICATE.equalsIgnoreCase(meta.getMetaDataPredicateId()))
+                .map(ContentMetaData::getMetaDataValue)
+                .findFirst()
+                .orElse(null);
+
+        Path filePath = resolveProductContentPath(contentId);
+        if (!Files.exists(filePath)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Content file not found");
+        }
+
+        return new ProductContentDownload(filePath, fileName);
     }
 
     private void requireProduct(String productId) {
@@ -438,5 +467,37 @@ public class ProductCompositeService {
 
     private String firstNonBlank(String value, String fallback) {
         return isBlank(value) ? fallback : value;
+    }
+
+    private void storeProductContentFile(String contentId, MultipartFile contentFile) {
+        try {
+            Files.createDirectories(PRODUCT_CONTENT_DIR);
+            Path destination = resolveProductContentPath(contentId);
+            Files.copy(contentFile.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to store content file");
+        }
+    }
+
+    private Path resolveProductContentPath(String contentId) {
+        return PRODUCT_CONTENT_DIR.resolve(contentId);
+    }
+
+    public static class ProductContentDownload {
+        private final Path filePath;
+        private final String fileName;
+
+        public ProductContentDownload(Path filePath, String fileName) {
+            this.filePath = filePath;
+            this.fileName = fileName;
+        }
+
+        public Path getFilePath() {
+            return filePath;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
     }
 }

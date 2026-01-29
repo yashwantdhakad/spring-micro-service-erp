@@ -11,14 +11,15 @@
       (ngSubmit)="createPO()"
       fxLayout="row wrap"
       fxLayoutAlign="start"
+      fxLayoutGap="16px"
       autocomplete="off"
     >
       <!-- Supplier Autocomplete -->
-      <mat-form-field fxFlex="70%">
+      <mat-form-field fxFlex="48%">
         <mat-label>{{ 'PO.SUPPLIER' | translate }}</mat-label>
         <input
           matInput
-          placeholder="Supplier"
+          [placeholder]="'PO.SUPPLIER' | translate"
           [matAutocomplete]="auto"
           formControlName="vendorPartyId"
         />
@@ -35,25 +36,10 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Customer Org (Dropdown) -->
-      <mat-form-field fxFlex="70%">
-        <mat-label>{{ 'PO.CUSTOMER_ORG' | translate }}</mat-label>
-        <mat-select placeholder="Customer Org" formControlName="customerPartyId">
-          <mat-option
-            *ngFor="let party of customerParties"
-            [value]="party.value"
-            >{{ party.label }}</mat-option
-          >
-        </mat-select>
-        <mat-error *ngIf="poForm.get('customerPartyId')?.hasError('required')">
-          {{ 'PO.CUSTOMER_ORG_REQUIRED' | translate }}
-        </mat-error>
-      </mat-form-field>
-
       <!-- Facility Dropdown -->
-      <mat-form-field fxFlex="70%">
+      <mat-form-field fxFlex="48%">
         <mat-label>{{ 'PO.FACILITY' | translate }}</mat-label>
-        <mat-select placeholder="Facility" formControlName="facilityId">
+        <mat-select [placeholder]="'PO.FACILITY' | translate" formControlName="facilityId">
           <mat-option
             *ngFor="let facility of facilities"
             [value]="facility.facilityId"
@@ -66,7 +52,7 @@
       </mat-form-field>
 
       <!-- Ship Before Date -->
-      <mat-form-field fxFlex="70%">
+      <mat-form-field fxFlex="48%">
         <mat-label>{{ 'PO.SHIP_BEFORE_DATE' | translate }}</mat-label>
         <input
           matInput
@@ -80,12 +66,12 @@
       </mat-form-field>
 
       <!-- Estimated Delivery Date -->
-      <mat-form-field fxFlex="70%">
-        <mat-label>Estimated Delivery Date</mat-label>
+      <mat-form-field fxFlex="48%">
+        <mat-label>{{ 'PO.EST_DELIVERY_DATE' | translate }}</mat-label>
         <input
           matInput
           [matDatepicker]="deliveryPicker"
-          placeholder="Estimated Delivery Date"
+          [placeholder]="'PO.EST_DELIVERY_DATE' | translate"
           formControlName="estimatedDeliveryDate"
           (click)="deliveryPicker.open()"
         />
@@ -100,9 +86,9 @@
 <mat-card class="mat-elevation-z10" style="margin-top: 16px;">
   <mat-card-header>
     <mat-card-title>
-      Items
+      {{ 'COMMON.ITEMS' | translate }}
       <button mat-stroked-button type="button" color="primary" (click)="addItemRow()">
-        Add Item
+        {{ 'COMMON.ADD_ITEM' | translate }}
       </button>
     </mat-card-title>
   </mat-card-header>
@@ -117,7 +103,7 @@
           [formGroupName]="i"
         >
           <mat-form-field fxFlex="35%">
-            <mat-label>Product</mat-label>
+            <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
             <input matInput formControlName="productId" [matAutocomplete]="productAuto" />
             <mat-autocomplete #productAuto="matAutocomplete" (optionSelected)="onProductSelected($event, i)">
               <mat-option *ngFor="let product of filteredProducts[i] | async" [value]="product.productId">
@@ -126,15 +112,15 @@
             </mat-autocomplete>
           </mat-form-field>
           <mat-form-field fxFlex="15%">
-            <mat-label>Qty</mat-label>
+            <mat-label>{{ 'COMMON.QTY' | translate }}</mat-label>
             <input matInput type="number" formControlName="quantity" />
           </mat-form-field>
           <mat-form-field fxFlex="20%">
-            <mat-label>Unit Cost</mat-label>
+            <mat-label>{{ 'COMMON.UNIT_COST' | translate }}</mat-label>
             <input matInput type="number" formControlName="unitAmount" />
           </mat-form-field>
           <mat-form-field fxFlex="20%">
-            <mat-label>Item Type</mat-label>
+            <mat-label>{{ 'COMMON.ITEM_TYPE' | translate }}</mat-label>
             <mat-select formControlName="itemTypeEnumId">
               <mat-option *ngFor="let type of itemTypes" [value]="type.id">
                 {{ type.label }}
@@ -160,7 +146,7 @@
         class="me-4"
         [disabled]="isLoading"
       >
-        <span *ngIf="!isLoading">{{ 'PO.SUBMIT' | translate }}</span>
+        <span *ngIf="!isLoading">{{ 'COMMON.SUBMIT' | translate }}</span>
         <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
       </button>
     </div>

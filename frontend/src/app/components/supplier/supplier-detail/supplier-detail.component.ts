@@ -22,6 +22,7 @@ import { EditSupplierComponent } from '../edit-supplier/edit-supplier.component'
 import { AddEditCreditCardComponent } from '../../party/add-edit-credit-card/add-edit-credit-card.component';
 import { AddEditBankAccountComponent } from '../../party/add-edit-bank-account/add-edit-bank-account.component';
 import { PartyNoteComponent } from '../../party/party-note/party-note.component';
+import { PartyContentComponent } from '../../party/party-content/party-content.component';
 import { SupplierProductDialogComponent } from '../supplier-product-dialog/supplier-product-dialog.component';
 
 @Component({
@@ -66,11 +67,14 @@ export class SupplierDetailComponent implements OnDestroy {
   creditCardData: any;
   bankAccountData: any;
   noteData: any;
+  contentData: any;
 
   partyNotes: any;
   noteColumns: string[] = ['noteText', 'noteDate', 'userId', 'action'];
   supplierProductColumns: string[] = ['productId', 'supplierProductName', 'lastPrice', 'action'];
   supplierProducts: any[] = [];
+  contents: any[] = [];
+  contentColumns: string[] = ['description', 'contentDate', 'contentLocation'];
 
   constructor(
     private fb: FormBuilder,
@@ -127,6 +131,7 @@ export class SupplierDetailComponent implements OnDestroy {
           postalAddressList,
           payments,
           partyNoteList,
+          contentList,
         } = supplierDetail;
 
         this.roles = partyRoleList;
@@ -138,6 +143,7 @@ export class SupplierDetailComponent implements OnDestroy {
         this.postalAddressList = postalAddressList;
         this.payments = payments;
         this.partyNotes = partyNoteList;
+        this.contents = Array.isArray(contentList) ? contentList : [];
       },
       error: () => {
       },
@@ -169,6 +175,41 @@ export class SupplierDetailComponent implements OnDestroy {
           this.loadSupplierProducts(this.partyId);
         }
       });
+  }
+
+  addUpdateContentDialog(params: any = null) {
+    this.contentData = {
+      ...params,
+      partyId: this.partyId,
+    };
+
+    this.dialog
+      .open(PartyContentComponent, {
+        data: {
+          contentData: this.contentData,
+        },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result?.partyId) {
+          this.getSupplier(result.partyId);
+        }
+      });
+  }
+
+  openPartyContent(item: any): void {
+    if (!this.partyId || !item?.contentId) {
+      return;
+    }
+    this.partyService.downloadPartyContent(this.partyId, item.contentId).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, '_blank', 'noopener');
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+      },
+      error: () => {
+      },
+    });
   }
 
   deleteSupplierProduct(item: any): void {
