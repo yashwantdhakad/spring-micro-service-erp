@@ -1134,6 +1134,7 @@ public class OrderCompositeService {
             return null;
         }
 
+        String purpose = firstNonBlank(request.getContactMechPurposeTypeId(), defaultPurpose);
         String contactMechId = firstNonBlank(request.getContactMechId(), "OCM" + UUID.randomUUID().toString().replace("-", "").toUpperCase(Locale.ROOT));
         PostalAddress address = postalAddressRepository.findByContactMechId(contactMechId)
                 .orElseGet(PostalAddress::new);
@@ -1147,10 +1148,13 @@ public class OrderCompositeService {
         address.setStateProvinceGeoId(request.getStateProvinceGeoId());
         postalAddressRepository.save(address);
 
+        orderContactMechRepository.findByOrderIdAndContactMechPurposeTypeId(orderId, purpose)
+                .forEach(orderContactMechRepository::delete);
+
         OrderContactMech contactMech = new OrderContactMech();
         contactMech.setOrderId(orderId);
         contactMech.setContactMechId(contactMechId);
-        contactMech.setContactMechPurposeTypeId(firstNonBlank(request.getContactMechPurposeTypeId(), defaultPurpose));
+        contactMech.setContactMechPurposeTypeId(purpose);
         contactMech = orderContactMechRepository.save(contactMech);
 
         if (assignShipGroup && PURPOSE_SHIPPING.equalsIgnoreCase(contactMech.getContactMechPurposeTypeId())) {

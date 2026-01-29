@@ -14,7 +14,26 @@
   </mat-list>
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>{{ 'MANUFACTURING.JOB_OVERVIEW' | translate }}</mat-card-title>
+      <mat-card-title>
+        {{ 'MANUFACTURING.JOB_OVERVIEW' | translate }}
+      </mat-card-title>
+      <span class="spacer"></span>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="approveJob()"
+        *ngIf="!isApproved()"
+      >
+        Approve
+      </button>
+      <button
+        mat-stroked-button
+        color="accent"
+        (click)="startJob()"
+        *ngIf="isApproved() && !isRunning()"
+      >
+        Start
+      </button>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row wrap" fxLayout.xs="column">
@@ -30,12 +49,16 @@
                 {{ jobDetail?.facilityId }}
               </li>
               <li class="custom-list-item">
-                <strong>Start Date:</strong>
+                <strong>Estimated Start Date:</strong>
                 {{ jobDetail?.estimatedStartDate | date : "MMMM d, y" }}
               </li>
               <li class="custom-list-item">
                 <strong>Status ID:</strong>
-                {{ jobDetail?.statusId }}
+                {{ statusLabel(jobDetail?.currentStatusId || jobDetail?.statusId) }}
+              </li>
+              <li class="custom-list-item">
+                <strong>Actual Start Date:</strong>
+                {{ (jobDetail?.actualStartDate || jobDetail?.estimatedStartDate) | date : "MMMM d, y" }}
               </li>
               <li class="custom-list-item">
                 <strong>Est. Hours:</strong>
@@ -127,7 +150,16 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title> Products to Consume </mat-card-title>
+      <mat-card-title>
+        <div class="card-title-row">
+          <span>Products to Consume</span>
+          <span class="spacer"></span>
+          <button mat-button color="primary" (click)="addConsumable()">
+            <mat-icon>add</mat-icon>
+            Add Item
+          </button>
+        </div>
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="productsToConsume">
@@ -179,6 +211,49 @@
             {{ item?.consumed }}
           </td>
         </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ statusLabel(item?.statusId) }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>Actions</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="reserveConsumable(item)"
+              *ngIf="!isReserved(item) && isApproved() && !isCancelled(item) && !isIssued(item)"
+            >
+              Reserve
+            </button>
+            <button
+              mat-stroked-button
+              color="accent"
+              (click)="releaseConsumable(item)"
+              *ngIf="isReserved(item) && !isCancelled(item) && !isIssued(item)"
+            >
+              Release
+            </button>
+            <button
+              mat-stroked-button
+              color="warn"
+              (click)="issueConsumable(item)"
+              *ngIf="isReserved(item) && !isCancelled(item) && !isIssued(item)"
+            >
+              Issue
+            </button>
+            <button
+              mat-button
+              color="warn"
+              (click)="cancelConsumable(item)"
+              *ngIf="!isCancelled(item) && !isIssued(item)"
+            >
+              Cancel
+            </button>
+          </td>
+        </ng-container>
         <tr mat-header-row *matHeaderRowDef="productsToConsumeColumns"></tr>
         <tr
           mat-row
@@ -188,4 +263,3 @@
     </mat-card-content>
   </mat-card>
 </ng-template>
-

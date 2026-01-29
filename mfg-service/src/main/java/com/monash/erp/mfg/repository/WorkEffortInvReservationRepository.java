@@ -7,4 +7,15 @@ import java.util.List;
 
 public interface WorkEffortInvReservationRepository extends JpaRepository<WorkEffortInvReservation, Long> {
     List<WorkEffortInvReservation> findByInventoryItemId(String inventoryItemId);
+
+    List<WorkEffortInvReservation> findByWorkEffortIdAndInventoryItemIdAndWegsReferenceNumber(
+            String workEffortId,
+            String inventoryItemId,
+            String wegsReferenceNumber
+    );
+
+    List<WorkEffortInvReservation> findByWorkEffortIdAndWegsReferenceNumber(
+            String workEffortId,
+            String wegsReferenceNumber
+    );
 }

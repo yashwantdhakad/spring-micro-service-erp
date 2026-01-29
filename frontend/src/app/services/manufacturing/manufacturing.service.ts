@@ -35,4 +35,44 @@ export class ManufacturingService {
     });
     return this.apiService.get(`/mfg/api/jobs/bom?${params.toString()}`);
   }
+
+  approveJob(workEffortId: string): Observable<any> {
+    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/approve`, {});
+  }
+
+  startJob(workEffortId: string): Observable<any> {
+    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/start`, {});
+  }
+
+  addConsumable(workEffortId: string, payload: any): Observable<any> {
+    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables`, payload);
+  }
+
+  reserveConsumable(workEffortId: string, wegsId: number, payload: any): Observable<any> {
+    return this.apiService.post(
+      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/reserve`,
+      payload
+    );
+  }
+
+  releaseConsumable(workEffortId: string, wegsId: number, payload: any): Observable<any> {
+    return this.apiService.post(
+      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/release`,
+      payload
+    );
+  }
+
+  issueConsumable(workEffortId: string, wegsId: number, payload: any): Observable<any> {
+    return this.apiService.post(
+      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/issue`,
+      payload
+    );
+  }
+
+  cancelConsumable(workEffortId: string, wegsId: number): Observable<any> {
+    return this.apiService.post(
+      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/cancel`,
+      {}
+    );
+  }
 }

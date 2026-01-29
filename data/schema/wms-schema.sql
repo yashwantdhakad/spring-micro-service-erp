@@ -2417,6 +2417,7 @@ CREATE TABLE ios_badge (
 );
 
 CREATE TABLE item_issuance (
+  ID bigint,
   ITEM_ISSUANCE_ID varchar(20),
   ORDER_ID varchar(20),
   ORDER_ITEM_SEQ_ID varchar(20),

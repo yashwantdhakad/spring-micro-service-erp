@@ -20,4 +20,17 @@ public interface WorkEffortRepository extends JpaRepository<WorkEffort, Long> {
     );
 
     Page<WorkEffort> findByWorkEffortPurposeTypeId(String workEffortPurposeTypeId, Pageable pageable);
+
+    Page<WorkEffort> findByWorkEffortPurposeTypeIdAndWorkEffortTypeId(
+            String workEffortPurposeTypeId,
+            String workEffortTypeId,
+            Pageable pageable
+    );
+
+    Page<WorkEffort> findByWorkEffortPurposeTypeIdAndWorkEffortTypeIdAndWorkEffortNameContainingIgnoreCase(
+            String workEffortPurposeTypeId,
+            String workEffortTypeId,
+            String workEffortName,
+            Pageable pageable
+    );
 }

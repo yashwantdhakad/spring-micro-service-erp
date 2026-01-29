@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { JobsComponent } from './jobs/jobs.component';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { JobDetailComponent } from './job-detail/job-detail.component';
+import { ConsumableItemComponent } from './consumable-item/consumable-item.component';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -20,6 +21,7 @@ import { MaterialModule } from '../../components/common/material/material.module
     JobsComponent,
     CreateJobComponent,
     JobDetailComponent,
+    ConsumableItemComponent,
   ],
   imports: [
     CommonModule,

@@ -30,6 +30,11 @@ public class InventoryItemDetailController {
         return service.list();
     }
 
+    @GetMapping("/by-work-effort/{workEffortId}")
+    public List<InventoryItemDetail> listByWorkEffort(@PathVariable String workEffortId) {
+        return service.listByWorkEffortId(workEffortId);
+    }
+
     @GetMapping("/{id}")
     public InventoryItemDetail get(@PathVariable Long id) {
         return service.get(id);

@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface OrderContactMechRepository extends JpaRepository<OrderContactMech, Long> {
     List<OrderContactMech> findByOrderId(String orderId);
+    List<OrderContactMech> findByOrderIdAndContactMechPurposeTypeId(String orderId, String contactMechPurposeTypeId);
 }

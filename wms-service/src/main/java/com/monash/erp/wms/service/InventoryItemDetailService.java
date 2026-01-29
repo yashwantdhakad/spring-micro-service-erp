@@ -21,6 +21,13 @@ public class InventoryItemDetailService {
         return repository.findAll();
     }
 
+    public List<InventoryItemDetail> listByWorkEffortId(String workEffortId) {
+        if (isBlank(workEffortId)) {
+            return List.of();
+        }
+        return repository.findByWorkEffortId(workEffortId);
+    }
+
     public InventoryItemDetail get(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "InventoryItemDetail %d not found".formatted(id)));
@@ -41,5 +48,9 @@ public class InventoryItemDetailService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

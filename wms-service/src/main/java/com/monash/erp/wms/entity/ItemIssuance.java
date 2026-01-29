@@ -22,10 +22,20 @@ public class ItemIssuance {
     private String shipmentItemSeqId;
     private String fixedAssetId;
     private String maintHistSeqId;
+    private String workEffortId;
     private LocalDateTime issuedDateTime;
     private String issuedByUserLoginId;
     private String quantity;
     private String cancelQuantity;
+    private String issuanceTypeId;
+    private String currentStatusId;
+    private LocalDateTime cancelledDateTime;
+    private String cancelledByUserLoginId;
+    private String transferQuantity;
+    private String returnedExcessIssuedQty;
+    private String wegsReferenceNumber;
+    private String locationSeqId;
+    private String deliveredToParty;
 
     public Long getId() {
         return id;
@@ -107,6 +117,14 @@ public class ItemIssuance {
         this.maintHistSeqId = maintHistSeqId;
     }
 
+    public String getWorkEffortId() {
+        return workEffortId;
+    }
+
+    public void setWorkEffortId(String workEffortId) {
+        this.workEffortId = workEffortId;
+    }
+
     public LocalDateTime getIssuedDateTime() {
         return issuedDateTime;
     }
@@ -137,6 +155,78 @@ public class ItemIssuance {
 
     public void setCancelQuantity(String cancelQuantity) {
         this.cancelQuantity = cancelQuantity;
+    }
+
+    public String getIssuanceTypeId() {
+        return issuanceTypeId;
+    }
+
+    public void setIssuanceTypeId(String issuanceTypeId) {
+        this.issuanceTypeId = issuanceTypeId;
+    }
+
+    public String getCurrentStatusId() {
+        return currentStatusId;
+    }
+
+    public void setCurrentStatusId(String currentStatusId) {
+        this.currentStatusId = currentStatusId;
+    }
+
+    public LocalDateTime getCancelledDateTime() {
+        return cancelledDateTime;
+    }
+
+    public void setCancelledDateTime(LocalDateTime cancelledDateTime) {
+        this.cancelledDateTime = cancelledDateTime;
+    }
+
+    public String getCancelledByUserLoginId() {
+        return cancelledByUserLoginId;
+    }
+
+    public void setCancelledByUserLoginId(String cancelledByUserLoginId) {
+        this.cancelledByUserLoginId = cancelledByUserLoginId;
+    }
+
+    public String getTransferQuantity() {
+        return transferQuantity;
+    }
+
+    public void setTransferQuantity(String transferQuantity) {
+        this.transferQuantity = transferQuantity;
+    }
+
+    public String getReturnedExcessIssuedQty() {
+        return returnedExcessIssuedQty;
+    }
+
+    public void setReturnedExcessIssuedQty(String returnedExcessIssuedQty) {
+        this.returnedExcessIssuedQty = returnedExcessIssuedQty;
+    }
+
+    public String getWegsReferenceNumber() {
+        return wegsReferenceNumber;
+    }
+
+    public void setWegsReferenceNumber(String wegsReferenceNumber) {
+        this.wegsReferenceNumber = wegsReferenceNumber;
+    }
+
+    public String getLocationSeqId() {
+        return locationSeqId;
+    }
+
+    public void setLocationSeqId(String locationSeqId) {
+        this.locationSeqId = locationSeqId;
+    }
+
+    public String getDeliveredToParty() {
+        return deliveredToParty;
+    }
+
+    public void setDeliveredToParty(String deliveredToParty) {
+        this.deliveredToParty = deliveredToParty;
     }
 
 }

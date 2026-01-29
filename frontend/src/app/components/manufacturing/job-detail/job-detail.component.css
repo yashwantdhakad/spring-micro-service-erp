@@ -1,0 +1,13 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+button + button {
+  margin-left: 6px;
+}

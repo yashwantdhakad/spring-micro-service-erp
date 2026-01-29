@@ -37,9 +37,22 @@ public class InventoryItemController {
         return service.summarizeByProduct(productId);
     }
 
+    @GetMapping("/search")
+    public List<InventoryItem> search(
+            @RequestParam String productId,
+            @RequestParam(required = false) String facilityId
+    ) {
+        return service.search(productId, facilityId);
+    }
+
     @GetMapping("/{id}")
     public InventoryItem get(@PathVariable Long id) {
         return service.get(id);
+    }
+
+    @GetMapping("/by-id/{inventoryItemId}")
+    public InventoryItem getByInventoryItemId(@PathVariable String inventoryItemId) {
+        return service.getByInventoryItemId(inventoryItemId);
     }
 
     @PostMapping
@@ -51,6 +64,11 @@ public class InventoryItemController {
     @PutMapping("/{id}")
     public InventoryItem update(@PathVariable Long id, @RequestBody InventoryItem entity) {
         return service.update(id, entity);
+    }
+
+    @PostMapping("/{inventoryItemId}/recalculate")
+    public InventoryItem recalculateTotals(@PathVariable String inventoryItemId) {
+        return service.recalculateTotals(inventoryItemId);
     }
 
     @DeleteMapping("/{id}")

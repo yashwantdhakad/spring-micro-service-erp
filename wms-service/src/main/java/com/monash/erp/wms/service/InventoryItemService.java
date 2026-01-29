@@ -3,7 +3,9 @@ package com.monash.erp.wms.service;
 import com.monash.erp.wms.dto.InventorySummaryDto;
 import com.monash.erp.wms.entity.Facility;
 import com.monash.erp.wms.entity.InventoryItem;
+import com.monash.erp.wms.entity.InventoryItemDetail;
 import com.monash.erp.wms.repository.FacilityRepository;
+import com.monash.erp.wms.repository.InventoryItemDetailRepository;
 import com.monash.erp.wms.repository.InventoryItemRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,16 @@ public class InventoryItemService {
 
     private final InventoryItemRepository repository;
     private final FacilityRepository facilityRepository;
+    private final InventoryItemDetailRepository inventoryItemDetailRepository;
 
-    public InventoryItemService(InventoryItemRepository repository, FacilityRepository facilityRepository) {
+    public InventoryItemService(
+            InventoryItemRepository repository,
+            FacilityRepository facilityRepository,
+            InventoryItemDetailRepository inventoryItemDetailRepository
+    ) {
         this.repository = repository;
         this.facilityRepository = facilityRepository;
+        this.inventoryItemDetailRepository = inventoryItemDetailRepository;
     }
 
     public List<InventoryItem> list() {
@@ -57,6 +65,11 @@ public class InventoryItemService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "InventoryItem %d not found".formatted(id)));
     }
 
+    public InventoryItem getByInventoryItemId(String inventoryItemId) {
+        return repository.findByInventoryItemId(inventoryItemId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "InventoryItem %s not found".formatted(inventoryItemId)));
+    }
+
     public InventoryItem create(InventoryItem entity) {
         entity.setId(null);
         return repository.save(entity);
@@ -70,8 +83,47 @@ public class InventoryItemService {
         return repository.save(entity);
     }
 
+    public List<InventoryItem> search(String productId, String facilityId) {
+        if (isBlank(productId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "productId is required");
+        }
+        if (isBlank(facilityId)) {
+            return repository.findByProductId(productId);
+        }
+        return repository.findByProductIdAndFacilityId(productId, facilityId);
+    }
+
+    public InventoryItem recalculateTotals(String inventoryItemId) {
+        InventoryItem item = getByInventoryItemId(inventoryItemId);
+        List<InventoryItemDetail> details = inventoryItemDetailRepository.findByInventoryItemId(inventoryItemId);
+        BigDecimal qohTotal = sumDetails(details, InventoryItemDetail::getQuantityOnHandDiff);
+        BigDecimal atpTotal = sumDetails(details, InventoryItemDetail::getAvailableToPromiseDiff);
+        BigDecimal accountingTotal = sumDetails(details, InventoryItemDetail::getAccountingQuantityDiff);
+        item.setQuantityOnHandTotal(qohTotal.toPlainString());
+        item.setAvailableToPromiseTotal(atpTotal.toPlainString());
+        item.setAccountingQuantityTotal(accountingTotal.toPlainString());
+        return repository.save(item);
+    }
+
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private BigDecimal sumDetails(List<InventoryItemDetail> details, java.util.function.Function<InventoryItemDetail, String> mapper) {
+        return details.stream()
+                .map(mapper)
+                .map(value -> {
+                    try {
+                        return new BigDecimal(value == null || value.isBlank() ? "0" : value);
+                    } catch (NumberFormatException ex) {
+                        return BigDecimal.ZERO;
+                    }
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private BigDecimal sumDecimal(List<InventoryItem> items, java.util.function.Function<InventoryItem, String> mapper) {

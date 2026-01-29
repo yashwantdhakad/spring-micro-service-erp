@@ -1,9 +1,13 @@
 package com.monash.erp.mfg.controller;
 
+import com.monash.erp.mfg.dto.JobConsumableCreateRequest;
 import com.monash.erp.mfg.dto.JobCreateRequest;
 import com.monash.erp.mfg.dto.JobDetailResponse;
+import com.monash.erp.mfg.dto.JobGoodStandardDto;
 import com.monash.erp.mfg.dto.JobListResponse;
 import com.monash.erp.mfg.dto.JobMaterialRequest;
+import com.monash.erp.mfg.dto.WorkEffortInventoryActionRequest;
+import com.monash.erp.mfg.dto.WorkEffortInventoryActionResponse;
 import com.monash.erp.mfg.entity.WorkEffort;
 import com.monash.erp.mfg.service.JobCompositeService;
 import org.springframework.http.HttpStatus;
@@ -45,6 +49,59 @@ public class JobController {
     @PostMapping
     public ResponseEntity<WorkEffort> create(@RequestBody JobCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createJob(request));
+    }
+
+    @PostMapping("/{workEffortId}/approve")
+    public WorkEffort approve(@PathVariable String workEffortId) {
+        return service.approveJob(workEffortId);
+    }
+
+    @PostMapping("/{workEffortId}/start")
+    public WorkEffort start(@PathVariable String workEffortId) {
+        return service.startJob(workEffortId);
+    }
+
+    @PostMapping("/{workEffortId}/consumables")
+    public ResponseEntity<JobGoodStandardDto> addConsumable(
+            @PathVariable String workEffortId,
+            @RequestBody JobConsumableCreateRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.addConsumableItem(workEffortId, request));
+    }
+
+    @PostMapping("/{workEffortId}/consumables/{wegsId}/reserve")
+    public WorkEffortInventoryActionResponse reserveConsumable(
+            @PathVariable String workEffortId,
+            @PathVariable Long wegsId,
+            @RequestBody WorkEffortInventoryActionRequest request
+    ) {
+        return service.reserveConsumable(workEffortId, wegsId, request);
+    }
+
+    @PostMapping("/{workEffortId}/consumables/{wegsId}/release")
+    public WorkEffortInventoryActionResponse releaseConsumable(
+            @PathVariable String workEffortId,
+            @PathVariable Long wegsId,
+            @RequestBody WorkEffortInventoryActionRequest request
+    ) {
+        return service.releaseConsumable(workEffortId, wegsId, request);
+    }
+
+    @PostMapping("/{workEffortId}/consumables/{wegsId}/issue")
+    public WorkEffortInventoryActionResponse issueConsumable(
+            @PathVariable String workEffortId,
+            @PathVariable Long wegsId,
+            @RequestBody WorkEffortInventoryActionRequest request
+    ) {
+        return service.issueConsumable(workEffortId, wegsId, request);
+    }
+
+    @PostMapping("/{workEffortId}/consumables/{wegsId}/cancel")
+    public WorkEffortInventoryActionResponse cancelConsumable(
+            @PathVariable String workEffortId,
+            @PathVariable Long wegsId
+    ) {
+        return service.cancelConsumable(workEffortId, wegsId);
     }
 
     @GetMapping("/bom")

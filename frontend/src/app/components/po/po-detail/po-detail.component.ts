@@ -380,9 +380,23 @@ export class PODetailComponent implements OnInit {
       next: (response) => {
         const supplierDetail = response?.supplierDetail;
         this.vendorName = supplierDetail?.party?.groupName || partyId;
-        this.vendorAddresses = Array.isArray(supplierDetail?.postalAddressList)
+        const addresses = Array.isArray(supplierDetail?.postalAddressList)
           ? supplierDetail.postalAddressList
           : [];
+        const preferredPurposeOrder = ['SHIP_ORIG_LOCATION', 'SHIPPING_LOCATION', 'PRIMARY_LOCATION'];
+        let selected = null;
+        for (const purpose of preferredPurposeOrder) {
+          selected = addresses.find((address: any) =>
+            (address?.contactMechPurposeId || '').toUpperCase() === purpose
+          );
+          if (selected) {
+            break;
+          }
+        }
+        if (!selected && addresses.length) {
+          selected = addresses[0];
+        }
+        this.vendorAddresses = selected ? [selected] : [];
       },
       error: () => {
         this.vendorName = partyId;
