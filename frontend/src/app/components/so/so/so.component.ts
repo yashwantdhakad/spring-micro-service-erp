@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from 'src/app/services/order/order.service';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-so',
@@ -7,6 +8,7 @@ import { OrderService } from 'src/app/services/order/order.service';
   styleUrls: ['./so.component.css'],
 })
 export class SOComponent implements OnInit {
+  @ViewChild(MatSort) sort?: MatSort;
   isLoading: boolean = false;
   queryString: string = '';
   pagination = {
@@ -15,6 +17,7 @@ export class SOComponent implements OnInit {
   };
   items: any[] = [];
   pages: number = 0;
+  currentSort?: Sort;
   displayedColumns: string[] = [
     'orderId',
     'customerName',
@@ -33,7 +36,7 @@ export class SOComponent implements OnInit {
   }
 
   getOrders(page: number, queryString: string): void {
-    this.orderService.getOrders(page - 1, queryString).subscribe({
+    this.orderService.getOrders(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction).subscribe({
       next: (response) => {
         const { orderList, orderListCount } = response.responseMap;
         this.items = orderList;
@@ -45,5 +48,24 @@ export class SOComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  onSortChange(sort: Sort): void {
+    let direction = sort.direction;
+    if (!direction) {
+      if (this.currentSort?.active === sort.active) {
+        direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        direction = 'asc';
+      }
+    } else if (this.currentSort?.active === sort.active && this.currentSort.direction === direction) {
+      direction = direction === 'asc' ? 'desc' : 'asc';
+    }
+    this.currentSort = { active: sort.active, direction };
+    if (this.sort) {
+      this.sort.active = sort.active;
+      this.sort.direction = direction;
+    }
+    this.getOrders(this.pagination.page, this.queryString);
   }
 }

@@ -39,6 +39,7 @@ import com.monash.erp.party.repository.PostalAddressRepository;
 import com.monash.erp.party.repository.TelecomNumberRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +48,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,18 +99,41 @@ public class CustomerService {
         this.partyNoteRepository = partyNoteRepository;
     }
 
-    public CustomerListResponse listCustomers(int page, int size, String query) {
-        PageRequest pageable = PageRequest.of(page, size);
+    public CustomerListResponse listCustomers(int page, int size, String query, String sortBy, String sortDirection) {
+        String sortField = resolveSortField(sortBy);
+        boolean requiresSummarySort = requiresSummarySort(sortField);
         Page<Person> people;
-        if (StringUtils.hasText(query)) {
-            people = personRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(query, query, pageable);
+        if (requiresSummarySort) {
+            PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
+            if (StringUtils.hasText(query)) {
+                people = personRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(query, query, pageable);
+            } else {
+                people = personRepository.findAll(pageable);
+            }
         } else {
-            people = personRepository.findAll(pageable);
+            Sort sort = Sort.by(resolveDirection(sortDirection), sortField);
+            PageRequest pageable = PageRequest.of(page, size, sort);
+            if (StringUtils.hasText(query)) {
+                people = personRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(query, query, pageable);
+            } else {
+                people = personRepository.findAll(pageable);
+            }
         }
 
         List<CustomerSummary> results = people.getContent().stream()
                 .map(this::toSummary)
                 .collect(Collectors.toList());
+
+        if (requiresSummarySort) {
+            results = sortSummaries(results, sortField, resolveDirection(sortDirection));
+            long total = results.size();
+            int fromIndex = Math.max(page, 0) * size;
+            int toIndex = Math.min(fromIndex + size, results.size());
+            List<CustomerSummary> pageSlice = fromIndex >= results.size()
+                    ? List.of()
+                    : results.subList(fromIndex, toIndex);
+            return new CustomerListResponse(pageSlice, total);
+        }
 
         return new CustomerListResponse(results, people.getTotalElements());
     }
@@ -351,6 +376,39 @@ public class CustomerService {
                 .orElse(phones.stream().findFirst().map(PhoneDto::getContactNumber).orElse(null));
 
         return new CustomerSummary(partyId, person.getFirstName(), person.getLastName(), phone, email);
+    }
+
+    private String resolveSortField(String sortBy) {
+        if (!StringUtils.hasText(sortBy)) {
+            return "id";
+        }
+        return switch (sortBy) {
+            case "partyId", "firstName", "lastName", "contactNumber", "emailAddress" -> sortBy;
+            default -> "id";
+        };
+    }
+
+    private boolean requiresSummarySort(String sortField) {
+        return "contactNumber".equals(sortField) || "emailAddress".equals(sortField);
+    }
+
+    private Sort.Direction resolveDirection(String sortDirection) {
+        return "asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
+    }
+
+    private List<CustomerSummary> sortSummaries(List<CustomerSummary> results, String sortField, Sort.Direction direction) {
+        Comparator<CustomerSummary> comparator = switch (sortField) {
+            case "partyId" -> Comparator.comparing(CustomerSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "firstName" -> Comparator.comparing(CustomerSummary::getFirstName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "lastName" -> Comparator.comparing(CustomerSummary::getLastName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "contactNumber" -> Comparator.comparing(CustomerSummary::getContactNumber, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "emailAddress" -> Comparator.comparing(CustomerSummary::getEmailAddress, Comparator.nullsLast(String::compareToIgnoreCase));
+            default -> Comparator.comparing(CustomerSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
+        };
+        if (direction == Sort.Direction.DESC) {
+            comparator = comparator.reversed();
+        }
+        return results.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     private CustomerDetail toDetail(Party party, Person person) {

@@ -8,10 +8,16 @@ import { Observable } from 'rxjs';
 export class CategoryService {
   constructor(private apiService: ApiService) {}
 
-  getCategories(pageIndex: number, keyword: string): Observable<any> {
+  getCategories(pageIndex: number, keyword: string, sortBy?: string, sortDirection?: string): Observable<any> {
     const params = new URLSearchParams();
     params.set('page', pageIndex.toString());
     params.set('categoryName', keyword);
+    if (sortBy) {
+      params.set('sortBy', sortBy);
+    }
+    if (sortDirection) {
+      params.set('sortDirection', sortDirection);
+    }
 
     const url = `/wms/api/product-categories?${params.toString()}`;
     return this.apiService.customGet(url); // already returns Observable

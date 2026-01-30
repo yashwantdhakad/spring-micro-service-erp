@@ -160,7 +160,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
         this.productDetail = product;
         this.productTypeLabel = this.productTypeMap.get(product?.productTypeId);
-        this.prices = prices;
+        const priceList = Array.isArray(prices) ? prices : [];
+        this.prices = priceList.filter((item) => !item?.thruDate);
         this.categories = categories;
         this.contents = contents;
         this.assocs = assocs;

@@ -8,23 +8,35 @@ import { Observable, map } from 'rxjs';
 export class OrderService {
   constructor(private apiService: ApiService) {}
 
-  getOrders(pageIndex: number, keyword: string): Observable<any> {
+  getOrders(pageIndex: number, keyword: string, sortBy?: string, sortDirection?: string): Observable<any> {
     const params = new URLSearchParams();
     params.append('page', pageIndex.toString());
     params.append('size', '10');
     params.append('queryString', keyword);
     params.append('orderTypeId', 'SALES_ORDER');
+    if (sortBy) {
+      params.append('sortBy', sortBy);
+    }
+    if (sortDirection) {
+      params.append('sortDirection', sortDirection);
+    }
 
     const url = `/oms/api/orders?${params.toString()}`;
     return this.apiService.get(url);
   }
 
-  getPOs(pageIndex: number, pageSize: number, keyword: string): Observable<any> {
+  getPOs(pageIndex: number, pageSize: number, keyword: string, sortBy?: string, sortDirection?: string): Observable<any> {
     const params = new URLSearchParams();
     params.append('page', pageIndex.toString());
     params.append('size', pageSize.toString());
     params.append('queryString', keyword);
     params.append('orderTypeId', 'PURCHASE_ORDER');
+    if (sortBy) {
+      params.append('sortBy', sortBy);
+    }
+    if (sortDirection) {
+      params.append('sortDirection', sortDirection);
+    }
 
     const url = `/oms/api/orders?${params.toString()}`;
     return this.apiService.get(url);

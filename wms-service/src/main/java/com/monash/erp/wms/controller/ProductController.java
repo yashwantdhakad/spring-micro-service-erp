@@ -48,9 +48,11 @@ public class ProductController {
     public ProductListResponse list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "") String queryString,
-            @RequestParam(required = false) Integer size
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortDirection
     ) {
-        return service.listProducts(page, queryString, size);
+        return service.listProducts(page, queryString, size, sortBy, sortDirection);
     }
 
     @GetMapping("/{productId}")

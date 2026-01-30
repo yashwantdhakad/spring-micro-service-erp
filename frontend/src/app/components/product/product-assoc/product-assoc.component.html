@@ -9,7 +9,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'PRODUCT.PRODUCT' | translate }}</mat-label>
         <input
           matInput
@@ -30,7 +30,7 @@
           >{{ 'PRODUCT.PRODUCT_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'PRODUCT.TYPE' | translate }}</mat-label>
         <mat-select
           formControlName="productAssocTypeEnumId"
@@ -52,7 +52,7 @@
         >
       </mat-form-field>
 
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'PRODUCT.SEQUENCE_NO' | translate }}</mat-label>
         <input matInput [placeholder]="'PRODUCT.SEQUENCE_NO' | translate" formControlName="quantity" />
       </mat-form-field>

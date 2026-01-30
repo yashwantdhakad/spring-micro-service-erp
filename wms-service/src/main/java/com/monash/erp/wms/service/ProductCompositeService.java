@@ -98,9 +98,10 @@ public class ProductCompositeService {
         this.contentMetaDataRepository = contentMetaDataRepository;
     }
 
-    public ProductListResponse listProducts(int page, String queryString, Integer size) {
+    public ProductListResponse listProducts(int page, String queryString, Integer size, String sortBy, String sortDirection) {
         int pageSize = size != null && size > 0 ? size : DEFAULT_PAGE_SIZE;
-        PageRequest pageable = PageRequest.of(Math.max(page, 0), pageSize, Sort.by("id").descending());
+        Sort sort = resolveSort(sortBy, sortDirection);
+        PageRequest pageable = PageRequest.of(Math.max(page, 0), pageSize, sort);
         Page<Product> result = isBlank(queryString)
                 ? productRepository.findAll(pageable)
                 : productRepository.findByProductNameContainingIgnoreCaseOrProductIdContainingIgnoreCase(
@@ -354,7 +355,10 @@ public class ProductCompositeService {
     }
 
     private List<ProductCategoryDto> buildCategoryDtos(String productId) {
-        List<ProductCategoryMember> members = productCategoryMemberRepository.findByProductId(productId);
+        List<ProductCategoryMember> members = productCategoryMemberRepository.findByProductId(productId)
+                .stream()
+                .filter(member -> member.getThruDate() == null)
+                .toList();
         if (members.isEmpty()) {
             return Collections.emptyList();
         }
@@ -417,13 +421,16 @@ public class ProductCompositeService {
     }
 
     private List<ProductAssocDto> buildAssocDtos(List<ProductAssoc> assocs) {
-        if (assocs.isEmpty()) {
+        List<ProductAssoc> activeAssocs = assocs.stream()
+                .filter(assoc -> assoc.getThruDate() == null)
+                .toList();
+        if (activeAssocs.isEmpty()) {
             return Collections.emptyList();
         }
 
         Map<String, ProductSummary> productCache = new HashMap<>();
         List<ProductAssocDto> results = new ArrayList<>();
-        for (ProductAssoc assoc : assocs) {
+        for (ProductAssoc assoc : activeAssocs) {
             ProductAssocDto dto = new ProductAssocDto();
             dto.setProduct(getProductSummary(assoc.getProductId(), productCache));
             dto.setToProduct(getProductSummary(assoc.getProductIdTo(), productCache));
@@ -470,6 +477,26 @@ public class ProductCompositeService {
 
     private String firstNonBlank(String value, String fallback) {
         return isBlank(value) ? fallback : value;
+    }
+
+    private Sort resolveSort(String sortBy, String sortDirection) {
+        String field = isBlank(sortBy) ? "id" : sortBy.trim();
+        if (!isProductSortField(field)) {
+            field = "id";
+        }
+        Sort.Direction direction = "asc".equalsIgnoreCase(sortDirection)
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+        return Sort.by(direction, field);
+    }
+
+    private boolean isProductSortField(String field) {
+        return field.equals("id")
+                || field.equals("productId")
+                || field.equals("productName")
+                || field.equals("internalName")
+                || field.equals("description")
+                || field.equals("productTypeId");
     }
 
     private void storeProductContentFile(String contentId, MultipartFile contentFile) {

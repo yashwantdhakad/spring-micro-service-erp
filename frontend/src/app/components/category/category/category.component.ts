@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatSort, Sort } from '@angular/material/sort';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service'; // Import SnackbarService
 import { CommonService } from 'src/app/services/common/common.service';
@@ -12,6 +13,7 @@ import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap
   styleUrls: ['./category.component.css'],
 })
 export class CategoryComponent implements OnInit, OnDestroy {
+  @ViewChild(MatSort) sort?: MatSort;
   isLoading: boolean = false;
   queryString: string = '';
   searchControl = new FormControl('');
@@ -27,6 +29,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     { key: 'productCategoryTypeId', header: 'CATEGORY.TYPE' },
   ];
   categoryTypeMap = new Map<string, string>();
+  currentSort?: Sort;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -50,7 +53,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
         tap(() => (this.isLoading = true)),
         switchMap((value) =>
           this.categoryService
-            .getCategories(0, value)
+            .getCategories(0, value, this.currentSort?.active, this.currentSort?.direction)
             .pipe(finalize(() => (this.isLoading = false)))
         ),
         takeUntil(this.destroy$)
@@ -58,7 +61,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           const { body, headers } = response;
-          this.items = body;
+          const list = Array.isArray(body) ? body : [];
+          this.items = list;
           this.pages = parseInt(headers.get('x-total-count') || '0', 10);
         },
         error: () => {
@@ -80,18 +84,38 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   private getCategories(page: number, queryString: string): void {
     this.isLoading = true;
-    this.categoryService.getCategories(page - 1, queryString)
+    this.categoryService.getCategories(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
       next: (response) => {
         const { body, headers } = response;
-        this.items = body;
+        const list = Array.isArray(body) ? body : [];
+        this.items = list;
         this.pages = parseInt(headers.get('x-total-count') || '0', 10);
       },
       error: () => {
         this.snackbarService.showError('Error fetching categories');
       },
     });
+  }
+
+  onSortChange(sort: Sort): void {
+    let direction = sort.direction;
+    if (!direction) {
+      if (this.currentSort?.active === sort.active) {
+        direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        direction = 'asc';
+      }
+    } else if (this.currentSort?.active === sort.active && this.currentSort.direction === direction) {
+      direction = direction === 'asc' ? 'desc' : 'asc';
+    }
+    this.currentSort = { active: sort.active, direction };
+    if (this.sort) {
+      this.sort.active = sort.active;
+      this.sort.direction = direction;
+    }
+    this.getCategories(this.pagination.page, this.queryString);
   }
 
 
@@ -106,6 +130,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     }
     return item?.[key];
   }
+
 
   private loadCategoryTypes(): void {
     this.commonService.getLookupResults({}, 'product_category_type').subscribe({

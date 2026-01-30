@@ -11,7 +11,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'FEATURE.ABBREV' | translate }}</mat-label>
         <input matInput [placeholder]="'FEATURE.ABBREV' | translate" formControlName="abbrev" />
         <mat-error *ngIf="featureForm.get('abbrev')?.hasError('required')">
@@ -19,7 +19,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'FEATURE.DESCRIPTION' | translate }}</mat-label>
         <input matInput [placeholder]="'FEATURE.DESCRIPTION' | translate" formControlName="description" />
         <mat-error *ngIf="featureForm.get('description')?.hasError('required')">

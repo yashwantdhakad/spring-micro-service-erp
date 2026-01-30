@@ -9,10 +9,12 @@ import { map } from 'rxjs/operators';
 export class ProductService {
   constructor(private apiService: ApiService) {}
 
-  getProducts(pageIndex: number, keyword: string): Observable<any> {
+  getProducts(pageIndex: number, keyword: string, sortBy?: string, sortDirection?: string): Observable<any> {
     const params = {
       page: pageIndex.toString(),
       queryString: keyword,
+      ...(sortBy ? { sortBy } : {}),
+      ...(sortDirection ? { sortDirection } : {}),
     };
     const queryString = new URLSearchParams(params).toString();
     const url = `/wms/api/products?${queryString}`;

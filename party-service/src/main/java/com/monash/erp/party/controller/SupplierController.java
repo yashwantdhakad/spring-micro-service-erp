@@ -30,8 +30,10 @@ public class SupplierController {
     @GetMapping("/suppliers")
     public SupplierListResponse listSuppliers(@RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "10") int pageSize,
-                                              @RequestParam(defaultValue = "") String query) {
-        return supplierService.listSuppliers(page, pageSize, query);
+                                              @RequestParam(defaultValue = "") String query,
+                                              @RequestParam(required = false) String sortBy,
+                                              @RequestParam(required = false) String sortDirection) {
+        return supplierService.listSuppliers(page, pageSize, query, sortBy, sortDirection);
     }
 
     @PostMapping("/suppliers")

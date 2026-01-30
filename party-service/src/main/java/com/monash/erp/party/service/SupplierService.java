@@ -2,6 +2,7 @@ package com.monash.erp.party.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,18 +100,41 @@ public class SupplierService {
         this.partyContentInfoRepository = partyContentInfoRepository;
     }
 
-    public SupplierListResponse listSuppliers(int page, int size, String query) {
-        PageRequest pageable = PageRequest.of(page, size);
+    public SupplierListResponse listSuppliers(int page, int size, String query, String sortBy, String sortDirection) {
+        String sortField = resolveSortField(sortBy);
+        boolean requiresSummarySort = requiresSummarySort(sortField);
         Page<PartyGroup> groups;
-        if (StringUtils.hasText(query)) {
-            groups = partyGroupRepository.findByGroupNameContainingIgnoreCase(query, pageable);
+        if (requiresSummarySort) {
+            PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
+            if (StringUtils.hasText(query)) {
+                groups = partyGroupRepository.findByGroupNameContainingIgnoreCase(query, pageable);
+            } else {
+                groups = partyGroupRepository.findAll(pageable);
+            }
         } else {
-            groups = partyGroupRepository.findAll(pageable);
+            Sort sort = Sort.by(resolveDirection(sortDirection), sortField);
+            PageRequest pageable = PageRequest.of(page, size, sort);
+            if (StringUtils.hasText(query)) {
+                groups = partyGroupRepository.findByGroupNameContainingIgnoreCase(query, pageable);
+            } else {
+                groups = partyGroupRepository.findAll(pageable);
+            }
         }
 
         List<SupplierSummary> results = groups.getContent().stream()
                 .map(this::toSummary)
                 .collect(Collectors.toList());
+
+        if (requiresSummarySort) {
+            results = sortSummaries(results, sortField, resolveDirection(sortDirection));
+            long total = results.size();
+            int fromIndex = Math.max(page, 0) * size;
+            int toIndex = Math.min(fromIndex + size, results.size());
+            List<SupplierSummary> pageSlice = fromIndex >= results.size()
+                    ? List.of()
+                    : results.subList(fromIndex, toIndex);
+            return new SupplierListResponse(pageSlice, total);
+        }
 
         return new SupplierListResponse(results, groups.getTotalElements());
     }
@@ -389,6 +414,38 @@ public class SupplierService {
                 .orElse(phones.stream().findFirst().map(PhoneDto::getContactNumber).orElse(null));
 
         return new SupplierSummary(partyId, group.getGroupName(), phone, email);
+    }
+
+    private String resolveSortField(String sortBy) {
+        if (!StringUtils.hasText(sortBy)) {
+            return "id";
+        }
+        return switch (sortBy) {
+            case "partyId", "groupName", "contactNumber", "emailAddress" -> sortBy;
+            default -> "id";
+        };
+    }
+
+    private boolean requiresSummarySort(String sortField) {
+        return "contactNumber".equals(sortField) || "emailAddress".equals(sortField);
+    }
+
+    private Sort.Direction resolveDirection(String sortDirection) {
+        return "asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
+    }
+
+    private List<SupplierSummary> sortSummaries(List<SupplierSummary> results, String sortField, Sort.Direction direction) {
+        Comparator<SupplierSummary> comparator = switch (sortField) {
+            case "partyId" -> Comparator.comparing(SupplierSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "groupName" -> Comparator.comparing(SupplierSummary::getGroupName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "contactNumber" -> Comparator.comparing(SupplierSummary::getContactNumber, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "emailAddress" -> Comparator.comparing(SupplierSummary::getEmailAddress, Comparator.nullsLast(String::compareToIgnoreCase));
+            default -> Comparator.comparing(SupplierSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
+        };
+        if (direction == Sort.Direction.DESC) {
+            comparator = comparator.reversed();
+        }
+        return results.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     private SupplierDetail toDetail(Party party, PartyGroup group) {

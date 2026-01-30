@@ -12,7 +12,7 @@
       fxLayoutGap="16px"
     >
       <div fxLayout="row wrap" fxLayoutGap="16px">
-        <mat-form-field fxFlex="48%">
+        <mat-form-field fxFlex="48%" appearance="outline">
           <mat-label>{{ 'MANUFACTURING.JOB_NAME' | translate }}</mat-label>
           <input
             matInput
@@ -25,7 +25,7 @@
           >
         </mat-form-field>
 
-        <mat-form-field fxFlex="48%">
+        <mat-form-field fxFlex="48%" appearance="outline">
           <mat-label>{{ 'MANUFACTURING.FACILITY_ID' | translate }}</mat-label>
           <mat-select placeholder="Facility" formControlName="facilityId">
             <mat-option
@@ -42,7 +42,7 @@
       </div>
 
       <div fxLayout="row wrap" fxLayoutGap="16px">
-        <mat-form-field fxFlex="48%">
+        <mat-form-field fxFlex="48%" appearance="outline">
           <mat-label>{{ 'MANUFACTURING.EST_START_DATE' | translate }}</mat-label>
           <input
             matInput
@@ -58,7 +58,7 @@
           <mat-datepicker #estimatedStartDate></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field fxFlex="48%">
+        <mat-form-field fxFlex="48%" appearance="outline">
           <mat-label>{{ 'MANUFACTURING.EST_HOURS' | translate }}</mat-label>
           <input
             matInput
@@ -69,7 +69,7 @@
       </div>
 
       <div fxLayout="row wrap" fxLayoutGap="16px">
-        <mat-form-field fxFlex="32%">
+        <mat-form-field fxFlex="32%" appearance="outline">
           <mat-label>{{ 'MANUFACTURING.PRODUCT' | translate }}</mat-label>
           <input
             matInput
@@ -91,7 +91,7 @@
           >
         </mat-form-field>
 
-        <mat-form-field fxFlex="32%">
+        <mat-form-field fxFlex="32%" appearance="outline">
           <mat-label>{{ 'MANUFACTURING.EST_QUANTITY' | translate }}</mat-label>
           <input
             matInput
@@ -106,7 +106,7 @@
           >
         </mat-form-field>
 
-        <mat-form-field fxFlex="32%">
+        <mat-form-field fxFlex="31%" appearance="outline">
           <mat-label>{{ 'MANUFACTURING.EST_COST' | translate }}</mat-label>
           <input
             matInput
@@ -135,7 +135,7 @@
             fxLayoutAlign="start center"
             class="mb-2"
           >
-            <mat-form-field fxFlex="60%">
+            <mat-form-field fxFlex="60%" appearance="outline">
               <mat-label>{{ 'MANUFACTURING.CONSUME_PRODUCT' | translate }}</mat-label>
               <input
                 matInput
@@ -152,7 +152,7 @@
               </mat-autocomplete>
             </mat-form-field>
 
-            <mat-form-field fxFlex="25%">
+            <mat-form-field fxFlex="25%" appearance="outline">
               <mat-label>{{ 'MANUFACTURING.CONSUME_QTY' | translate }}</mat-label>
               <input matInput formControlName="estimatedQuantity" />
             </mat-form-field>

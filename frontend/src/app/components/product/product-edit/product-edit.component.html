@@ -9,7 +9,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <input
           matInput
           placeholder="{{ 'PRODUCT.PRODUCT_NAME' | translate }}"
@@ -20,14 +20,14 @@
           >{{ 'PRODUCT.NAME_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <input
           matInput
           placeholder="{{ 'PRODUCT.INTERNAL_NAME' | translate }}"
           formControlName="internalName"
         />
       </mat-form-field>
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <textarea
           matInput
           rows="3"

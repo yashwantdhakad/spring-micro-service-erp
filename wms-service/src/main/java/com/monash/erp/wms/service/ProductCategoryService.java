@@ -38,8 +38,9 @@ public class ProductCategoryService {
         this.productRepository = productRepository;
     }
 
-    public Page<ProductCategory> list(int page, int size, String categoryName) {
-        PageRequest pageable = PageRequest.of(Math.max(page, 0), size, Sort.by("id").descending());
+    public Page<ProductCategory> list(int page, int size, String categoryName, String sortBy, String sortDirection) {
+        Sort sort = resolveSort(sortBy, sortDirection);
+        PageRequest pageable = PageRequest.of(Math.max(page, 0), size, sort);
         if (categoryName == null || categoryName.isBlank()) {
             return repository.findAll(pageable);
         }
@@ -147,5 +148,23 @@ public class ProductCategoryService {
         return cache.computeIfAbsent(productId, id -> productRepository.findByProductId(id)
                 .map(product -> new ProductSummary(product.getProductId(), product.getProductName(), product.getProductTypeId()))
                 .orElse(new ProductSummary(id, id, null)));
+    }
+
+    private Sort resolveSort(String sortBy, String sortDirection) {
+        String field = sortBy == null || sortBy.isBlank() ? "id" : sortBy.trim();
+        if (!isCategorySortField(field)) {
+            field = "id";
+        }
+        Sort.Direction direction = "asc".equalsIgnoreCase(sortDirection)
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+        return Sort.by(direction, field);
+    }
+
+    private boolean isCategorySortField(String field) {
+        return field.equals("id")
+                || field.equals("productCategoryId")
+                || field.equals("categoryName")
+                || field.equals("productCategoryTypeId");
     }
 }

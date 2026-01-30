@@ -11,7 +11,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.FIRST_NAME' | translate }}</mat-label>
         <input matInput [placeholder]="'CUSTOMER.FIRST_NAME' | translate" formControlName="firstName" />
         <mat-error
@@ -22,7 +22,7 @@
 
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.LAST_NAME' | translate }}</mat-label>
         <input matInput [placeholder]="'CUSTOMER.LAST_NAME' | translate" formControlName="lastName" />
         <mat-error
@@ -33,7 +33,7 @@
 
       <span fxFlex="30%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.CONTACT_NUMBER' | translate }}</mat-label>
         <input
           matInput
@@ -52,7 +52,7 @@
 
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.EMAIL_ADDRESS' | translate }}</mat-label>
         <input matInput [placeholder]="'CUSTOMER.EMAIL_ADDRESS' | translate" formControlName="emailAddress" />
         <mat-error
@@ -67,7 +67,7 @@
 
       <span fxFlex="30%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.ADDRESS1' | translate }}</mat-label>
         <input matInput [placeholder]="'CUSTOMER.ADDRESS1' | translate" formControlName="address1" />
         <mat-error
@@ -78,14 +78,14 @@
 
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.ADDRESS2' | translate }}</mat-label>
         <input matInput [placeholder]="'CUSTOMER.ADDRESS2' | translate" formControlName="address2" />
       </mat-form-field>
 
       <span fxFlex="30%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.CITY' | translate }}</mat-label>
         <input matInput [placeholder]="'CUSTOMER.CITY' | translate" formControlName="city" />
         <mat-error *ngIf="createCustomerForm.get('city')?.hasError('required')"
@@ -94,7 +94,7 @@
       </mat-form-field>
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.POSTAL_CODE' | translate }}</mat-label>
         <input
           matInput
@@ -109,7 +109,7 @@
 
       <span fxFlex="30%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.COUNTRY' | translate }}</mat-label>
         <mat-select formControlName="countryGeoId" name="countryGeoId">
           <mat-option
@@ -125,7 +125,7 @@
       </mat-form-field>
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'CUSTOMER.STATE' | translate }}</mat-label>
         <mat-select
           formControlName="stateProvinceGeoId"

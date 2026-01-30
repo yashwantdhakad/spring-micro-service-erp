@@ -11,7 +11,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'SUPPLIER.SUPPLIER_NAME' | translate }}</mat-label>
         <input
           matInput
@@ -24,7 +24,7 @@
         >
       </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'SUPPLIER.CONTACT_NUMBER' | translate }}</mat-label>
         <input
           matInput
@@ -41,7 +41,7 @@
         >
       </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'SUPPLIER.EMAIL' | translate }}</mat-label>
         <input matInput [placeholder]="'SUPPLIER.EMAIL' | translate" formControlName="emailAddress" />
         <mat-error

@@ -205,21 +205,31 @@ public class OrderCompositeService {
         this.wmsBaseUrl = wmsBaseUrl;
     }
 
-    public OrderListResponse listOrders(int page, int size, String queryString, String orderTypeId) {
-        PageRequest pageable = PageRequest.of(Math.max(page, 0), size, Sort.by("id").descending());
+    public OrderListResponse listOrders(int page, int size, String queryString, String orderTypeId, String sortBy, String sortDirection) {
+        boolean sortRequested = !isBlank(sortBy);
         Page<OrderHeader> orders;
-        if (isBlank(orderTypeId)) {
-            orders = orderHeaderRepository.findAll(pageable);
-        } else if (isBlank(queryString)) {
-            orders = orderHeaderRepository.findByOrderTypeId(orderTypeId, pageable);
+        if (sortRequested) {
+            PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
+            orders = loadOrders(queryString, orderTypeId, pageable);
         } else {
-            orders = orderHeaderRepository.findByOrderTypeIdAndOrderIdContainingIgnoreCaseOrOrderTypeIdAndOrderNameContainingIgnoreCase(
-                    orderTypeId, queryString, orderTypeId, queryString, pageable);
+            PageRequest pageable = PageRequest.of(Math.max(page, 0), size, Sort.by("id").descending());
+            orders = loadOrders(queryString, orderTypeId, pageable);
         }
 
         List<OrderListItem> items = orders.getContent().stream()
                 .map(this::toListItem)
                 .collect(Collectors.toList());
+
+        if (sortRequested) {
+            items = sortOrderListItems(items, sortBy, resolveDirection(sortDirection));
+            long total = items.size();
+            int fromIndex = Math.max(page, 0) * size;
+            int toIndex = Math.min(fromIndex + size, items.size());
+            List<OrderListItem> pageSlice = fromIndex >= items.size()
+                    ? List.of()
+                    : items.subList(fromIndex, toIndex);
+            return new OrderListResponse(new OrderListResponseMap(pageSlice, total));
+        }
 
         OrderListResponseMap responseMap = new OrderListResponseMap(items, orders.getTotalElements());
         return new OrderListResponse(responseMap);
@@ -845,6 +855,17 @@ public class OrderCompositeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order %s not found".formatted(orderId)));
     }
 
+    private Page<OrderHeader> loadOrders(String queryString, String orderTypeId, PageRequest pageable) {
+        if (isBlank(orderTypeId)) {
+            return orderHeaderRepository.findAll(pageable);
+        }
+        if (isBlank(queryString)) {
+            return orderHeaderRepository.findByOrderTypeId(orderTypeId, pageable);
+        }
+        return orderHeaderRepository.findByOrderTypeIdAndOrderIdContainingIgnoreCaseOrOrderTypeIdAndOrderNameContainingIgnoreCase(
+                orderTypeId, queryString, orderTypeId, queryString, pageable);
+    }
+
     private OrderListItem toListItem(OrderHeader order) {
         OrderListItem item = new OrderListItem();
         item.setOrderId(order.getOrderId());
@@ -877,6 +898,31 @@ public class OrderCompositeService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         item.setQuantityTotal(quantityTotal);
         return item;
+    }
+
+    private Sort.Direction resolveDirection(String sortDirection) {
+        return "asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
+    }
+
+    private List<OrderListItem> sortOrderListItems(List<OrderListItem> items, String sortBy, Sort.Direction direction) {
+        String sortField = isBlank(sortBy) ? "orderId" : sortBy;
+        Comparator<OrderListItem> comparator = switch (sortField) {
+            case "orderId" -> Comparator.comparing(OrderListItem::getOrderId, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "customerName" -> Comparator.comparing(OrderListItem::getCustomerName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "organizationName" -> Comparator.comparing(OrderListItem::getOrganizationName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "vendorOrganizationName" -> Comparator.comparing(OrderListItem::getVendorOrganizationName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "entryDate" -> Comparator.comparing(OrderListItem::getEntryDate, Comparator.nullsLast(Comparator.naturalOrder()));
+            case "statusDescription" -> Comparator.comparing(OrderListItem::getStatusDescription, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "storeName" -> Comparator.comparing(OrderListItem::getStoreName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "facilityName" -> Comparator.comparing(OrderListItem::getFacilityName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "quantityTotal" -> Comparator.comparing(OrderListItem::getQuantityTotal, Comparator.nullsLast(Comparator.naturalOrder()));
+            case "grandTotal" -> Comparator.comparing(OrderListItem::getGrandTotal, Comparator.nullsLast(Comparator.naturalOrder()));
+            default -> Comparator.comparing(OrderListItem::getOrderId, Comparator.nullsLast(String::compareToIgnoreCase));
+        };
+        if (direction == Sort.Direction.DESC) {
+            comparator = comparator.reversed();
+        }
+        return items.stream().sorted(comparator).collect(Collectors.toList());
     }
 
     private OrderHeaderDto toHeaderDto(OrderHeader orderHeader) {

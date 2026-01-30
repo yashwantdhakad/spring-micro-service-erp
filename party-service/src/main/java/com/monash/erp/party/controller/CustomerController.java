@@ -39,8 +39,10 @@ public class CustomerController {
     @GetMapping("/customers")
     public CustomerListResponse listCustomers(@RequestParam(defaultValue = "0") int page,
                                               @RequestParam(defaultValue = "10") int pageSize,
-                                              @RequestParam(defaultValue = "") String query) {
-        return customerService.listCustomers(page, pageSize, query);
+                                              @RequestParam(defaultValue = "") String query,
+                                              @RequestParam(required = false) String sortBy,
+                                              @RequestParam(required = false) String sortDirection) {
+        return customerService.listCustomers(page, pageSize, query, sortBy, sortDirection);
     }
 
     @PostMapping("/customers")

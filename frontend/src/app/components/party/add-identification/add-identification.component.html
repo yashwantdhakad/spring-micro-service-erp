@@ -9,7 +9,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'PARTY.IDENTIFICATION_LABEL' | translate }}</mat-label>
         <mat-select
           formControlName="partyIdTypeEnumId"
@@ -29,7 +29,7 @@
         >
       </mat-form-field>
 
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'PARTY.ID_VALUE' | translate }}</mat-label>
         <input matInput [placeholder]="'PARTY.ID_VALUE' | translate" formControlName="idValue" />
         <mat-error

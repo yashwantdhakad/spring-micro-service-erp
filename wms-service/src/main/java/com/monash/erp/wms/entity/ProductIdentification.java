@@ -1,28 +1,49 @@
 package com.monash.erp.wms.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "product_identification")
 public class ProductIdentification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "PRODUCT_ID", length = 20)
     private String productId;
+
+    @Column(name = "IDENTIFICATION_TYPE_ID", length = 20)
     private String identificationTypeId;
+
+    @Column(name = "IDENTIFICATION_VALUE", length = 255)
     private String identificationValue;
+
+    @Column(name = "FROM_DATE")
     private LocalDateTime fromDate;
+
+    @Column(name = "THRU_DATE")
     private LocalDateTime thruDate;
+
+    @Column(name = "CREATED_BY", length = 250)
     private String createdBy;
+
+    @Column(name = "LAST_UPDATED_STAMP")
     private LocalDateTime lastUpdatedStamp;
+
+    @Column(name = "LAST_UPDATED_TX_STAMP")
     private LocalDateTime lastUpdatedTxStamp;
+
+    @Column(name = "CREATED_STAMP")
     private LocalDateTime createdStamp;
+
+    @Column(name = "CREATED_TX_STAMP")
     private LocalDateTime createdTxStamp;
 
     public Long getId() {
@@ -112,5 +133,4 @@ public class ProductIdentification {
     public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
 }

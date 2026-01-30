@@ -11,7 +11,7 @@
       <mat-card-title>{{ 'SO.TITLE' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-actions>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>{{ 'SO.SEARCH' | translate }}</mat-label>
         <input
           matInput
@@ -23,15 +23,19 @@
       </mat-form-field>
     </mat-card-actions>
     <mat-card-content>
-      <table mat-table [dataSource]="items">
+      <table mat-table [dataSource]="items" matSort [matSortDisableClear]="true" (matSortChange)="onSortChange($event)">
         <ng-container matColumnDef="orderId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.ID' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="orderId">
+            {{ 'SO.ID' | translate }}
+          </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <a [routerLink]="['/orders', item.orderId]">{{ item.orderId }}</a>
           </td>
         </ng-container>
         <ng-container matColumnDef="customerName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.BILL_TO' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="customerName">
+            {{ 'SO.BILL_TO' | translate }}
+          </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <ng-container *ngIf="item.vendorOrganizationName; else elseBlock">
               <span>{{ item.vendorOrganizationName }}</span>
@@ -42,31 +46,41 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="organizationName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.BILL_FROM' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="organizationName">
+            {{ 'SO.BILL_FROM' | translate }}
+          </th>
           <td mat-cell class="text-left" *matCellDef="let item">
               {{ item.organizationName }}
           </td>
         </ng-container>
         <ng-container matColumnDef="entryDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.ORDER_DATE' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="entryDate">
+            {{ 'SO.ORDER_DATE' | translate }}
+          </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.entryDate | date : 'MMMM d, y' }}
           </td>
         </ng-container>
         <ng-container matColumnDef="statusDescription">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.STATUS' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="statusDescription">
+            {{ 'SO.STATUS' | translate }}
+          </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.statusDescription }}
           </td>
         </ng-container>
         <ng-container matColumnDef="storeName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.STORE' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="storeName">
+            {{ 'SO.STORE' | translate }}
+          </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.organizationName }}
           </td>
         </ng-container>
         <ng-container matColumnDef="grandTotal">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.TOTAL' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="grandTotal">
+            {{ 'SO.TOTAL' | translate }}
+          </th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item.grandTotal | currency }}
           </td>
@@ -78,7 +92,7 @@
       <mat-paginator
         [pageSize]="pagination.rowsPerPage"
         [length]="pages"
-        (page)="getOrders($event.pageIndex + 1, '')"
+        (page)="getOrders($event.pageIndex + 1, queryString)"
       ></mat-paginator>
     </mat-card-content>
   </mat-card>

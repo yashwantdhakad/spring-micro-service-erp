@@ -93,7 +93,8 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <table mat-table [dataSource]="prices">
+      <div class="table-scroll">
+        <table mat-table [dataSource]="prices">
         <ng-container matColumnDef="typeDescription">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
             {{ 'PRODUCT.PRICE_TYPE' | translate }}
@@ -143,7 +144,8 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
+        </table>
+      </div>
     </mat-card-content>
   </mat-card>
   <br />
@@ -161,7 +163,8 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <table mat-table [dataSource]="categories">
+      <div class="table-scroll">
+        <table mat-table [dataSource]="categories">
         <ng-container matColumnDef="categoryName">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
             {{ 'CATEGORY.NAME' | translate }}
@@ -186,7 +189,8 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="categoryColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: categoryColumns"></tr>
-      </table>
+        </table>
+      </div>
     </mat-card-content>
   </mat-card>
   <br />
@@ -241,7 +245,8 @@
       >
     </mat-card-header>
     <mat-card-content>
-      <table mat-table [dataSource]="assocs">
+      <div class="table-scroll">
+        <table mat-table [dataSource]="assocs">
         <ng-container matColumnDef="productName">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.PRODUCT' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
@@ -270,7 +275,8 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="assocColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: assocColumns"></tr>
-      </table>
+        </table>
+      </div>
     </mat-card-content>
   </mat-card>
   <br />
@@ -279,7 +285,8 @@
       <mat-card-title> {{ 'PRODUCT.ASSOCIATED_FROM_TITLE' | translate }} </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <table mat-table [dataSource]="toAssocs">
+      <div class="table-scroll">
+        <table mat-table [dataSource]="toAssocs">
         <ng-container matColumnDef="productName">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.PRODUCT' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
@@ -308,7 +315,8 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="toAssocColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: toAssocColumns"></tr>
-      </table>
+        </table>
+      </div>
     </mat-card-content>
   </mat-card>
 </ng-template>

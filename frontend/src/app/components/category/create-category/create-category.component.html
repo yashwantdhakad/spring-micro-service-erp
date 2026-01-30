@@ -11,7 +11,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <input
           matInput
           placeholder="{{ 'CATEGORY.NAME' | translate }}"
@@ -23,7 +23,7 @@
         >
       </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'CATEGORY.TYPE' | translate }}</mat-label>
         <mat-select
           formControlName="productCategoryTypeId"
@@ -37,7 +37,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <textarea
           matInput
           placeholder="{{ 'CATEGORY.DESCRIPTION' | translate }}"

@@ -11,7 +11,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'FEATURE.TYPE' | translate }}</mat-label>
         <mat-select formControlName="productFeatureTypeEnumId" name="productFeatureTypeEnumId">
           <mat-option *ngFor="let enumType of enumTypes" [value]="enumType.enumId">
@@ -23,7 +23,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'FEATURE.ABBREV' | translate }}</mat-label>
         <input matInput [placeholder]="'FEATURE.ABBREV' | translate" formControlName="abbrev" />
         <mat-error *ngIf="createFeatureForm.get('abbrev')?.hasError('required')">
@@ -31,7 +31,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'FEATURE.DESCRIPTION' | translate }}</mat-label>
         <textarea matInput [placeholder]="'FEATURE.DESCRIPTION' | translate" formControlName="description"></textarea>
         <mat-error *ngIf="createFeatureForm.get('description')?.hasError('required')">

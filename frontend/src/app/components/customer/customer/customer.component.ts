@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatSort, Sort } from '@angular/material/sort';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { Subject } from 'rxjs';
@@ -11,6 +12,7 @@ import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap
   styleUrls: ['./customer.component.css'],
 })
 export class CustomerComponent implements OnInit, OnDestroy {
+  @ViewChild(MatSort) sort?: MatSort;
   isLoading: boolean = false;
   queryString: string = '';
   searchControl = new FormControl('');
@@ -20,6 +22,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
   };
   items: any[] = [];
   pages: number = 0;
+  currentSort?: Sort;
 
   customerColumns = [
     { key: 'partyId', header: 'CUSTOMER.ID' },
@@ -50,7 +53,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
         tap(() => (this.isLoading = true)),
         switchMap((value) =>
           this.partyService
-            .getCustomers(0, value)
+            .getCustomers(0, value, this.currentSort?.active, this.currentSort?.direction)
             .pipe(finalize(() => (this.isLoading = false)))
         ),
         takeUntil(this.destroy$)
@@ -81,7 +84,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
   private getCustomers(page: number, queryString: string): void {
     this.isLoading = true;
     this.partyService
-      .getCustomers(page - 1, queryString)
+      .getCustomers(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
@@ -93,6 +96,25 @@ export class CustomerComponent implements OnInit, OnDestroy {
           this.snackbarService.showError('Error fetching customers');
         },
       });
+  }
+
+  onSortChange(sort: Sort): void {
+    let direction = sort.direction;
+    if (!direction) {
+      if (this.currentSort?.active === sort.active) {
+        direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        direction = 'asc';
+      }
+    } else if (this.currentSort?.active === sort.active && this.currentSort.direction === direction) {
+      direction = direction === 'asc' ? 'desc' : 'asc';
+    }
+    this.currentSort = { active: sort.active, direction };
+    if (this.sort) {
+      this.sort.active = sort.active;
+      this.sort.direction = direction;
+    }
+    this.getCustomers(this.pagination.page, this.queryString);
   }
 
   getCustomerColumnKeys(): string[] {

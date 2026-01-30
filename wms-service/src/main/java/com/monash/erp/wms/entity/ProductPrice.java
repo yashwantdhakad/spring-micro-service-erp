@@ -1,39 +1,77 @@
 package com.monash.erp.wms.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "product_price")
 public class ProductPrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "PRODUCT_ID", length = 20)
     private String productId;
+
+    @Column(name = "PRODUCT_PRICE_TYPE_ID", length = 20)
     private String productPriceTypeId;
+
+    @Column(name = "PRODUCT_PRICE_PURPOSE_ID", length = 20)
     private String productPricePurposeId;
+
+    @Column(name = "CURRENCY_UOM_ID", length = 20)
     private String currencyUomId;
+
+    @Column(name = "PRODUCT_STORE_GROUP_ID", length = 20)
     private String productStoreGroupId;
+
+    @Column(name = "FROM_DATE")
     private LocalDateTime fromDate;
+
+    @Column(name = "THRU_DATE")
     private LocalDateTime thruDate;
+
+    @Column(name = "PRICE", columnDefinition = "decimal(18,3)")
     private String price;
+
+    @Column(name = "TERM_UOM_ID", length = 20)
     private String termUomId;
+
+    @Column(name = "CUSTOM_PRICE_CALC_SERVICE", length = 20)
     private String customPriceCalcService;
-    private String priceWithoutTax;
-    private String priceWithTax;
-    private String taxAmount;
-    private String taxPercentage;
-    private String taxAuthPartyId;
-    private String taxAuthGeoId;
-    private String taxInPrice;
+
+    @Column(name = "CREATED_DATE")
     private LocalDateTime createdDate;
+
+    @Column(name = "CREATED_BY_USER_LOGIN", length = 250)
     private String createdByUserLogin;
+
+    @Column(name = "LAST_MODIFIED_DATE")
     private LocalDateTime lastModifiedDate;
+
+    @Column(name = "LAST_MODIFIED_BY_USER_LOGIN", length = 250)
     private String lastModifiedByUserLogin;
+
+    @Column(name = "LAST_UPDATED_STAMP")
+    private LocalDateTime lastUpdatedStamp;
+
+    @Column(name = "LAST_UPDATED_TX_STAMP")
+    private LocalDateTime lastUpdatedTxStamp;
+
+    @Column(name = "CREATED_STAMP")
+    private LocalDateTime createdStamp;
+
+    @Column(name = "CREATED_TX_STAMP")
+    private LocalDateTime createdTxStamp;
+
+    @Column(name = "OEM_PARTY_ID", length = 20)
+    private String oemPartyId;
 
     public Long getId() {
         return id;
@@ -123,62 +161,6 @@ public class ProductPrice {
         this.customPriceCalcService = customPriceCalcService;
     }
 
-    public String getPriceWithoutTax() {
-        return priceWithoutTax;
-    }
-
-    public void setPriceWithoutTax(String priceWithoutTax) {
-        this.priceWithoutTax = priceWithoutTax;
-    }
-
-    public String getPriceWithTax() {
-        return priceWithTax;
-    }
-
-    public void setPriceWithTax(String priceWithTax) {
-        this.priceWithTax = priceWithTax;
-    }
-
-    public String getTaxAmount() {
-        return taxAmount;
-    }
-
-    public void setTaxAmount(String taxAmount) {
-        this.taxAmount = taxAmount;
-    }
-
-    public String getTaxPercentage() {
-        return taxPercentage;
-    }
-
-    public void setTaxPercentage(String taxPercentage) {
-        this.taxPercentage = taxPercentage;
-    }
-
-    public String getTaxAuthPartyId() {
-        return taxAuthPartyId;
-    }
-
-    public void setTaxAuthPartyId(String taxAuthPartyId) {
-        this.taxAuthPartyId = taxAuthPartyId;
-    }
-
-    public String getTaxAuthGeoId() {
-        return taxAuthGeoId;
-    }
-
-    public void setTaxAuthGeoId(String taxAuthGeoId) {
-        this.taxAuthGeoId = taxAuthGeoId;
-    }
-
-    public String getTaxInPrice() {
-        return taxInPrice;
-    }
-
-    public void setTaxInPrice(String taxInPrice) {
-        this.taxInPrice = taxInPrice;
-    }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -211,4 +193,43 @@ public class ProductPrice {
         this.lastModifiedByUserLogin = lastModifiedByUserLogin;
     }
 
+    public LocalDateTime getLastUpdatedStamp() {
+        return lastUpdatedStamp;
+    }
+
+    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+        this.lastUpdatedStamp = lastUpdatedStamp;
+    }
+
+    public LocalDateTime getLastUpdatedTxStamp() {
+        return lastUpdatedTxStamp;
+    }
+
+    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
+    }
+
+    public LocalDateTime getCreatedStamp() {
+        return createdStamp;
+    }
+
+    public void setCreatedStamp(LocalDateTime createdStamp) {
+        this.createdStamp = createdStamp;
+    }
+
+    public LocalDateTime getCreatedTxStamp() {
+        return createdTxStamp;
+    }
+
+    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+        this.createdTxStamp = createdTxStamp;
+    }
+
+    public String getOemPartyId() {
+        return oemPartyId;
+    }
+
+    public void setOemPartyId(String oemPartyId) {
+        this.oemPartyId = oemPartyId;
+    }
 }

@@ -30,10 +30,12 @@ public class ProductCategoryController {
     public ResponseEntity<java.util.List<ProductCategory>> list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(required = false) String categoryName,
-            @RequestParam(required = false) Integer size
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortDirection
     ) {
         int pageSize = size != null && size > 0 ? size : 10;
-        Page<ProductCategory> result = service.list(page, pageSize, categoryName);
+        Page<ProductCategory> result = service.list(page, pageSize, categoryName, sortBy, sortDirection);
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(result.getTotalElements()))
                 .body(result.getContent());

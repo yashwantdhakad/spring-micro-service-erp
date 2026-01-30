@@ -3,11 +3,11 @@
 </h1>
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" appearance="fill">
       <mat-label>{{ 'FACILITY.LOCATION_SEQ_ID' | translate }}</mat-label>
       <input matInput formControlName="locationSeqId" />
     </mat-form-field>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" appearance="fill">
       <mat-label>{{ 'FACILITY.LOCATION_TYPE' | translate }}</mat-label>
       <mat-select formControlName="locationTypeEnumId">
         <mat-option *ngFor="let item of locationTypes" [value]="item.enumId">
@@ -15,7 +15,7 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline" appearance="fill">
       <mat-label>{{ 'FACILITY.AREA_ID' | translate }}</mat-label>
       <input matInput formControlName="areaId" />
     </mat-form-field>

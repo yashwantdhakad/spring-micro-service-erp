@@ -4,7 +4,7 @@
     <mat-progress-spinner [diameter]="40" mode="indeterminate"></mat-progress-spinner>
   </ng-container>
   <ng-template #pickerSelect>
-    <mat-form-field class="search-field">
+    <mat-form-field appearance="outline" class="search-field">
       <mat-label>{{ 'PICKLIST.SELECT_PICKER' | translate }}</mat-label>
       <mat-select [(ngModel)]="selectedPartyId" cdkFocusInitial>
         <mat-option *ngFor="let picker of pickers" [value]="picker.partyId">

@@ -9,7 +9,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'FEATURE.TYPE' | translate }}</mat-label>
         <mat-select formControlName="productPriceTypeId" name="productPriceTypeId">
           <mat-option
@@ -27,7 +27,7 @@
           >{{ 'FEATURE.TYPE_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'PRODUCT.PURPOSE' | translate }}</mat-label>
         <mat-select
           formControlName="productPricePurposeId"
@@ -48,7 +48,7 @@
           >{{ 'PRODUCT.PURPOSE_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'COMMON.PRICE' | translate }}</mat-label>
         <input matInput [placeholder]="'COMMON.PRICE' | translate" formControlName="price" />
         <mat-error
@@ -56,7 +56,7 @@
           >{{ 'COMMON.PRICE' | translate }} {{ 'COMMON.REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
-      <mat-form-field fxFlex="100%">
+      <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'PRODUCT.PRICE_UOM' | translate }}</mat-label>
         <mat-select formControlName="currencyUomId">
           <mat-option *ngFor="let uom of priceUomOptions" [value]="uom.uomId">

@@ -9,11 +9,17 @@ import { map } from 'rxjs/operators';
 export class PartyService {
   constructor(private apiService: ApiService) { }
 
-  getCustomers(page: number, keyword: string): Observable<any> {
+  getCustomers(page: number, keyword: string, sortBy?: string, sortDirection?: string): Observable<any> {
     const params = new URLSearchParams({
       page: page.toString(),
       query: keyword,
     });
+    if (sortBy) {
+      params.append('sortBy', sortBy);
+    }
+    if (sortDirection) {
+      params.append('sortDirection', sortDirection);
+    }
     const url = `/party/api/customers?${params.toString()}`;
     return this.apiService.get(url).pipe(
       map((response: any) => {
@@ -72,11 +78,17 @@ export class PartyService {
     return this.apiService.get(url);
   }
 
-  getSuppliers(page: number, keyword: string): Observable<any> {
+  getSuppliers(page: number, keyword: string, sortBy?: string, sortDirection?: string): Observable<any> {
     const params = new URLSearchParams({
       page: page.toString(),
       query: keyword,
     });
+    if (sortBy) {
+      params.append('sortBy', sortBy);
+    }
+    if (sortDirection) {
+      params.append('sortDirection', sortDirection);
+    }
     const url = `/party/api/suppliers?${params.toString()}`;
     return this.apiService.get(url).pipe(
       map((response: any) => {

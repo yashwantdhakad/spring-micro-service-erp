@@ -54,9 +54,11 @@ public class OrderCompositeController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String queryString,
-            @RequestParam(required = false) String orderTypeId
+            @RequestParam(required = false) String orderTypeId,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String sortDirection
     ) {
-        return orderCompositeService.listOrders(page, size, queryString, orderTypeId);
+        return orderCompositeService.listOrders(page, size, queryString, orderTypeId, sortBy, sortDirection);
     }
 
     @GetMapping("/{orderId}")

@@ -11,7 +11,7 @@
       <mat-card-title> {{ 'SUPPLIER.TITLE' | translate }} </mat-card-title>
     </mat-card-header>
     <mat-card-actions>
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>{{ 'SUPPLIER.SEARCH' | translate }}</mat-label>
         <input
           matInput
@@ -22,9 +22,11 @@
       </mat-form-field>
     </mat-card-actions>
     <mat-card-content>
-      <table mat-table [dataSource]="items">
+      <table mat-table [dataSource]="items" matSort [matSortDisableClear]="true" (matSortChange)="onSortChange($event)">
         <ng-container *ngFor="let column of supplierColumns" [matColumnDef]="column.key">
-          <th mat-header-cell *matHeaderCellDef class="text-left">{{ column.header | translate }}</th>
+          <th mat-header-cell *matHeaderCellDef class="text-left" [mat-sort-header]="column.key">
+            {{ column.header | translate }}
+          </th>
           <td mat-cell *matCellDef="let element" class="text-left">
             <span *ngIf="column.key !== 'action' && column.key !== 'partyId'">{{ getValue(element, column.key) }}</span>
             <ng-container *ngIf="column.key === 'partyId'">

@@ -11,7 +11,7 @@
       fxLayout="row wrap"
       fxLayoutAlign="start"
     >
-    <mat-form-field fxFlex="70%">
+    <mat-form-field fxFlex="70%" appearance="outline">
       <mat-label>{{ 'ASSET.PRODUCT' | translate }}</mat-label>
       <input
         matInput
@@ -32,7 +32,7 @@
           </mat-error>
     </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'ASSET.STATUS' | translate }}</mat-label>
         <mat-select [placeholder]="'ASSET.STATUS' | translate" formControlName="statusId">
           <mat-option *ngFor="let status of statusList" [value]="status.statusId">
@@ -44,7 +44,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'ASSET.FACILITY' | translate }}</mat-label>
         <mat-select [placeholder]="'ASSET.FACILITY' | translate" formControlName="facilityId">
           <mat-option *ngFor="let facility of facilities" [value]="facility.facilityId">
@@ -58,7 +58,7 @@
 
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'ASSET.FACILITY_LOCATION' | translate }}</mat-label>
         <mat-select [placeholder]="'ASSET.FACILITY_LOCATION' | translate" formControlName="locationSeqId">
           <mat-option *ngFor="let facilityLocation of facilityLocations" [value]="facilityLocation.locationSeqId">
@@ -67,7 +67,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'ASSET.QUANTITY' | translate }}</mat-label>
         <input matInput [placeholder]="'ASSET.QUANTITY' | translate" formControlName="quantity" />
         <mat-error *ngIf="createAssetForm.get('quantity')?.hasError('required')">
@@ -77,7 +77,7 @@
 
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="34%">
+      <mat-form-field appearance="outline" fxFlex="34%">
         <mat-label>{{ 'ASSET.COST' | translate }}</mat-label>
         <input matInput [placeholder]="'ASSET.COST' | translate" formControlName="acquireCost" />
         <mat-error *ngIf="createAssetForm.get('acquireCost')?.hasError('required')">
@@ -87,7 +87,7 @@
 
       <span fxFlex="30%"></span>
 
-      <mat-form-field fxFlex="22%">
+      <mat-form-field appearance="outline" fxFlex="22%">
         <mat-label>{{ 'ASSET.RECEIVED_DATE' | translate }}</mat-label>
         <input
           matInput
@@ -102,7 +102,7 @@
 
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="22%">
+      <mat-form-field appearance="outline" fxFlex="22%">
         <mat-label>{{ 'ASSET.MANUFACTURED_DATE' | translate }}</mat-label>
         <input
           matInput
@@ -117,7 +117,7 @@
 
       <span fxFlex="2%"></span>
 
-      <mat-form-field fxFlex="22%">
+      <mat-form-field appearance="outline" fxFlex="22%">
         <mat-label>{{ 'ASSET.EXPIRATION_DATE' | translate }}</mat-label>
         <input
           matInput
@@ -130,7 +130,7 @@
         <mat-datepicker #expirationDate></mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field fxFlex="70%">
+      <mat-form-field appearance="outline" fxFlex="70%">
         <mat-label>{{ 'ASSET.COMMENT' | translate }}</mat-label>
         <textarea matInput [placeholder]="'ASSET.ENTER_COMMENT' | translate" formControlName="comments"></textarea>
       </mat-form-field>

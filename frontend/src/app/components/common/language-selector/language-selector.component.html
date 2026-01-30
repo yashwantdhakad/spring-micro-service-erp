@@ -1,7 +1,7 @@
 <mat-card class="language-dialog">
   <mat-card-title mat-dialog-title>{{ 'COMMON.CHANGE_LANGUAGE' | translate }}</mat-card-title>
   <mat-card-content>
-    <mat-form-field appearance="fill" class="full-width">
+    <mat-form-field appearance="outline" class="full-width">
       <mat-label>{{ 'COMMON.SELECT_LANGUAGE' | translate }}</mat-label>
       <mat-select [(value)]="selectedLanguage">
         <mat-option *ngFor="let lang of languages" [value]="lang.code">

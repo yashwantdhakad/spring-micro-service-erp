@@ -8,7 +8,7 @@
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row wrap" fxLayoutGap="16px" class="filter-row">
-        <mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'PICKLIST.FACILITY' | translate }}</mat-label>
           <mat-select [(ngModel)]="filters.facilityId">
             <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
@@ -17,7 +17,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'PICKLIST.STATUS' | translate }}</mat-label>
           <mat-select [(ngModel)]="filters.statusId">
             <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
@@ -26,13 +26,13 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'PICKLIST.FROM_DATE' | translate }}</mat-label>
           <input matInput [matDatepicker]="fromPicker" [(ngModel)]="filters.fromDate" />
           <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
           <mat-datepicker #fromPicker></mat-datepicker>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'PICKLIST.TO_DATE' | translate }}</mat-label>
           <input matInput [matDatepicker]="toPicker" [(ngModel)]="filters.toDate" />
           <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>

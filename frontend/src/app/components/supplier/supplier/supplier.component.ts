@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatSort, Sort } from '@angular/material/sort';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { PartyService } from 'src/app/services/party/party.service';
@@ -11,6 +12,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
   styleUrls: ['./supplier.component.css'],
 })
 export class SupplierComponent implements OnInit, OnDestroy {
+  @ViewChild(MatSort) sort?: MatSort;
   isLoading: boolean = false;
   queryString: string = '';
   searchControl = new FormControl('');
@@ -20,6 +22,7 @@ export class SupplierComponent implements OnInit, OnDestroy {
   };
   items: any[] = [];
   pages: number = 0;
+  currentSort?: Sort;
   supplierColumns = [
     { key: 'partyId', header: 'SUPPLIER.ID' },
     { key: 'groupName', header: 'SUPPLIER.NAME' },
@@ -48,7 +51,7 @@ export class SupplierComponent implements OnInit, OnDestroy {
         tap(() => (this.isLoading = true)),
         switchMap((value) =>
           this.partyService
-            .getSuppliers(0, value)
+            .getSuppliers(0, value, this.currentSort?.active, this.currentSort?.direction)
             .pipe(finalize(() => (this.isLoading = false)))
         ),
         takeUntil(this.destroy$)
@@ -81,7 +84,7 @@ export class SupplierComponent implements OnInit, OnDestroy {
   private getSuppliers(page: number, queryString: string): void {
     this.isLoading = true;
     this.partyService
-      .getSuppliers(page - 1, queryString)
+      .getSuppliers(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response: any) => {
@@ -95,6 +98,25 @@ export class SupplierComponent implements OnInit, OnDestroy {
           this.snackbarService.showError('Error fetching suppliers');
         },
       });
+  }
+
+  onSortChange(sort: Sort): void {
+    let direction = sort.direction;
+    if (!direction) {
+      if (this.currentSort?.active === sort.active) {
+        direction = this.currentSort.direction === 'asc' ? 'desc' : 'asc';
+      } else {
+        direction = 'asc';
+      }
+    } else if (this.currentSort?.active === sort.active && this.currentSort.direction === direction) {
+      direction = direction === 'asc' ? 'desc' : 'asc';
+    }
+    this.currentSort = { active: sort.active, direction };
+    if (this.sort) {
+      this.sort.active = sort.active;
+      this.sort.direction = direction;
+    }
+    this.getSuppliers(this.pagination.page, this.queryString);
   }
 
   getSupplierColumnKeys(): string[] {
