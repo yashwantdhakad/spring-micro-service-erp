@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ManufacturingService } from 'src/app/services/manufacturing/manufacturing.service';
 import { ConsumableItemComponent } from '../consumable-item/consumable-item.component';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
+import { ProduceItemComponent } from '../produce-item/produce-item.component';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -27,6 +28,8 @@ export class JobDetailComponent implements OnInit {
     'estimatedQuantity',
     'uom',
     'produced',
+    'inventoryItemIds',
+    'actions',
   ];
 
   productsToConsumeColumns: string[] = [
@@ -89,6 +92,26 @@ export class JobDetailComponent implements OnInit {
     });
   }
 
+  produceItem(item: any): void {
+    if (!this.workEffortId) {
+      return;
+    }
+    this.dialog.open(ProduceItemComponent, {
+      data: {
+        produceData: {
+          workEffortId: this.workEffortId,
+          productId: item?.productId,
+          productName: item?.productName,
+          facilityId: this.jobDetail?.facilityId,
+        },
+      },
+    }).afterClosed().subscribe(() => {
+      if (this.workEffortId) {
+        this.fetchJobDetail(this.workEffortId);
+      }
+    });
+  }
+
   approveJob(): void {
     if (!this.workEffortId) {
       return;
@@ -107,6 +130,32 @@ export class JobDetailComponent implements OnInit {
       return;
     }
     this.manufacturingService.startJob(this.workEffortId).subscribe({
+      next: () => {
+        this.fetchJobDetail(this.workEffortId as string);
+      },
+      error: () => {
+      },
+    });
+  }
+
+  completeJob(): void {
+    if (!this.workEffortId) {
+      return;
+    }
+    this.manufacturingService.completeJob(this.workEffortId).subscribe({
+      next: () => {
+        this.fetchJobDetail(this.workEffortId as string);
+      },
+      error: () => {
+      },
+    });
+  }
+
+  closeJob(): void {
+    if (!this.workEffortId) {
+      return;
+    }
+    this.manufacturingService.closeJob(this.workEffortId).subscribe({
       next: () => {
         this.fetchJobDetail(this.workEffortId as string);
       },
@@ -202,11 +251,21 @@ export class JobDetailComponent implements OnInit {
     return (this.jobDetail?.currentStatusId || '').toUpperCase() === 'PRUN_RUNNING';
   }
 
+  isCompleted(): boolean {
+    return (this.jobDetail?.currentStatusId || '').toUpperCase() === 'PRUN_COMPLETED';
+  }
+
+  isClosed(): boolean {
+    return (this.jobDetail?.currentStatusId || '').toUpperCase() === 'PRUN_CLOSED';
+  }
+
   statusLabel(statusId?: string): string {
     const map: Record<string, string> = {
       PRUN_CREATED: 'Created',
       PRUN_APPROVED: 'Approved',
       PRUN_RUNNING: 'Running',
+      PRUN_COMPLETED: 'Completed',
+      PRUN_CLOSED: 'Closed',
       WEGS_CREATED: 'Created',
       WEGS_RESERVED: 'Reserved',
       WEGS_ISSUED: 'Issued',
@@ -216,5 +275,16 @@ export class JobDetailComponent implements OnInit {
       return '';
     }
     return map[statusId] || statusId.replace(/_/g, ' ');
+  }
+
+  getProducedInventoryItemIds(item: any): string[] {
+    const raw = item?.producedInventoryItemIds;
+    if (!raw) {
+      return [];
+    }
+    return String(raw)
+      .split(',')
+      .map((value) => value.trim())
+      .filter((value) => value.length > 0);
   }
 }

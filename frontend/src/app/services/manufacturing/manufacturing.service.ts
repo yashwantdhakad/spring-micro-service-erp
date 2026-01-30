@@ -44,6 +44,14 @@ export class ManufacturingService {
     return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/start`, {});
   }
 
+  completeJob(workEffortId: string): Observable<any> {
+    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/complete`, {});
+  }
+
+  closeJob(workEffortId: string): Observable<any> {
+    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/close`, {});
+  }
+
   addConsumable(workEffortId: string, payload: any): Observable<any> {
     return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables`, payload);
   }
@@ -74,5 +82,9 @@ export class ManufacturingService {
       `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/cancel`,
       {}
     );
+  }
+
+  produceItem(workEffortId: string, payload: any): Observable<any> {
+    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/produce`, payload);
   }
 }

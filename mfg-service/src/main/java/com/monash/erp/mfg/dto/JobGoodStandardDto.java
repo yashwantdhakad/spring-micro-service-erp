@@ -11,6 +11,8 @@ public class JobGoodStandardDto {
     private String reservedQuantity;
     private String issuedQuantity;
     private String remainingQuantity;
+    private String produced;
+    private String producedInventoryItemIds;
 
     public Long getId() {
         return id;
@@ -82,5 +84,21 @@ public class JobGoodStandardDto {
 
     public void setRemainingQuantity(String remainingQuantity) {
         this.remainingQuantity = remainingQuantity;
+    }
+
+    public String getProduced() {
+        return produced;
+    }
+
+    public void setProduced(String produced) {
+        this.produced = produced;
+    }
+
+    public String getProducedInventoryItemIds() {
+        return producedInventoryItemIds;
+    }
+
+    public void setProducedInventoryItemIds(String producedInventoryItemIds) {
+        this.producedInventoryItemIds = producedInventoryItemIds;
     }
 }

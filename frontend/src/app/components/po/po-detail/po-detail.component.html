@@ -20,7 +20,7 @@
           <mat-icon>picture_as_pdf</mat-icon>
         </button>
         <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
-          Approve
+          {{ 'COMMON.APPROVE' | translate }}
         </button>
         <button mat-raised-button color="accent" *ngIf="canReceive" (click)="goToReceive()">
           Receive
@@ -30,7 +30,7 @@
     <mat-card-content>
       <mat-list>
         <mat-list-item *ngFor="let field of overviewFields">
-          <span matListItemTitle>{{ field.label }}:</span>
+          <span matListItemTitle>{{ field.label | translate }}:</span>
           <span matListItemLine>{{ field.value }}</span>
         </mat-list-item>
       </mat-list>

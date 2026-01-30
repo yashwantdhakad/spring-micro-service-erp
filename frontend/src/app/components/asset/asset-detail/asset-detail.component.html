@@ -88,6 +88,17 @@
             {{ item.inventoryItemDetailSeqId }}
           </td>
         </ng-container>
+        <ng-container matColumnDef="workEffortId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.WORK_EFFORT_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <ng-container *ngIf="item.workEffortId; else noWorkEffortId">
+              <a [routerLink]="['/jobs', item.workEffortId]">{{ item.workEffortId }}</a>
+            </ng-container>
+            <ng-template #noWorkEffortId>--</ng-template>
+          </td>
+        </ng-container>
         <ng-container matColumnDef="orderId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
             {{ 'ASSET.ORDER_ID' | translate }}
@@ -262,7 +273,7 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="shipmentId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Shipment Id</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.ID_LABEL' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <ng-container *ngIf="item.shipmentId; else noShipment">
               <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>

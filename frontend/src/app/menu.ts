@@ -1,20 +1,20 @@
 export const menuItems = [
     {
       path: '/',
-      name: 'Home',
+      name: 'MENU.HOME',
       nav: ['side'],
       meta: {
-        title: 'Home',
+        title: 'MENU.HOME',
         icon: 'home',
         requiredAuth: true,
         permissions: ['ADMIN']
       }
     },
     {
-      name: 'Customer',
+      name: 'MENU.CUSTOMER',
       nav: ['side'],
       meta: {
-        title: 'Customer',
+        title: 'MENU.CUSTOMER',
         icon: 'account_circle',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -22,20 +22,20 @@ export const menuItems = [
       children: [
         {
           path: '/customers',
-          name: 'Customers',
+          name: 'MENU.CUSTOMERS',
           nav: ['side'],
           meta: {
-            title: 'Customers',
+            title: 'MENU.CUSTOMERS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/customers/create',
-          name: 'Create Customer',
+          name: 'MENU.CREATE_CUSTOMER',
           nav: ['side'],
           meta: {
-            title: 'Create Customer',
+            title: 'MENU.CREATE_CUSTOMER',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -43,10 +43,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Supplier',
+      name: 'MENU.SUPPLIER',
       nav: ['side'],
       meta: {
-        title: 'Suppliers',
+        title: 'MENU.SUPPLIERS',
         icon: 'group',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -54,20 +54,20 @@ export const menuItems = [
       children: [
         {
           path: '/suppliers',
-          name: 'Suppliers',
+          name: 'MENU.SUPPLIERS',
           nav: ['side'],
           meta: {
-            title: 'Suppliers',
+            title: 'MENU.SUPPLIERS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/suppliers/create',
-          name: 'Create Supplier',
+          name: 'MENU.CREATE_SUPPLIER',
           nav: ['side'],
           meta: {
-            title: 'Create Supplier',
+            title: 'MENU.CREATE_SUPPLIER',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -75,10 +75,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Product',
+      name: 'MENU.PRODUCT',
       nav: ['side'],
       meta: {
-        title: 'Product',
+        title: 'MENU.PRODUCT',
         icon: 'store-outline',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -86,20 +86,20 @@ export const menuItems = [
       children: [
         {
           path: '/products',
-          name: 'Products',
+          name: 'MENU.PRODUCTS',
           nav: ['side'],
           meta: {
-            title: 'Products',
+            title: 'MENU.PRODUCTS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/products/create',
-          name: 'Create Product',
+          name: 'MENU.CREATE_PRODUCT',
           nav: ['side'],
           meta: {
-            title: 'Create Product',
+            title: 'MENU.CREATE_PRODUCT',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -171,10 +171,10 @@ export const menuItems = [
     //   ],
     // },
     {
-      name: 'Category',
+      name: 'MENU.CATEGORY',
       nav: ['side'],
       meta: {
-        title: 'Category',
+        title: 'MENU.CATEGORY',
         icon: 'category',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -182,20 +182,20 @@ export const menuItems = [
       children: [
         {
           path: '/category',
-          name: 'Categories',
+          name: 'MENU.CATEGORIES',
           nav: ['side'],
           meta: {
-            title: 'Categories',
+            title: 'MENU.CATEGORIES',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/category/create',
-          name: 'Create Category',
+          name: 'MENU.CREATE_CATEGORY',
           nav: ['side'],
           meta: {
-            title: 'Create Category',
+            title: 'MENU.CREATE_CATEGORY',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -203,10 +203,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Order',
+      name: 'MENU.ORDER',
       nav: ['side'],
       meta: {
-        title: 'Order',
+        title: 'MENU.ORDER',
         icon: 'shopping_cart',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -214,20 +214,20 @@ export const menuItems = [
       children: [
         {
           path: '/orders',
-          name: 'Orders',
+          name: 'MENU.ORDERS',
           nav: ['side'],
           meta: {
-            title: 'Orders',
+            title: 'MENU.ORDERS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/orders/create',
-          name: 'Create Order',
+          name: 'MENU.CREATE_ORDER',
           nav: ['side'],
           meta: {
-            title: 'Create Order',
+            title: 'MENU.CREATE_ORDER',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -235,10 +235,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'PO',
+      name: 'MENU.PO',
       nav: ['side'],
       meta: {
-        title: 'PO',
+        title: 'MENU.PO',
         icon: 'shopping_cart',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -246,20 +246,20 @@ export const menuItems = [
       children: [
         {
           path: '/pos',
-          name: 'POs',
+          name: 'MENU.POS',
           nav: ['side'],
           meta: {
-            title: 'POs',
+            title: 'MENU.POS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/pos/create',
-          name: 'Create PO',
+          name: 'MENU.CREATE_PO',
           nav: ['side'],
           meta: {
-            title: 'Create PO',
+            title: 'MENU.CREATE_PO',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -267,10 +267,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Shipment',
+      name: 'MENU.SHIPMENT',
       nav: ['side'],
       meta: {
-        title: 'Shipment',
+        title: 'MENU.SHIPMENT',
         icon: 'local_shipping',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -278,20 +278,20 @@ export const menuItems = [
       children: [
         {
           path: '/shipments',
-          name: 'Shipments',
+          name: 'MENU.SHIPMENTS',
           nav: ['side'],
           meta: {
-            title: 'Shipments',
+            title: 'MENU.SHIPMENTS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/shipments/create',
-          name: 'Create Shipment',
+          name: 'MENU.CREATE_SHIPMENT',
           nav: ['side'],
           meta: {
-            title: 'Create Shipment',
+            title: 'MENU.CREATE_SHIPMENT',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -299,10 +299,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Picklists',
+      name: 'MENU.PICKLISTS',
       nav: ['side'],
       meta: {
-        title: 'Picklists',
+        title: 'MENU.PICKLISTS',
         icon: 'list_alt',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -310,10 +310,10 @@ export const menuItems = [
       children: [
         {
           path: '/picklists',
-          name: 'Picklists',
+          name: 'MENU.PICKLISTS',
           nav: ['side'],
           meta: {
-            title: 'Picklists',
+            title: 'MENU.PICKLISTS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -321,10 +321,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Facility',
+      name: 'MENU.FACILITY',
       nav: ['side'],
       meta: {
-        title: 'Facility',
+        title: 'MENU.FACILITY',
         icon: 'warehouse',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -332,20 +332,20 @@ export const menuItems = [
       children: [
         {
           path: '/facilities',
-          name: 'Facilities',
+          name: 'MENU.FACILITIES',
           nav: ['side'],
           meta: {
-            title: 'Facilities',
+            title: 'MENU.FACILITIES',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/facilities/create',
-          name: 'Create Facility',
+          name: 'MENU.CREATE_FACILITY',
           nav: ['side'],
           meta: {
-            title: 'Create Facility',
+            title: 'MENU.CREATE_FACILITY',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -353,10 +353,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Asset',
+      name: 'MENU.ASSET',
       nav: ['side'],
       meta: {
-        title: 'Asset',
+        title: 'MENU.ASSET',
         icon: 'inventory',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -364,20 +364,20 @@ export const menuItems = [
       children: [
         {
           path: '/assets',
-          name: 'Assets',
+          name: 'MENU.ASSETS',
           nav: ['side'],
           meta: {
-            title: 'Asset',
+            title: 'MENU.ASSETS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/assets/create',
-          name: 'Create Asset',
+          name: 'MENU.CREATE_ASSET',
           nav: ['side'],
           meta: {
-            title: 'Create Asset',
+            title: 'MENU.CREATE_ASSET',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
@@ -385,10 +385,10 @@ export const menuItems = [
       ],
     },
     {
-      name: 'Manufacturing',
+      name: 'MENU.MANUFACTURING',
       nav: ['side'],
       meta: {
-        title: 'Manufacturing',
+        title: 'MENU.MANUFACTURING',
         icon: 'factory',
         requiredAuth: true,
         permissions: ['ADMIN']
@@ -396,20 +396,20 @@ export const menuItems = [
       children: [
         {
           path: '/jobs',
-          name: 'Jobs',
+          name: 'MENU.JOBS',
           nav: ['side'],
           meta: {
-            title: 'Jobs',
+            title: 'MENU.JOBS',
             requiredAuth: true,
             permissions: ['ADMIN']
           }
         },
         {
           path: '/jobs/create',
-          name: 'Create Job',
+          name: 'MENU.CREATE_JOB',
           nav: ['side'],
           meta: {
-            title: 'Create Job',
+            title: 'MENU.CREATE_JOB',
             requiredAuth: true,
             permissions: ['ADMIN']
           }

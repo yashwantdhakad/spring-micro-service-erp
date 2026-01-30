@@ -12,6 +12,7 @@ import { JobsComponent } from './jobs/jobs.component';
 import { CreateJobComponent } from './create-job/create-job.component';
 import { JobDetailComponent } from './job-detail/job-detail.component';
 import { ConsumableItemComponent } from './consumable-item/consumable-item.component';
+import { ProduceItemComponent } from './produce-item/produce-item.component';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -22,6 +23,7 @@ import { MaterialModule } from '../../components/common/material/material.module
     CreateJobComponent,
     JobDetailComponent,
     ConsumableItemComponent,
+    ProduceItemComponent,
   ],
   imports: [
     CommonModule,

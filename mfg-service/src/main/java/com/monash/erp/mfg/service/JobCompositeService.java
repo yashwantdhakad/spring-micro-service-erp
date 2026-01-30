@@ -8,8 +8,12 @@ import com.monash.erp.mfg.dto.JobListItem;
 import com.monash.erp.mfg.dto.JobListResponse;
 import com.monash.erp.mfg.dto.JobListResponseMap;
 import com.monash.erp.mfg.dto.JobMaterialRequest;
+import com.monash.erp.mfg.dto.JobProduceRequest;
+import com.monash.erp.mfg.dto.JobProduceResponse;
 import com.monash.erp.mfg.dto.WorkEffortInventoryActionRequest;
 import com.monash.erp.mfg.dto.WorkEffortInventoryActionResponse;
+import com.monash.erp.mfg.dto.WmsAssetReceiveRequest;
+import com.monash.erp.mfg.dto.WmsAssetReceiveResponse;
 import com.monash.erp.mfg.dto.WmsInventoryItemDetailRequest;
 import com.monash.erp.mfg.dto.WmsInventoryItemDetailDto;
 import com.monash.erp.mfg.dto.WmsInventoryItemDto;
@@ -19,8 +23,10 @@ import com.monash.erp.mfg.dto.WmsProductAssocDto;
 import com.monash.erp.mfg.dto.WmsProductDetailResponse;
 import com.monash.erp.mfg.entity.WorkEffort;
 import com.monash.erp.mfg.entity.WorkEffortGoodStandard;
+import com.monash.erp.mfg.entity.WorkEffortInventoryProduced;
 import com.monash.erp.mfg.entity.WorkEffortInvReservation;
 import com.monash.erp.mfg.repository.WorkEffortGoodStandardRepository;
+import com.monash.erp.mfg.repository.WorkEffortInventoryProducedRepository;
 import com.monash.erp.mfg.repository.WorkEffortInvReservationRepository;
 import com.monash.erp.mfg.repository.WorkEffortRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +64,8 @@ public class JobCompositeService {
     private static final String STATUS_CREATED = "PRUN_CREATED";
     private static final String STATUS_APPROVED = "PRUN_APPROVED";
     private static final String STATUS_RUNNING = "PRUN_RUNNING";
+    private static final String STATUS_COMPLETED = "PRUN_COMPLETED";
+    private static final String STATUS_CLOSED = "PRUN_CLOSED";
     private static final String WEGS_STATUS_CREATED = "WEGS_CREATED";
     private static final String WEGS_STATUS_RESERVED = "WEGS_RESERVED";
     private static final String WEGS_STATUS_ISSUED = "WEGS_ISSUED";
@@ -68,6 +76,7 @@ public class JobCompositeService {
     private final WorkEffortRepository workEffortRepository;
     private final WorkEffortGoodStandardRepository workEffortGoodStandardRepository;
     private final WorkEffortInvReservationRepository workEffortInvReservationRepository;
+    private final WorkEffortInventoryProducedRepository workEffortInventoryProducedRepository;
     private final RestTemplate restTemplate;
     private final String wmsBaseUrl;
     private final String wmsServiceToken;
@@ -76,6 +85,7 @@ public class JobCompositeService {
             WorkEffortRepository workEffortRepository,
             WorkEffortGoodStandardRepository workEffortGoodStandardRepository,
             WorkEffortInvReservationRepository workEffortInvReservationRepository,
+            WorkEffortInventoryProducedRepository workEffortInventoryProducedRepository,
             RestTemplate restTemplate,
             @Value("${wms.base-url:http://localhost:8080/wms}") String wmsBaseUrl,
             @Value("${wms.service-token:}") String wmsServiceToken
@@ -83,6 +93,7 @@ public class JobCompositeService {
         this.workEffortRepository = workEffortRepository;
         this.workEffortGoodStandardRepository = workEffortGoodStandardRepository;
         this.workEffortInvReservationRepository = workEffortInvReservationRepository;
+        this.workEffortInventoryProducedRepository = workEffortInventoryProducedRepository;
         this.restTemplate = restTemplate;
         this.wmsBaseUrl = wmsBaseUrl;
         this.wmsServiceToken = wmsServiceToken;
@@ -127,6 +138,7 @@ public class JobCompositeService {
                 .filter(item -> isProduceType(item.getWorkEffortGoodStdTypeId()))
                 .map(this::toGoodStandardDto)
                 .collect(Collectors.toList());
+        attachProducedInventoryItemIds(header.getWorkEffortId(), produceList);
 
         List<JobGoodStandardDto> consumeList = new ArrayList<>();
         for (WorkEffort task : tasks) {
@@ -232,6 +244,67 @@ public class JobCompositeService {
             header.setActualStartDate(LocalDateTime.now());
         }
         return workEffortRepository.save(header);
+    }
+
+    public WorkEffort completeJob(String workEffortId) {
+        WorkEffort header = findWorkEffort(workEffortId);
+        if (!STATUS_RUNNING.equalsIgnoreCase(header.getCurrentStatusId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Job must be running to complete");
+        }
+        header.setCurrentStatusId(STATUS_COMPLETED);
+        header.setLastStatusUpdate(LocalDateTime.now());
+        return workEffortRepository.save(header);
+    }
+
+    public WorkEffort closeJob(String workEffortId) {
+        WorkEffort header = findWorkEffort(workEffortId);
+        if (!STATUS_COMPLETED.equalsIgnoreCase(header.getCurrentStatusId())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Job must be completed to close");
+        }
+        header.setCurrentStatusId(STATUS_CLOSED);
+        header.setLastStatusUpdate(LocalDateTime.now());
+        return workEffortRepository.save(header);
+    }
+
+    public JobProduceResponse produceItem(String workEffortId, JobProduceRequest request) {
+        if (request == null || isBlank(request.getQuantity())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "quantity is required");
+        }
+        if (isBlank(request.getLocationSeqId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "locationSeqId is required");
+        }
+
+        WorkEffort base = findWorkEffort(workEffortId);
+        WorkEffort header = TYPE_PRODUCTION_TASK.equalsIgnoreCase(base.getWorkEffortTypeId())
+                ? findWorkEffort(base.getWorkEffortParentId())
+                : base;
+
+        String productId = resolveProduceProductId(header, request.getProductId());
+        if (isBlank(header.getFacilityId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "facilityId is required");
+        }
+
+        WmsAssetReceiveRequest wmsRequest = new WmsAssetReceiveRequest();
+        wmsRequest.setProductId(productId);
+        wmsRequest.setFacilityId(header.getFacilityId());
+        wmsRequest.setLocationSeqId(request.getLocationSeqId());
+        wmsRequest.setQuantity(request.getQuantity());
+        wmsRequest.setAcquireCost("0");
+        wmsRequest.setReceivedDate(LocalDateTime.now());
+        wmsRequest.setWorkEffortId(header.getWorkEffortId());
+
+        WmsAssetReceiveResponse wmsResponse = receiveAsset(wmsRequest);
+        if (wmsResponse == null || isBlank(wmsResponse.getAssetId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create inventory item");
+        }
+
+        WorkEffortInventoryProduced produced = new WorkEffortInventoryProduced();
+        produced.setWorkEffortId(header.getWorkEffortId());
+        produced.setInventoryItemId(wmsResponse.getAssetId());
+        produced.setId(null);
+        workEffortInventoryProducedRepository.save(produced);
+
+        return new JobProduceResponse(wmsResponse.getAssetId());
     }
 
     public JobGoodStandardDto addConsumableItem(String workEffortId, JobConsumableCreateRequest request) {
@@ -406,6 +479,26 @@ public class JobCompositeService {
         return dto;
     }
 
+    private void attachProducedInventoryItemIds(String workEffortId, List<JobGoodStandardDto> produceList) {
+        if (produceList == null || produceList.isEmpty() || isBlank(workEffortId)) {
+            return;
+        }
+        List<WorkEffortInventoryProduced> produced = workEffortInventoryProducedRepository
+                .findByWorkEffortId(workEffortId);
+        if (produced.isEmpty()) {
+            return;
+        }
+        String ids = produced.stream()
+                .map(WorkEffortInventoryProduced::getInventoryItemId)
+                .filter(id -> id != null && !id.isBlank())
+                .collect(Collectors.joining(", "));
+        String producedCount = String.valueOf(produced.size());
+        for (JobGoodStandardDto item : produceList) {
+            item.setProducedInventoryItemIds(ids);
+            item.setProduced(producedCount);
+        }
+    }
+
     private JobGoodStandardDto toGoodStandardDtoWithQuantities(
             WorkEffortGoodStandard wegs,
             String headerWorkEffortId,
@@ -462,6 +555,20 @@ public class JobCompositeService {
                 .filter(task -> TYPE_PRODUCTION_TASK.equalsIgnoreCase(task.getWorkEffortTypeId()))
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Production task not found"));
+    }
+
+    private String resolveProduceProductId(WorkEffort header, String productId) {
+        if (!isBlank(productId)) {
+            return productId;
+        }
+        List<WorkEffortGoodStandard> produces = workEffortGoodStandardRepository.findByWorkEffortId(header.getWorkEffortId())
+                .stream()
+                .filter(item -> isProduceType(item.getWorkEffortGoodStdTypeId()))
+                .collect(Collectors.toList());
+        if (produces.size() == 1) {
+            return produces.get(0).getProductId();
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "productId is required");
     }
 
     private WorkEffortGoodStandard getConsumable(Long wegsId) {
@@ -543,6 +650,23 @@ public class JobCompositeService {
         }
         HttpEntity<WmsInventoryItemDetailRequest> requestEntity = new HttpEntity<>(detail, headers);
         restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
+    }
+
+    private WmsAssetReceiveResponse receiveAsset(WmsAssetReceiveRequest request) {
+        String url = String.format("%s/api/assets/receive", wmsBaseUrl);
+        HttpHeaders headers = new HttpHeaders();
+        String authHeader = resolveAuthorizationHeader();
+        if (!isBlank(authHeader)) {
+            headers.set(HttpHeaders.AUTHORIZATION, authHeader);
+        }
+        HttpEntity<WmsAssetReceiveRequest> requestEntity = new HttpEntity<>(request, headers);
+        ResponseEntity<WmsAssetReceiveResponse> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                WmsAssetReceiveResponse.class
+        );
+        return response.getBody();
     }
 
     private WorkEffortInventoryActionResponse reserveConsumableByProduct(

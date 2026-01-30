@@ -23,6 +23,7 @@ public class AssetReceiveRequest {
     private String orderItemSeqId;
     private String shipGroupSeqId;
     private String shipmentItemSeqId;
+    private String workEffortId;
 
     public String getInventoryItemId() {
         return inventoryItemId;
@@ -174,5 +175,13 @@ public class AssetReceiveRequest {
 
     public void setShipmentItemSeqId(String shipmentItemSeqId) {
         this.shipmentItemSeqId = shipmentItemSeqId;
+    }
+
+    public String getWorkEffortId() {
+        return workEffortId;
+    }
+
+    public void setWorkEffortId(String workEffortId) {
+        this.workEffortId = workEffortId;
     }
 }

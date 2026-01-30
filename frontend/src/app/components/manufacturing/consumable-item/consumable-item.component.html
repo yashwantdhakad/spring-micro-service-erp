@@ -1,5 +1,5 @@
 <mat-card class="mat-elevation-z10">
-  <mat-card-title mat-dialog-title>Add Item</mat-card-title>
+  <mat-card-title mat-dialog-title>{{ 'MANUFACTURING.ADD_ITEM' | translate }}</mat-card-title>
   <mat-card-content mat-dialog-content>
     <form
       (ngSubmit)="addConsumable()"
@@ -9,10 +9,10 @@
       fxLayoutGap="12px"
     >
       <mat-form-field fxFlex="70%">
-        <mat-label>Product</mat-label>
+        <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
         <input
           matInput
-          placeholder="Product"
+          [placeholder]="'COMMON.PRODUCT' | translate"
           [matAutocomplete]="autoProduct"
           formControlName="productId"
         />
@@ -25,7 +25,7 @@
           </mat-option>
         </mat-autocomplete>
         <mat-error *ngIf="addConsumableForm.get('productId')?.hasError('required')">
-          Product is required
+          {{ 'PRODUCT.PRODUCT_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 
@@ -33,12 +33,12 @@
         <input
           matInput
           type="number"
-          placeholder="Quantity"
+          [placeholder]="'COMMON.QTY' | translate"
           formControlName="estimatedQuantity"
           required
         />
         <mat-error *ngIf="addConsumableForm.get('estimatedQuantity')?.hasError('required')">
-          Quantity is required
+          {{ 'COMMON.QTY_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 
@@ -50,10 +50,10 @@
           class="me-4"
           [disabled]="isLoading"
         >
-          <span *ngIf="!isLoading">Save</span>
+          <span *ngIf="!isLoading">{{ 'COMMON.SAVE' | translate }}</span>
           <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
         </button>
-        <button mat-button mat-dialog-close color="primary">Cancel</button>
+        <button mat-button mat-dialog-close color="primary">{{ 'COMMON.CANCEL' | translate }}</button>
       </div>
     </form>
   </mat-card-content>

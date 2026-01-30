@@ -19,6 +19,7 @@ import { StoreModule } from '@ngrx/store';
 import { AddEditProductComponent } from './components/category/add-edit-product/add-edit-product.component';
 import { EditCategoryComponent } from './components/category/edit-category/edit-category.component';
 import { ConfirmationDialogComponent } from './components/common/confirmation-dialog/confirmation-dialog.component';
+import { LanguageSelectorComponent } from './components/common/language-selector/language-selector.component';
 import { CustomerAutoCompleteComponent } from './components/customer/customer-auto-complete/customer-auto-complete.component';
 import { EditCustomerComponent } from './components/customer/edit-customer/edit-customer.component';
 import { AddToFeatureGroupComponent } from './components/feature/add-to-feature-group/add-to-feature-group.component';
@@ -84,6 +85,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     EditSupplierComponent,
     CustomerAutoCompleteComponent,
     ConfirmationDialogComponent,
+    LanguageSelectorComponent,
     AddEditProductPriceComponent,
     AddEditProductCategoryComponent,
     ItemComponent,

@@ -22,17 +22,33 @@
         mat-stroked-button
         color="primary"
         (click)="approveJob()"
-        *ngIf="!isApproved()"
+        *ngIf="!isApproved() && !isClosed()"
       >
-        Approve
+        {{ 'MANUFACTURING.APPROVE' | translate }}
       </button>
       <button
         mat-stroked-button
         color="accent"
         (click)="startJob()"
-        *ngIf="isApproved() && !isRunning()"
+        *ngIf="isApproved() && !isRunning() && !isCompleted() && !isClosed()"
       >
-        Start
+        {{ 'MANUFACTURING.START' | translate }}
+      </button>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="completeJob()"
+        *ngIf="isRunning() && !isCompleted() && !isClosed()"
+      >
+        {{ 'MANUFACTURING.COMPLETE' | translate }}
+      </button>
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="closeJob()"
+        *ngIf="isCompleted() && !isClosed()"
+      >
+        {{ 'MANUFACTURING.CLOSE' | translate }}
       </button>
     </mat-card-header>
     <mat-card-content>
@@ -41,27 +57,27 @@
           <mat-card-content>
             <ul class="custom-list">
               <li class="custom-list-item">
-                <strong>Job Name:</strong>
+                <strong>{{ 'MANUFACTURING.JOB_NAME' | translate }}:</strong>
                 {{ jobDetail?.workEffortName }}
               </li>
               <li class="custom-list-item">
-                <strong>Facility ID:</strong>
+                <strong>{{ 'MANUFACTURING.FACILITY_ID' | translate }}:</strong>
                 {{ jobDetail?.facilityId }}
               </li>
               <li class="custom-list-item">
-                <strong>Estimated Start Date:</strong>
+                <strong>{{ 'MANUFACTURING.EST_START_DATE' | translate }}:</strong>
                 {{ jobDetail?.estimatedStartDate | date : "MMMM d, y" }}
               </li>
               <li class="custom-list-item">
-                <strong>Status ID:</strong>
+                <strong>{{ 'MANUFACTURING.STATUS_ID' | translate }}:</strong>
                 {{ statusLabel(jobDetail?.currentStatusId || jobDetail?.statusId) }}
               </li>
               <li class="custom-list-item">
-                <strong>Actual Start Date:</strong>
+                <strong>{{ 'MANUFACTURING.ACTUAL_START_DATE' | translate }}:</strong>
                 {{ (jobDetail?.actualStartDate || jobDetail?.estimatedStartDate) | date : "MMMM d, y" }}
               </li>
               <li class="custom-list-item">
-                <strong>Est. Hours:</strong>
+                <strong>{{ 'MANUFACTURING.EST_HOURS' | translate }}:</strong>
                 {{ jobDetail?.estimatedWorkDuration }}
               </li>
             </ul>
@@ -71,11 +87,11 @@
           <mat-card-content>
             <ul class="custom-list">
               <li class="custom-list-item">
-                <strong>QOH:</strong>
+                <strong>{{ 'COMMON.QOH' | translate }}:</strong>
                 {{ jobDetail?.quantityOnHandTotal }}
               </li>
               <li class="custom-list-item">
-                <strong>ATP:</strong>
+                <strong>{{ 'COMMON.ATP' | translate }}:</strong>
                 {{ jobDetail?.availableToPromiseTotal }}
               </li>
             </ul>
@@ -87,13 +103,13 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title> Products to Produce </mat-card-title>
+      <mat-card-title>{{ 'MANUFACTURING.PRODUCTS_TO_PRODUCE' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="productsToProduce">
         <ng-container matColumnDef="productId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            Product ID
+            {{ 'MANUFACTURING.PRODUCT_ID' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item?.productId }}
@@ -101,42 +117,71 @@
         </ng-container>
         <ng-container matColumnDef="productName">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            Product Name
+            {{ 'MANUFACTURING.PRODUCT_NAME' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item?.productName }}
           </td>
         </ng-container>
         <ng-container matColumnDef="atp">
-          <th mat-header-cell class="text-right" *matHeaderCellDef>ATP</th>
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.ATP' | translate }}</th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.availableToPromiseTotal }}
           </td>
         </ng-container>
         <ng-container matColumnDef="qoh">
-          <th mat-header-cell class="text-right" *matHeaderCellDef>QOH</th>
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.QOH' | translate }}</th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.quantityOnHandTotal }}
           </td>
         </ng-container>
         <ng-container matColumnDef="estimatedQuantity">
           <th mat-header-cell class="text-right" *matHeaderCellDef>
-            Estimated Quantity
+            {{ 'MANUFACTURING.EST_QUANTITY' | translate }}
           </th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.estimatedQuantity }}
           </td>
         </ng-container>
         <ng-container matColumnDef="uom">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>UOM</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.UOM' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item?.uom }}
           </td>
         </ng-container>
         <ng-container matColumnDef="produced">
-          <th mat-header-cell class="text-right" *matHeaderCellDef>Produced</th>
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'MANUFACTURING.PRODUCED' | translate }}</th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.produced }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="inventoryItemIds">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'MANUFACTURING.INVENTORY_ITEM_IDS' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <ng-container *ngIf="getProducedInventoryItemIds(item).length; else noInventoryItems">
+              <a
+                *ngFor="let inventoryItemId of getProducedInventoryItemIds(item); let last = last"
+                [routerLink]="['/assets', inventoryItemId]"
+              >
+                {{ inventoryItemId }}<span *ngIf="!last">, </span>
+              </a>
+            </ng-container>
+            <ng-template #noInventoryItems>-</ng-template>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <button
+              mat-stroked-button
+              color="primary"
+              (click)="produceItem(item)"
+              *ngIf="isApproved() && !isClosed()"
+            >
+              {{ 'MANUFACTURING.PRODUCE' | translate }}
+            </button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="productsToProduceColumns"></tr>
@@ -152,11 +197,11 @@
     <mat-card-header>
       <mat-card-title>
         <div class="card-title-row">
-          <span>Products to Consume</span>
+          <span>{{ 'MANUFACTURING.PRODUCTS_TO_CONSUME' | translate }}</span>
           <span class="spacer"></span>
-          <button mat-button color="primary" (click)="addConsumable()">
+          <button mat-button color="primary" (click)="addConsumable()" *ngIf="!isClosed()">
             <mat-icon>add</mat-icon>
-            Add Item
+            {{ 'MANUFACTURING.ADD_ITEM' | translate }}
           </button>
         </div>
       </mat-card-title>
@@ -165,7 +210,7 @@
       <table mat-table [dataSource]="productsToConsume">
         <ng-container matColumnDef="productId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            Product ID
+            {{ 'MANUFACTURING.PRODUCT_ID' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item?.productId }}
@@ -173,84 +218,84 @@
         </ng-container>
         <ng-container matColumnDef="productName">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            Product Name
+            {{ 'MANUFACTURING.PRODUCT_NAME' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item?.productName }}
           </td>
         </ng-container>
         <ng-container matColumnDef="atp">
-          <th mat-header-cell class="text-right" *matHeaderCellDef>ATP</th>
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.ATP' | translate }}</th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.availableToPromiseTotal }}
           </td>
         </ng-container>
         <ng-container matColumnDef="qoh">
-          <th mat-header-cell class="text-right" *matHeaderCellDef>QOH</th>
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.QOH' | translate }}</th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.quantityOnHandTotal }}
           </td>
         </ng-container>
         <ng-container matColumnDef="estimatedQuantity">
           <th mat-header-cell class="text-right" *matHeaderCellDef>
-            Estimated Quantity
+            {{ 'MANUFACTURING.EST_QUANTITY' | translate }}
           </th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.estimatedQuantity }}
           </td>
         </ng-container>
         <ng-container matColumnDef="uom">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>UOM</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.UOM' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item?.uom }}
           </td>
         </ng-container>
         <ng-container matColumnDef="consumed">
-          <th mat-header-cell class="text-right" *matHeaderCellDef>Consumed</th>
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'MANUFACTURING.CONSUMED' | translate }}</th>
           <td mat-cell class="text-right" *matCellDef="let item">
             {{ item?.consumed }}
           </td>
         </ng-container>
         <ng-container matColumnDef="status">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ statusLabel(item?.statusId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="actions">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Actions</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <button
               mat-stroked-button
               color="primary"
               (click)="reserveConsumable(item)"
-              *ngIf="!isReserved(item) && isApproved() && !isCancelled(item) && !isIssued(item)"
+              *ngIf="!isReserved(item) && isApproved() && !isCancelled(item) && !isIssued(item) && !isClosed()"
             >
-              Reserve
+              {{ 'MANUFACTURING.RESERVE' | translate }}
             </button>
             <button
               mat-stroked-button
               color="accent"
               (click)="releaseConsumable(item)"
-              *ngIf="isReserved(item) && !isCancelled(item) && !isIssued(item)"
+              *ngIf="isReserved(item) && !isCancelled(item) && !isIssued(item) && !isClosed()"
             >
-              Release
+              {{ 'MANUFACTURING.RELEASE' | translate }}
             </button>
             <button
               mat-stroked-button
               color="warn"
               (click)="issueConsumable(item)"
-              *ngIf="isReserved(item) && !isCancelled(item) && !isIssued(item)"
+              *ngIf="isReserved(item) && !isCancelled(item) && !isIssued(item) && !isClosed()"
             >
-              Issue
+              {{ 'MANUFACTURING.ISSUE' | translate }}
             </button>
             <button
               mat-button
               color="warn"
               (click)="cancelConsumable(item)"
-              *ngIf="!isCancelled(item) && !isIssued(item)"
+              *ngIf="!isCancelled(item) && !isIssued(item) && !isClosed()"
             >
-              Cancel
+              {{ 'COMMON.CANCEL' | translate }}
             </button>
           </td>
         </ng-container>

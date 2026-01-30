@@ -41,7 +41,7 @@
                 <button
                   mat-icon-button
                   color="primary"
-                  [attr.aria-label]="picklistDetail?.pickerId ? 'Edit picker' : 'Assign picker'"
+                  [attr.aria-label]="picklistDetail?.pickerId ? ('PICKLIST.EDIT_PICKER' | translate) : ('PICKLIST.ASSIGN_PICKER' | translate)"
                   (click)="openAssignPickerDialog()"
                 >
                   <mat-icon>{{ picklistDetail?.pickerId ? 'edit' : 'add' }}</mat-icon>

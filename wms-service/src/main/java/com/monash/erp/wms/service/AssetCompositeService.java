@@ -159,6 +159,7 @@ public class AssetCompositeService {
         detail.setShipmentItemSeqId(request.getShipmentItemSeqId());
         detail.setReceiptId(savedReceipt.getReceiptId());
         detail.setItemIssuanceId(issuance == null ? null : issuance.getItemIssuanceId());
+        detail.setWorkEffortId(request.getWorkEffortId());
         detail.setId(null);
 
         inventoryItemDetailRepository.save(detail);

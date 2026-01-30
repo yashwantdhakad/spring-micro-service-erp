@@ -1,0 +1,40 @@
+<div class="dialog-container">
+  <mat-card>
+    <mat-card-title mat-dialog-title>{{ 'MANUFACTURING.PRODUCE_ITEM' | translate }}</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="produceForm" class="produce-form">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
+          <input matInput [readonly]="true" [value]="productLabel" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ 'COMMON.LOCATION' | translate }}</mat-label>
+          <mat-select formControlName="locationSeqId">
+            <mat-option *ngFor="let location of facilityLocations" [value]="location.locationSeqId">
+              {{ location.locationSeqId }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="produceForm.get('locationSeqId')?.hasError('required')">
+            {{ 'COMMON.LOCATION_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>{{ 'COMMON.QTY' | translate }}</mat-label>
+          <input matInput type="number" formControlName="quantity" min="1" />
+          <mat-error *ngIf="produceForm.get('quantity')?.hasError('required')">
+            {{ 'COMMON.QTY_REQUIRED' | translate }}
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button (click)="dialogRef.close()">{{ 'COMMON.CANCEL' | translate }}</button>
+      <button mat-raised-button color="primary" (click)="produce()" [disabled]="isLoading">
+        {{ 'MANUFACTURING.PRODUCE' | translate }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

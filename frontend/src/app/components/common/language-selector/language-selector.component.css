@@ -1,0 +1,11 @@
+.language-dialog {
+  min-width: 320px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+button + button {
+  margin-left: 8px;
+}

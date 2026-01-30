@@ -19,7 +19,7 @@
     <mat-card-content>
       <ul class="custom-list">
         <li class="custom-list-item">
-          <strong>Name:</strong>
+          <strong>{{ 'PRODUCT.NAME' | translate }}:</strong>
           {{ productDetail?.productName }}
           <mat-icon
             matListIcon
@@ -30,7 +30,7 @@
           >
         </li>
         <li class="custom-list-item">
-          <strong>Type:</strong>
+          <strong>{{ 'PRODUCT.TYPE' | translate }}:</strong>
           {{ productTypeLabel || productDetail?.productTypeId }}
         </li>
       </ul>

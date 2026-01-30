@@ -22,6 +22,7 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
   details: any[] = [];
   detailColumns: string[] = [
     'inventoryItemDetailSeqId',
+    'workEffortId',
     'orderId',
     'receiptId',
     'productId',

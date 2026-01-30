@@ -148,9 +148,9 @@ export class PODetailComponent implements OnInit {
             this.canReceive = this.statusItem?.statusId === 'ORDER_APPROVED';
 
             this.overviewFields = [
-              { label: 'Order #', value: this.orderHeader?.orderId },
-              { label: 'Order Date', value: this.datePipe.transform(this.orderHeader?.entryDate, 'MMMM d, y') },
-              { label: 'Status', value: this.statusItem?.description },
+              { label: 'PO.ID', value: this.orderHeader?.orderId },
+              { label: 'PO.ORDER_DATE', value: this.datePipe.transform(this.orderHeader?.entryDate, 'MMMM d, y') },
+              { label: 'PO.STATUS', value: this.statusItem?.description },
             ];
 
             if (displayResponse?.firstPart?.vendorPartyId) {

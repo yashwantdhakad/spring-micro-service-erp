@@ -3,6 +3,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { menuItems } from './menu';
 import { AuthService } from './services/common/auth.service';
 import { Router, NavigationEnd } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { LanguageSelectorComponent } from './components/common/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-root',
@@ -17,15 +19,28 @@ export class AppComponent {
 
   title = 'erp';
   items = menuItems;
+  currentLanguage = 'en';
+  languages = [
+    { code: 'en', label: 'English' },
+    { code: 'es', label: 'Español' },
+    { code: 'fr', label: 'Français' },
+    { code: 'hi', label: 'हिन्दी' },
+  ];
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private translate: TranslateService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {
-    this.translate.addLangs(['en', 'es']);
+    this.translate.addLangs(this.languages.map((lang) => lang.code));
     this.translate.setDefaultLang('en');
+    const savedLang = localStorage.getItem('locale');
+    this.currentLanguage = savedLang && this.translate.getLangs().includes(savedLang)
+      ? savedLang
+      : 'en';
+    this.translate.use(this.currentLanguage);
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.checkLoggedInStatus();
@@ -62,7 +77,27 @@ export class AppComponent {
   }
 
   switchLanguage(language: string) {
+    this.currentLanguage = language;
     this.translate.use(language);
+    localStorage.setItem('locale', language);
+  }
+
+  openLanguageDialog(): void {
+    const dialogRef = this.dialog.open(LanguageSelectorComponent, {
+      data: {
+        current: this.currentLanguage,
+        languages: this.languages,
+      },
+    });
+    dialogRef.afterClosed().subscribe((language) => {
+      if (language) {
+        this.switchLanguage(language);
+      }
+    });
+  }
+
+  getCurrentLanguageLabel(): string {
+    return this.languages.find((lang) => lang.code === this.currentLanguage)?.label || this.currentLanguage;
   }
 
   logout(): void {

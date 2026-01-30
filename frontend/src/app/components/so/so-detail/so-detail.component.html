@@ -20,7 +20,7 @@
           <mat-icon>picture_as_pdf</mat-icon>
         </button>
         <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
-          Approve
+          {{ 'COMMON.APPROVE' | translate }}
         </button>
         <button mat-raised-button color="accent" *ngIf="canPicklist" (click)="createPicklist()">
           Create Picklist
@@ -383,30 +383,30 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>Shipments</mat-card-title>
+      <mat-card-title>{{ 'SHIPMENT.TITLE' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="shipments">
         <ng-container matColumnDef="shipmentId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Shipment</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.ID_LABEL' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <a [routerLink]="['/shipments', item.shipmentId]">{{ item.shipmentId }}</a>
           </td>
         </ng-container>
         <ng-container matColumnDef="shipmentTypeId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Type</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.TYPE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getShipmentTypeDescription(item.shipmentTypeId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="statusId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Status</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.STATUS' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getStatusDescription(item.statusId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="createdDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>Created</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SHIPMENT.CREATED_DATE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.createdDate | date : "MMMM d, y" }}
           </td>

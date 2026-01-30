@@ -12,6 +12,15 @@
   width: 100%;
 }
 
+.lang-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 18px;
+  padding: 2px 12px;
+  font-weight: 600;
+}
+
 .contenido {
   display: flex;
   flex-grow: 1;

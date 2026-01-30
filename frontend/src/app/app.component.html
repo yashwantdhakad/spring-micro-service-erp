@@ -6,8 +6,10 @@
       </button>
       <span>Ng ERP</span>
       <span style="flex: 1 1 auto;"></span>
-      <button mat-button (click)="switchLanguage('en')">EN</button>
-      <button mat-button (click)="switchLanguage('es')">ES</button>
+      <button mat-stroked-button class="lang-button" (click)="openLanguageDialog()">
+        <mat-icon>language</mat-icon>
+        <span>{{ getCurrentLanguageLabel() }}</span>
+      </button>
     </mat-toolbar-row>
   </mat-toolbar>
   <mat-sidenav-container class="contenido">
@@ -31,7 +33,7 @@
                     <mat-icon matListItemIcon class="custom-icon">{{
                       item.meta.icon
                     }}</mat-icon>
-                    {{ item.name }}
+                    {{ item.name | translate }}
                   </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-nav-list class="custom-expansion-panel-body">
@@ -40,7 +42,7 @@
                     *ngFor="let childItem of item.children"
                     [routerLink]="childItem.path"
                   >
-                    {{ childItem.name }}
+                    {{ childItem.name | translate }}
                   </a>
                 </mat-nav-list>
               </mat-expansion-panel>
@@ -49,13 +51,13 @@
           <ng-template #listItem>
             <mat-list-item>
               <mat-icon matListItemIcon>{{ item.meta.icon }}</mat-icon>
-              <a [routerLink]="item.path">{{ item.name }}</a>
+              <a [routerLink]="item.path">{{ item.name | translate }}</a>
             </mat-list-item>
           </ng-template>
         </ng-container>
         <mat-list-item (click)="logout()">
           <mat-icon matListItemIcon>logout</mat-icon>
-          Logout
+          {{ 'COMMON.LOGOUT' | translate }}
         </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>
