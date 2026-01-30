@@ -1,0 +1,33 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: data-migration-service
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
+      schema: classpath:org/springframework/batch/core/schema-mysql.sql
+  sql:
+    init:
+      mode: never
+      schema-locations: classpath:org/springframework/batch/core/schema-mysql.sql
+
+migration:
+  datasource:
+    source:
+      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_SOURCE:ares}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: ${DB_USER:root}
+      password: ${DB_PASSWORD:123456}
+    target:
+      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_TARGET:wmsdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: ${DB_USER:root}
+      password: ${DB_PASSWORD:123456}
+  product:
+    chunk-size: 1000
+    fetch-size: 1000
+    run-on-startup: false

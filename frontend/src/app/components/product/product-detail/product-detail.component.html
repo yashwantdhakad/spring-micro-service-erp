@@ -19,6 +19,10 @@
     <mat-card-content>
       <ul class="custom-list">
         <li class="custom-list-item">
+          <strong>{{ 'PRODUCT.PRODUCT_ID' | translate }}:</strong>
+          {{ productDetail?.productId }}
+        </li>
+        <li class="custom-list-item">
           <strong>{{ 'PRODUCT.NAME' | translate }}:</strong>
           {{ productDetail?.productName }}
           <mat-icon
@@ -28,6 +32,14 @@
             (click)="editProductDialog()"
             >edit</mat-icon
           >
+        </li>
+        <li class="custom-list-item">
+          <strong>{{ 'PRODUCT.INTERNAL_NAME' | translate }}:</strong>
+          {{ productDetail?.internalName }}
+        </li>
+        <li class="custom-list-item">
+          <strong>{{ 'PRODUCT.DESCRIPTION' | translate }}:</strong>
+          {{ productDetail?.description }}
         </li>
         <li class="custom-list-item">
           <strong>{{ 'PRODUCT.TYPE' | translate }}:</strong>

@@ -20,6 +20,21 @@
           >{{ 'PRODUCT.NAME_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
+      <mat-form-field fxFlex="100%">
+        <input
+          matInput
+          placeholder="{{ 'PRODUCT.INTERNAL_NAME' | translate }}"
+          formControlName="internalName"
+        />
+      </mat-form-field>
+      <mat-form-field fxFlex="100%">
+        <textarea
+          matInput
+          rows="3"
+          placeholder="{{ 'PRODUCT.DESCRIPTION' | translate }}"
+          formControlName="description"
+        ></textarea>
+      </mat-form-field>
 
       <div fxFlex="100%" fxLayoutAlign="start">
         <button

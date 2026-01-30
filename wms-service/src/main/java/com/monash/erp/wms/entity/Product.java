@@ -1,88 +1,250 @@
 package com.monash.erp.wms.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "product")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 20, unique = true)
     private String productId;
+
+    @Column(length = 20)
     private String productTypeId;
+
+    @Column(length = 20)
     private String primaryProductCategoryId;
+
+    @Column(length = 20)
+    private String manufacturerPartyId;
+
+    @Column(length = 20)
     private String facilityId;
+
     private LocalDateTime introductionDate;
-    private LocalDateTime releaseDate;
     private LocalDateTime supportDiscontinuationDate;
     private LocalDateTime salesDiscontinuationDate;
+    private LocalDateTime releaseDate;
+
+    @Column(length = 1)
     private String salesDiscWhenNotAvail;
+
+    @Column(length = 255)
     private String internalName;
+
+    @Column(length = 100)
     private String brandName;
+
+    @Column(length = 255)
     private String comments;
+
+    @Column(length = 100)
     private String productName;
+
+    @Column(length = 255)
     private String description;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String longDescription;
+
+    @Column(columnDefinition = "TEXT")
     private String priceDetailText;
+
+    @Column(columnDefinition = "TEXT")
     private String smallImageUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String mediumImageUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String largeImageUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String detailImageUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String originalImageUrl;
+
+    @Column(columnDefinition = "TEXT")
     private String detailScreen;
+
+    @Column(columnDefinition = "TEXT")
     private String inventoryMessage;
-    private String inventoryItemTypeId;
+
+    @Column(length = 1)
     private String requireInventory;
+
+    @Column(length = 20)
     private String quantityUomId;
-    private String quantityIncluded;
-    private String piecesIncluded;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal quantityIncluded;
+
+    @Column(precision = 20, scale = 0)
+    private BigDecimal piecesIncluded;
+
+    @Column(length = 1)
     private String requireAmount;
-    private String fixedAmount;
+
+    @Column(precision = 18, scale = 2)
+    private BigDecimal fixedAmount;
+
+    @Column(length = 20)
     private String amountUomTypeId;
+
+    @Column(length = 20)
     private String weightUomId;
-    private String shippingWeight;
-    private String productWeight;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal weight;
+
+    @Column(length = 20)
     private String heightUomId;
-    private String productHeight;
-    private String shippingHeight;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal productHeight;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal shippingHeight;
+
+    @Column(length = 20)
     private String widthUomId;
-    private String productWidth;
-    private String shippingWidth;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal productWidth;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal shippingWidth;
+
+    @Column(length = 20)
     private String depthUomId;
-    private String productDepth;
-    private String shippingDepth;
-    private String diameterUomId;
-    private String productDiameter;
-    private String productRating;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal productDepth;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal shippingDepth;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal productRating;
+
+    @Column(length = 20)
     private String ratingTypeEnum;
+
+    @Column(length = 1)
     private String returnable;
+
+    @Column(length = 1)
     private String taxable;
+
+    @Column(length = 1)
     private String chargeShipping;
+
+    @Column(length = 1)
     private String autoCreateKeywords;
+
+    @Column(length = 1)
     private String includeInPromotions;
+
+    @Column(length = 1)
     private String isVirtual;
+
+    @Column(length = 1)
     private String isVariant;
+
+    @Column(length = 20)
     private String virtualVariantMethodEnum;
+
+    @Column(length = 20)
     private String originGeoId;
+
+    @Column(length = 20)
     private String requirementMethodEnumId;
-    private String billOfMaterialLevel;
-    private String reservMaxPersons;
-    private String reserv2ndPPPerc;
-    private String reservNthPPPerc;
+
+    @Column(precision = 20, scale = 0)
+    private BigDecimal billOfMaterialLevel;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal reservMaxPersons;
+
+    @Column(name = "RESERV2ND_P_P_PERC", precision = 18, scale = 6)
+    private BigDecimal reserv2ndPPPerc;
+
+    @Column(name = "RESERV_NTH_P_P_PERC", precision = 18, scale = 6)
+    private BigDecimal reservNthPPPerc;
+
+    @Column(length = 20)
     private String configId;
+
     private LocalDateTime createdDate;
+
+    @Column(length = 250)
     private String createdByUserLogin;
+
     private LocalDateTime lastModifiedDate;
+
+    @Column(length = 250)
     private String lastModifiedByUserLogin;
+
+    @Column(length = 1)
     private String inShippingBox;
+
+    @Column(length = 20)
     private String defaultShipmentBoxTypeId;
-    private String lotIdFilledIn;
-    private String orderDecimalQuantity;
+
+    private LocalDateTime lastUpdatedStamp;
+    private LocalDateTime lastUpdatedTxStamp;
+    private LocalDateTime createdStamp;
+    private LocalDateTime createdTxStamp;
+
+    @Column(length = 1)
+    private String isChemical;
+
+    @Column(length = 1)
+    private String serialized;
+
+    @Column(length = 1)
+    private String shelfLife;
+
+    @Column(length = 20)
+    private String externalId;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal defaultLeadTimeDays;
+
+    @Column(columnDefinition = "TEXT")
+    private String receivingNote;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal productWeight;
+
+    @Column(length = 20)
+    private String diameterUomId;
+
+    @Column(precision = 18, scale = 6)
+    private BigDecimal productDiameter;
+
+    @Column(precision = 20, scale = 0)
+    private BigDecimal annualFlightHours;
+
+    @Column(length = 1)
+    private String hasSleeves;
+
+    @Column(length = 1)
+    private String lifeLimitation;
 
     public Long getId() {
         return id;
@@ -116,6 +278,14 @@ public class Product {
         this.primaryProductCategoryId = primaryProductCategoryId;
     }
 
+    public String getManufacturerPartyId() {
+        return manufacturerPartyId;
+    }
+
+    public void setManufacturerPartyId(String manufacturerPartyId) {
+        this.manufacturerPartyId = manufacturerPartyId;
+    }
+
     public String getFacilityId() {
         return facilityId;
     }
@@ -132,14 +302,6 @@ public class Product {
         this.introductionDate = introductionDate;
     }
 
-    public LocalDateTime getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDateTime releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
     public LocalDateTime getSupportDiscontinuationDate() {
         return supportDiscontinuationDate;
     }
@@ -154,6 +316,14 @@ public class Product {
 
     public void setSalesDiscontinuationDate(LocalDateTime salesDiscontinuationDate) {
         this.salesDiscontinuationDate = salesDiscontinuationDate;
+    }
+
+    public LocalDateTime getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDateTime releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getSalesDiscWhenNotAvail() {
@@ -276,14 +446,6 @@ public class Product {
         this.inventoryMessage = inventoryMessage;
     }
 
-    public String getInventoryItemTypeId() {
-        return inventoryItemTypeId;
-    }
-
-    public void setInventoryItemTypeId(String inventoryItemTypeId) {
-        this.inventoryItemTypeId = inventoryItemTypeId;
-    }
-
     public String getRequireInventory() {
         return requireInventory;
     }
@@ -300,19 +462,19 @@ public class Product {
         this.quantityUomId = quantityUomId;
     }
 
-    public String getQuantityIncluded() {
+    public BigDecimal getQuantityIncluded() {
         return quantityIncluded;
     }
 
-    public void setQuantityIncluded(String quantityIncluded) {
+    public void setQuantityIncluded(BigDecimal quantityIncluded) {
         this.quantityIncluded = quantityIncluded;
     }
 
-    public String getPiecesIncluded() {
+    public BigDecimal getPiecesIncluded() {
         return piecesIncluded;
     }
 
-    public void setPiecesIncluded(String piecesIncluded) {
+    public void setPiecesIncluded(BigDecimal piecesIncluded) {
         this.piecesIncluded = piecesIncluded;
     }
 
@@ -324,11 +486,11 @@ public class Product {
         this.requireAmount = requireAmount;
     }
 
-    public String getFixedAmount() {
+    public BigDecimal getFixedAmount() {
         return fixedAmount;
     }
 
-    public void setFixedAmount(String fixedAmount) {
+    public void setFixedAmount(BigDecimal fixedAmount) {
         this.fixedAmount = fixedAmount;
     }
 
@@ -348,20 +510,12 @@ public class Product {
         this.weightUomId = weightUomId;
     }
 
-    public String getShippingWeight() {
-        return shippingWeight;
+    public BigDecimal getWeight() {
+        return weight;
     }
 
-    public void setShippingWeight(String shippingWeight) {
-        this.shippingWeight = shippingWeight;
-    }
-
-    public String getProductWeight() {
-        return productWeight;
-    }
-
-    public void setProductWeight(String productWeight) {
-        this.productWeight = productWeight;
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 
     public String getHeightUomId() {
@@ -372,19 +526,19 @@ public class Product {
         this.heightUomId = heightUomId;
     }
 
-    public String getProductHeight() {
+    public BigDecimal getProductHeight() {
         return productHeight;
     }
 
-    public void setProductHeight(String productHeight) {
+    public void setProductHeight(BigDecimal productHeight) {
         this.productHeight = productHeight;
     }
 
-    public String getShippingHeight() {
+    public BigDecimal getShippingHeight() {
         return shippingHeight;
     }
 
-    public void setShippingHeight(String shippingHeight) {
+    public void setShippingHeight(BigDecimal shippingHeight) {
         this.shippingHeight = shippingHeight;
     }
 
@@ -396,19 +550,19 @@ public class Product {
         this.widthUomId = widthUomId;
     }
 
-    public String getProductWidth() {
+    public BigDecimal getProductWidth() {
         return productWidth;
     }
 
-    public void setProductWidth(String productWidth) {
+    public void setProductWidth(BigDecimal productWidth) {
         this.productWidth = productWidth;
     }
 
-    public String getShippingWidth() {
+    public BigDecimal getShippingWidth() {
         return shippingWidth;
     }
 
-    public void setShippingWidth(String shippingWidth) {
+    public void setShippingWidth(BigDecimal shippingWidth) {
         this.shippingWidth = shippingWidth;
     }
 
@@ -420,43 +574,27 @@ public class Product {
         this.depthUomId = depthUomId;
     }
 
-    public String getProductDepth() {
+    public BigDecimal getProductDepth() {
         return productDepth;
     }
 
-    public void setProductDepth(String productDepth) {
+    public void setProductDepth(BigDecimal productDepth) {
         this.productDepth = productDepth;
     }
 
-    public String getShippingDepth() {
+    public BigDecimal getShippingDepth() {
         return shippingDepth;
     }
 
-    public void setShippingDepth(String shippingDepth) {
+    public void setShippingDepth(BigDecimal shippingDepth) {
         this.shippingDepth = shippingDepth;
     }
 
-    public String getDiameterUomId() {
-        return diameterUomId;
-    }
-
-    public void setDiameterUomId(String diameterUomId) {
-        this.diameterUomId = diameterUomId;
-    }
-
-    public String getProductDiameter() {
-        return productDiameter;
-    }
-
-    public void setProductDiameter(String productDiameter) {
-        this.productDiameter = productDiameter;
-    }
-
-    public String getProductRating() {
+    public BigDecimal getProductRating() {
         return productRating;
     }
 
-    public void setProductRating(String productRating) {
+    public void setProductRating(BigDecimal productRating) {
         this.productRating = productRating;
     }
 
@@ -548,35 +686,35 @@ public class Product {
         this.requirementMethodEnumId = requirementMethodEnumId;
     }
 
-    public String getBillOfMaterialLevel() {
+    public BigDecimal getBillOfMaterialLevel() {
         return billOfMaterialLevel;
     }
 
-    public void setBillOfMaterialLevel(String billOfMaterialLevel) {
+    public void setBillOfMaterialLevel(BigDecimal billOfMaterialLevel) {
         this.billOfMaterialLevel = billOfMaterialLevel;
     }
 
-    public String getReservMaxPersons() {
+    public BigDecimal getReservMaxPersons() {
         return reservMaxPersons;
     }
 
-    public void setReservMaxPersons(String reservMaxPersons) {
+    public void setReservMaxPersons(BigDecimal reservMaxPersons) {
         this.reservMaxPersons = reservMaxPersons;
     }
 
-    public String getReserv2ndPPPerc() {
+    public BigDecimal getReserv2ndPPPerc() {
         return reserv2ndPPPerc;
     }
 
-    public void setReserv2ndPPPerc(String reserv2ndPPPerc) {
+    public void setReserv2ndPPPerc(BigDecimal reserv2ndPPPerc) {
         this.reserv2ndPPPerc = reserv2ndPPPerc;
     }
 
-    public String getReservNthPPPerc() {
+    public BigDecimal getReservNthPPPerc() {
         return reservNthPPPerc;
     }
 
-    public void setReservNthPPPerc(String reservNthPPPerc) {
+    public void setReservNthPPPerc(BigDecimal reservNthPPPerc) {
         this.reservNthPPPerc = reservNthPPPerc;
     }
 
@@ -636,20 +774,131 @@ public class Product {
         this.defaultShipmentBoxTypeId = defaultShipmentBoxTypeId;
     }
 
-    public String getLotIdFilledIn() {
-        return lotIdFilledIn;
+    public LocalDateTime getLastUpdatedStamp() {
+        return lastUpdatedStamp;
     }
 
-    public void setLotIdFilledIn(String lotIdFilledIn) {
-        this.lotIdFilledIn = lotIdFilledIn;
+    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+        this.lastUpdatedStamp = lastUpdatedStamp;
     }
 
-    public String getOrderDecimalQuantity() {
-        return orderDecimalQuantity;
+    public LocalDateTime getLastUpdatedTxStamp() {
+        return lastUpdatedTxStamp;
     }
 
-    public void setOrderDecimalQuantity(String orderDecimalQuantity) {
-        this.orderDecimalQuantity = orderDecimalQuantity;
+    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
 
+    public LocalDateTime getCreatedStamp() {
+        return createdStamp;
+    }
+
+    public void setCreatedStamp(LocalDateTime createdStamp) {
+        this.createdStamp = createdStamp;
+    }
+
+    public LocalDateTime getCreatedTxStamp() {
+        return createdTxStamp;
+    }
+
+    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+        this.createdTxStamp = createdTxStamp;
+    }
+
+    public String getIsChemical() {
+        return isChemical;
+    }
+
+    public void setIsChemical(String isChemical) {
+        this.isChemical = isChemical;
+    }
+
+    public String getSerialized() {
+        return serialized;
+    }
+
+    public void setSerialized(String serialized) {
+        this.serialized = serialized;
+    }
+
+    public String getShelfLife() {
+        return shelfLife;
+    }
+
+    public void setShelfLife(String shelfLife) {
+        this.shelfLife = shelfLife;
+    }
+
+    public String getExternalId() {
+        return externalId;
+    }
+
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
+    }
+
+    public BigDecimal getDefaultLeadTimeDays() {
+        return defaultLeadTimeDays;
+    }
+
+    public void setDefaultLeadTimeDays(BigDecimal defaultLeadTimeDays) {
+        this.defaultLeadTimeDays = defaultLeadTimeDays;
+    }
+
+    public String getReceivingNote() {
+        return receivingNote;
+    }
+
+    public void setReceivingNote(String receivingNote) {
+        this.receivingNote = receivingNote;
+    }
+
+    public BigDecimal getProductWeight() {
+        return productWeight;
+    }
+
+    public void setProductWeight(BigDecimal productWeight) {
+        this.productWeight = productWeight;
+    }
+
+    public String getDiameterUomId() {
+        return diameterUomId;
+    }
+
+    public void setDiameterUomId(String diameterUomId) {
+        this.diameterUomId = diameterUomId;
+    }
+
+    public BigDecimal getProductDiameter() {
+        return productDiameter;
+    }
+
+    public void setProductDiameter(BigDecimal productDiameter) {
+        this.productDiameter = productDiameter;
+    }
+
+    public BigDecimal getAnnualFlightHours() {
+        return annualFlightHours;
+    }
+
+    public void setAnnualFlightHours(BigDecimal annualFlightHours) {
+        this.annualFlightHours = annualFlightHours;
+    }
+
+    public String getHasSleeves() {
+        return hasSleeves;
+    }
+
+    public void setHasSleeves(String hasSleeves) {
+        this.hasSleeves = hasSleeves;
+    }
+
+    public String getLifeLimitation() {
+        return lifeLimitation;
+    }
+
+    public void setLifeLimitation(String lifeLimitation) {
+        this.lifeLimitation = lifeLimitation;
+    }
 }

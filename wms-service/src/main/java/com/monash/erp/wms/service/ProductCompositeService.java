@@ -176,6 +176,9 @@ public class ProductCompositeService {
         if (request.getDescription() != null) {
             existing.setDescription(request.getDescription());
         }
+        if (request.getInternalName() != null) {
+            existing.setInternalName(request.getInternalName());
+        }
 
         return productRepository.save(existing);
     }

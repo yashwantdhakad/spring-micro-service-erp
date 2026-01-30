@@ -20,11 +20,13 @@ export class ProductComponent implements OnInit, OnDestroy {
   };
   items: any[] = [];
   pages = 0;
-  displayedColumns: string[] = ['productId', 'productName', 'productTypeId'];
+  displayedColumns: string[] = ['productId', 'productName', 'internalName', 'description', 'productTypeId'];
 
   customerColumns = [
-    { key: 'productId', header: 'COMMON.ID' },
+    { key: 'productId', header: 'PRODUCT.PRODUCT_ID' },
     { key: 'productName', header: 'PRODUCT.NAME' },
+    { key: 'internalName', header: 'PRODUCT.INTERNAL_NAME' },
+    { key: 'description', header: 'PRODUCT.DESCRIPTION' },
     { key: 'productTypeId', header: 'PRODUCT.TYPE' },
   ];
   productTypeMap = new Map<string, string>();

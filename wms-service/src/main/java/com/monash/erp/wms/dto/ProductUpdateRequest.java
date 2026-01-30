@@ -4,6 +4,7 @@ public class ProductUpdateRequest {
 
     private String productName;
     private String description;
+    private String internalName;
 
     public String getProductName() {
         return productName;
@@ -19,5 +20,13 @@ public class ProductUpdateRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInternalName() {
+        return internalName;
+    }
+
+    public void setInternalName(String internalName) {
+        this.internalName = internalName;
     }
 }

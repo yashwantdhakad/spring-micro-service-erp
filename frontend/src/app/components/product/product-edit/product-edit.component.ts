@@ -20,11 +20,13 @@ export class ProductEditComponent {
     private productService: ProductService,
     private snackbarService: SnackbarService
   ) {
-    const { productId, productName } = this.data?.productDetail ?? {};
+    const { productId, productName, internalName, description } = this.data?.productDetail ?? {};
 
     this.updateProductForm = this.fb.group({
       productId: [productId],
       productName: [productName, Validators.required],
+      internalName: [internalName],
+      description: [description],
     });
   }
 
