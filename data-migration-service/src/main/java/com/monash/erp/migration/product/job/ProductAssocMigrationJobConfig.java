@@ -1,4 +1,4 @@
-package com.monash.erp.migration.job;
+package com.monash.erp.migration.product.job;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -23,39 +23,39 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.monash.erp.migration.config.ProductMigrationProperties;
+import com.monash.erp.migration.product.config.ProductMigrationProperties;
 
 @Configuration
 @EnableBatchProcessing
-public class ProductIdentificationMigrationJobConfig {
+public class ProductAssocMigrationJobConfig {
 
     @Bean
-    public JdbcCursorItemReader<Map<String, Object>> productIdentificationReader(
+    public JdbcCursorItemReader<Map<String, Object>> productAssocReader(
             @Qualifier("sourceDataSource") DataSource sourceDataSource,
             ProductMigrationProperties properties,
-            @Qualifier("productIdentificationColumns") List<String> productIdentificationColumns
+            @Qualifier("productAssocColumns") List<String> productAssocColumns
     ) {
         JdbcCursorItemReader<Map<String, Object>> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(sourceDataSource);
-        reader.setSql("SELECT " + String.join(", ", productIdentificationColumns) + " FROM product_identification");
+        reader.setSql("SELECT " + String.join(", ", productAssocColumns) + " FROM product_assoc");
         reader.setRowMapper(new ColumnMapRowMapper());
         reader.setFetchSize(properties.getFetchSize());
         return reader;
     }
 
     @Bean
-    public JdbcBatchItemWriter<Map<String, Object>> productIdentificationWriter(
+    public JdbcBatchItemWriter<Map<String, Object>> productAssocWriter(
             @Qualifier("targetDataSource") DataSource targetDataSource,
-            @Qualifier("productIdentificationColumns") List<String> productIdentificationColumns
+            @Qualifier("productAssocColumns") List<String> productAssocColumns
     ) {
         JdbcBatchItemWriter<Map<String, Object>> writer = new JdbcBatchItemWriter<>();
         writer.setDataSource(targetDataSource);
-        writer.setSql(buildInsertSql("product_identification", productIdentificationColumns));
+        writer.setSql(buildInsertSql("product_assoc", productAssocColumns));
         writer.setItemPreparedStatementSetter(new ItemPreparedStatementSetter<Map<String, Object>>() {
             @Override
             public void setValues(Map<String, Object> item, PreparedStatement ps) throws SQLException {
                 int index = 1;
-                for (String column : productIdentificationColumns) {
+                for (String column : productAssocColumns) {
                     ps.setObject(index++, item.get(column));
                 }
             }
@@ -64,24 +64,24 @@ public class ProductIdentificationMigrationJobConfig {
     }
 
     @Bean
-    public Step productIdentificationMigrationStep(
+    public Step productAssocMigrationStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
-            JdbcCursorItemReader<Map<String, Object>> productIdentificationReader,
-            JdbcBatchItemWriter<Map<String, Object>> productIdentificationWriter,
+            JdbcCursorItemReader<Map<String, Object>> productAssocReader,
+            JdbcBatchItemWriter<Map<String, Object>> productAssocWriter,
             ProductMigrationProperties properties
     ) {
-        return new StepBuilder("productIdentificationMigrationStep", jobRepository)
+        return new StepBuilder("productAssocMigrationStep", jobRepository)
                 .<Map<String, Object>, Map<String, Object>>chunk(properties.getChunkSize(), transactionManager)
-                .reader(productIdentificationReader)
-                .writer(productIdentificationWriter)
+                .reader(productAssocReader)
+                .writer(productAssocWriter)
                 .build();
     }
 
     @Bean
-    public Job productIdentificationMigrationJob(JobRepository jobRepository, Step productIdentificationMigrationStep) {
-        return new JobBuilder("productIdentificationMigrationJob", jobRepository)
-                .start(productIdentificationMigrationStep)
+    public Job productAssocMigrationJob(JobRepository jobRepository, Step productAssocMigrationStep) {
+        return new JobBuilder("productAssocMigrationJob", jobRepository)
+                .start(productAssocMigrationStep)
                 .build();
     }
 

@@ -107,6 +107,7 @@
     "MARK_PICKED": "Mark Picked",
     "NAME": "Name",
     "NONE": "None",
+    "NO": "Non",
     "NOT_AVAILABLE": "Not available",
     "ORDERED": "Ordered",
     "PICKED_QTY": "Picked Qty",
@@ -135,7 +136,8 @@
     "TYPE": "Type",
     "UNIT_COST": "Unit Cost",
     "UNIT_PRICE": "Unit Price",
-    "UOM": "UOM"
+    "UOM": "UOM",
+    "YES": "Oui"
   },
   "CUSTOMER": {
     "ACTION": "Action",
@@ -318,6 +320,7 @@
     "CREATE_PRODUCT": "Créer un produit",
     "CREATE_SHIPMENT": "Créer un envoi",
     "CREATE_SUPPLIER": "Créer un fournisseur",
+    "CREATE_USER": "Créer un utilisateur",
     "CUSTOMER": "Client",
     "CUSTOMERS": "Clients",
     "FACILITIES": "Sites",
@@ -332,10 +335,12 @@
     "POS": "Commandes d'achat",
     "PRODUCT": "Produit",
     "PRODUCTS": "Produits",
+    "SECURITY": "Sécurité",
     "SHIPMENT": "Expédition",
     "SHIPMENTS": "Expéditions",
     "SUPPLIER": "Fournisseur",
-    "SUPPLIERS": "Fournisseurs"
+    "SUPPLIERS": "Fournisseurs",
+    "USERS": "Utilisateurs"
   },
   "ORDER": {
     "ASSET_CLASS": "Asset Class",
@@ -686,6 +691,31 @@
     "TITLE": "Suppliers",
     "TITLE_COL": "Title",
     "UPDATED_SUCCESS": "Supplier updated successfully"
+  },
+  "USER": {
+    "CREATE_BUTTON": "Créer un utilisateur",
+    "CREATE_TITLE": "Créer un utilisateur",
+    "DETAILS": "Détails",
+    "DISABLED": "Désactivé",
+    "EDIT_TITLE": "Modifier l'utilisateur",
+    "ENABLED": "Activé",
+    "GROUP_ID": "ID du groupe",
+    "GROUP_NAME": "Nom du groupe",
+    "ID": "Identifiant utilisateur",
+    "FIRST_NAME": "Prénom",
+    "LAST_NAME": "Nom",
+    "NAME": "Nom",
+    "OVERVIEW": "Aperçu",
+    "PARTY_ID": "ID de partie",
+    "PASSWORD": "Mot de passe",
+    "PASSWORD_HINT": "Laisser vide pour conserver le mot de passe actuel.",
+    "PERMISSION_ID": "ID de permission",
+    "PERMISSIONS": "Autorisations",
+    "REQUIRE_PASSWORD_CHANGE": "Exiger un changement de mot de passe",
+    "ROLES": "Rôles",
+    "SEARCH": "Rechercher",
+    "STATUS": "Statut",
+    "TITLE": "Utilisateurs"
   },
   "USERNAME": "Username",
   "USERNAME_PLACEHOLDER": "Enter your username",

@@ -1,4 +1,4 @@
-package com.monash.erp.migration.controller;
+package com.monash.erp.migration.product.controller;
 
 import java.time.Instant;
 import java.util.Set;

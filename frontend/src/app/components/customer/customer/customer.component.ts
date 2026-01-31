@@ -50,11 +50,13 @@ export class CustomerComponent implements OnInit, OnDestroy {
           this.queryString = value;
           this.pagination.page = 1;
         }),
-        tap(() => (this.isLoading = true)),
         switchMap((value) =>
-          this.partyService
-            .getCustomers(0, value, this.currentSort?.active, this.currentSort?.direction)
-            .pipe(finalize(() => (this.isLoading = false)))
+          this.partyService.getCustomers(
+            0,
+            value,
+            this.currentSort?.active,
+            this.currentSort?.direction
+          )
         ),
         takeUntil(this.destroy$)
       )
@@ -68,6 +70,8 @@ export class CustomerComponent implements OnInit, OnDestroy {
           this.snackbarService.showError('Error fetching customers');
         },
       });
+
+    this.getCustomers(1, '');
   }
 
   ngOnDestroy(): void {

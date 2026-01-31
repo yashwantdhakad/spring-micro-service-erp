@@ -105,6 +105,7 @@
     "MARK_PICKED": "Marcar recogido",
     "NAME": "Nombre",
     "NONE": "Ninguno",
+    "NO": "No",
     "NOT_AVAILABLE": "No disponible",
     "ORDERED": "Ordenado",
     "PICKED_QTY": "Cantidad recogida",
@@ -133,7 +134,8 @@
     "TYPE": "Tipo",
     "UNIT_COST": "Costo unitario",
     "UNIT_PRICE": "Precio unitario",
-    "UOM": "UOM"
+    "UOM": "UOM",
+    "YES": "Sí"
   },
   "CUSTOMER": {
     "ACTION": "Acción",
@@ -319,6 +321,7 @@
     "CREATE_PRODUCT": "Crear Producto",
     "CREATE_SHIPMENT": "Crear Envío",
     "CREATE_SUPPLIER": "Crear Proveedor",
+    "CREATE_USER": "Crear Usuario",
     "CUSTOMER": "Cliente",
     "CUSTOMERS": "Clientes",
     "FACILITIES": "Instalaciones",
@@ -333,10 +336,12 @@
     "POS": "Órdenes de Compra",
     "PRODUCT": "Producto",
     "PRODUCTS": "Productos",
+    "SECURITY": "Seguridad",
     "SHIPMENT": "Envío",
     "SHIPMENTS": "Envíos",
     "SUPPLIER": "Proveedor",
-    "SUPPLIERS": "Proveedores"
+    "SUPPLIERS": "Proveedores",
+    "USERS": "Usuarios"
   },
   "ORDER": {
     "ASSET_CLASS": "Clase de Activo",
@@ -680,6 +685,31 @@
     "SUPPLIER_REQUIRED": "Se requiere nombre de la organización.",
     "TITLE": "Proveedores",
     "UPDATED_SUCCESS": "Proveedor actualizado exitosamente"
+  },
+  "USER": {
+    "CREATE_BUTTON": "Crear Usuario",
+    "CREATE_TITLE": "Crear Usuario",
+    "DETAILS": "Detalles",
+    "DISABLED": "Deshabilitado",
+    "EDIT_TITLE": "Editar Usuario",
+    "ENABLED": "Habilitado",
+    "GROUP_ID": "ID de grupo",
+    "GROUP_NAME": "Nombre del grupo",
+    "ID": "ID de Usuario",
+    "FIRST_NAME": "Nombre",
+    "LAST_NAME": "Apellido",
+    "NAME": "Nombre",
+    "OVERVIEW": "Resumen",
+    "PARTY_ID": "ID de Parte",
+    "PASSWORD": "Contraseña",
+    "PASSWORD_HINT": "Dejar en blanco para mantener la contraseña actual.",
+    "PERMISSION_ID": "ID de permiso",
+    "PERMISSIONS": "Permisos",
+    "REQUIRE_PASSWORD_CHANGE": "Requerir cambio de contraseña",
+    "ROLES": "Roles",
+    "SEARCH": "Buscar",
+    "STATUS": "Estado",
+    "TITLE": "Usuarios"
   },
   "USERNAME": "Nombre de usuario",
   "USERNAME_PLACEHOLDER": "Ingrese su nombre de usuario",

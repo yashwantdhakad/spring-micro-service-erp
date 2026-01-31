@@ -7,6 +7,7 @@ import com.monash.erp.apigateway.security.entity.UserLoginSecurityGroup;
 import com.monash.erp.apigateway.security.repository.UserLoginRepository;
 import com.monash.erp.apigateway.security.repository.UserLoginSecurityGroupRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -23,15 +24,19 @@ public class AuthenticationService {
     private final UserLoginRepository userLoginRepository;
     private final UserLoginSecurityGroupRepository securityGroupRepository;
     private final JwtTokenService tokenService;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthenticationService(UserLoginRepository userLoginRepository,
                                  UserLoginSecurityGroupRepository securityGroupRepository,
-                                 JwtTokenService tokenService) {
+                                 JwtTokenService tokenService,
+                                 PasswordEncoder passwordEncoder) {
         this.userLoginRepository = userLoginRepository;
         this.securityGroupRepository = securityGroupRepository;
         this.tokenService = tokenService;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public AuthResponse authenticate(String userLoginId, String password) {
         UserLogin userLogin = userLoginRepository.findByUserLoginId(userLoginId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
@@ -40,7 +45,17 @@ public class AuthenticationService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
-        if (!StringUtils.hasText(userLogin.getCurrentPassword()) || !userLogin.getCurrentPassword().equals(password)) {
+        String storedPassword = userLogin.getCurrentPassword();
+        if (!StringUtils.hasText(storedPassword)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        }
+        if (passwordEncoder.matches(password, storedPassword)) {
+            // already hashed
+        } else if (storedPassword.equals(password)) {
+            // legacy plain-text password; upgrade to bcrypt
+            userLogin.setCurrentPassword(passwordEncoder.encode(password));
+            userLoginRepository.save(userLogin);
+        } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
@@ -58,7 +73,7 @@ public class AuthenticationService {
 
         UserLogin userLogin = new UserLogin();
         userLogin.setUserLoginId(userLoginId);
-        userLogin.setCurrentPassword(password);
+        userLogin.setCurrentPassword(passwordEncoder.encode(password));
         userLogin.setEnabled(true);
         userLoginRepository.save(userLogin);
 

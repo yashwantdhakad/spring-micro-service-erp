@@ -1,4 +1,4 @@
-package com.monash.erp.migration.job;
+package com.monash.erp.migration.product.job;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.monash.erp.migration.config.ProductMigrationProperties;
+import com.monash.erp.migration.product.config.ProductMigrationProperties;
 
 @Configuration
 @EnableBatchProcessing

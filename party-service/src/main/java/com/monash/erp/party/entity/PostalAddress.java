@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 public class PostalAddress {
@@ -30,6 +31,11 @@ public class PostalAddress {
     private String municipalityGeoId;
     private String postalCodeGeoId;
     private String geoPointId;
+    private LocalDateTime lastUpdatedStamp;
+    private LocalDateTime lastUpdatedTxStamp;
+    private LocalDateTime createdStamp;
+    private LocalDateTime createdTxStamp;
+    private String shipToCode;
 
     public Long getId() {
         return id;
@@ -181,6 +187,46 @@ public class PostalAddress {
 
     public void setGeoPointId(String geoPointId) {
         this.geoPointId = geoPointId;
+    }
+
+    public LocalDateTime getLastUpdatedStamp() {
+        return lastUpdatedStamp;
+    }
+
+    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+        this.lastUpdatedStamp = lastUpdatedStamp;
+    }
+
+    public LocalDateTime getLastUpdatedTxStamp() {
+        return lastUpdatedTxStamp;
+    }
+
+    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
+    }
+
+    public LocalDateTime getCreatedStamp() {
+        return createdStamp;
+    }
+
+    public void setCreatedStamp(LocalDateTime createdStamp) {
+        this.createdStamp = createdStamp;
+    }
+
+    public LocalDateTime getCreatedTxStamp() {
+        return createdTxStamp;
+    }
+
+    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+        this.createdTxStamp = createdTxStamp;
+    }
+
+    public String getShipToCode() {
+        return shipToCode;
+    }
+
+    public void setShipToCode(String shipToCode) {
+        this.shipToCode = shipToCode;
     }
 
 }

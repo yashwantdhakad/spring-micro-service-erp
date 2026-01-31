@@ -1,4 +1,4 @@
-package com.monash.erp.migration.job;
+package com.monash.erp.migration.product.job;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -23,39 +23,39 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.monash.erp.migration.config.ProductMigrationProperties;
+import com.monash.erp.migration.product.config.ProductMigrationProperties;
 
 @Configuration
 @EnableBatchProcessing
-public class ProductPriceMigrationJobConfig {
+public class ProductCategoryMigrationJobConfig {
 
     @Bean
-    public JdbcCursorItemReader<Map<String, Object>> productPriceReader(
+    public JdbcCursorItemReader<Map<String, Object>> productCategoryReader(
             @Qualifier("sourceDataSource") DataSource sourceDataSource,
             ProductMigrationProperties properties,
-            @Qualifier("productPriceColumns") List<String> productPriceColumns
+            @Qualifier("productCategoryColumns") List<String> productCategoryColumns
     ) {
         JdbcCursorItemReader<Map<String, Object>> reader = new JdbcCursorItemReader<>();
         reader.setDataSource(sourceDataSource);
-        reader.setSql("SELECT " + String.join(", ", productPriceColumns) + " FROM product_price");
+        reader.setSql("SELECT " + String.join(", ", productCategoryColumns) + " FROM product_category");
         reader.setRowMapper(new ColumnMapRowMapper());
         reader.setFetchSize(properties.getFetchSize());
         return reader;
     }
 
     @Bean
-    public JdbcBatchItemWriter<Map<String, Object>> productPriceWriter(
+    public JdbcBatchItemWriter<Map<String, Object>> productCategoryWriter(
             @Qualifier("targetDataSource") DataSource targetDataSource,
-            @Qualifier("productPriceColumns") List<String> productPriceColumns
+            @Qualifier("productCategoryColumns") List<String> productCategoryColumns
     ) {
         JdbcBatchItemWriter<Map<String, Object>> writer = new JdbcBatchItemWriter<>();
         writer.setDataSource(targetDataSource);
-        writer.setSql(buildInsertSql("product_price", productPriceColumns));
+        writer.setSql(buildInsertSql("product_category", productCategoryColumns));
         writer.setItemPreparedStatementSetter(new ItemPreparedStatementSetter<Map<String, Object>>() {
             @Override
             public void setValues(Map<String, Object> item, PreparedStatement ps) throws SQLException {
                 int index = 1;
-                for (String column : productPriceColumns) {
+                for (String column : productCategoryColumns) {
                     ps.setObject(index++, item.get(column));
                 }
             }
@@ -64,24 +64,24 @@ public class ProductPriceMigrationJobConfig {
     }
 
     @Bean
-    public Step productPriceMigrationStep(
+    public Step productCategoryMigrationStep(
             JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
-            JdbcCursorItemReader<Map<String, Object>> productPriceReader,
-            JdbcBatchItemWriter<Map<String, Object>> productPriceWriter,
+            JdbcCursorItemReader<Map<String, Object>> productCategoryReader,
+            JdbcBatchItemWriter<Map<String, Object>> productCategoryWriter,
             ProductMigrationProperties properties
     ) {
-        return new StepBuilder("productPriceMigrationStep", jobRepository)
+        return new StepBuilder("productCategoryMigrationStep", jobRepository)
                 .<Map<String, Object>, Map<String, Object>>chunk(properties.getChunkSize(), transactionManager)
-                .reader(productPriceReader)
-                .writer(productPriceWriter)
+                .reader(productCategoryReader)
+                .writer(productCategoryWriter)
                 .build();
     }
 
     @Bean
-    public Job productPriceMigrationJob(JobRepository jobRepository, Step productPriceMigrationStep) {
-        return new JobBuilder("productPriceMigrationJob", jobRepository)
-                .start(productPriceMigrationStep)
+    public Job productCategoryMigrationJob(JobRepository jobRepository, Step productCategoryMigrationStep) {
+        return new JobBuilder("productCategoryMigrationJob", jobRepository)
+                .start(productCategoryMigrationStep)
                 .build();
     }
 

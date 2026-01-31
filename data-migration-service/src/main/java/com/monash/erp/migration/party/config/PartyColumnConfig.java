@@ -1,4 +1,4 @@
-package com.monash.erp.migration.config;
+package com.monash.erp.migration.party.config;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,48 +16,80 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
-public class ProductRelatedColumnConfig {
+public class PartyColumnConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductRelatedColumnConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(PartyColumnConfig.class);
 
     @Bean
-    public List<String> productCategoryColumns(
+    public List<String> partyColumns(
             @Qualifier("sourceDataSource") DataSource sourceDataSource,
-            @Qualifier("targetDataSource") DataSource targetDataSource
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
     ) {
-        return resolveColumns(sourceDataSource, targetDataSource, "product_category");
+        return resolveColumns(sourceDataSource, targetDataSource, "party");
     }
 
     @Bean
-    public List<String> productCategoryMemberColumns(
+    public List<String> personColumns(
             @Qualifier("sourceDataSource") DataSource sourceDataSource,
-            @Qualifier("targetDataSource") DataSource targetDataSource
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
     ) {
-        return resolveColumns(sourceDataSource, targetDataSource, "product_category_member");
+        return resolveColumns(sourceDataSource, targetDataSource, "person");
     }
 
     @Bean
-    public List<String> productPriceColumns(
+    public List<String> partyGroupColumns(
             @Qualifier("sourceDataSource") DataSource sourceDataSource,
-            @Qualifier("targetDataSource") DataSource targetDataSource
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
     ) {
-        return resolveColumns(sourceDataSource, targetDataSource, "product_price");
+        return resolveColumns(sourceDataSource, targetDataSource, "party_group");
     }
 
     @Bean
-    public List<String> productIdentificationColumns(
+    public List<String> partyRoleColumns(
             @Qualifier("sourceDataSource") DataSource sourceDataSource,
-            @Qualifier("targetDataSource") DataSource targetDataSource
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
     ) {
-        return resolveColumns(sourceDataSource, targetDataSource, "product_identification");
+        return resolveColumns(sourceDataSource, targetDataSource, "party_role");
     }
 
     @Bean
-    public List<String> productAssocColumns(
+    public List<String> partyIdentificationColumns(
             @Qualifier("sourceDataSource") DataSource sourceDataSource,
-            @Qualifier("targetDataSource") DataSource targetDataSource
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
     ) {
-        return resolveColumns(sourceDataSource, targetDataSource, "product_assoc");
+        return resolveColumns(sourceDataSource, targetDataSource, "party_identification");
+    }
+
+    @Bean
+    public List<String> partyContactMechColumns(
+            @Qualifier("sourceDataSource") DataSource sourceDataSource,
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
+    ) {
+        return resolveColumns(sourceDataSource, targetDataSource, "party_contact_mech");
+    }
+
+    @Bean
+    public List<String> partyContactMechPurposeColumns(
+            @Qualifier("sourceDataSource") DataSource sourceDataSource,
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
+    ) {
+        return resolveColumns(sourceDataSource, targetDataSource, "party_contact_mech_purpose");
+    }
+
+    @Bean
+    public List<String> postalAddressColumns(
+            @Qualifier("sourceDataSource") DataSource sourceDataSource,
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
+    ) {
+        return resolveColumns(sourceDataSource, targetDataSource, "postal_address");
+    }
+
+    @Bean
+    public List<String> telecomNumberColumns(
+            @Qualifier("sourceDataSource") DataSource sourceDataSource,
+            @Qualifier("partyTargetDataSource") DataSource targetDataSource
+    ) {
+        return resolveColumns(sourceDataSource, targetDataSource, "telecom_number");
     }
 
     private List<String> resolveColumns(DataSource sourceDataSource, DataSource targetDataSource, String tableName) {
@@ -82,6 +114,7 @@ public class ProductRelatedColumnConfig {
         if (!missingInSource.isEmpty()) {
             logger.warn("Skipping columns missing in source {} table: {}", tableName, missingInSource);
         }
+
         if (sourceColumns.isEmpty()) {
             throw new IllegalStateException("No columns found in source " + tableName + " table");
         }

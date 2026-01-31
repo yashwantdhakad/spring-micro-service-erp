@@ -43,6 +43,19 @@ public class MigrationDataSourceConfig {
             .build();
     }
 
+    @Bean
+    @ConfigurationProperties("migration.datasource.party-target")
+    public DataSourceProperties partyTargetDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean(name = "partyTargetDataSource")
+    public DataSource partyTargetDataSource() {
+        return partyTargetDataSourceProperties()
+            .initializeDataSourceBuilder()
+            .build();
+    }
+
     @Bean(name = "dataSource")
     public DataSource dataSource(@Qualifier("targetDataSource") DataSource targetDataSource) {
         return targetDataSource;
@@ -51,5 +64,12 @@ public class MigrationDataSourceConfig {
     @Bean
     public PlatformTransactionManager transactionManager(DataSource targetDataSource) {
         return new DataSourceTransactionManager(targetDataSource);
+    }
+
+    @Bean(name = "partyTransactionManager")
+    public PlatformTransactionManager partyTransactionManager(
+            @Qualifier("partyTargetDataSource") DataSource partyTargetDataSource
+    ) {
+        return new DataSourceTransactionManager(partyTargetDataSource);
     }
 }

@@ -1,13 +1,12 @@
-package com.monash.erp.migration.config;
+package com.monash.erp.migration.party.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "migration.product")
-public class ProductMigrationProperties {
+@ConfigurationProperties(prefix = "migration.party")
+public class PartyMigrationProperties {
 
     private int chunkSize = 1000;
     private int fetchSize = 1000;
-    private boolean runOnStartup = false;
 
     public int getChunkSize() {
         return chunkSize;
@@ -23,13 +22,5 @@ public class ProductMigrationProperties {
 
     public void setFetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
-    }
-
-    public boolean isRunOnStartup() {
-        return runOnStartup;
-    }
-
-    public void setRunOnStartup(boolean runOnStartup) {
-        this.runOnStartup = runOnStartup;
     }
 }

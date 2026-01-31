@@ -1,6 +1,7 @@
 package com.monash.erp.party.controller;
 
 import com.monash.erp.party.dto.PartyRoleSummary;
+import com.monash.erp.party.dto.RoleSummary;
 import com.monash.erp.party.entity.PartyRole;
 import com.monash.erp.party.service.PartyRoleService;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,11 @@ public class PartyRoleController {
         return service.listSummaries(roleTypeId);
     }
 
+    @GetMapping("/by-party/{partyId}")
+    public List<RoleSummary> listByParty(@PathVariable String partyId) {
+        return service.listByPartyId(partyId);
+    }
+
     @GetMapping("/{id}")
     public PartyRole get(@PathVariable Long id) {
         return service.get(id);
@@ -58,6 +64,12 @@ public class PartyRoleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/by-party/{partyId}/{roleTypeId}")
+    public ResponseEntity<Void> deleteByParty(@PathVariable String partyId, @PathVariable String roleTypeId) {
+        service.deleteByPartyAndRole(partyId, roleTypeId);
         return ResponseEntity.noContent().build();
     }
 }

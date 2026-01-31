@@ -75,6 +75,38 @@ export const menuItems = [
       ],
     },
     {
+      name: 'MENU.SECURITY',
+      nav: ['side'],
+      meta: {
+        title: 'MENU.SECURITY',
+        icon: 'security',
+        requiredAuth: true,
+        permissions: ['ADMIN']
+      },
+      children: [
+        {
+          path: '/users',
+          name: 'MENU.USERS',
+          nav: ['side'],
+          meta: {
+            title: 'MENU.USERS',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
+        {
+          path: '/users/create',
+          name: 'MENU.CREATE_USER',
+          nav: ['side'],
+          meta: {
+            title: 'MENU.CREATE_USER',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
+      ],
+    },
+    {
       name: 'MENU.PRODUCT',
       nav: ['side'],
       meta: {

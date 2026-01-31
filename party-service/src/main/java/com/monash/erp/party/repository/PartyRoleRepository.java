@@ -9,4 +9,6 @@ public interface PartyRoleRepository extends JpaRepository<PartyRole, Long> {
     List<PartyRole> findByPartyId(String partyId);
 
     List<PartyRole> findByRoleTypeId(String roleTypeId);
+
+    void deleteByPartyIdAndRoleTypeId(String partyId, String roleTypeId);
 }

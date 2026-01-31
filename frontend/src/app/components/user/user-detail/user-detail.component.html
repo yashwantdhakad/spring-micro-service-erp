@@ -1,1 +1,84 @@
-<p>user-detail works!</p>
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+<ng-template #content>
+  <mat-card class="mat-card mat-elevation-z10">
+    <mat-list>
+      <mat-list-item>
+        <a [routerLink]="['/users']">{{ 'USER.TITLE' | translate }}</a>
+        / {{ userLoginId }}
+      </mat-list-item>
+    </mat-list>
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'USER.OVERVIEW' | translate }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <div fxLayout="row wrap" fxLayout.xs="column">
+      <mat-card fxFlex.gt-xs="24%" class="card-margin mat-elevation-z10">
+        <mat-card-header>
+          <mat-card-title>
+            {{ 'USER.DETAILS' | translate }}
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="openEditDialog()"
+            >edit</mat-icon>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="custom-list">
+            <li class="custom-list-item">
+              <strong>{{ 'USER.ID' | translate }}:</strong>
+              {{ userDetail?.user?.userLoginId }}
+            </li>
+            <li class="custom-list-item">
+              <strong>{{ 'USER.NAME' | translate }}:</strong>
+              {{ userDetail?.user?.firstName || '' }} {{ userDetail?.user?.lastName || '' }}
+            </li>
+            <li class="custom-list-item">
+              <strong>{{ 'USER.STATUS' | translate }}:</strong>
+              {{ userDetail?.user?.enabled ? ('USER.ENABLED' | translate) : ('USER.DISABLED' | translate) }}
+            </li>
+            <li class="custom-list-item">
+              <strong>{{ 'USER.REQUIRE_PASSWORD_CHANGE' | translate }}:</strong>
+              {{ userDetail?.user?.requirePasswordChange ? ('COMMON.YES' | translate) : ('COMMON.NO' | translate) }}
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card fxFlex.gt-xs="24%" class="card-margin mat-elevation-z10">
+        <mat-card-header>
+          <mat-card-title>
+            {{ 'USER.ROLES' | translate }}
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="openRoleDialog()"
+            >add</mat-icon>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="custom-list">
+            <li class="custom-list-item" *ngFor="let role of userRoles">
+              {{ role.roleTypeDescription || role.description || role.roleType }}
+              <mat-icon
+                class="custom-mat-icon custom-icon-align"
+                color="warn"
+                (click)="deleteRoleDialog(role)"
+              >delete</mat-icon>
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-card>
+</ng-template>

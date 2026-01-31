@@ -50,11 +50,13 @@ export class CategoryComponent implements OnInit, OnDestroy {
           this.queryString = value;
           this.pagination.page = 1;
         }),
-        tap(() => (this.isLoading = true)),
         switchMap((value) =>
-          this.categoryService
-            .getCategories(0, value, this.currentSort?.active, this.currentSort?.direction)
-            .pipe(finalize(() => (this.isLoading = false)))
+          this.categoryService.getCategories(
+            0,
+            value,
+            this.currentSort?.active,
+            this.currentSort?.direction
+          )
         ),
         takeUntil(this.destroy$)
       )
@@ -69,6 +71,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
           this.snackbarService.showError('Error fetching categories');
         },
       });
+
+    this.getCategories(1, '');
   }
 
   ngOnDestroy(): void {

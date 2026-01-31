@@ -32,7 +32,7 @@ public class Person {
     private String height;
     private String weight;
     private String mothersMaidenName;
-    private String maritalStatusEnumId;
+    private String maritalStatus;
     private String socialSecurityNumber;
     private String passportNumber;
     private LocalDateTime passportExpireDate;
@@ -45,6 +45,10 @@ public class Person {
     private String monthsWithEmployer;
     private String existingCustomer;
     private String cardId;
+    private LocalDateTime lastUpdatedStamp;
+    private LocalDateTime lastUpdatedTxStamp;
+    private LocalDateTime createdStamp;
+    private LocalDateTime createdTxStamp;
 
     public Long getId() {
         return id;
@@ -206,12 +210,12 @@ public class Person {
         this.mothersMaidenName = mothersMaidenName;
     }
 
-    public String getMaritalStatusEnumId() {
-        return maritalStatusEnumId;
+    public String getMaritalStatus() {
+        return maritalStatus;
     }
 
-    public void setMaritalStatusEnumId(String maritalStatusEnumId) {
-        this.maritalStatusEnumId = maritalStatusEnumId;
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
     }
 
     public String getSocialSecurityNumber() {
@@ -308,6 +312,38 @@ public class Person {
 
     public void setCardId(String cardId) {
         this.cardId = cardId;
+    }
+
+    public LocalDateTime getLastUpdatedStamp() {
+        return lastUpdatedStamp;
+    }
+
+    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+        this.lastUpdatedStamp = lastUpdatedStamp;
+    }
+
+    public LocalDateTime getLastUpdatedTxStamp() {
+        return lastUpdatedTxStamp;
+    }
+
+    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
+    }
+
+    public LocalDateTime getCreatedStamp() {
+        return createdStamp;
+    }
+
+    public void setCreatedStamp(LocalDateTime createdStamp) {
+        this.createdStamp = createdStamp;
+    }
+
+    public LocalDateTime getCreatedTxStamp() {
+        return createdTxStamp;
+    }
+
+    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+        this.createdTxStamp = createdTxStamp;
     }
 
 }

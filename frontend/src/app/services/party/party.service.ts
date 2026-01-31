@@ -58,6 +58,11 @@ export class PartyService {
     return this.apiService.get(url);
   }
 
+  getPartyRolesByPartyId(partyId: string): Observable<any> {
+    const url = `/party/api/party-roles/by-party/${encodeURIComponent(partyId)}`;
+    return this.apiService.get(url);
+  }
+
   getParties(page: number, pageSize: number, keyword: string): Observable<any> {
     const params = new URLSearchParams({
       page: page.toString(),
@@ -163,7 +168,10 @@ export class PartyService {
   }
 
   deleteRole(params: any): Observable<any> {
-    return this.apiService.post('/api/rest/s1/commerce/deletePartyRole', params);
+    const partyId = encodeURIComponent(params.partyId);
+    const roleTypeId = encodeURIComponent(params.roleTypeId);
+    const url = `/party/api/party-roles/by-party/${partyId}/${roleTypeId}`;
+    return this.apiService.delete(url);
   }
 
   addEmailPhone(params: any): Observable<any> {

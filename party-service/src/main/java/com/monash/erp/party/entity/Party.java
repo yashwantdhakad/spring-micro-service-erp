@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,6 +26,12 @@ public class Party {
     private String lastModifiedByUserLogin;
     private String dataSourceId;
     private String isUnread;
+    private LocalDateTime lastUpdatedStamp;
+    private LocalDateTime lastUpdatedTxStamp;
+    private LocalDateTime createdStamp;
+    private LocalDateTime createdTxStamp;
+    @Column(name = "APPROVED_P_M_A")
+    private String approvedPMa;
 
     public Long getId() {
         return id;
@@ -128,6 +135,46 @@ public class Party {
 
     public void setIsUnread(String isUnread) {
         this.isUnread = isUnread;
+    }
+
+    public LocalDateTime getLastUpdatedStamp() {
+        return lastUpdatedStamp;
+    }
+
+    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+        this.lastUpdatedStamp = lastUpdatedStamp;
+    }
+
+    public LocalDateTime getLastUpdatedTxStamp() {
+        return lastUpdatedTxStamp;
+    }
+
+    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
+    }
+
+    public LocalDateTime getCreatedStamp() {
+        return createdStamp;
+    }
+
+    public void setCreatedStamp(LocalDateTime createdStamp) {
+        this.createdStamp = createdStamp;
+    }
+
+    public LocalDateTime getCreatedTxStamp() {
+        return createdTxStamp;
+    }
+
+    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+        this.createdTxStamp = createdTxStamp;
+    }
+
+    public String getApprovedPMa() {
+        return approvedPMa;
+    }
+
+    public void setApprovedPMa(String approvedPMa) {
+        this.approvedPMa = approvedPMa;
     }
 
 }

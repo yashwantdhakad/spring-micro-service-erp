@@ -68,6 +68,9 @@ spring:
             - StripPrefix=1
 
 eureka:
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
@@ -78,8 +81,12 @@ security:
     secret: YXskSV6tKeQso3GjcnQV5mOVJHgkjWOrYUTrWjPlIWCFgJ3YdOcpN0VhsGLIVInl
     issuer: ${JWT_ISSUER:}
     allowed-skew-seconds: 60
-    token-ttl-seconds: ${JWT_TTL_SECONDS:3600}
-    ignored-paths:
-      - /actuator/**
-      - /eureka/**
-      - /security/auth/**
+
+rate-limit:
+  enabled: false
+
+token-ttl-seconds: ${JWT_TTL_SECONDS:3600}
+ignored-paths:
+  - /actuator/**
+  - /eureka/**
+  - /security/auth/**

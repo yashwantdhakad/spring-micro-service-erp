@@ -107,6 +107,7 @@
     "MARK_PICKED": "Mark Picked",
     "NAME": "Name",
     "NONE": "None",
+    "NO": "नहीं",
     "NOT_AVAILABLE": "Not available",
     "ORDERED": "Ordered",
     "PICKED_QTY": "Picked Qty",
@@ -135,7 +136,8 @@
     "TYPE": "Type",
     "UNIT_COST": "Unit Cost",
     "UNIT_PRICE": "Unit Price",
-    "UOM": "UOM"
+    "UOM": "UOM",
+    "YES": "हाँ"
   },
   "CUSTOMER": {
     "ACTION": "Action",
@@ -318,6 +320,7 @@
     "CREATE_PRODUCT": "Create Product",
     "CREATE_SHIPMENT": "Create Shipment",
     "CREATE_SUPPLIER": "Create Supplier",
+    "CREATE_USER": "Create User",
     "CUSTOMER": "Customer",
     "CUSTOMERS": "Customers",
     "FACILITIES": "Facilities",
@@ -332,10 +335,12 @@
     "POS": "Purchase Orders",
     "PRODUCT": "Product",
     "PRODUCTS": "Products",
+    "SECURITY": "Security",
     "SHIPMENT": "Shipment",
     "SHIPMENTS": "Shipments",
     "SUPPLIER": "Supplier",
-    "SUPPLIERS": "Suppliers"
+    "SUPPLIERS": "Suppliers",
+    "USERS": "Users"
   },
   "ORDER": {
     "ASSET_CLASS": "Asset Class",
@@ -686,6 +691,31 @@
     "TITLE": "Suppliers",
     "TITLE_COL": "Title",
     "UPDATED_SUCCESS": "Supplier updated successfully"
+  },
+  "USER": {
+    "CREATE_BUTTON": "Create User",
+    "CREATE_TITLE": "Create User",
+    "DETAILS": "Details",
+    "DISABLED": "Disabled",
+    "EDIT_TITLE": "Edit User",
+    "ENABLED": "Enabled",
+    "GROUP_ID": "Group ID",
+    "GROUP_NAME": "Group Name",
+    "ID": "User ID",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "NAME": "Name",
+    "OVERVIEW": "Overview",
+    "PARTY_ID": "Party ID",
+    "PASSWORD": "Password",
+    "PASSWORD_HINT": "Leave blank to keep the current password.",
+    "PERMISSION_ID": "Permission ID",
+    "PERMISSIONS": "Permissions",
+    "REQUIRE_PASSWORD_CHANGE": "Require Password Change",
+    "ROLES": "Roles",
+    "SEARCH": "Search",
+    "STATUS": "Status",
+    "TITLE": "Users"
   },
   "USERNAME": "Username",
   "USERNAME_PLACEHOLDER": "Enter your username",

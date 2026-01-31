@@ -51,11 +51,13 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.queryString = value;
           this.pagination.page = 1;
         }),
-        tap(() => (this.isLoading = true)),
         switchMap((value) =>
-          this.productService
-            .getProducts(0, value, this.currentSort?.active, this.currentSort?.direction)
-            .pipe(finalize(() => (this.isLoading = false)))
+          this.productService.getProducts(
+            0,
+            value,
+            this.currentSort?.active,
+            this.currentSort?.direction
+          )
         ),
         takeUntil(this.destroy$)
       )
@@ -70,6 +72,8 @@ export class ProductComponent implements OnInit, OnDestroy {
           this.pages = 0;
         }
       });
+
+    this.getProducts(1, '');
   }
 
   ngOnDestroy(): void {

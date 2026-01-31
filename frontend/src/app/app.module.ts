@@ -48,7 +48,6 @@ import { ProductAssocComponent } from './components/product/product-assoc/produc
 import { ProductContentComponent } from './components/product/product-content/product-content.component';
 import { ProductEditComponent } from './components/product/product-edit/product-edit.component';
 import { EditSupplierComponent } from './components/supplier/edit-supplier/edit-supplier.component';
-import { UserDetailComponent } from './components/user/user-detail/user-detail.component';
 import { CurrencyPipe } from './pipes/currency.pipe';
 import { SnackbarService } from './services/common/snackbar.service';
 import { EnumEffects } from './store/enum/enum.effects';
@@ -99,7 +98,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     ProductItemComponent,
     PartyNoteComponent,
     PartyContentComponent,
-    UserDetailComponent,
     EditFeatureComponent,
     EditFeaturegroupComponent,
     AddToFeatureGroupComponent,

@@ -1,12 +1,14 @@
 package com.monash.erp.party.service;
 
 import com.monash.erp.party.dto.PartyRoleSummary;
+import com.monash.erp.party.dto.RoleSummary;
 import com.monash.erp.party.entity.PartyRole;
 import com.monash.erp.party.entity.Person;
 import com.monash.erp.party.repository.PartyRoleRepository;
 import com.monash.erp.party.repository.PersonRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -55,6 +57,13 @@ public class PartyRoleService {
         repository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteByPartyAndRole(String partyId, String roleTypeId) {
+        if (isNotBlank(partyId) && isNotBlank(roleTypeId)) {
+            repository.deleteByPartyIdAndRoleTypeId(partyId, roleTypeId);
+        }
+    }
+
     public List<PartyRoleSummary> listSummaries(String roleTypeId) {
         List<PartyRole> roles = list(roleTypeId);
         if (roles.isEmpty()) {
@@ -80,6 +89,21 @@ public class PartyRoleService {
             String partyId = role.getPartyId();
             String name = names.getOrDefault(partyId, partyId);
             summaries.add(new PartyRoleSummary(partyId, role.getRoleTypeId(), name));
+        }
+        return summaries;
+    }
+
+    public List<RoleSummary> listByPartyId(String partyId) {
+        if (!isNotBlank(partyId)) {
+            return List.of();
+        }
+        List<PartyRole> roles = repository.findByPartyId(partyId);
+        if (roles.isEmpty()) {
+            return List.of();
+        }
+        List<RoleSummary> summaries = new ArrayList<>();
+        for (PartyRole role : roles) {
+            summaries.add(new RoleSummary(role.getRoleTypeId(), role.getRoleTypeId()));
         }
         return summaries;
     }

@@ -1,4 +1,4 @@
-package com.monash.erp.migration.config;
+package com.monash.erp.migration.product.config;
 
 import java.util.LinkedHashSet;
 import java.util.List;
