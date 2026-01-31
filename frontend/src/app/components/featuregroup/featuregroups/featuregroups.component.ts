@@ -20,7 +20,7 @@ export class FeaturegroupsComponent implements OnInit {
 
   displayedColumns = [
     { key: 'productFeatureGroupId', header: 'FEATUREGROUP.ID' },
-    { key: 'description', header: 'FEATUREGROUP.DESCRIPTION' },
+    { key: 'description', header: 'COMMON.DESCRIPTION' },
   ];
 
   constructor(private featureGroupService: FeatureGroupService) {}

@@ -22,10 +22,10 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   displayedColumns = [
     { key: 'inventoryItemId', header: 'ASSET.ASSET_ID' },
-    { key: 'productId', header: 'ASSET.PRODUCT_ID' },
-    { key: 'facilityId', header: 'ASSET.FACILITY_ID' },
+    { key: 'productId', header: 'COMMON.PRODUCT_ID' },
+    { key: 'facilityId', header: 'COMMON.FACILITY_ID' },
     { key: 'inventoryItemTypeId', header: 'ASSET.ASSET_TYPE_ENUM_ID' },
-    { key: 'statusId', header: 'ASSET.STATUS_ID' },
+    { key: 'statusId', header: 'COMMON.STATUS_ID' },
     { key: 'quantityOnHandTotal', header: 'ASSET.QUANTITY_ON_HAND_TOTAL' },
     { key: 'availableToPromiseTotal', header: 'ASSET.AVAILABLE_TO_PROMISE_TOTAL' },
     { key: 'unitCost', header: 'ASSET.ACQUIRE_COST' },

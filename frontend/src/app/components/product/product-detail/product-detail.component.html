@@ -19,11 +19,11 @@
     <mat-card-content>
       <ul class="custom-list">
         <li class="custom-list-item">
-          <strong>{{ 'PRODUCT.PRODUCT_ID' | translate }}:</strong>
+          <strong>{{ 'COMMON.PRODUCT_ID' | translate }}:</strong>
           {{ productDetail?.productId }}
         </li>
         <li class="custom-list-item">
-          <strong>{{ 'PRODUCT.NAME' | translate }}:</strong>
+          <strong>{{ 'COMMON.NAME' | translate }}:</strong>
           {{ productDetail?.productName }}
           <mat-icon
             matListIcon
@@ -38,11 +38,11 @@
           {{ productDetail?.internalName }}
         </li>
         <li class="custom-list-item">
-          <strong>{{ 'PRODUCT.DESCRIPTION' | translate }}:</strong>
+          <strong>{{ 'COMMON.DESCRIPTION' | translate }}:</strong>
           {{ productDetail?.description }}
         </li>
         <li class="custom-list-item">
-          <strong>{{ 'PRODUCT.TYPE' | translate }}:</strong>
+          <strong>{{ 'COMMON.TYPE' | translate }}:</strong>
           {{ productTypeLabel || productDetail?.productTypeId }}
         </li>
       </ul>
@@ -82,7 +82,7 @@
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
       <mat-card-title>
-        {{ 'PRODUCT.PRICE_TITLE' | translate }}
+        {{ 'COMMON.PRICE_TITLE' | translate }}
         <mat-icon
           matListIcon
           class="custom-mat-icon custom-icon-align"
@@ -97,7 +97,7 @@
         <table mat-table [dataSource]="prices">
         <ng-container matColumnDef="typeDescription">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'PRODUCT.PRICE_TYPE' | translate }}
+            {{ 'COMMON.PRICE_TYPE' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getPriceTypeDescription(item?.productPriceTypeId) }}
@@ -105,20 +105,20 @@
         </ng-container>
         <ng-container matColumnDef="description">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'PRODUCT.PRICE_PURPOSE' | translate }}
+            {{ 'COMMON.PRICE_PURPOSE' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ getPricePurposeDescription(item?.productPricePurposeId) }}
           </td>
         </ng-container>
         <ng-container matColumnDef="price">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.PRICE' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRICE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.price }}
           </td>
         </ng-container>
         <ng-container matColumnDef="action">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.ACTION' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <mat-icon
               matListIcon
@@ -248,14 +248,14 @@
       <div class="table-scroll">
         <table mat-table [dataSource]="assocs">
         <ng-container matColumnDef="productName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.PRODUCT' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.toProduct.productName }}
           </td>
         </ng-container>
         <ng-container matColumnDef="description">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'PRODUCT.TYPE' | translate }}
+            {{ 'COMMON.TYPE' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.type.description }}
@@ -288,14 +288,14 @@
       <div class="table-scroll">
         <table mat-table [dataSource]="toAssocs">
         <ng-container matColumnDef="productName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.PRODUCT' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.product.productName }}
           </td>
         </ng-container>
         <ng-container matColumnDef="description">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'PRODUCT.TYPE' | translate }}
+            {{ 'COMMON.TYPE' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.type.description }}

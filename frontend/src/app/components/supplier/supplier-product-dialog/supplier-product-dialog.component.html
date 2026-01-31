@@ -6,7 +6,7 @@
     <mat-dialog-content>
       <form [formGroup]="supplierProductForm" fxLayout="column" fxLayoutGap="16px">
         <mat-form-field appearance="outline" appearance="outline">
-          <mat-label>{{ 'SUPPLIER.PRODUCT' | translate }}</mat-label>
+          <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
           <input matInput formControlName="productId" [matAutocomplete]="supplierProductAuto" />
           <mat-autocomplete #supplierProductAuto="matAutocomplete"
             (optionSelected)="onSupplierProductSelected($event.option.value)">

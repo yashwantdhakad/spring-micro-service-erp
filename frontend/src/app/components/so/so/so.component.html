@@ -12,7 +12,7 @@
     </mat-card-header>
     <mat-card-actions>
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'SO.SEARCH' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.SEARCH' | translate }}</mat-label>
         <input
           matInput
           [(ngModel)]="queryString"
@@ -26,7 +26,7 @@
       <table mat-table [dataSource]="items" matSort [matSortDisableClear]="true" (matSortChange)="onSortChange($event)">
         <ng-container matColumnDef="orderId">
           <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="orderId">
-            {{ 'SO.ID' | translate }}
+            {{ 'COMMON.ID' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <a [routerLink]="['/orders', item.orderId]">{{ item.orderId }}</a>
@@ -63,7 +63,7 @@
         </ng-container>
         <ng-container matColumnDef="statusDescription">
           <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="statusDescription">
-            {{ 'SO.STATUS' | translate }}
+            {{ 'COMMON.STATUS' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.statusDescription }}

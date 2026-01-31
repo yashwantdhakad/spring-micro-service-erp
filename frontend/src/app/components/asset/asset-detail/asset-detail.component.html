@@ -22,7 +22,7 @@
           <mat-card-content>
             <ul class="custom-list">
               <li class="custom-list-item">
-                <strong>{{ 'ASSET.FACILITY' | translate }}</strong>
+                <strong>{{ 'COMMON.FACILITY' | translate }}</strong>
                 <ng-container *ngIf="assetDetail?.facilityId; else noFacility">
                   <a [routerLink]="['/facilities', assetDetail.facilityId]">
                     {{ facilityName || assetDetail.facilityId }}
@@ -34,7 +34,7 @@
                 <ng-template #noFacility>--</ng-template>
               </li>
               <li class="custom-list-item">
-                <strong>{{ 'ASSET.LOCATION' | translate }}</strong>
+                <strong>{{ 'COMMON.LOCATION' | translate }}</strong>
                 {{ assetDetail?.locationSeqId }}
               </li>
               <li class="custom-list-item">
@@ -42,11 +42,11 @@
                 {{ assetDetail?.datetimeReceived | date : "MMMM d, y" }}
               </li>
               <li class="custom-list-item">
-                <strong>{{ 'ASSET.TYPE' | translate }}</strong>
+                <strong>{{ 'COMMON.TYPE' | translate }}</strong>
                 {{ getInventoryItemTypeLabel(assetDetail?.inventoryItemTypeId || assetDetail?.inventoryItemTypeEnumId) }}
               </li>
               <li class="custom-list-item">
-                <strong>{{ 'ASSET.STATUS' | translate }}</strong>
+                <strong>{{ 'COMMON.STATUS' | translate }}</strong>
                 {{ getStatusLabel(assetDetail?.statusId) }}
               </li>
               <li *ngIf="assetDetail?.serialNumber" class="custom-list-item">
@@ -117,7 +117,7 @@
         </ng-container>
         <ng-container matColumnDef="productId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'ASSET.PRODUCT_ID' | translate }}
+            {{ 'COMMON.PRODUCT_ID' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.productId }}
@@ -283,7 +283,7 @@
         </ng-container>
         <ng-container matColumnDef="productId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'ASSET.PRODUCT_ID' | translate }}
+            {{ 'COMMON.PRODUCT_ID' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.productId }}

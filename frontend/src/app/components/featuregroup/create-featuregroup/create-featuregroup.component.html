@@ -12,17 +12,17 @@
       fxLayoutAlign="start"
     >
       <mat-form-field appearance="outline" fxFlex="70%">
-        <mat-label>{{ 'FEATUREGROUP.DESCRIPTION' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.DESCRIPTION' | translate }}</mat-label>
         <textarea
           matInput
-          [placeholder]="'FEATUREGROUP.DESCRIPTION' | translate"
+          [placeholder]="'COMMON.DESCRIPTION' | translate"
           formControlName="description"
         ></textarea>
         <mat-error
           *ngIf="
             createFeatureGroupForm.get('description')?.hasError('required')
           "
-          >{{ 'FEATUREGROUP.DESCRIPTION_REQUIRED' | translate }}</mat-error
+          >{{ 'COMMON.DESCRIPTION_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 

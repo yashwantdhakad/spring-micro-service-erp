@@ -24,7 +24,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   items: any[] = [];
   pages: number = 0;
   displayedColumns = [
-    { key: 'productCategoryId', header: 'CATEGORY.ID' },
+    { key: 'productCategoryId', header: 'COMMON.ID' },
     { key: 'categoryName', header: 'CATEGORY.NAME' },
     { key: 'productCategoryTypeId', header: 'CATEGORY.TYPE' },
   ];

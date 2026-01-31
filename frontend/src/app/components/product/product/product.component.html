@@ -12,7 +12,7 @@
     </mat-card-header>
     <mat-card-actions>
       <mat-form-field appearance="outline">
-        <mat-label>{{ 'PRODUCT.SEARCH' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.SEARCH' | translate }}</mat-label>
         <input
           matInput
           [formControl]="searchControl"
@@ -55,11 +55,11 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="name">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.NAME' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.NAME' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.productName }}</td>
         </ng-container>
         <ng-container matColumnDef="type">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.TYPE' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.TYPE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.productTypeId }}</td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -12,14 +12,14 @@
       fxLayoutAlign="start"
     >
       <mat-form-field appearance="outline" fxFlex="70%">
-        <mat-label>{{ 'FEATURE.TYPE' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.TYPE' | translate }}</mat-label>
         <mat-select formControlName="productFeatureTypeEnumId" name="productFeatureTypeEnumId">
           <mat-option *ngFor="let enumType of enumTypes" [value]="enumType.enumId">
             {{ enumType.description }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="createFeatureForm.get('productFeatureTypeEnumId')?.hasError('required')">
-          {{ 'FEATURE.TYPE_REQUIRED' | translate }}
+          {{ 'COMMON.TYPE_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 
@@ -32,10 +32,10 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="70%">
-        <mat-label>{{ 'FEATURE.DESCRIPTION' | translate }}</mat-label>
-        <textarea matInput [placeholder]="'FEATURE.DESCRIPTION' | translate" formControlName="description"></textarea>
+        <mat-label>{{ 'COMMON.DESCRIPTION' | translate }}</mat-label>
+        <textarea matInput [placeholder]="'COMMON.DESCRIPTION' | translate" formControlName="description"></textarea>
         <mat-error *ngIf="createFeatureForm.get('description')?.hasError('required')">
-          {{ 'FEATURE.DESCRIPTION_REQUIRED' | translate }}
+          {{ 'COMMON.DESCRIPTION_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 

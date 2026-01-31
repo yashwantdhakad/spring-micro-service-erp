@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{ 'PICKLIST.RESERVED_ITEMS_IN_ORDER' | translate:{ orderId: data.orderId } }}</h2>
+<mat-dialog-content>
+  <table mat-table [dataSource]="data.items">
+    <ng-container matColumnDef="product">
+      <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ getProductLabel(item) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="reservedQuantity">
+      <th mat-header-cell *matHeaderCellDef>{{ 'ASSET.RESERVED_QTY' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ item.reservedQuantity }}</td>
+    </ng-container>
+    <ng-container matColumnDef="inventoryItemId">
+      <th mat-header-cell *matHeaderCellDef>{{ 'ASSET.INVENTORY_ITEM' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ item.inventoryItemId || '-' }}</td>
+    </ng-container>
+    <ng-container matColumnDef="orderItemSeqId">
+      <th mat-header-cell *matHeaderCellDef>{{ 'PICKLIST.ORDER_ITEM_SEQ_ID' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ item.orderItemSeqId }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">{{ 'PICKLIST.CLOSE' | translate }}</button>
+</mat-dialog-actions>

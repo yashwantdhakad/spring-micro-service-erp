@@ -26,11 +26,11 @@ export class ProductComponent implements OnInit, OnDestroy {
   currentSort?: Sort;
 
   customerColumns = [
-    { key: 'productId', header: 'PRODUCT.PRODUCT_ID' },
-    { key: 'productName', header: 'PRODUCT.NAME' },
+    { key: 'productId', header: 'COMMON.PRODUCT_ID' },
+    { key: 'productName', header: 'COMMON.NAME' },
     { key: 'internalName', header: 'PRODUCT.INTERNAL_NAME' },
-    { key: 'description', header: 'PRODUCT.DESCRIPTION' },
-    { key: 'productTypeId', header: 'PRODUCT.TYPE' },
+    { key: 'description', header: 'COMMON.DESCRIPTION' },
+    { key: 'productTypeId', header: 'COMMON.TYPE' },
   ];
   productTypeMap = new Map<string, string>();
 

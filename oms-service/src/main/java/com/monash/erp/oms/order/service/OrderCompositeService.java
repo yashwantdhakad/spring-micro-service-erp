@@ -38,6 +38,8 @@ import com.monash.erp.oms.order.dto.PurchaseOrderReceiveRequest;
 import com.monash.erp.oms.order.dto.PurchaseOrderReceiveResponse;
 import com.monash.erp.oms.order.dto.PurchaseOrderReceiptDto;
 import com.monash.erp.oms.order.dto.ReservationStatusDto;
+import com.monash.erp.oms.order.dto.ReservedOrderItemDto;
+import com.monash.erp.oms.order.dto.ReservedOrderSummaryDto;
 import com.monash.erp.oms.accounting.entity.AcctgTrans;
 import com.monash.erp.oms.accounting.entity.AcctgTransEntry;
 import com.monash.erp.oms.accounting.entity.Invoice;
@@ -99,6 +101,8 @@ import java.util.Locale;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -486,6 +490,126 @@ public class OrderCompositeService {
     public ReservationStatusDto getReservationStatus(String orderId) {
         getOrderHeader(orderId);
         return buildReservationStatus(orderId);
+    }
+
+    public List<ReservedOrderSummaryDto> listReservedOrders() {
+        List<OrderHeader> approvedOrders = orderHeaderRepository.findByStatusId(STATUS_APPROVED);
+        if (approvedOrders.isEmpty()) {
+            return List.of();
+        }
+
+        List<String> orderIds = approvedOrders.stream()
+                .map(OrderHeader::getOrderId)
+                .filter(value -> !isBlank(value))
+                .distinct()
+                .collect(Collectors.toList());
+
+        if (orderIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderIdIn(orderIds);
+        Map<String, List<OrderItemShipGrpInvRes>> reservationsByOrder = reservations.stream()
+                .filter(res -> res.getQuantity() != null && res.getQuantity().compareTo(BigDecimal.ZERO) > 0)
+                .collect(Collectors.groupingBy(OrderItemShipGrpInvRes::getOrderId));
+
+        if (reservationsByOrder.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, OrderHeader> orderMap = approvedOrders.stream()
+                .filter(order -> !isBlank(order.getOrderId()))
+                .collect(Collectors.toMap(OrderHeader::getOrderId, order -> order, (a, b) -> a));
+
+        List<ReservedOrderSummaryDto> result = new ArrayList<>();
+        for (Map.Entry<String, List<OrderItemShipGrpInvRes>> entry : reservationsByOrder.entrySet()) {
+            String orderId = entry.getKey();
+            OrderHeader header = orderMap.get(orderId);
+            if (header == null) {
+                continue;
+            }
+
+            List<OrderItemShipGrpInvRes> orderReservations = entry.getValue();
+            BigDecimal totalReserved = orderReservations.stream()
+                    .map(OrderItemShipGrpInvRes::getQuantity)
+                    .filter(Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            if (totalReserved.compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
+            }
+
+            Set<String> itemSeqIds = orderReservations.stream()
+                    .map(OrderItemShipGrpInvRes::getOrderItemSeqId)
+                    .filter(value -> !isBlank(value))
+                    .collect(Collectors.toSet());
+
+            ReservedOrderSummaryDto dto = new ReservedOrderSummaryDto();
+            dto.setOrderId(orderId);
+            dto.setFacilityId(header.getOriginFacilityId());
+            dto.setStatusId(header.getStatusId());
+            dto.setCreatedDate(header.getOrderDate());
+            dto.setPickQuantity(totalReserved);
+            dto.setItemCount(itemSeqIds.size());
+            result.add(dto);
+        }
+
+        return result;
+    }
+
+    public List<ReservedOrderItemDto> listReservedOrderItems(String orderId) {
+        if (isBlank(orderId)) {
+            return List.of();
+        }
+
+        List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+        if (reservations.isEmpty()) {
+            return List.of();
+        }
+
+        Map<String, BigDecimal> reservedByItem = new HashMap<>();
+        Map<String, String> inventoryByItem = new HashMap<>();
+        Map<String, String> shipGroupByItem = new HashMap<>();
+
+        for (OrderItemShipGrpInvRes res : reservations) {
+            if (res.getQuantity() == null || res.getQuantity().compareTo(BigDecimal.ZERO) <= 0) {
+                continue;
+            }
+            reservedByItem.merge(res.getOrderItemSeqId(), res.getQuantity(), BigDecimal::add);
+            if (!isBlank(res.getInventoryItemId())) {
+                inventoryByItem.put(res.getOrderItemSeqId(), res.getInventoryItemId());
+            }
+            if (!isBlank(res.getShipGroupSeqId())) {
+                shipGroupByItem.put(res.getOrderItemSeqId(), res.getShipGroupSeqId());
+            }
+        }
+
+        if (reservedByItem.isEmpty()) {
+            return List.of();
+        }
+
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        Map<String, OrderItem> itemMap = items.stream()
+                .filter(item -> !isBlank(item.getOrderItemSeqId()))
+                .collect(Collectors.toMap(OrderItem::getOrderItemSeqId, item -> item, (a, b) -> a));
+
+        List<ReservedOrderItemDto> result = new ArrayList<>();
+        for (Map.Entry<String, BigDecimal> entry : reservedByItem.entrySet()) {
+            String itemSeqId = entry.getKey();
+            OrderItem item = itemMap.get(itemSeqId);
+            ReservedOrderItemDto dto = new ReservedOrderItemDto();
+            dto.setOrderItemSeqId(itemSeqId);
+            dto.setReservedQuantity(entry.getValue());
+            dto.setInventoryItemId(inventoryByItem.get(itemSeqId));
+            dto.setShipGroupSeqId(shipGroupByItem.get(itemSeqId));
+            if (item != null) {
+                dto.setProductId(item.getProductId());
+                dto.setDescription(item.getItemDescription());
+            }
+            result.add(dto);
+        }
+
+        return result;
     }
 
     public ReservationStatusDto reserveBackorders() {

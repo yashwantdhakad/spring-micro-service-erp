@@ -16,7 +16,7 @@
       <mat-card-content>
         <ul class="custom-list">
           <li class="custom-list-item">
-            <strong>{{ 'SUPPLIER.NAME' | translate }}:</strong>
+            <strong>{{ 'COMMON.NAME' | translate }}:</strong>
             {{ supplierDetail?.groupName }}
             <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
               (click)="editSupplierDialog()">edit</mat-icon>
@@ -148,7 +148,7 @@
     <!--
     <mat-card fxFlex.gt-xs="24%" class="card-margin mat-elevation-z10">
       <mat-card-header>
-        <mat-card-title>{{ 'SUPPLIER.IDENTIFICATION' | translate }}
+        <mat-card-title>{{ 'COMMON.IDENTIFICATION' | translate }}
           <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
             (click)="addIdentificationDialog()">add</mat-icon></mat-card-title>
       </mat-card-header>
@@ -196,7 +196,7 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="action">
-        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.ACTION' | translate }}</th>
+        <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
         <td mat-cell class="text-left" *matCellDef="let item">
           <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
             (click)="addUpdateNoteDialog(item)">edit</mat-icon>

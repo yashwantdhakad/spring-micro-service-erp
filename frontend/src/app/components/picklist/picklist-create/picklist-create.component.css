@@ -1,0 +1,11 @@
+.filter-row {
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+}

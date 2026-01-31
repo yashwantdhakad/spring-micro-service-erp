@@ -10,17 +10,17 @@
       fxLayoutAlign="start"
     >
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'FEATURE.DESCRIPTION' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.DESCRIPTION' | translate }}</mat-label>
         <input
           matInput
-          placeholder="{{ 'FEATURE.DESCRIPTION' | translate }}"
+          placeholder="{{ 'COMMON.DESCRIPTION' | translate }}"
           formControlName="description"
         />
         <mat-error
           *ngIf="
             addEditBankAccountForm.get('description')?.hasError('required')
           "
-          >{{ 'FEATURE.DESCRIPTION_REQUIRED' | translate }}</mat-error
+          >{{ 'COMMON.DESCRIPTION_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 

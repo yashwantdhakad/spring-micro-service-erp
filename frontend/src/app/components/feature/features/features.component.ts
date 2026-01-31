@@ -21,9 +21,9 @@ export class FeaturesComponent implements OnInit {
 
   displayedColumns = [
     { key: 'productFeatureId', header: 'FEATURE.ID' },
-    { key: 'description', header: 'FEATURE.DESCRIPTION' },
+    { key: 'description', header: 'COMMON.DESCRIPTION' },
     { key: 'abbrev', header: 'FEATURE.ABBREV' },
-    { key: 'productFeatureTypeEnumId', header: 'FEATURE.TYPE_ID' },
+    { key: 'productFeatureTypeEnumId', header: 'COMMON.TYPE_ID' },
   ];
 
   constructor(

@@ -38,8 +38,8 @@
 
       <!-- Facility Dropdown -->
       <mat-form-field appearance="outline" fxFlex="48%">
-        <mat-label>{{ 'PO.FACILITY' | translate }}</mat-label>
-        <mat-select [placeholder]="'PO.FACILITY' | translate" formControlName="facilityId">
+        <mat-label>{{ 'COMMON.FACILITY' | translate }}</mat-label>
+        <mat-select [placeholder]="'COMMON.FACILITY' | translate" formControlName="facilityId">
           <mat-option
             *ngFor="let facility of facilities"
             [value]="facility.facilityId"
@@ -47,7 +47,7 @@
           >
         </mat-select>
         <mat-error *ngIf="poForm.get('facilityId')?.hasError('required')">
-          {{ 'PO.FACILITY_REQUIRED' | translate }}
+          {{ 'COMMON.FACILITY_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 

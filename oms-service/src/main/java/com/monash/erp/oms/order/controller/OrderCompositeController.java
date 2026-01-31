@@ -16,6 +16,8 @@ import com.monash.erp.oms.order.dto.PurchaseOrderReceiveRequest;
 import com.monash.erp.oms.order.dto.PurchaseOrderReceiveResponse;
 import com.monash.erp.oms.order.dto.InvoiceSummaryDto;
 import com.monash.erp.oms.order.dto.ReservationStatusDto;
+import com.monash.erp.oms.order.dto.ReservedOrderItemDto;
+import com.monash.erp.oms.order.dto.ReservedOrderSummaryDto;
 import com.monash.erp.oms.order.service.OrderCompositeService;
 import com.monash.erp.oms.order.service.OrderPdfService;
 import org.springframework.core.io.Resource;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URLConnection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -130,6 +133,16 @@ public class OrderCompositeController {
     @GetMapping("/{orderId}/reservation-status")
     public ReservationStatusDto reservationStatus(@PathVariable String orderId) {
         return orderCompositeService.getReservationStatus(orderId);
+    }
+
+    @GetMapping("/reserved")
+    public List<ReservedOrderSummaryDto> listReservedOrders() {
+        return orderCompositeService.listReservedOrders();
+    }
+
+    @GetMapping("/{orderId}/reserved-items")
+    public List<ReservedOrderItemDto> listReservedOrderItems(@PathVariable String orderId) {
+        return orderCompositeService.listReservedOrderItems(orderId);
     }
 
     @PostMapping("/backorders/reserve")

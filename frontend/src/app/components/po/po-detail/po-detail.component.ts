@@ -46,7 +46,7 @@ export class PODetailComponent implements OnInit {
     { key: 'noteText', label: this.translate.instant('PO.NOTE') },
     { key: 'noteDate', label: this.translate.instant('PO.NOTE_DATE') },
     { key: 'userId', label: this.translate.instant('PO.CREATED_BY') },
-    { key: 'action', label: this.translate.instant('PO.ACTION') }
+    { key: 'action', label: this.translate.instant('COMMON.ACTION') }
   ];
   noteColumnKeys: string[] = this.noteColumns.map(c => c.key);
 
@@ -56,9 +56,9 @@ export class PODetailComponent implements OnInit {
     { key: 'productId', label: this.translate.instant('PO.PRODUCT_ID') },
     { key: 'productName', label: this.translate.instant('PO.PRODUCT_NAME') },
     { key: 'itemDescription', label: this.translate.instant('PO.ITEM_DESCRIPTION') },
-    { key: 'description', label: this.translate.instant('PO.TYPE') },
+    { key: 'description', label: this.translate.instant('COMMON.TYPE') },
     { key: 'requiredByDate', label: this.translate.instant('PO.REQUIRED_BY_DATE') },
-    { key: 'unitAmount', label: this.translate.instant('PO.PRICE') },
+    { key: 'unitAmount', label: this.translate.instant('COMMON.PRICE') },
     { key: 'quantity', label: this.translate.instant('PO.QUANTITY') },
     { key: 'receivedQuantity', label: this.translate.instant('PO.RECEIVED_QTY') },
     { key: 'remainingQuantity', label: this.translate.instant('PO.REMAINING_QTY') },
@@ -148,9 +148,9 @@ export class PODetailComponent implements OnInit {
             this.canReceive = this.statusItem?.statusId === 'ORDER_APPROVED';
 
             this.overviewFields = [
-              { label: 'PO.ID', value: this.orderHeader?.orderId },
+              { label: 'COMMON.ID', value: this.orderHeader?.orderId },
               { label: 'PO.ORDER_DATE', value: this.datePipe.transform(this.orderHeader?.entryDate, 'MMMM d, y') },
-              { label: 'PO.STATUS', value: this.statusItem?.description },
+              { label: 'COMMON.STATUS', value: this.statusItem?.description },
             ];
 
             if (displayResponse?.firstPart?.vendorPartyId) {

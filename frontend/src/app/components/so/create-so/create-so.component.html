@@ -28,14 +28,14 @@
 
       <!-- Facility -->
       <mat-form-field appearance="outline" fxFlex="48%">
-        <mat-label>{{ 'SO.FACILITY' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.FACILITY' | translate }}</mat-label>
         <mat-select formControlName="facilityId">
           <mat-option *ngFor="let facility of facilities" [value]="facility.facilityId">
             {{ facility.label }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="orderForm.get('facilityId')?.hasError('required')">
-          {{ 'SO.FACILITY_REQUIRED' | translate }}
+          {{ 'COMMON.FACILITY_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 

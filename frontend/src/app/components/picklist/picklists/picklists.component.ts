@@ -25,12 +25,12 @@ export class PicklistsComponent implements OnInit, OnDestroy {
 
   displayedColumns = [
     'picklistId',
-    'createdDate',
-    'pickerId',
-    'orderCount',
-    'itemCount',
     'statusId',
     'facilityId',
+    'orderCount',
+    'itemCount',
+    'pickerId',
+    'createdDate',
   ];
 
   private destroy$ = new Subject<void>();
@@ -138,10 +138,7 @@ export class PicklistsComponent implements OnInit, OnDestroy {
     if (!date) {
       return undefined;
     }
-    const year = date.getFullYear();
-    const month = `${date.getMonth() + 1}`.padStart(2, '0');
-    const day = `${date.getDate()}`.padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return date.toISOString().split('T')[0];
   }
 
   ngOnDestroy(): void {

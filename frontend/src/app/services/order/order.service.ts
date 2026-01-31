@@ -106,6 +106,16 @@ export class OrderService {
     return this.apiService.get(url);
   }
 
+  getReservedOrders(): Observable<any> {
+    const url = '/oms/api/orders/reserved';
+    return this.apiService.get(url);
+  }
+
+  getReservedOrderItems(orderId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/reserved-items`;
+    return this.apiService.get(url);
+  }
+
   createPicklist(orderId: string): Observable<any> {
     const url = `/oms/api/orders/${encodeURIComponent(orderId)}/picklist`;
     return this.apiService.post(url, {});

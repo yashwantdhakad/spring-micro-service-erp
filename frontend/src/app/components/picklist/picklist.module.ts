@@ -8,6 +8,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { PicklistRoutingModule } from './picklist-routing.module';
 import { PicklistsComponent } from './picklists/picklists.component';
+import { PicklistOrderItemsDialogComponent } from './picklists/picklist-order-items-dialog.component';
+import { PicklistCreateComponent } from './picklist-create/picklist-create.component';
+import { PicklistCreateItemsDialogComponent } from './picklist-create/picklist-create-items-dialog.component';
 import { PicklistDetailComponent } from './picklist-detail/picklist-detail.component';
 import { PicklistAssignPickerDialogComponent } from './picklist-detail/picklist-assign-picker-dialog.component';
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -17,6 +20,9 @@ import { MaterialModule } from '../../components/common/material/material.module
     PicklistsComponent,
     PicklistDetailComponent,
     PicklistAssignPickerDialogComponent,
+    PicklistOrderItemsDialogComponent,
+    PicklistCreateComponent,
+    PicklistCreateItemsDialogComponent,
   ],
   imports: [
     CommonModule,

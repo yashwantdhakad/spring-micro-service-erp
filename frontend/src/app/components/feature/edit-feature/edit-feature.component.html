@@ -20,10 +20,10 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'FEATURE.DESCRIPTION' | translate }}</mat-label>
-        <input matInput [placeholder]="'FEATURE.DESCRIPTION' | translate" formControlName="description" />
+        <mat-label>{{ 'COMMON.DESCRIPTION' | translate }}</mat-label>
+        <input matInput [placeholder]="'COMMON.DESCRIPTION' | translate" formControlName="description" />
         <mat-error *ngIf="featureForm.get('description')?.hasError('required')">
-          {{ 'FEATURE.DESCRIPTION_REQUIRED' | translate }}
+          {{ 'COMMON.DESCRIPTION_REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 

@@ -12,10 +12,10 @@
       fxLayoutAlign="start"
     >
     <mat-form-field fxFlex="70%" appearance="outline">
-      <mat-label>{{ 'ASSET.PRODUCT' | translate }}</mat-label>
+      <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
       <input
         matInput
-        [placeholder]="'ASSET.PRODUCT' | translate"
+        [placeholder]="'COMMON.PRODUCT' | translate"
         [matAutocomplete]="autoProduct"
         formControlName="productId"
       />
@@ -28,39 +28,39 @@
         </mat-option>
       </mat-autocomplete>
           <mat-error *ngIf="createAssetForm.get('productId')?.hasError('required')">
-            {{ 'ASSET.PRODUCT' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+            {{ 'COMMON.PRODUCT' | translate }} {{ 'ASSET.REQUIRED' | translate }}
           </mat-error>
     </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="70%">
-        <mat-label>{{ 'ASSET.STATUS' | translate }}</mat-label>
-        <mat-select [placeholder]="'ASSET.STATUS' | translate" formControlName="statusId">
+        <mat-label>{{ 'COMMON.STATUS' | translate }}</mat-label>
+        <mat-select [placeholder]="'COMMON.STATUS' | translate" formControlName="statusId">
           <mat-option *ngFor="let status of statusList" [value]="status.statusId">
             {{ status.description }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="createAssetForm.get('statusId')?.hasError('required')">
-          {{ 'ASSET.STATUS' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+          {{ 'COMMON.STATUS' | translate }} {{ 'ASSET.REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" fxFlex="34%">
-        <mat-label>{{ 'ASSET.FACILITY' | translate }}</mat-label>
-        <mat-select [placeholder]="'ASSET.FACILITY' | translate" formControlName="facilityId">
+        <mat-label>{{ 'COMMON.FACILITY' | translate }}</mat-label>
+        <mat-select [placeholder]="'COMMON.FACILITY' | translate" formControlName="facilityId">
           <mat-option *ngFor="let facility of facilities" [value]="facility.facilityId">
             {{ facility.label }}
           </mat-option>
         </mat-select>
         <mat-error *ngIf="createAssetForm.get('facilityId')?.hasError('required')">
-          {{ 'ASSET.FACILITY' | translate }} {{ 'ASSET.REQUIRED' | translate }}
+          {{ 'COMMON.FACILITY' | translate }} {{ 'ASSET.REQUIRED' | translate }}
         </mat-error>
       </mat-form-field>
 
       <span fxFlex="2%"></span>
 
       <mat-form-field appearance="outline" fxFlex="34%">
-        <mat-label>{{ 'ASSET.FACILITY_LOCATION' | translate }}</mat-label>
-        <mat-select [placeholder]="'ASSET.FACILITY_LOCATION' | translate" formControlName="locationSeqId">
+        <mat-label>{{ 'COMMON.FACILITY_LOCATION' | translate }}</mat-label>
+        <mat-select [placeholder]="'COMMON.FACILITY_LOCATION' | translate" formControlName="locationSeqId">
           <mat-option *ngFor="let facilityLocation of facilityLocations" [value]="facilityLocation.locationSeqId">
             {{ facilityLocation.locationSeqId }}
           </mat-option>

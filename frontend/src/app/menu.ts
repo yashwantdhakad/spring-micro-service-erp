@@ -350,6 +350,16 @@ export const menuItems = [
             permissions: ['ADMIN']
           }
         },
+        {
+          path: '/picklists/create',
+          name: 'MENU.CREATE_PICKLIST',
+          nav: ['side'],
+          meta: {
+            title: 'MENU.CREATE_PICKLIST',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
       ],
     },
     {

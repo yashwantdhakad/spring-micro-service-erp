@@ -25,7 +25,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
   currentSort?: Sort;
 
   customerColumns = [
-    { key: 'partyId', header: 'CUSTOMER.ID' },
+    { key: 'partyId', header: 'COMMON.ID' },
     { key: 'firstName', header: 'CUSTOMER.FIRST_NAME' },
     { key: 'lastName', header: 'CUSTOMER.LAST_NAME' },
     { key: 'contactNumber', header: 'CUSTOMER.PHONE' },

@@ -10,8 +10,8 @@
       fxLayoutAlign="start"
     >
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'CUSTOMER.NAME' | translate }}</mat-label>
-        <input matInput placeholder="{{ 'CUSTOMER.NAME' | translate }}" formControlName="toName" />
+        <mat-label>{{ 'COMMON.NAME' | translate }}</mat-label>
+        <input matInput placeholder="{{ 'COMMON.NAME' | translate }}" formControlName="toName" />
         <mat-error *ngIf="addEditAddressForm.get('toName')?.hasError('required')">
           {{ 'PARTY.TO_NAME_REQUIRED' | translate }}
         </mat-error>

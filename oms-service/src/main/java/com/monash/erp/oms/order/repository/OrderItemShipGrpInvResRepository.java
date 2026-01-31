@@ -9,6 +9,8 @@ import java.util.List;
 public interface OrderItemShipGrpInvResRepository extends JpaRepository<OrderItemShipGrpInvRes, Long> {
     List<OrderItemShipGrpInvRes> findByOrderId(String orderId);
 
+    List<OrderItemShipGrpInvRes> findByOrderIdIn(List<String> orderIds);
+
     List<OrderItemShipGrpInvRes> findByInventoryItemId(String inventoryItemId);
 
     List<OrderItemShipGrpInvRes> findByQuantityNotAvailableGreaterThan(BigDecimal quantity);

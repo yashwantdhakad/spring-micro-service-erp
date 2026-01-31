@@ -1,6 +1,6 @@
 <mat-card class="mat-elevation-z10">
   <mat-card-title mat-dialog-title>
-    {{ 'PRODUCT.PRICE_TITLE' | translate }}
+    {{ 'COMMON.PRICE_TITLE' | translate }}
   </mat-card-title>
   <mat-card-content mat-dialog-content>
     <form
@@ -10,7 +10,7 @@
       fxLayoutAlign="start"
     >
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'FEATURE.TYPE' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.TYPE' | translate }}</mat-label>
         <mat-select formControlName="productPriceTypeId" name="productPriceTypeId">
           <mat-option
             *ngFor="let priceTypeEnum of priceTypeEnums"
@@ -24,7 +24,7 @@
               .get('productPriceTypeId')
               ?.hasError('required')
           "
-          >{{ 'FEATURE.TYPE_REQUIRED' | translate }}</mat-error
+          >{{ 'COMMON.TYPE_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100%">
@@ -57,7 +57,7 @@
         >
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'PRODUCT.PRICE_UOM' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.PRICE_UOM' | translate }}</mat-label>
         <mat-select formControlName="currencyUomId">
           <mat-option *ngFor="let uom of priceUomOptions" [value]="uom.uomId">
             {{ uom.description }}
@@ -67,7 +67,7 @@
           *ngIf="
             addUpdateProductPriceForm.get('currencyUomId')?.hasError('required')
           "
-          >{{ 'PRODUCT.PRICE_UOM_REQUIRED' | translate }}</mat-error
+          >{{ 'COMMON.PRICE_UOM_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 

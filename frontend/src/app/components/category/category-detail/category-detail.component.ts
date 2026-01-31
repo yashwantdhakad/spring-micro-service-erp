@@ -23,11 +23,11 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
   categoryTypeMap = new Map<string, string>();
   products: any[] = [];
   productColumns = [
-    { key: 'productId', header: 'CATEGORY.ID' },
-    { key: 'product.productName', header: 'CATEGORY.PRODUCT_NAME' },
+    { key: 'productId', header: 'COMMON.ID' },
+    { key: 'product.productName', header: 'COMMON.PRODUCT_NAME' },
     { key: 'fromDate', header: 'CATEGORY.FROM_DATE', isDate: true },
     { key: 'sequenceNum', header: 'CATEGORY.SEQUENCE_NO' },
-    { key: 'action', header: 'CATEGORY.ACTION' }
+    { key: 'action', header: 'COMMON.ACTION' }
   ];
   categoryProductData: any;
   getCurrentDateTime(): string {

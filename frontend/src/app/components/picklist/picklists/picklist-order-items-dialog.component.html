@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{ 'PICKLIST.ITEMS_IN_ORDER' | translate:{ orderId: data.orderId } }}</h2>
+<mat-dialog-content>
+  <table mat-table [dataSource]="data.items">
+    <ng-container matColumnDef="product">
+      <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ getProductLabel(item) }}</td>
+    </ng-container>
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef>{{ 'PICKLIST.DIALOG_QTY_READY' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+    </ng-container>
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.LOCATION' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ item.location }}</td>
+    </ng-container>
+    <ng-container matColumnDef="lotId">
+      <th mat-header-cell *matHeaderCellDef>{{ 'PICKLIST.DIALOG_LOT_ID' | translate }}</th>
+      <td mat-cell *matCellDef="let item">{{ item.lotId || '-' }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">{{ 'PICKLIST.CLOSE' | translate }}</button>
+</mat-dialog-actions>

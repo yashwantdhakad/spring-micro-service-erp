@@ -1,6 +1,6 @@
 <mat-card class="mat-elevation-z10">
   <mat-card-title mat-dialog-title>
-    <h1>{{ 'CATEGORY.PRODUCT' | translate }}</h1>
+    <h1>{{ 'COMMON.PRODUCT' | translate }}</h1>
   </mat-card-title>
   <mat-card-content mat-dialog-content>
     <form
@@ -10,10 +10,10 @@
       fxLayoutAlign="start"
     >
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'CATEGORY.PRODUCT' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
         <input
           matInput
-          placeholder="{{ 'CATEGORY.PRODUCT' | translate }}"
+          placeholder="{{ 'COMMON.PRODUCT' | translate }}"
           [matAutocomplete]="auto"
           formControlName="productId"
         />
@@ -26,7 +26,7 @@
           </mat-option>
         </mat-autocomplete>
         <mat-error *ngIf="addProductToCategoryForm.get('productId')?.hasError('required')"
-          >{{ 'CATEGORY.PRODUCT_REQUIRED' | translate }}</mat-error
+          >{{ 'COMMON.PRODUCT_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
       <div fxFlex="100%" fxLayoutAlign="start">

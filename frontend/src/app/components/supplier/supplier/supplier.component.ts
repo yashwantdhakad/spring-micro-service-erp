@@ -24,8 +24,8 @@ export class SupplierComponent implements OnInit, OnDestroy {
   pages: number = 0;
   currentSort?: Sort;
   supplierColumns = [
-    { key: 'partyId', header: 'SUPPLIER.ID' },
-    { key: 'groupName', header: 'SUPPLIER.NAME' },
+    { key: 'partyId', header: 'COMMON.ID' },
+    { key: 'groupName', header: 'COMMON.NAME' },
     { key: 'contactNumber', header: 'SUPPLIER.PHONE' },
     { key: 'emailAddress', header: 'SUPPLIER.EMAIL' },
   ];

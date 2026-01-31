@@ -67,7 +67,7 @@
           <td mat-cell *matCellDef="let item">{{ item.userId }}</td>
         </ng-container>
         <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef>{{ 'PO.ACTION' | translate }}</th>
+          <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell *matCellDef="let item">
             <mat-icon
               matListIcon
@@ -126,7 +126,7 @@
           <mat-card-content>
             <ul class="custom-list">
               <li class="custom-list-item">
-                <strong>{{ 'PO.FACILITY' | translate }}:</strong> {{ part.facility.facilityName }}
+                <strong>{{ 'COMMON.FACILITY' | translate }}:</strong> {{ part.facility.facilityName }}
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'PO.ADDRESS' | translate }}:</strong>
@@ -161,7 +161,7 @@
           <mat-card-content>
             <ul class="custom-list">
               <li class="custom-list-item">
-                <strong>{{ 'PO.NAME' | translate }}:</strong>
+                <strong>{{ 'COMMON.NAME' | translate }}:</strong>
                 {{ vendorName || part?.vendor?.organization?.organizationName || vendorPartyId }}
               </li>
             </ul>
@@ -253,7 +253,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="unitAmount">
-              <th mat-header-cell *matHeaderCellDef>{{ 'PO.PRICE' | translate }}</th>
+              <th mat-header-cell *matHeaderCellDef>{{ 'COMMON.PRICE' | translate }}</th>
               <td mat-cell *matCellDef="let item">
                 {{ item.unitAmount | currency : orderHeader?.currencyUomId }}
               </td>

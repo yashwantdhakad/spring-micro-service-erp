@@ -40,6 +40,27 @@ export class PicklistService {
     return this.apiService.get(url);
   }
 
+  getPicklistOrders(filters: {
+    statusId?: string;
+    facilityId?: string;
+  }): Observable<any> {
+    const params = new URLSearchParams();
+    if (filters.statusId) {
+      params.append('statusId', filters.statusId);
+    }
+    if (filters.facilityId) {
+      params.append('facilityId', filters.facilityId);
+    }
+    const suffix = params.toString();
+    const url = suffix ? `/wms/api/picklists/orders?${suffix}` : '/wms/api/picklists/orders';
+    return this.apiService.get(url);
+  }
+
+  getPicklistOrdersByOrder(orderId: string): Observable<any> {
+    const url = `/wms/api/picklists/by-order/${encodeURIComponent(orderId)}`;
+    return this.apiService.get(url);
+  }
+
   assignPicker(picklistId: string, partyId: string): Observable<any> {
     const url = '/wms/api/picklist-roles';
     const payload = {

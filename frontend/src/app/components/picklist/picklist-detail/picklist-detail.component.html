@@ -22,11 +22,11 @@
                 {{ picklistDetail?.picklist?.picklistId }}
               </li>
               <li class="custom-list-item">
-                <strong>{{ 'PICKLIST.FACILITY' | translate }}</strong>
+                <strong>{{ 'COMMON.FACILITY' | translate }}</strong>
                 {{ getFacilityLabel(picklistDetail?.picklist?.facilityId) }}
               </li>
               <li class="custom-list-item">
-                <strong>{{ 'PICKLIST.STATUS' | translate }}</strong>
+                <strong>{{ 'COMMON.STATUS' | translate }}</strong>
                 {{ getPicklistStatusLabel(picklistDetail?.picklist?.statusId) }}
               </li>
             </ul>
@@ -128,7 +128,7 @@
               </ng-container>
               <ng-container matColumnDef="quantity">
                 <th mat-header-cell class="text-right" *matHeaderCellDef>
-                  {{ 'PICKLIST.QTY' | translate }}
+                  {{ 'COMMON.QTY' | translate }}
                 </th>
                 <td mat-cell class="text-right" *matCellDef="let item">
                   {{ item.quantity }}

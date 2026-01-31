@@ -9,7 +9,7 @@
     <mat-card-content>
       <div fxLayout="row wrap" fxLayoutGap="16px" class="filter-row">
         <mat-form-field appearance="outline">
-          <mat-label>{{ 'PICKLIST.FACILITY' | translate }}</mat-label>
+          <mat-label>{{ 'COMMON.FACILITY' | translate }}</mat-label>
           <mat-select [(ngModel)]="filters.facilityId">
             <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
             <mat-option *ngFor="let facility of facilities" [value]="facility.facilityId">
@@ -18,7 +18,7 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">
-          <mat-label>{{ 'PICKLIST.STATUS' | translate }}</mat-label>
+          <mat-label>{{ 'COMMON.STATUS' | translate }}</mat-label>
           <mat-select [(ngModel)]="filters.statusId">
             <mat-option value="">{{ 'COMMON.ALL' | translate }}</mat-option>
             <mat-option *ngFor="let status of statusOptions" [value]="status.statusId">
@@ -50,59 +50,35 @@
       <div class="table-container">
         <table mat-table [dataSource]="picklists">
           <ng-container matColumnDef="picklistId">
-            <th mat-header-cell class="text-left" *matHeaderCellDef>
-              {{ 'PICKLIST.ID' | translate }}
-            </th>
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PICKLIST.ID' | translate }}</th>
             <td mat-cell class="text-left" *matCellDef="let item">
               <a [routerLink]="['/picklists', item.picklistId]">{{ item.picklistId }}</a>
             </td>
           </ng-container>
-          <ng-container matColumnDef="createdDate">
-            <th mat-header-cell class="text-left" *matHeaderCellDef>
-              {{ 'PICKLIST.CREATED_DATE' | translate }}
-            </th>
-            <td mat-cell class="text-left" *matCellDef="let item">
-              {{ item.createdDate | date : "MMMM d, y" }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="pickerId">
-            <th mat-header-cell class="text-left" *matHeaderCellDef>
-              {{ 'PICKLIST.PICKER' | translate }}
-            </th>
-            <td mat-cell class="text-left" *matCellDef="let item">
-              {{ item.pickerId || '--' }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="orderCount">
-            <th mat-header-cell class="text-right" *matHeaderCellDef>
-              {{ 'PICKLIST.ORDER_COUNT' | translate }}
-            </th>
-            <td mat-cell class="text-right" *matCellDef="let item">
-              {{ item.orderCount }}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="itemCount">
-            <th mat-header-cell class="text-right" *matHeaderCellDef>
-              {{ 'PICKLIST.ITEM_COUNT' | translate }}
-            </th>
-            <td mat-cell class="text-right" *matCellDef="let item">
-              {{ item.itemCount }}
-            </td>
-          </ng-container>
           <ng-container matColumnDef="statusId">
-            <th mat-header-cell class="text-left" *matHeaderCellDef>
-              {{ 'PICKLIST.STATUS' | translate }}
-            </th>
-            <td mat-cell class="text-left" *matCellDef="let item">
-              {{ getStatusLabel(item.statusId) }}
-            </td>
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">{{ getStatusLabel(item.statusId) }}</td>
           </ng-container>
           <ng-container matColumnDef="facilityId">
-            <th mat-header-cell class="text-left" *matHeaderCellDef>
-              {{ 'PICKLIST.FACILITY' | translate }}
-            </th>
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.FACILITY' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">{{ getFacilityLabel(item.facilityId) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="orderCount">
+            <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'PICKLIST.ORDER_COUNT' | translate }}</th>
+            <td mat-cell class="text-right" *matCellDef="let item">{{ item.orderCount }}</td>
+          </ng-container>
+          <ng-container matColumnDef="itemCount">
+            <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'PICKLIST.ITEM_COUNT' | translate }}</th>
+            <td mat-cell class="text-right" *matCellDef="let item">{{ item.itemCount }}</td>
+          </ng-container>
+          <ng-container matColumnDef="pickerId">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PICKLIST.PICKER' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">{{ item.pickerId || '-' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="createdDate">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PICKLIST.CREATED_DATE' | translate }}</th>
             <td mat-cell class="text-left" *matCellDef="let item">
-              {{ getFacilityLabel(item.facilityId) }}
+              {{ item.createdDate | date : "MMMM d, y" }}
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

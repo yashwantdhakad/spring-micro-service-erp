@@ -10,10 +10,10 @@
       fxLayoutAlign="start"
     >
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'PRODUCT.PRODUCT' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
         <input
           matInput
-          [placeholder]="'PRODUCT.PRODUCT' | translate"
+          [placeholder]="'COMMON.PRODUCT' | translate"
           [matAutocomplete]="auto"
           formControlName="toProductId"
         />
@@ -27,11 +27,11 @@
         </mat-autocomplete>
         <mat-error
           *ngIf="addProductAssocForm.get('toProductId')?.hasError('required')"
-          >{{ 'PRODUCT.PRODUCT_REQUIRED' | translate }}</mat-error
+          >{{ 'COMMON.PRODUCT_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'PRODUCT.TYPE' | translate }}</mat-label>
+        <mat-label>{{ 'COMMON.TYPE' | translate }}</mat-label>
         <mat-select
           formControlName="productAssocTypeEnumId"
           name="productAssocTypeEnumId"
@@ -48,7 +48,7 @@
               .get('productAssocTypeEnumId')
               ?.hasError('required')
           "
-          >{{ 'PRODUCT.TYPE_REQUIRED' | translate }}</mat-error
+          >{{ 'COMMON.TYPE_REQUIRED' | translate }}</mat-error
         >
       </mat-form-field>
 
