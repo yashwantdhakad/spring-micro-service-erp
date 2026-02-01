@@ -72,7 +72,12 @@ public class InventoryItemService {
 
     public InventoryItem create(InventoryItem entity) {
         entity.setId(null);
-        return repository.save(entity);
+        InventoryItem saved = repository.save(entity);
+        if (isBlank(saved.getInventoryItemId())) {
+            saved.setInventoryItemId(String.valueOf(saved.getId()));
+            saved = repository.save(saved);
+        }
+        return saved;
     }
 
     public InventoryItem update(Long id, InventoryItem entity) {

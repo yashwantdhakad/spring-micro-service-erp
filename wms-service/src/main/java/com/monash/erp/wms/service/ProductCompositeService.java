@@ -147,7 +147,7 @@ public class ProductCompositeService {
         Product saved = productRepository.save(product);
 
         if (isBlank(saved.getProductId())) {
-            saved.setProductId("PROD" + saved.getId());
+            saved.setProductId(String.valueOf(saved.getId()));
             saved = productRepository.save(saved);
         }
 

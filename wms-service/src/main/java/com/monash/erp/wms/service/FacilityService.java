@@ -39,7 +39,12 @@ public class FacilityService {
 
     public Facility create(Facility entity) {
         entity.setId(null);
-        return repository.save(entity);
+        Facility saved = repository.save(entity);
+        if (isBlank(saved.getFacilityId())) {
+            saved.setFacilityId(String.valueOf(saved.getId()));
+            saved = repository.save(saved);
+        }
+        return saved;
     }
 
     public Facility update(Long id, Facility entity) {
@@ -76,5 +81,9 @@ public class FacilityService {
             }
         }
         return true;
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

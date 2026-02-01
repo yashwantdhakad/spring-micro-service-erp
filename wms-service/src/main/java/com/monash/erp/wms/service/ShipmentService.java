@@ -28,7 +28,12 @@ public class ShipmentService {
 
     public Shipment create(Shipment entity) {
         entity.setId(null);
-        return repository.save(entity);
+        Shipment saved = repository.save(entity);
+        if (isBlank(saved.getShipmentId())) {
+            saved.setShipmentId(String.valueOf(saved.getId()));
+            saved = repository.save(saved);
+        }
+        return saved;
     }
 
     public Shipment update(Long id, Shipment entity) {
@@ -41,5 +46,9 @@ public class ShipmentService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

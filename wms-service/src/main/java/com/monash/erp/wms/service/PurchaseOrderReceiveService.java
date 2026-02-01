@@ -25,8 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 
 @Service
 public class PurchaseOrderReceiveService {
@@ -74,9 +72,7 @@ public class PurchaseOrderReceiveService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "facilityId is required");
         }
 
-        String shipmentId = generateShipmentId();
         Shipment shipment = new Shipment();
-        shipment.setShipmentId(shipmentId);
         shipment.setShipmentTypeId(SHIPMENT_TYPE);
         shipment.setStatusId(SHIPMENT_STATUS);
         shipment.setPrimaryOrderId(orderId);
@@ -86,7 +82,12 @@ public class PurchaseOrderReceiveService {
         shipment.setCreatedDate(LocalDateTime.now());
         shipment.setLastModifiedDate(LocalDateTime.now());
         shipment.setId(null);
-        shipmentRepository.save(shipment);
+        Shipment savedShipment = shipmentRepository.save(shipment);
+        if (isBlank(savedShipment.getShipmentId())) {
+            savedShipment.setShipmentId(String.valueOf(savedShipment.getId()));
+            savedShipment = shipmentRepository.save(savedShipment);
+        }
+        String shipmentId = savedShipment.getShipmentId();
 
         ShipmentStatus status = new ShipmentStatus();
         status.setShipmentId(shipmentId);
@@ -116,9 +117,7 @@ public class PurchaseOrderReceiveService {
             shipmentItem.setId(null);
             shipmentItemRepository.save(shipmentItem);
 
-            String inventoryItemId = generateInventoryItemId();
             InventoryItem inventoryItem = new InventoryItem();
-            inventoryItem.setInventoryItemId(inventoryItemId);
             inventoryItem.setInventoryItemTypeId(DEFAULT_INVENTORY_ITEM_TYPE);
             inventoryItem.setProductId(itemRequest.getProductId());
             inventoryItem.setFacilityId(request.getFacilityId());
@@ -132,10 +131,15 @@ public class PurchaseOrderReceiveService {
             inventoryItem.setUnitCost(itemRequest.getUnitCost());
             inventoryItem.setCurrencyUomId(defaultValue(request.getCurrencyUomId(), DEFAULT_CURRENCY));
             inventoryItem.setId(null);
-            inventoryItemRepository.save(inventoryItem);
+            InventoryItem savedItem = inventoryItemRepository.save(inventoryItem);
+            if (isBlank(savedItem.getInventoryItemId())) {
+                savedItem.setInventoryItemId(String.valueOf(savedItem.getId()));
+                savedItem = inventoryItemRepository.save(savedItem);
+            }
+            String inventoryItemId = savedItem.getInventoryItemId();
 
             ShipmentReceipt receipt = new ShipmentReceipt();
-            receipt.setReceiptId(generateReceiptId());
+            receipt.setReceiptId(null);
             receipt.setInventoryItemId(inventoryItemId);
             receipt.setProductId(itemRequest.getProductId());
             receipt.setShipmentId(shipmentId);
@@ -146,11 +150,14 @@ public class PurchaseOrderReceiveService {
             receipt.setQuantityAccepted(itemRequest.getQuantity());
             receipt.setQuantityRejected("0");
             receipt.setId(null);
-            shipmentReceiptRepository.save(receipt);
+            ShipmentReceipt savedReceipt = shipmentReceiptRepository.save(receipt);
+            if (isBlank(savedReceipt.getReceiptId())) {
+                savedReceipt.setReceiptId(String.valueOf(savedReceipt.getId()));
+                savedReceipt = shipmentReceiptRepository.save(savedReceipt);
+            }
 
             InventoryItemDetail detail = new InventoryItemDetail();
             detail.setInventoryItemId(inventoryItemId);
-            detail.setInventoryItemDetailSeqId("00001");
             detail.setEffectiveDate(defaultDate(request.getReceivedDate()));
             detail.setQuantityOnHandDiff(itemRequest.getQuantity());
             detail.setAvailableToPromiseDiff(itemRequest.getQuantity());
@@ -161,13 +168,17 @@ public class PurchaseOrderReceiveService {
             detail.setShipGroupSeqId(defaultValue(request.getShipGroupSeqId(), "00001"));
             detail.setShipmentId(shipmentId);
             detail.setShipmentItemSeqId(shipmentItemSeqId);
-            detail.setReceiptId(receipt.getReceiptId());
+            detail.setReceiptId(savedReceipt.getReceiptId());
             detail.setId(null);
-            inventoryItemDetailRepository.save(detail);
+            InventoryItemDetail savedDetail = inventoryItemDetailRepository.save(detail);
+            if (isBlank(savedDetail.getInventoryItemDetailSeqId())) {
+                savedDetail.setInventoryItemDetailSeqId(String.valueOf(savedDetail.getId()));
+                inventoryItemDetailRepository.save(savedDetail);
+            }
 
             receipts.add(new PurchaseOrderReceiptDto(
                     itemRequest.getOrderItemSeqId(),
-                    receipt.getReceiptId(),
+                    savedReceipt.getReceiptId(),
                     inventoryItemId,
                     itemRequest.getQuantity()
             ));
@@ -179,18 +190,6 @@ public class PurchaseOrderReceiveService {
 
     public List<ShipmentReceipt> listReceipts(String orderId) {
         return shipmentReceiptRepository.findByOrderId(orderId);
-    }
-
-    private String generateShipmentId() {
-        return "SHP-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
-    }
-
-    private String generateInventoryItemId() {
-        return "INV-" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase(Locale.ROOT);
-    }
-
-    private String generateReceiptId() {
-        return "RCPT-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
     }
 
     private LocalDateTime defaultDate(LocalDateTime date) {

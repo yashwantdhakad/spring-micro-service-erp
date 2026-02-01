@@ -28,7 +28,12 @@ public class ItemIssuanceService {
 
     public ItemIssuance create(ItemIssuance entity) {
         entity.setId(null);
-        return repository.save(entity);
+        ItemIssuance saved = repository.save(entity);
+        if (isBlank(saved.getItemIssuanceId())) {
+            saved.setItemIssuanceId(String.valueOf(saved.getId()));
+            saved = repository.save(saved);
+        }
+        return saved;
     }
 
     public ItemIssuance update(Long id, ItemIssuance entity) {
@@ -41,5 +46,9 @@ public class ItemIssuanceService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

@@ -37,8 +37,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -117,16 +115,19 @@ public class SalesOrderFulfillmentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "facilityId is required");
         }
 
-        String picklistId = generatePicklistId();
         Picklist picklist = new Picklist();
-        picklist.setPicklistId(picklistId);
         picklist.setFacilityId(request.getFacilityId());
         picklist.setShipmentMethodTypeId(request.getShipmentMethodTypeId());
         picklist.setStatusId(PICKLIST_STATUS_INPUT);
         picklist.setPicklistDate(LocalDateTime.now());
         picklist.setCreatedDate(LocalDateTime.now());
         picklist.setLastModifiedDate(LocalDateTime.now());
-        picklistRepository.save(picklist);
+        Picklist savedPicklist = picklistRepository.save(picklist);
+        if (isBlank(savedPicklist.getPicklistId())) {
+            savedPicklist.setPicklistId(String.valueOf(savedPicklist.getId()));
+            savedPicklist = picklistRepository.save(savedPicklist);
+        }
+        String picklistId = savedPicklist.getPicklistId();
 
         PicklistStatus status = new PicklistStatus();
         status.setPicklistId(picklistId);
@@ -134,18 +135,19 @@ public class SalesOrderFulfillmentService {
         status.setStatusDate(LocalDateTime.now());
         picklistStatusRepository.save(status);
 
-        String picklistBinId = generatePicklistBinId();
         PicklistBin bin = new PicklistBin();
-        bin.setPicklistBinId(picklistBinId);
         bin.setPicklistId(picklistId);
         bin.setPrimaryOrderId(request.getOrderId());
         bin.setPrimaryShipGroupSeqId(defaultValue(request.getShipGroupSeqId(), DEFAULT_SHIP_GROUP));
         bin.setBinLocationNumber("BIN-1");
-        picklistBinRepository.save(bin);
+        PicklistBin savedBin = picklistBinRepository.save(bin);
+        if (isBlank(savedBin.getPicklistBinId())) {
+            savedBin.setPicklistBinId(String.valueOf(savedBin.getId()));
+            savedBin = picklistBinRepository.save(savedBin);
+        }
+        String picklistBinId = savedBin.getPicklistBinId();
 
-        String shipmentId = generateShipmentId();
         Shipment shipment = new Shipment();
-        shipment.setShipmentId(shipmentId);
         shipment.setShipmentTypeId(SHIPMENT_TYPE_SALES);
         shipment.setStatusId(SHIPMENT_STATUS_INPUT);
         shipment.setPrimaryOrderId(request.getOrderId());
@@ -154,7 +156,12 @@ public class SalesOrderFulfillmentService {
         shipment.setOriginFacilityId(request.getFacilityId());
         shipment.setCreatedDate(LocalDateTime.now());
         shipment.setLastModifiedDate(LocalDateTime.now());
-        shipmentRepository.save(shipment);
+        Shipment savedShipment = shipmentRepository.save(shipment);
+        if (isBlank(savedShipment.getShipmentId())) {
+            savedShipment.setShipmentId(String.valueOf(savedShipment.getId()));
+            savedShipment = shipmentRepository.save(savedShipment);
+        }
+        String shipmentId = savedShipment.getShipmentId();
 
         ShipmentStatus shipmentStatus = new ShipmentStatus();
         shipmentStatus.setShipmentId(shipmentId);
@@ -241,18 +248,6 @@ public class SalesOrderFulfillmentService {
         response.setNotAvailableQuantity(remaining);
         response.setAllocations(allocations);
         return response;
-    }
-
-    private String generatePicklistId() {
-        return "PKL-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
-    }
-
-    private String generatePicklistBinId() {
-        return "PKB-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
-    }
-
-    private String generateShipmentId() {
-        return "SHP-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
     }
 
     private void createReservationDetail(

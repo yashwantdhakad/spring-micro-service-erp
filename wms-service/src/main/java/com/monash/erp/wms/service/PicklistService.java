@@ -28,7 +28,12 @@ public class PicklistService {
 
     public Picklist create(Picklist entity) {
         entity.setId(null);
-        return repository.save(entity);
+        Picklist saved = repository.save(entity);
+        if (isBlank(saved.getPicklistId())) {
+            saved.setPicklistId(String.valueOf(saved.getId()));
+            saved = repository.save(saved);
+        }
+        return saved;
     }
 
     public Picklist update(Long id, Picklist entity) {
@@ -41,5 +46,9 @@ public class PicklistService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

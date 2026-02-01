@@ -154,7 +154,7 @@ public class SupplierService {
         party.setCreatedDate(LocalDateTime.now());
         party = partyRepository.save(party);
 
-        String partyId = "SUPP" + party.getId();
+        String partyId = String.valueOf(party.getId());
         party.setPartyId(partyId);
         party = partyRepository.save(party);
 
@@ -554,10 +554,14 @@ public class SupplierService {
 
     private ContactMech createContactMech(String typeId, String infoString) {
         ContactMech contactMech = new ContactMech();
-        contactMech.setContactMechId("CM" + UUID.randomUUID().toString().replace("-", ""));
         contactMech.setContactMechTypeId(typeId);
         contactMech.setInfoString(infoString);
-        return contactMechRepository.save(contactMech);
+        ContactMech saved = contactMechRepository.save(contactMech);
+        if (!StringUtils.hasText(saved.getContactMechId())) {
+            saved.setContactMechId(String.valueOf(saved.getId()));
+            saved = contactMechRepository.save(saved);
+        }
+        return saved;
     }
 
     private void linkContactMech(String partyId, String contactMechId) {

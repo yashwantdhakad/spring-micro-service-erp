@@ -42,10 +42,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -161,10 +159,6 @@ public class ShipmentCompositeService {
         }
 
         Shipment shipment = request.getShipment();
-        if (isBlank(shipment.getShipmentId())) {
-            shipment.setShipmentId(generateShipmentId());
-        }
-
         LocalDateTime now = LocalDateTime.now();
         if (shipment.getCreatedDate() == null) {
             shipment.setCreatedDate(now);
@@ -173,6 +167,10 @@ public class ShipmentCompositeService {
         shipment.setId(null);
 
         Shipment saved = shipmentRepository.save(shipment);
+        if (isBlank(saved.getShipmentId())) {
+            saved.setShipmentId(String.valueOf(saved.getId()));
+            saved = shipmentRepository.save(saved);
+        }
 
         List<ShipmentItem> items = saveItems(saved.getShipmentId(), request.getItems());
         List<ShipmentRouteSegment> routeSegments = saveRouteSegments(saved.getShipmentId(), request.getRouteSegments());
@@ -412,10 +410,6 @@ public class ShipmentCompositeService {
                 .collect(Collectors.toList());
     }
 
-    private String generateShipmentId() {
-        return "SHP-" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase(Locale.ROOT);
-    }
-
     private boolean isBlank(String value) {
         return value == null || value.isBlank();
     }
@@ -459,7 +453,6 @@ public class ShipmentCompositeService {
 
             String shipmentItemSeqId = shipmentItemByProduct.get(inventoryItem.getProductId());
             ItemIssuance issuance = new ItemIssuance();
-            issuance.setItemIssuanceId(generateItemIssuanceId());
             issuance.setInventoryItemId(inventoryItem.getInventoryItemId());
             issuance.setShipmentId(shipment.getShipmentId());
             issuance.setShipmentItemSeqId(shipmentItemSeqId);
@@ -468,13 +461,16 @@ public class ShipmentCompositeService {
             issuance.setShipGroupSeqId(picklistItem.getShipGroupSeqId());
             issuance.setIssuedDateTime(LocalDateTime.now());
             issuance.setQuantity(picklistItem.getQuantity());
-            itemIssuanceRepository.save(issuance);
+            ItemIssuance savedIssuance = itemIssuanceRepository.save(issuance);
+            if (isBlank(savedIssuance.getItemIssuanceId())) {
+                savedIssuance.setItemIssuanceId(String.valueOf(savedIssuance.getId()));
+                savedIssuance = itemIssuanceRepository.save(savedIssuance);
+            }
 
             updateInventoryItemOnHand(inventoryItem, picklistItem.getQuantity());
 
             InventoryItemDetail detail = new InventoryItemDetail();
             detail.setInventoryItemId(inventoryItem.getInventoryItemId());
-            detail.setInventoryItemDetailSeqId("SHP-" + UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase(Locale.ROOT));
             detail.setEffectiveDate(LocalDateTime.now());
             detail.setQuantityOnHandDiff(negate(picklistItem.getQuantity()));
             detail.setAvailableToPromiseDiff("0");
@@ -484,9 +480,13 @@ public class ShipmentCompositeService {
             detail.setShipGroupSeqId(picklistItem.getShipGroupSeqId());
             detail.setShipmentId(shipment.getShipmentId());
             detail.setShipmentItemSeqId(shipmentItemSeqId);
-            detail.setItemIssuanceId(issuance.getItemIssuanceId());
+            detail.setItemIssuanceId(savedIssuance.getItemIssuanceId());
             detail.setDescription("Ship order");
-            inventoryItemDetailRepository.save(detail);
+            InventoryItemDetail savedDetail = inventoryItemDetailRepository.save(detail);
+            if (isBlank(savedDetail.getInventoryItemDetailSeqId())) {
+                savedDetail.setInventoryItemDetailSeqId(String.valueOf(savedDetail.getId()));
+                inventoryItemDetailRepository.save(savedDetail);
+            }
         }
     }
 
@@ -513,10 +513,6 @@ public class ShipmentCompositeService {
         } catch (NumberFormatException e) {
             return java.math.BigDecimal.ZERO;
         }
-    }
-
-    private String generateItemIssuanceId() {
-        return "ISS-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
     }
 
     private void triggerSalesInvoice(String orderId) {

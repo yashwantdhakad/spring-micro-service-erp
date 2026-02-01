@@ -1,0 +1,6 @@
+oms:
+  base-url: http://oms-service:8081
+
+eureka:
+  client:
+    enabled: false

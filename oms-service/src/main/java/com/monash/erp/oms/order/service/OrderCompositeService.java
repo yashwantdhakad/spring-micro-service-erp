@@ -308,7 +308,7 @@ public class OrderCompositeService {
         header.setGrandTotal(BigDecimal.ZERO);
         header = orderHeaderRepository.save(header);
 
-        header.setOrderId("ORD" + header.getId());
+        header.setOrderId(String.valueOf(header.getId()));
         header = orderHeaderRepository.save(header);
 
         if (!isBlank(request.getCustomerPartyId())) {

@@ -22,9 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AssetCompositeService {
@@ -89,7 +87,7 @@ public class AssetCompositeService {
         }
 
         String inventoryItemId = isBlank(request.getInventoryItemId())
-                ? generateInventoryItemId()
+                ? null
                 : request.getInventoryItemId();
 
         InventoryItem item = new InventoryItem();
@@ -113,9 +111,14 @@ public class AssetCompositeService {
         item.setId(null);
 
         InventoryItem savedItem = inventoryItemRepository.save(item);
+        if (isBlank(savedItem.getInventoryItemId())) {
+            savedItem.setInventoryItemId(String.valueOf(savedItem.getId()));
+            savedItem = inventoryItemRepository.save(savedItem);
+        }
+        inventoryItemId = savedItem.getInventoryItemId();
 
         ShipmentReceipt receipt = new ShipmentReceipt();
-        receipt.setReceiptId(generateReceiptId());
+        receipt.setReceiptId(null);
         receipt.setInventoryItemId(inventoryItemId);
         receipt.setProductId(request.getProductId());
         receipt.setShipmentId(request.getShipmentId());
@@ -127,11 +130,14 @@ public class AssetCompositeService {
         receipt.setId(null);
 
         ShipmentReceipt savedReceipt = shipmentReceiptRepository.save(receipt);
+        if (isBlank(savedReceipt.getReceiptId())) {
+            savedReceipt.setReceiptId(String.valueOf(savedReceipt.getId()));
+            savedReceipt = shipmentReceiptRepository.save(savedReceipt);
+        }
 
         ItemIssuance issuance = null;
         if (!isBlank(request.getShipmentId()) || !isBlank(request.getOrderId())) {
             issuance = new ItemIssuance();
-            issuance.setItemIssuanceId(generateItemIssuanceId());
             issuance.setInventoryItemId(inventoryItemId);
             issuance.setShipmentId(request.getShipmentId());
             issuance.setShipmentItemSeqId(request.getShipmentItemSeqId());
@@ -142,11 +148,14 @@ public class AssetCompositeService {
             issuance.setQuantity(request.getQuantity());
             issuance.setId(null);
             issuance = itemIssuanceRepository.save(issuance);
+            if (isBlank(issuance.getItemIssuanceId())) {
+                issuance.setItemIssuanceId(String.valueOf(issuance.getId()));
+                issuance = itemIssuanceRepository.save(issuance);
+            }
         }
 
         InventoryItemDetail detail = new InventoryItemDetail();
         detail.setInventoryItemId(inventoryItemId);
-        detail.setInventoryItemDetailSeqId("00001");
         detail.setEffectiveDate(defaultDate(request.getReceivedDate()));
         detail.setQuantityOnHandDiff(request.getQuantity());
         detail.setAvailableToPromiseDiff(request.getQuantity());
@@ -162,7 +171,11 @@ public class AssetCompositeService {
         detail.setWorkEffortId(request.getWorkEffortId());
         detail.setId(null);
 
-        inventoryItemDetailRepository.save(detail);
+        InventoryItemDetail savedDetail = inventoryItemDetailRepository.save(detail);
+        if (isBlank(savedDetail.getInventoryItemDetailSeqId())) {
+            savedDetail.setInventoryItemDetailSeqId(String.valueOf(savedDetail.getId()));
+            inventoryItemDetailRepository.save(savedDetail);
+        }
 
         return new AssetReceiveResponse(savedItem.getInventoryItemId());
     }
@@ -180,18 +193,6 @@ public class AssetCompositeService {
         }
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Asset %s not found".formatted(assetId));
-    }
-
-    private String generateInventoryItemId() {
-        return "INV-" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase(Locale.ROOT);
-    }
-
-    private String generateReceiptId() {
-        return "RCPT-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
-    }
-
-    private String generateItemIssuanceId() {
-        return "ISS-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
     }
 
     private String defaultValue(String value, String fallback) {

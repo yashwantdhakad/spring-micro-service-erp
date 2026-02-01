@@ -35,7 +35,12 @@ public class InventoryItemDetailService {
 
     public InventoryItemDetail create(InventoryItemDetail entity) {
         entity.setId(null);
-        return repository.save(entity);
+        InventoryItemDetail saved = repository.save(entity);
+        if (isBlank(saved.getInventoryItemDetailSeqId())) {
+            saved.setInventoryItemDetailSeqId(String.valueOf(saved.getId()));
+            saved = repository.save(saved);
+        }
+        return saved;
     }
 
     public InventoryItemDetail update(Long id, InventoryItemDetail entity) {
@@ -48,6 +53,10 @@ public class InventoryItemDetailService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 
     private boolean isBlank(String value) {

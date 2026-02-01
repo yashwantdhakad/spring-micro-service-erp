@@ -28,7 +28,12 @@ public class ShipmentReceiptService {
 
     public ShipmentReceipt create(ShipmentReceipt entity) {
         entity.setId(null);
-        return repository.save(entity);
+        ShipmentReceipt saved = repository.save(entity);
+        if (isBlank(saved.getReceiptId())) {
+            saved.setReceiptId(String.valueOf(saved.getId()));
+            saved = repository.save(saved);
+        }
+        return saved;
     }
 
     public ShipmentReceipt update(Long id, ShipmentReceipt entity) {
@@ -41,5 +46,9 @@ public class ShipmentReceiptService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

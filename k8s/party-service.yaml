@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: party-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: party-service
+  template:
+    metadata:
+      labels:
+        app: party-service
+    spec:
+      containers:
+        - name: party-service
+          image: spring-micro-service-erp/party-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8084
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+            - name: DB_HOST
+              value: host.docker.internal
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_NAME
+              value: partydb
+            - name: DB_USER
+              value: root
+            - name: DB_PASSWORD
+              value: "123456"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: party-service
+spec:
+  type: ClusterIP
+  selector:
+    app: party-service
+  ports:
+    - port: 8084
+      targetPort: 8084

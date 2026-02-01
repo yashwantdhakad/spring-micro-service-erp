@@ -50,9 +50,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -165,7 +163,6 @@ public class JobCompositeService {
         }
 
         WorkEffort header = new WorkEffort();
-        header.setWorkEffortId(generateWorkEffortId());
         header.setWorkEffortTypeId(TYPE_PRODUCTION_HEADER);
         header.setWorkEffortPurposeTypeId(normalizePurpose(request.getPurposeEnumId()));
         header.setCurrentStatusId(STATUS_CREATED);
@@ -179,6 +176,10 @@ public class JobCompositeService {
         header.setId(null);
 
         WorkEffort savedHeader = workEffortRepository.save(header);
+        if (isBlank(savedHeader.getWorkEffortId())) {
+            savedHeader.setWorkEffortId(String.valueOf(savedHeader.getId()));
+            savedHeader = workEffortRepository.save(savedHeader);
+        }
 
         WorkEffortGoodStandard produce = new WorkEffortGoodStandard();
         produce.setWorkEffortId(savedHeader.getWorkEffortId());
@@ -193,7 +194,6 @@ public class JobCompositeService {
         ensureWegsReferenceNumber(savedProduce);
 
         WorkEffort task = new WorkEffort();
-        task.setWorkEffortId(generateWorkEffortId());
         task.setWorkEffortTypeId(TYPE_PRODUCTION_TASK);
         task.setWorkEffortPurposeTypeId(normalizePurpose(request.getPurposeEnumId()));
         task.setCurrentStatusId(STATUS_CREATED);
@@ -207,6 +207,10 @@ public class JobCompositeService {
         task.setCreatedDate(LocalDateTime.now());
         task.setId(null);
         WorkEffort savedTask = workEffortRepository.save(task);
+        if (isBlank(savedTask.getWorkEffortId())) {
+            savedTask.setWorkEffortId(String.valueOf(savedTask.getId()));
+            savedTask = workEffortRepository.save(savedTask);
+        }
 
         List<JobMaterialRequest> consumeItems = request.getConsumeItems();
         if (consumeItems == null || consumeItems.isEmpty()) {
@@ -633,7 +637,6 @@ public class JobCompositeService {
     ) {
         WmsInventoryItemDetailRequest detail = new WmsInventoryItemDetailRequest();
         detail.setInventoryItemId(inventoryItemId);
-        detail.setInventoryItemDetailSeqId(generateInventoryDetailSeqId());
         detail.setEffectiveDate(LocalDateTime.now());
         detail.setQuantityOnHandDiff(qohDiff);
         detail.setAvailableToPromiseDiff(atpDiff);
@@ -864,8 +867,8 @@ public class JobCompositeService {
             remaining = remaining.subtract(issuePart);
             issuedTotal = issuedTotal.add(issuePart);
 
-            String issuanceId = generateItemIssuanceId();
-            createItemIssuance(issuanceId, reservation.getInventoryItemId(), header.getWorkEffortId(), wegs.getWegsReferenceNumber(), issuePart);
+            String issuanceId = createItemIssuance(reservation.getInventoryItemId(), header.getWorkEffortId(),
+                    wegs.getWegsReferenceNumber(), issuePart);
             createInventoryDetail(reservation.getInventoryItemId(), header.getWorkEffortId(), issuanceId,
                     negate(issuePart), "0", negate(issuePart), "Issue inventory for work effort");
             recalculateInventoryTotals(reservation.getInventoryItemId());
@@ -1005,15 +1008,13 @@ public class JobCompositeService {
         }
     }
 
-    private void createItemIssuance(
-            String issuanceId,
+    private String createItemIssuance(
             String inventoryItemId,
             String workEffortId,
             String wegsReferenceNumber,
             BigDecimal quantity
     ) {
         WmsItemIssuanceRequest issuance = new WmsItemIssuanceRequest();
-        issuance.setItemIssuanceId(issuanceId);
         issuance.setInventoryItemId(inventoryItemId);
         issuance.setWorkEffortId(workEffortId);
         issuance.setIssuedDateTime(LocalDateTime.now());
@@ -1028,7 +1029,16 @@ public class JobCompositeService {
             headers.set(HttpHeaders.AUTHORIZATION, authHeader);
         }
         HttpEntity<WmsItemIssuanceRequest> requestEntity = new HttpEntity<>(issuance, headers);
-        restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
+        ResponseEntity<java.util.Map> response = restTemplate.exchange(
+                url,
+                HttpMethod.POST,
+                requestEntity,
+                java.util.Map.class
+        );
+        if (response.getBody() != null && response.getBody().get("itemIssuanceId") != null) {
+            return String.valueOf(response.getBody().get("itemIssuanceId"));
+        }
+        return null;
     }
 
     private void recalculateInventoryTotals(String inventoryItemId) {
@@ -1040,14 +1050,6 @@ public class JobCompositeService {
         }
         HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
         restTemplate.exchange(url, HttpMethod.POST, requestEntity, Void.class);
-    }
-
-    private String generateInventoryDetailSeqId() {
-        return "WEG-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
-    }
-
-    private String generateItemIssuanceId() {
-        return "ISS-" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
     }
 
     private void ensureWegsReferenceNumber(WorkEffortGoodStandard wegs) {
@@ -1094,10 +1096,6 @@ public class JobCompositeService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkEffort %s not found".formatted(workEffortId)));
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkEffort %s not found".formatted(workEffortId));
-    }
-
-    private String generateWorkEffortId() {
-        return "WE-" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase(Locale.ROOT);
     }
 
     private String normalizePurpose(String purposeEnumId) {

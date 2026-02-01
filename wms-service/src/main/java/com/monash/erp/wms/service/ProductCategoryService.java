@@ -74,7 +74,7 @@ public class ProductCategoryService {
         entity.setId(null);
         ProductCategory saved = repository.save(entity);
         if (saved.getProductCategoryId() == null || saved.getProductCategoryId().isBlank()) {
-            saved.setProductCategoryId("CAT" + saved.getId());
+            saved.setProductCategoryId(String.valueOf(saved.getId()));
             saved = repository.save(saved);
         }
         return saved;
