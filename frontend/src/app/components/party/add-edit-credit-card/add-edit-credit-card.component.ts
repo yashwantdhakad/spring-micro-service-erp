@@ -7,6 +7,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { PartyService } from 'src/app/services/party/party.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-edit-credit-card',
   templateUrl: './add-edit-credit-card.component.html',
   styleUrls: ['./add-edit-credit-card.component.css'],

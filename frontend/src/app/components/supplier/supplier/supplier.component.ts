@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Subject, asyncScheduler } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, observeOn, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.css'],
@@ -23,6 +24,7 @@ export class SupplierComponent implements OnInit, OnDestroy {
   items: any[] = [];
   pages: number = 0;
   currentSort?: Sort;
+  private initialLoad = true;
   supplierColumns = [
     { key: 'partyId', header: 'COMMON.ID' },
     { key: 'groupName', header: 'COMMON.NAME' },
@@ -38,6 +40,10 @@ export class SupplierComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    setTimeout(() => this.setupSearch(), 0);
+  }
+
+  private setupSearch(): void {
     this.searchControl.valueChanges
       .pipe(
         startWith(''),
@@ -47,22 +53,29 @@ export class SupplierComponent implements OnInit, OnDestroy {
         tap((value) => {
           this.queryString = value;
           this.pagination.page = 1;
+          if (this.initialLoad) {
+            this.isLoading = true;
+          }
         }),
-        switchMap((value) =>
-          this.partyService.getSuppliers(
-            0,
-            value,
-            this.currentSort?.active,
-            this.currentSort?.direction
-          )
+        switchMap((value) => this.partyService
+          .getSuppliers(0, value, this.currentSort?.active, this.currentSort?.direction)
+          .pipe(finalize(() => {
+            if (this.initialLoad) {
+              this.isLoading = false;
+              this.initialLoad = false;
+            }
+          }))
         ),
+        observeOn(asyncScheduler),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response: any) => {
           const { resultList, documentListCount } = response;
-          this.items = resultList;
-          this.pages = documentListCount;
+          setTimeout(() => {
+            this.items = resultList;
+            this.pages = documentListCount;
+          }, 0);
         },
         error: () => {
           this.items = [];
@@ -70,8 +83,6 @@ export class SupplierComponent implements OnInit, OnDestroy {
           this.snackbarService.showError('Error fetching suppliers');
         },
       });
-
-    this.getSuppliers(1, '');
   }
 
   ngOnDestroy(): void {

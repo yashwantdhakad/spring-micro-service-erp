@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/services/product/product.service';
 import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
+  standalone: false,
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],

@@ -9,6 +9,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { PicklistAssignPickerDialogComponent } from './picklist-assign-picker-dialog.component';
 
 @Component({
+  standalone: false,
   selector: 'app-picklist-detail',
   templateUrl: './picklist-detail.component.html',
   styleUrls: ['./picklist-detail.component.css'],

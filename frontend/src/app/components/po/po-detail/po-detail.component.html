@@ -166,7 +166,7 @@
               </li>
             </ul>
 
-            <ul class="custom-list" *ngIf="vendorAddresses?.length; else noVendorAddress">
+            <ul class="custom-list" *ngIf="vendorAddresses.length; else noVendorAddress">
               <li class="custom-list-item" *ngFor="let primaryAddress of vendorAddresses">
                 <strong>{{ 'PO.ADDRESS' | translate }}:</strong>
                 <mat-icon

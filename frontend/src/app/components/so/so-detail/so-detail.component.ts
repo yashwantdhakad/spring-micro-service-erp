@@ -14,6 +14,7 @@ import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
 
 @Component({
+  standalone: false,
   selector: 'app-so-detail',
   templateUrl: './so-detail.component.html',
   styleUrls: ['./so-detail.component.css'],

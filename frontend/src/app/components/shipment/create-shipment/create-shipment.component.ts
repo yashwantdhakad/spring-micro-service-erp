@@ -8,6 +8,7 @@ import { ShipmentService } from 'src/app/services/shipment/shipment.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-create-shipment',
   templateUrl: './create-shipment.component.html',
   styleUrls: ['./create-shipment.component.css']

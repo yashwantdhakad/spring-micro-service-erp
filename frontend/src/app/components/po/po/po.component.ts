@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
+  standalone: false,
   selector: 'app-po',
   templateUrl: './po.component.html',
   styleUrls: ['./po.component.css'],

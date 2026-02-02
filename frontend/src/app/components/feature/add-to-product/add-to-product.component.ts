@@ -9,6 +9,7 @@ import { ProductService } from 'src/app/services/product/product.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-to-product',
   templateUrl: './add-to-product.component.html',
   styleUrls: ['./add-to-product.component.css'],

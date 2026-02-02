@@ -4,6 +4,7 @@ import { Subject, finalize, takeUntil } from 'rxjs';
 import { PartyService } from 'src/app/services/party/party.service';
 
 @Component({
+  standalone: false,
   selector: 'app-picklist-assign-picker-dialog',
   templateUrl: './picklist-assign-picker-dialog.component.html',
   styleUrls: ['./picklist-assign-picker-dialog.component.css'],

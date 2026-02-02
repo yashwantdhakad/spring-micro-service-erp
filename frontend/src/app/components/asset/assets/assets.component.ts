@@ -4,6 +4,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { Subject, finalize, takeUntil } from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'app-assets',
   templateUrl: './assets.component.html',
   styleUrls: ['./assets.component.css'],

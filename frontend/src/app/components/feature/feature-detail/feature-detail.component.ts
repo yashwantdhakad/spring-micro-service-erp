@@ -8,6 +8,7 @@ import { AddToFeatureGroupComponent } from '../add-to-feature-group/add-to-featu
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-feature-detail',
   templateUrl: './feature-detail.component.html',
   styleUrls: ['./feature-detail.component.css'],

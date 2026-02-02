@@ -3,10 +3,11 @@ import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Subject, asyncScheduler } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, observeOn, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-customer',
   templateUrl: './customer.component.html',
   styleUrls: ['./customer.component.css'],
@@ -23,6 +24,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
   items: any[] = [];
   pages: number = 0;
   currentSort?: Sort;
+  private initialLoad = true;
 
   customerColumns = [
     { key: 'partyId', header: 'COMMON.ID' },
@@ -40,6 +42,10 @@ export class CustomerComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
+    setTimeout(() => this.setupSearch(), 0);
+  }
+
+  private setupSearch(): void {
     this.searchControl.valueChanges
       .pipe(
         startWith(''),
@@ -49,29 +55,34 @@ export class CustomerComponent implements OnInit, OnDestroy {
         tap((value) => {
           this.queryString = value;
           this.pagination.page = 1;
+          if (this.initialLoad) {
+            this.isLoading = true;
+          }
         }),
-        switchMap((value) =>
-          this.partyService.getCustomers(
-            0,
-            value,
-            this.currentSort?.active,
-            this.currentSort?.direction
-          )
+        switchMap((value) => this.partyService
+          .getCustomers(0, value, this.currentSort?.active, this.currentSort?.direction)
+          .pipe(finalize(() => {
+            if (this.initialLoad) {
+              this.isLoading = false;
+              this.initialLoad = false;
+            }
+          }))
         ),
+        observeOn(asyncScheduler),
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response) => {
           const { resultList, documentListCount } = response;
-          this.items = resultList;
-          this.pages = documentListCount;
+          setTimeout(() => {
+            this.items = resultList;
+            this.pages = documentListCount;
+          }, 0);
         },
         error: () => {
           this.snackbarService.showError('Error fetching customers');
         },
       });
-
-    this.getCustomers(1, '');
   }
 
   ngOnDestroy(): void {

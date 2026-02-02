@@ -26,6 +26,7 @@ import { PartyContentComponent } from '../../party/party-content/party-content.c
 import { SupplierProductDialogComponent } from '../supplier-product-dialog/supplier-product-dialog.component';
 
 @Component({
+  standalone: false,
   selector: 'app-supplier-detail',
   templateUrl: './supplier-detail.component.html',
   styleUrls: ['./supplier-detail.component.css'],

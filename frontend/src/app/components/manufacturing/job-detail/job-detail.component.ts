@@ -8,6 +8,7 @@ import { ProduceItemComponent } from '../produce-item/produce-item.component';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-job-detail',
   templateUrl: './job-detail.component.html',
   styleUrls: ['./job-detail.component.css'],

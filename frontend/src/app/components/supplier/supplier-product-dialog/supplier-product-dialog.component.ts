@@ -8,6 +8,7 @@ import { SupplierProductService } from 'src/app/services/supplier-product/suppli
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-supplier-product-dialog',
   templateUrl: './supplier-product-dialog.component.html',
   styleUrls: ['./supplier-product-dialog.component.css'],

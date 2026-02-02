@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { PartyService } from 'src/app/services/party/party.service'; // Replace with your service path
 
 @Component({
+  standalone: false,
   selector: 'app-customer-auto-complete',
   templateUrl: './customer-auto-complete.component.html',
   styleUrls: ['./customer-auto-complete.component.css'],

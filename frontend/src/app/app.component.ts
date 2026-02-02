@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LanguageSelectorComponent } from './components/common/language-selector/language-selector.component';
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],

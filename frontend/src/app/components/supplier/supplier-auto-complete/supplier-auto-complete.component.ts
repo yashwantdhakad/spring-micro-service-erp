@@ -6,6 +6,7 @@ import { startWith, switchMap, map } from 'rxjs/operators';
 import { PartyService } from 'src/app/services/party/party.service';
 
 @Component({
+  standalone: false,
   selector: 'app-supplier-auto-complete',
   templateUrl: './supplier-auto-complete.component.html',
   styleUrls: ['./supplier-auto-complete.component.css']

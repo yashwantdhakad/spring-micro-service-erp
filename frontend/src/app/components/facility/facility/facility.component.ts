@@ -5,6 +5,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { FacilityService } from 'src/app/services/facility/facility.service';
 
 @Component({
+  standalone: false,
   selector: 'app-facility',
   templateUrl: './facility.component.html',
   styleUrls: ['./facility.component.css']

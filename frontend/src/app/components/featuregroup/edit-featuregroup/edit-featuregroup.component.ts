@@ -5,6 +5,7 @@ import { finalize } from 'rxjs/operators';
 import { FeatureGroupService } from 'src/app/services/featuregroup/feature-group.service';
 
 @Component({
+  standalone: false,
   selector: 'app-edit-featuregroup',
   templateUrl: './edit-featuregroup.component.html',
   styleUrls: ['./edit-featuregroup.component.css'],

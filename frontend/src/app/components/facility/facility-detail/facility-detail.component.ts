@@ -10,6 +10,7 @@ import { PartyService } from 'src/app/services/party/party.service';
 import { FacilityLocationDialogComponent } from '../facility-location-dialog/facility-location-dialog.component';
 
 @Component({
+  standalone: false,
   selector: 'app-facility-detail',
   templateUrl: './facility-detail.component.html',
   styleUrls: ['./facility-detail.component.css']

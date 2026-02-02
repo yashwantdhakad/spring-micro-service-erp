@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
+  standalone: false,
   selector: 'app-facility-location-dialog',
   templateUrl: './facility-location-dialog.component.html',
   styleUrls: ['./facility-location-dialog.component.css']

@@ -15,6 +15,7 @@ import { FeatureService } from 'src/app/services/features/feature.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-product-feature-group-appl',
   templateUrl: './add-product-feature-group-appl.component.html',
   styleUrls: ['./add-product-feature-group-appl.component.css'],

@@ -16,6 +16,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-po-detail',
   templateUrl: './po-detail.component.html',
   styleUrls: ['./po-detail.component.css'],

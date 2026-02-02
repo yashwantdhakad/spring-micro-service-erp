@@ -8,6 +8,7 @@ import { PartyService } from 'src/app/services/party/party.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-add-identification',
   templateUrl: './add-identification.component.html',
   styleUrls: ['./add-identification.component.css'],

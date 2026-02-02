@@ -7,6 +7,7 @@ import { FacilityService } from 'src/app/services/facility/facility.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-asset-detail',
   templateUrl: './asset-detail.component.html',
   styleUrls: ['./asset-detail.component.css'],

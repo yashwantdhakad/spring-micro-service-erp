@@ -5,6 +5,7 @@ import { ShipmentService } from 'src/app/services/shipment/shipment.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-shipment',
   templateUrl: './shipment.component.html',
   styleUrls: ['./shipment.component.css'],

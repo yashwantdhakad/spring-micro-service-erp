@@ -8,6 +8,7 @@ import { FeatureService } from 'src/app/services/features/feature.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-to-feature-group',
   templateUrl: './add-to-feature-group.component.html',
   styleUrls: ['./add-to-feature-group.component.css'],

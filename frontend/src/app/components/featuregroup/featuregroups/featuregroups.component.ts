@@ -4,6 +4,7 @@ import { finalize } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({
+  standalone: false,
   selector: 'app-featuregroups',
   templateUrl: './featuregroups.component.html',
   styleUrls: ['./featuregroups.component.css'],

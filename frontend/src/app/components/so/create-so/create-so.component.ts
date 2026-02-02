@@ -23,6 +23,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProductService } from 'src/app/services/product/product.service';
 
 @Component({
+  standalone: false,
   selector: 'app-create-so',
   templateUrl: './create-so.component.html',
   styleUrls: ['./create-so.component.css'],

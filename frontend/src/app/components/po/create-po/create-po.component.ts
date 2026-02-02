@@ -26,6 +26,7 @@ import { ProductService } from 'src/app/services/product/product.service';
 import { SupplierProductService } from 'src/app/services/supplier-product/supplier-product.service';
 
 @Component({
+  standalone: false,
   selector: 'app-create-po',
   templateUrl: './create-po.component.html',
   styleUrls: ['./create-po.component.css'],

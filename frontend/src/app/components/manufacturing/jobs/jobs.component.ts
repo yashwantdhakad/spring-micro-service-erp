@@ -3,6 +3,7 @@ import { ManufacturingService } from 'src/app/services/manufacturing/manufacturi
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-jobs',
   templateUrl: './jobs.component.html',
   styleUrls: ['./jobs.component.css'],

@@ -7,6 +7,7 @@ import { OrderService } from 'src/app/services/order/order.service';
 import { PicklistCreateItemsDialogComponent } from './picklist-create-items-dialog.component';
 
 @Component({
+  standalone: false,
   selector: 'app-picklist-create',
   templateUrl: './picklist-create.component.html',
   styleUrls: ['./picklist-create.component.css'],

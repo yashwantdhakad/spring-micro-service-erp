@@ -8,6 +8,7 @@ import { TokenStorageService } from 'src/app/services/common/token-storage.servi
 import { SnackbarService } from 'src/app/services/common/snackbar.service'; // <-- add this
 
 @Component({
+  standalone: false,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],

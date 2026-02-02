@@ -7,6 +7,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
+  standalone: false,
   selector: 'app-po-receive',
   templateUrl: './po-receive.component.html',
   styleUrls: ['./po-receive.component.css'],

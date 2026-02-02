@@ -18,6 +18,7 @@ import { ProductService } from 'src/app/services/product/product.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
 @Component({
+  standalone: false,
   selector: 'app-create-asset',
   templateUrl: './create-asset.component.html',
   styleUrls: ['./create-asset.component.css'],

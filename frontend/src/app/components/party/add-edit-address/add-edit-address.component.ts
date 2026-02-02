@@ -8,6 +8,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { OrderService } from 'src/app/services/order/order.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-edit-address',
   templateUrl: './add-edit-address.component.html',
   styleUrls: ['./add-edit-address.component.css'],

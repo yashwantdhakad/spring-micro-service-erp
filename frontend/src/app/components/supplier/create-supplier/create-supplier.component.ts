@@ -7,6 +7,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
+  standalone: false,
   selector: 'app-create-supplier',
   templateUrl: './create-supplier.component.html',
   styleUrls: ['./create-supplier.component.css'],

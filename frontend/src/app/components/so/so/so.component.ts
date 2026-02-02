@@ -3,6 +3,7 @@ import { OrderService } from 'src/app/services/order/order.service';
 import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
+  standalone: false,
   selector: 'app-so',
   templateUrl: './so.component.html',
   styleUrls: ['./so.component.css'],

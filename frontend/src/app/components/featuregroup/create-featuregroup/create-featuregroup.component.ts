@@ -6,6 +6,7 @@ import { FeatureGroupService } from 'src/app/services/featuregroup/feature-group
 import { SnackbarService } from 'src/app/services/common/snackbar.service'; // Optional
 
 @Component({
+  standalone: false,
   selector: 'app-create-featuregroup',
   templateUrl: './create-featuregroup.component.html',
   styleUrls: ['./create-featuregroup.component.css'],

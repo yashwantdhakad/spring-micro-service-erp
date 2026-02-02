@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { ManufacturingService } from 'src/app/services/manufacturing/manufacturing.service';
 
 @Component({
+  standalone: false,
   selector: 'app-produce-item',
   templateUrl: './produce-item.component.html',
   styleUrls: ['./produce-item.component.css'],

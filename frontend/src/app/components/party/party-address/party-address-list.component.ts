@@ -6,6 +6,7 @@ import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/co
 import { PartyService } from 'src/app/services/party/party.service';
 
 @Component({
+  standalone: false,
   selector: 'app-party-address-list',
   templateUrl: './party-address-list.component.html',
   styleUrls: ['./party-address-list.component.css']

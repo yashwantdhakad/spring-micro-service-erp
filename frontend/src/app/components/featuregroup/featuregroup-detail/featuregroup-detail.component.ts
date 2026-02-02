@@ -8,6 +8,7 @@ import { AddProductFeatureGroupApplComponent } from '../add-product-feature-grou
 import { AddCategoryFeatureGroupApplComponent } from '../add-category-feature-group-appl/add-category-feature-group-appl.component';
 
 @Component({
+  standalone: false,
   selector: 'app-featuregroup-detail',
   templateUrl: './featuregroup-detail.component.html',
   styleUrls: ['./featuregroup-detail.component.css'],

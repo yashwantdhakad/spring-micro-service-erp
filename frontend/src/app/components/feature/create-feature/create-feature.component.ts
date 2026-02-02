@@ -11,6 +11,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-create-feature',
   templateUrl: './create-feature.component.html',
   styleUrls: ['./create-feature.component.css'],

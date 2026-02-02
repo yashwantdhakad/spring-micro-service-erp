@@ -7,6 +7,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-add-edit-product-price',
   templateUrl: './add-edit-product-price.component.html',
   styleUrls: ['./add-edit-product-price.component.css'],

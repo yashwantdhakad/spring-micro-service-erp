@@ -14,6 +14,7 @@ import { ManufacturingService } from 'src/app/services/manufacturing/manufacturi
 import { ProductService } from 'src/app/services/product/product.service';
 
 @Component({
+  standalone: false,
   selector: 'app-consumable-item',
   templateUrl: './consumable-item.component.html',
   styleUrls: ['./consumable-item.component.css'],

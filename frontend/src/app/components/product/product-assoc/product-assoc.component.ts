@@ -22,6 +22,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
+  standalone: false,
   selector: 'app-product-assoc',
   templateUrl: './product-assoc.component.html',
   styleUrls: ['./product-assoc.component.css'],

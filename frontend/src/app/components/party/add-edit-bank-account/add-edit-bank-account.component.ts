@@ -6,6 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { PartyService } from 'src/app/services/party/party.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-edit-bank-account',
   templateUrl: './add-edit-bank-account.component.html',
   styleUrls: ['./add-edit-bank-account.component.css'],

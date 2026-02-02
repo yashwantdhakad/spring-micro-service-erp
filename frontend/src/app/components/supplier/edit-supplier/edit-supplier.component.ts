@@ -7,6 +7,7 @@ import { PartyService } from 'src/app/services/party/party.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-edit-supplier',
   templateUrl: './edit-supplier.component.html',
   styleUrls: ['./edit-supplier.component.css'],

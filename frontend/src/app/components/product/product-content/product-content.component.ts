@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-product-content',
   templateUrl: './product-content.component.html',
   styleUrls: ['./product-content.component.css'],

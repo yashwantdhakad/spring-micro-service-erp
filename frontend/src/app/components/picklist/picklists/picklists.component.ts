@@ -4,6 +4,7 @@ import { PicklistService } from 'src/app/services/picklist/picklist.service';
 import { CommonService } from 'src/app/services/common/common.service';
 
 @Component({
+  standalone: false,
   selector: 'app-picklists',
   templateUrl: './picklists.component.html',
   styleUrls: ['./picklists.component.css'],

@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
+  standalone: false,
   selector: 'app-picklist-order-items-dialog',
   templateUrl: './picklist-order-items-dialog.component.html',
   styleUrls: ['./picklist-order-items-dialog.component.css'],

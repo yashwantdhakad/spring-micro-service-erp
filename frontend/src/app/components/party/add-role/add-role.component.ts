@@ -7,6 +7,7 @@ import { PartyService } from 'src/app/services/party/party.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-add-role',
   templateUrl: './add-role.component.html',
   styleUrls: ['./add-role.component.css'],

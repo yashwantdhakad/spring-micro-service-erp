@@ -6,6 +6,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-note',
   templateUrl: './note.component.html',
   styleUrls: ['./note.component.css'],

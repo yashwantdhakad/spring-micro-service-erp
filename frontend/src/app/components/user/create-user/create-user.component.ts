@@ -6,6 +6,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { UserService } from 'src/app/services/security/user.service';
 
 @Component({
+  standalone: false,
   selector: 'app-create-user',
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.css'],

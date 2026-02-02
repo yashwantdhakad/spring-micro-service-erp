@@ -5,6 +5,7 @@ import { finalize } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({
+  standalone: false,
   selector: 'app-features',
   templateUrl: './features.component.html',
   styleUrls: ['./features.component.css'],

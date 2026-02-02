@@ -64,23 +64,24 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "erp:build:development",
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
-              "browserTarget": "erp:build:production"
+              "buildTarget": "erp:build:production"
             },
             "development": {
-              "browserTarget": "erp:build:development"
+              "buildTarget": "erp:build:development"
             }
-          },
-          "options": {
-            "proxyConfig": "proxy.conf.json"
           },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "erp:build"
+            "buildTarget": "erp:build"
           }
         },
         "test": {

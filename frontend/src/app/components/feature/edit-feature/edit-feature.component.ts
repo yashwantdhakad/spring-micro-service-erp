@@ -6,6 +6,7 @@ import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-edit-feature',
   templateUrl: './edit-feature.component.html',
   styleUrls: ['./edit-feature.component.css'],

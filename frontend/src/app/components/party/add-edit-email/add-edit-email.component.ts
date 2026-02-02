@@ -7,6 +7,7 @@ import { PartyService } from 'src/app/services/party/party.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
+  standalone: false,
   selector: 'app-add-edit-email',
   templateUrl: './add-edit-email.component.html',
   styleUrls: ['./add-edit-email.component.css'],

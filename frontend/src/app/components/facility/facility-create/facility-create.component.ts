@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 import { FacilityService } from 'src/app/services/facility/facility.service';
 
 @Component({
+  standalone: false,
   selector: 'app-facility-create',
   templateUrl: './facility-create.component.html',
   styleUrls: ['./facility-create.component.css']

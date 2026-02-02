@@ -6,6 +6,7 @@ import { CommonService } from 'src/app/services/common/common.service';
 import { PartyService } from 'src/app/services/party/party.service';
 
 @Component({
+  standalone: false,
   selector: 'app-add-classification',
   templateUrl: './add-classification.component.html',
   styleUrls: ['./add-classification.component.css'],
