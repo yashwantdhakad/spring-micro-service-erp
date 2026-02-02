@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from 'src/app/services/order/order.service';
@@ -112,7 +112,8 @@ export class PODetailComponent implements OnInit {
     private datePipe: DatePipe,
     private translate: TranslateService,
     private commonService: CommonService,
-    private productService: ProductService
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -191,6 +192,7 @@ export class PODetailComponent implements OnInit {
       }),
       finalize(() => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       })
     );
   }

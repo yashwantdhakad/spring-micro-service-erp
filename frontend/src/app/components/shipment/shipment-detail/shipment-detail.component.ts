@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
@@ -40,7 +40,8 @@ export class ShipmentDetailComponent implements OnInit {
   constructor(
     private readonly shipmentService: ShipmentService,
     private readonly route: ActivatedRoute,
-    private readonly commonService: CommonService
+    private readonly commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -56,14 +57,17 @@ export class ShipmentDetailComponent implements OnInit {
   getShipment(shipmentId: string): void {
     this.isLoading = true;
     this.shipmentService.getShipment(shipmentId)
-      .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (response) => {
           this.shipmentDetail = response?.shipment || response;
           this.items = response?.items || [];
           this.shipmentRouteSegments = response?.routeSegments || [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }

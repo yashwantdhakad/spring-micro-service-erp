@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from 'src/app/services/order/order.service';
 import { MatSort, Sort } from '@angular/material/sort';
 
@@ -29,7 +29,10 @@ export class SOComponent implements OnInit {
     'grandTotal',
   ];
 
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -42,11 +45,12 @@ export class SOComponent implements OnInit {
         const { orderList, orderListCount } = response.responseMap;
         this.items = orderList;
         this.pages = orderListCount;
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
-      },
-      complete: () => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

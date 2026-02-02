@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -84,7 +84,8 @@ export class SupplierDetailComponent implements OnDestroy {
     private dialog: MatDialog,
     private store: Store<GeoState>,
     private supplierProductService: SupplierProductService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   private destroy$ = new Subject<void>();
@@ -118,9 +119,7 @@ export class SupplierDetailComponent implements OnDestroy {
 
   getSupplier(partyId: string): void {
     this.isLoading = true;
-    this.partyService.getSupplier(partyId).pipe(
-      finalize(() => (this.isLoading = false))
-    ).subscribe({
+    this.partyService.getSupplier(partyId).subscribe({
       next: (response) => {
         const { supplierDetail } = response;
         const {
@@ -145,8 +144,12 @@ export class SupplierDetailComponent implements OnDestroy {
         this.payments = payments;
         this.partyNotes = partyNoteList;
         this.contents = Array.isArray(contentList) ? contentList : [];
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }

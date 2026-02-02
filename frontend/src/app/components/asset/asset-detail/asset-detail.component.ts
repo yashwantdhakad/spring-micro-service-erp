@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil, finalize } from 'rxjs';
 import { AssetService } from 'src/app/services/asset/asset.service';
@@ -67,7 +67,8 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private facilityService: FacilityService,
     private route: ActivatedRoute,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -88,8 +89,7 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
     this.assetService
       .getAsset(assetId)
       .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isLoading = false))
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response) => {
@@ -104,9 +104,13 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
           }
           const inventoryItemId = this.assetDetail?.inventoryItemId || assetId;
           this.loadReservations(inventoryItemId);
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           this.snackbarService.showError('Error fetching asset details.');
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

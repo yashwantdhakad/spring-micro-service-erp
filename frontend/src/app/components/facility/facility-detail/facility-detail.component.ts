@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -34,7 +34,8 @@ export class FacilityDetailComponent implements OnInit {
     private partyService: PartyService,
     private commonService: CommonService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -103,7 +104,6 @@ export class FacilityDetailComponent implements OnInit {
   getFacility(facilityId: string): void {
     this.isLoading = true;
     this.facilityService.getFacility(facilityId)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
           this.facilityDetail = response?.facility || response;
@@ -114,12 +114,16 @@ export class FacilityDetailComponent implements OnInit {
             this.dataSource.paginator = this.paginator;
           }
           this.loadFacilityAddress(facilityId);
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.facilityDetail = null;
           this.locations = [];
           this.dataSource.data = [];
           this.facilityAddress = null;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Subject, asyncScheduler } from 'rxjs';
-import { debounceTime, distinctUntilChanged, finalize, map, observeOn, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, observeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 
@@ -34,37 +34,30 @@ export class SupplierComponent implements OnInit, OnDestroy {
 
   constructor(
     private partyService: PartyService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   private destroy$ = new Subject<void>();
 
   ngOnInit(): void {
-    setTimeout(() => this.setupSearch(), 0);
+    this.isLoading = true;
+    this.getSuppliers(1, '', true);
+    this.setupSearch();
   }
 
   private setupSearch(): void {
     this.searchControl.valueChanges
       .pipe(
-        startWith(''),
         map((value) => (value ?? '').toString()),
         debounceTime(300),
         distinctUntilChanged(),
         tap((value) => {
           this.queryString = value;
           this.pagination.page = 1;
-          if (this.initialLoad) {
-            this.isLoading = true;
-          }
         }),
         switchMap((value) => this.partyService
           .getSuppliers(0, value, this.currentSort?.active, this.currentSort?.direction)
-          .pipe(finalize(() => {
-            if (this.initialLoad) {
-              this.isLoading = false;
-              this.initialLoad = false;
-            }
-          }))
         ),
         observeOn(asyncScheduler),
         takeUntil(this.destroy$)
@@ -72,10 +65,8 @@ export class SupplierComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response: any) => {
           const { resultList, documentListCount } = response;
-          setTimeout(() => {
-            this.items = resultList;
-            this.pages = documentListCount;
-          }, 0);
+          this.items = resultList;
+          this.pages = documentListCount;
         },
         error: () => {
           this.items = [];
@@ -96,21 +87,32 @@ export class SupplierComponent implements OnInit, OnDestroy {
     this.getSuppliers(page, this.queryString);
   }
 
-  private getSuppliers(page: number, queryString: string): void {
-    this.isLoading = true;
+  private getSuppliers(page: number, queryString: string, showLoader: boolean = true): void {
+    if (showLoader) {
+      this.isLoading = true;
+    }
     this.partyService
       .getSuppliers(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response: any) => {
           const { resultList, documentListCount } = response;
           this.items = resultList;
           this.pages = documentListCount;
+          if (showLoader) {
+            this.isLoading = false;
+            this.initialLoad = false;
+          }
+          this.cdr.detectChanges();
         },
         error: () => {
           this.items = [];
           this.pages = 0;
           this.snackbarService.showError('Error fetching suppliers');
+          if (showLoader) {
+            this.isLoading = false;
+            this.initialLoad = false;
+          }
+          this.cdr.detectChanges();
         },
       });
   }

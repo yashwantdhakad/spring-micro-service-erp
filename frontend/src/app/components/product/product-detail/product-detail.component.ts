@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product/product.service';
 // In your product list component
@@ -82,7 +82,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private store: Store<EnumState>,
     private translate: TranslateService,
     private snackbarService: SnackbarService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   private destroy$ = new Subject<void>();
@@ -153,9 +154,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   getProduct(productId: string): void {
     this.isLoading = true;
 
-    this.productService.getProduct(productId).pipe(
-      finalize(() => (this.isLoading = false))
-    ).subscribe({
+    this.productService.getProduct(productId).subscribe({
       next: (response) => {
         const { product, prices, categories, contents, assocs, toAssocs } = response;
 
@@ -168,8 +167,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.assocs = assocs;
         this.toAssocs = toAssocs;
         this.loadInventorySummary(productId);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { PicklistService } from 'src/app/services/picklist/picklist.service';
 import { CommonService } from 'src/app/services/common/common.service';
@@ -38,7 +38,8 @@ export class PicklistsComponent implements OnInit, OnDestroy {
 
   constructor(
     private picklistService: PicklistService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -55,16 +56,17 @@ export class PicklistsComponent implements OnInit, OnDestroy {
         fromDate: this.formatDate(this.filters.fromDate),
         toDate: this.formatDate(this.filters.toDate),
       })
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isLoading = false))
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           this.picklists = Array.isArray(response) ? response : [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.picklists = [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
@@ -30,7 +30,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private partyService: PartyService,
     private snackbarService: SnackbarService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +53,6 @@ export class UserDetailComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.userService
       .getUser(this.userLoginId)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response: any) => {
           this.userDetail = response?.userDetail;
@@ -62,10 +62,14 @@ export class UserDetailComponent implements OnInit, OnDestroy {
           } else {
             this.userRoles = [];
           }
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.snackbarService.showError('Failed to load user');
           this.router.navigate(['/users']);
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

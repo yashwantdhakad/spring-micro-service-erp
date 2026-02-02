@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -82,7 +82,8 @@ export class CustomerDetailComponent implements OnDestroy {
     private partyService: PartyService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private store: Store<GeoState>
+    private store: Store<GeoState>,
+    private cdr: ChangeDetectorRef
   ) {
     this.emailForm = this.fb.group({
       organizationName: ['', Validators.required],
@@ -121,9 +122,7 @@ export class CustomerDetailComponent implements OnDestroy {
 
   getCustomer(partyId: string): void {
     this.isLoading = true;
-    this.partyService.getCustomer(partyId).pipe(
-      finalize(() => (this.isLoading = false))
-    ).subscribe({
+    this.partyService.getCustomer(partyId).subscribe({
       next: (response) => {
         const { customerDetail } = response;
         const {
@@ -151,8 +150,12 @@ export class CustomerDetailComponent implements OnDestroy {
         this.partyNotes = partyNoteList;
         this.contents = contentList;
         console.log(this.partyRoleList);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }

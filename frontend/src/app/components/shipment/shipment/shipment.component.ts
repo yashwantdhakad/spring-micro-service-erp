@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
 import { ShipmentService } from 'src/app/services/shipment/shipment.service';
@@ -32,7 +32,8 @@ export class ShipmentComponent implements OnInit {
 
   constructor(
     private shipmentService: ShipmentService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -70,14 +71,17 @@ export class ShipmentComponent implements OnInit {
   getShipments(page: number, queryString: string): void {
     this.shipmentService
       .getShipments(page - 1, queryString)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
           const responseMap = response?.responseMap;
           this.items = responseMap?.resultList || [];
           this.pages = responseMap?.total ?? this.items.length;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

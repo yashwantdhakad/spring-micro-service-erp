@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject, finalize, forkJoin, takeUntil } from 'rxjs';
@@ -39,7 +39,8 @@ export class PicklistCreateComponent implements OnInit, OnDestroy {
   constructor(
     private commonService: CommonService,
     private orderService: OrderService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -52,17 +53,20 @@ export class PicklistCreateComponent implements OnInit, OnDestroy {
     this.orderService
       .getReservedOrders()
       .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isLoading = false))
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response) => {
           this.allPicklists = Array.isArray(response) ? response : [];
           this.applyFilters();
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.allPicklists = [];
           this.applyFilters();
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }
@@ -150,14 +154,17 @@ export class PicklistCreateComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     forkJoin(orderIds.map((orderId) => this.orderService.createPicklist(orderId)))
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: () => {
           this.selection.clear();
           this.loadPicklists();
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.loadPicklists();
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

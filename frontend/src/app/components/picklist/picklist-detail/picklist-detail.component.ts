@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { PicklistService } from 'src/app/services/picklist/picklist.service';
@@ -41,7 +41,8 @@ export class PicklistDetailComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private partyService: PartyService,
     private dialog: MatDialog,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -60,8 +61,7 @@ export class PicklistDetailComponent implements OnInit, OnDestroy {
     this.picklistService
       .getPicklist(picklistId)
       .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isLoading = false))
+        takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response) => {
@@ -69,10 +69,14 @@ export class PicklistDetailComponent implements OnInit, OnDestroy {
           this.bins = Array.isArray(this.picklistDetail?.bins)
             ? this.picklistDetail.bins
             : [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.picklistDetail = null;
           this.bins = [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

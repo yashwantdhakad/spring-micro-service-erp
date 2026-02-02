@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { CategoryService } from 'src/app/services/category/category.service';
@@ -36,7 +36,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
   constructor(
     private categoryService: CategoryService,
     private snackbarService: SnackbarService, // Inject SnackbarService
-    private commonService: CommonService
+    private commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -90,16 +91,19 @@ export class CategoryComponent implements OnInit, OnDestroy {
   private getCategories(page: number, queryString: string): void {
     this.isLoading = true;
     this.categoryService.getCategories(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
       next: (response) => {
         const { body, headers } = response;
         const list = Array.isArray(body) ? body : [];
         this.items = list;
         this.pages = parseInt(headers.get('x-total-count') || '0', 10);
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.snackbarService.showError('Error fetching categories');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
     });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ManufacturingService } from 'src/app/services/manufacturing/manufacturing.service';
 import { finalize } from 'rxjs/operators';
 
@@ -27,7 +27,10 @@ export class JobsComponent implements OnInit {
   ];
   displayedColumnKeys: string[] = [];
 
-  constructor(private manufacturingService: ManufacturingService) { }
+  constructor(
+    private manufacturingService: ManufacturingService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -38,14 +41,17 @@ export class JobsComponent implements OnInit {
   getJobs(page: number, queryString: string): void {
     this.manufacturingService
       .getJobs(page - 1, this.pagination.rowsPerPage, queryString)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
           const responseMap = response?.responseMap ?? {};
           this.items = responseMap.resultList ?? [];
           this.pages = responseMap.total ?? 0;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
 

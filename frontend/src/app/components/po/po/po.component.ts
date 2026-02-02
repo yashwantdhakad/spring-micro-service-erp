@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from 'src/app/services/order/order.service';
 import { DatePipe } from '@angular/common';
 import { finalize } from 'rxjs';
@@ -37,7 +37,8 @@ export class POComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -47,7 +48,6 @@ export class POComponent implements OnInit {
 
   getOrders(page: number, pageSize: number, queryString: string): void {
     this.orderService.getPOs(page - 1, pageSize, queryString, this.currentSort?.active, this.currentSort?.direction)
-      .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (response) => {
           const { orderList, orderListCount } = response.responseMap;
@@ -56,8 +56,12 @@ export class POComponent implements OnInit {
             entryDate: this.datePipe.transform(order.entryDate, 'MMMM d, y'),
           }));
           this.pages = orderListCount;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

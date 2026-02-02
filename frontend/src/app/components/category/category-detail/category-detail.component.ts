@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from 'src/app/services/category/category.service';
@@ -40,7 +40,8 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private dialog: MatDialog,
     private commonService: CommonService,
-    private snackbarService: SnackbarService // Inject SnackbarService
+    private snackbarService: SnackbarService, // Inject SnackbarService
+    private cdr: ChangeDetectorRef
   ) { }
 
   private destroy$ = new Subject<void>();
@@ -64,16 +65,18 @@ export class CategoryDetailComponent implements OnInit, OnDestroy {
   getCategory(productCategoryId: string): void {
     this.isLoading = true;
 
-    this.categoryService.getCategory(productCategoryId).pipe(
-      finalize(() => (this.isLoading = false))
-    ).subscribe({
+    this.categoryService.getCategory(productCategoryId).subscribe({
       next: (response) => {
         this.categoryDetail = response.category;
         this.categoryTypeLabel = this.categoryTypeMap.get(this.categoryDetail?.productCategoryTypeId);
         this.products = response.products;
+        this.isLoading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         this.snackbarService.showError('Error fetching products');
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }

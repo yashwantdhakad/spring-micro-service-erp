@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FeatureGroupService } from 'src/app/services/featuregroup/feature-group.service';
 import { finalize } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
@@ -24,7 +24,10 @@ export class FeaturegroupsComponent implements OnInit {
     { key: 'description', header: 'COMMON.DESCRIPTION' },
   ];
 
-  constructor(private featureGroupService: FeatureGroupService) {}
+  constructor(
+    private featureGroupService: FeatureGroupService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -35,14 +38,17 @@ export class FeaturegroupsComponent implements OnInit {
     const pageIndex = page - 1;
 
     this.featureGroupService.getFeatureGroups(pageIndex, query)
-      .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (response: HttpResponse<any[]>) => {
           this.items = response.body ?? [];
           const totalCount = response.headers?.get('x-total-count');
           this.pages = totalCount ? parseInt(totalCount, 10) : 0;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }

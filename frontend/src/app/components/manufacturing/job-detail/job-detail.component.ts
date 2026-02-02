@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ManufacturingService } from 'src/app/services/manufacturing/manufacturing.service';
@@ -48,7 +48,8 @@ export class JobDetailComponent implements OnInit {
   constructor(
     private readonly manufacturingService: ManufacturingService,
     private readonly route: ActivatedRoute,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -68,14 +69,17 @@ export class JobDetailComponent implements OnInit {
     this.isLoading = true;
 
     this.manufacturingService.getJob(workEffortId)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
           this.jobDetail = response?.workEffort ?? {};
           this.productsToConsume = response?.consumeList ?? [];
           this.productsToProduce = response?.produceList ?? [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

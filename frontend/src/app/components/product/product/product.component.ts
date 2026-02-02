@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Subject } from 'rxjs';
@@ -37,7 +37,8 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -92,16 +93,19 @@ export class ProductComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.productService
       .getProducts(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction)
-      .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: (data: any) => {
           const list = Array.isArray(data?.documentList) ? data.documentList : [];
           this.items = list;
           this.pages = data?.documentListCount ?? 0;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (err) => {
           this.items = [];
           this.pages = 0;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }

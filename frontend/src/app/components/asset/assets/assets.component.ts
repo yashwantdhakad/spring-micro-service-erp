@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { AssetService } from 'src/app/services/asset/asset.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { Subject, finalize, takeUntil } from 'rxjs';
@@ -41,7 +41,8 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   constructor(
     private assetService: AssetService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -52,17 +53,18 @@ export class AssetsComponent implements OnInit, OnDestroy {
 
   getAssets(page: number, queryString: string): void {
     this.assetService.getAssets(page - 1, queryString)
-      .pipe(
-        takeUntil(this.destroy$),
-        finalize(() => (this.isLoading = false))
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
           const responseMap = response?.responseMap;
           this.items = responseMap?.resultList || [];
           this.pages = responseMap?.total ?? this.items.length;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }

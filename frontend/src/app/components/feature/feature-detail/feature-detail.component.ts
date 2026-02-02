@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { FeatureService } from 'src/app/services/features/feature.service';
@@ -42,7 +42,8 @@ export class FeatureDetailComponent implements OnInit {
   constructor(
     private readonly featureService: FeatureService,
     private readonly route: ActivatedRoute,
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -59,14 +60,17 @@ export class FeatureDetailComponent implements OnInit {
 
     this.featureService
       .getFeature(productFeatureId)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response) => {
           this.featureDetail = response;
           this.products = response?.products ?? [];
           this.groups = response?.groups ?? [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

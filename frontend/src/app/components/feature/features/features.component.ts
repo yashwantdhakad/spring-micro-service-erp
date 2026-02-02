@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FeatureService } from 'src/app/services/features/feature.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { finalize } from 'rxjs/operators';
@@ -29,7 +29,8 @@ export class FeaturesComponent implements OnInit {
 
   constructor(
     private featureService: FeatureService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -39,15 +40,18 @@ export class FeaturesComponent implements OnInit {
 
   fetchFeatures(page: number, query: string): void {
     this.featureService.getFeatures(page - 1, query)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response: HttpResponse<any[]>) => {
           this.items = response.body ?? [];
           const totalCount = response.headers?.get('x-total-count');
           this.pages = totalCount ? parseInt(totalCount, 10) : 0;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           this.snackbarService.showError('Error fetching features');
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

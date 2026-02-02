@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
@@ -82,7 +82,8 @@ export class SODetailComponent implements OnInit {
     private productService: ProductService,
     private facilityService: FacilityService,
     private partyService: PartyService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -160,6 +161,7 @@ export class SODetailComponent implements OnInit {
       }),
       finalize(() => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       })
     );
   }

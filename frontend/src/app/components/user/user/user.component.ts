@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Subject } from 'rxjs';
@@ -35,7 +35,11 @@ export class UserComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  constructor(private userService: UserService, private snackbarService: SnackbarService) {}
+  constructor(
+    private userService: UserService,
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.searchControl.valueChanges
@@ -129,17 +133,20 @@ export class UserComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.userService
       .listUsers(page - 1, query, this.currentSort?.active, this.currentSort?.direction)
-      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
         next: (response: any) => {
           const { resultList, documentListCount } = response || {};
           this.items = Array.isArray(resultList) ? resultList : [];
           this.pages = documentListCount ?? 0;
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.items = [];
           this.pages = 0;
           this.snackbarService.showError('Error fetching users');
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
       });
   }

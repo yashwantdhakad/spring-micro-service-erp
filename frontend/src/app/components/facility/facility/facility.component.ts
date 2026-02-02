@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
@@ -18,7 +18,8 @@ export class FacilityComponent implements OnInit {
 
   constructor(
     private facilityService: FacilityService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -31,7 +32,6 @@ export class FacilityComponent implements OnInit {
       facilities: this.facilityService.getFacilities(),
       types: this.facilityService.getFacilityTypes(),
     })
-      .pipe(finalize(() => this.isLoading = false))
       .subscribe({
         next: ({ facilities, types }) => {
           const typeList = Array.isArray(types) ? types : [];
@@ -42,10 +42,14 @@ export class FacilityComponent implements OnInit {
             ])
           );
           this.items = Array.isArray(facilities) ? facilities : [];
+          this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: () => {
           this.items = [];
           this.facilityTypeMap = new Map();
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }
