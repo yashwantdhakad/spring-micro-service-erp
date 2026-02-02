@@ -2,7 +2,7 @@ package com.monash.erp.migration.config;
 
 import javax.sql.DataSource;
 
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,58 +15,30 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Configuration
 public class MigrationDataSourceConfig {
 
-    @Bean
-    @ConfigurationProperties("migration.datasource.source")
-    public DataSourceProperties sourceDataSourceProperties() {
-        return new DataSourceProperties();
-    }
-
     @Bean(name = "sourceDataSource")
+    @ConfigurationProperties("migration.datasource.source")
     public DataSource sourceDataSource() {
-        return sourceDataSourceProperties()
-            .initializeDataSourceBuilder()
-            .build();
-    }
-
-    @Bean
-    @ConfigurationProperties("migration.datasource.target")
-    public DataSourceProperties targetDataSourceProperties() {
-        return new DataSourceProperties();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "targetDataSource")
     @Primary
     @BatchDataSource
+    @ConfigurationProperties("migration.datasource.target")
     public DataSource targetDataSource() {
-        return targetDataSourceProperties()
-            .initializeDataSourceBuilder()
-            .build();
-    }
-
-    @Bean
-    @ConfigurationProperties("migration.datasource.party-target")
-    public DataSourceProperties partyTargetDataSourceProperties() {
-        return new DataSourceProperties();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "partyTargetDataSource")
+    @ConfigurationProperties("migration.datasource.party-target")
     public DataSource partyTargetDataSource() {
-        return partyTargetDataSourceProperties()
-            .initializeDataSourceBuilder()
-            .build();
-    }
-
-    @Bean
-    @ConfigurationProperties("migration.datasource.order-target")
-    public DataSourceProperties orderTargetDataSourceProperties() {
-        return new DataSourceProperties();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "orderTargetDataSource")
+    @ConfigurationProperties("migration.datasource.order-target")
     public DataSource orderTargetDataSource() {
-        return orderTargetDataSourceProperties()
-            .initializeDataSourceBuilder()
-            .build();
+        return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "dataSource")
