@@ -4,11 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderItemNote {
+@Table(
+        name = "order_item_note",
+        indexes = {
+                @Index(name = "idx_order_item_note_order_id", columnList = "order_id")
+        }
+)
+public class OrderItemNote extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,10 +26,6 @@ public class OrderItemNote {
     private String orderItemSeqId;
     private String noteId;
     private String internalNote;
-    private LocalDateTime lastUpdatedStamp;
-    private LocalDateTime lastUpdatedTxStamp;
-    private LocalDateTime createdStamp;
-    private LocalDateTime createdTxStamp;
 
     public Long getId() {
         return id;
@@ -63,36 +67,7 @@ public class OrderItemNote {
         this.internalNote = internalNote;
     }
 
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
 
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
-        this.lastUpdatedStamp = lastUpdatedStamp;
-    }
 
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
-        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
-    }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
-        this.createdStamp = createdStamp;
-    }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
-        this.createdTxStamp = createdTxStamp;
-    }
 
 }

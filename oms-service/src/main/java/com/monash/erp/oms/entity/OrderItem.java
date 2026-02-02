@@ -1,15 +1,25 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderItem {
+@Table(
+        name = "order_item",
+        indexes = {
+                @Index(name = "idx_order_item_order_id", columnList = "order_id"),
+                @Index(name = "idx_order_item_order_item_seq", columnList = "order_id, order_item_seq_id"),
+                @Index(name = "idx_order_item_product_id", columnList = "product_id")
+        }
+)
+public class OrderItem extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,16 +30,15 @@ public class OrderItem {
     private String externalId;
     private String orderItemTypeId;
     private String orderItemGroupSeqId;
-    private Boolean isItemGroupPrimary;
+    private String isItemGroupPrimary;
     private String fromInventoryItemId;
     private String budgetId;
     private String budgetItemSeqId;
     private String productId;
-    private String supplierProductId;
     private String productFeatureId;
     private String prodCatalogId;
     private String productCategoryId;
-    private Boolean isPromo;
+    private String isPromo;
     private String quoteId;
     private String quoteItemSeqId;
     private String shoppingListId;
@@ -43,8 +52,7 @@ public class OrderItem {
     private BigDecimal unitListPrice;
     private BigDecimal unitAverageCost;
     private BigDecimal unitRecurringPrice;
-    private BigDecimal discountRate;
-    private Boolean isModifiedPrice;
+    private String isModifiedPrice;
     private String recurringFreqUomId;
     private String itemDescription;
     private String comments;
@@ -58,11 +66,25 @@ public class OrderItem {
     private String dontCancelSetUserLogin;
     private LocalDateTime shipBeforeDate;
     private LocalDateTime shipAfterDate;
-    private LocalDateTime reserveAfterDate;
     private LocalDateTime cancelBackOrderDate;
     private String overrideGlAccountId;
     private String salesOpportunityId;
     private String changeByUserLoginId;
+    private String qaApproved;
+    private String qaOverridePartyId;
+    private String qaOverride;
+    private LocalDateTime qaOverrideValidFrom;
+    private LocalDateTime qaOverrideValidThru;
+    private LocalDateTime initialDeliveryDate;
+    private String qaOverrideNote;
+    private String supplierProductId;
+    private String invAuthEnumId;
+    private String mltrUseAuth;
+    private String commUseAuth;
+    private String mrgtAuth;
+    private String mrslAuth;
+    private String propRepAuth;
+    private String priorityCode;
 
     public Long getId() {
         return id;
@@ -112,11 +134,11 @@ public class OrderItem {
         this.orderItemGroupSeqId = orderItemGroupSeqId;
     }
 
-    public Boolean getIsItemGroupPrimary() {
+    public String getIsItemGroupPrimary() {
         return isItemGroupPrimary;
     }
 
-    public void setIsItemGroupPrimary(Boolean isItemGroupPrimary) {
+    public void setIsItemGroupPrimary(String isItemGroupPrimary) {
         this.isItemGroupPrimary = isItemGroupPrimary;
     }
 
@@ -152,14 +174,6 @@ public class OrderItem {
         this.productId = productId;
     }
 
-    public String getSupplierProductId() {
-        return supplierProductId;
-    }
-
-    public void setSupplierProductId(String supplierProductId) {
-        this.supplierProductId = supplierProductId;
-    }
-
     public String getProductFeatureId() {
         return productFeatureId;
     }
@@ -184,11 +198,11 @@ public class OrderItem {
         this.productCategoryId = productCategoryId;
     }
 
-    public Boolean getIsPromo() {
+    public String getIsPromo() {
         return isPromo;
     }
 
-    public void setIsPromo(Boolean isPromo) {
+    public void setIsPromo(String isPromo) {
         this.isPromo = isPromo;
     }
 
@@ -296,19 +310,11 @@ public class OrderItem {
         this.unitRecurringPrice = unitRecurringPrice;
     }
 
-    public BigDecimal getDiscountRate() {
-        return discountRate;
-    }
-
-    public void setDiscountRate(BigDecimal discountRate) {
-        this.discountRate = discountRate;
-    }
-
-    public Boolean getIsModifiedPrice() {
+    public String getIsModifiedPrice() {
         return isModifiedPrice;
     }
 
-    public void setIsModifiedPrice(Boolean isModifiedPrice) {
+    public void setIsModifiedPrice(String isModifiedPrice) {
         this.isModifiedPrice = isModifiedPrice;
     }
 
@@ -416,14 +422,6 @@ public class OrderItem {
         this.shipAfterDate = shipAfterDate;
     }
 
-    public LocalDateTime getReserveAfterDate() {
-        return reserveAfterDate;
-    }
-
-    public void setReserveAfterDate(LocalDateTime reserveAfterDate) {
-        this.reserveAfterDate = reserveAfterDate;
-    }
-
     public LocalDateTime getCancelBackOrderDate() {
         return cancelBackOrderDate;
     }
@@ -455,4 +453,128 @@ public class OrderItem {
     public void setChangeByUserLoginId(String changeByUserLoginId) {
         this.changeByUserLoginId = changeByUserLoginId;
     }
+
+    public String getQaApproved() {
+        return qaApproved;
+    }
+
+    public void setQaApproved(String qaApproved) {
+        this.qaApproved = qaApproved;
+    }
+
+
+
+
+    public String getQaOverridePartyId() {
+        return qaOverridePartyId;
+    }
+
+    public void setQaOverridePartyId(String qaOverridePartyId) {
+        this.qaOverridePartyId = qaOverridePartyId;
+    }
+
+    public String getQaOverride() {
+        return qaOverride;
+    }
+
+    public void setQaOverride(String qaOverride) {
+        this.qaOverride = qaOverride;
+    }
+
+    public LocalDateTime getQaOverrideValidFrom() {
+        return qaOverrideValidFrom;
+    }
+
+    public void setQaOverrideValidFrom(LocalDateTime qaOverrideValidFrom) {
+        this.qaOverrideValidFrom = qaOverrideValidFrom;
+    }
+
+    public LocalDateTime getQaOverrideValidThru() {
+        return qaOverrideValidThru;
+    }
+
+    public void setQaOverrideValidThru(LocalDateTime qaOverrideValidThru) {
+        this.qaOverrideValidThru = qaOverrideValidThru;
+    }
+
+    public LocalDateTime getInitialDeliveryDate() {
+        return initialDeliveryDate;
+    }
+
+    public void setInitialDeliveryDate(LocalDateTime initialDeliveryDate) {
+        this.initialDeliveryDate = initialDeliveryDate;
+    }
+
+    public String getQaOverrideNote() {
+        return qaOverrideNote;
+    }
+
+    public void setQaOverrideNote(String qaOverrideNote) {
+        this.qaOverrideNote = qaOverrideNote;
+    }
+
+    public String getSupplierProductId() {
+        return supplierProductId;
+    }
+
+    public void setSupplierProductId(String supplierProductId) {
+        this.supplierProductId = supplierProductId;
+    }
+
+    public String getInvAuthEnumId() {
+        return invAuthEnumId;
+    }
+
+    public void setInvAuthEnumId(String invAuthEnumId) {
+        this.invAuthEnumId = invAuthEnumId;
+    }
+
+    public String getMltrUseAuth() {
+        return mltrUseAuth;
+    }
+
+    public void setMltrUseAuth(String mltrUseAuth) {
+        this.mltrUseAuth = mltrUseAuth;
+    }
+
+    public String getCommUseAuth() {
+        return commUseAuth;
+    }
+
+    public void setCommUseAuth(String commUseAuth) {
+        this.commUseAuth = commUseAuth;
+    }
+
+    public String getMrgtAuth() {
+        return mrgtAuth;
+    }
+
+    public void setMrgtAuth(String mrgtAuth) {
+        this.mrgtAuth = mrgtAuth;
+    }
+
+    public String getMrslAuth() {
+        return mrslAuth;
+    }
+
+    public void setMrslAuth(String mrslAuth) {
+        this.mrslAuth = mrslAuth;
+    }
+
+    public String getPropRepAuth() {
+        return propRepAuth;
+    }
+
+    public void setPropRepAuth(String propRepAuth) {
+        this.propRepAuth = propRepAuth;
+    }
+
+    public String getPriorityCode() {
+        return priorityCode;
+    }
+
+    public void setPriorityCode(String priorityCode) {
+        this.priorityCode = priorityCode;
+    }
+
 }

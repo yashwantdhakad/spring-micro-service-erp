@@ -4,11 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderItemContactMech {
+@Table(
+        name = "order_item_contact_mech",
+        indexes = {
+                @Index(name = "idx_order_item_contact_mech_order_purpose", columnList = "order_id, contact_mech_purpose_type_id")
+        }
+)
+public class OrderItemContactMech extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,10 +26,6 @@ public class OrderItemContactMech {
     private String orderItemSeqId;
     private String contactMechPurposeTypeId;
     private String contactMechId;
-    private LocalDateTime lastUpdatedStamp;
-    private LocalDateTime lastUpdatedTxStamp;
-    private LocalDateTime createdStamp;
-    private LocalDateTime createdTxStamp;
 
     public Long getId() {
         return id;
@@ -63,36 +67,7 @@ public class OrderItemContactMech {
         this.contactMechId = contactMechId;
     }
 
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
 
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
-        this.lastUpdatedStamp = lastUpdatedStamp;
-    }
 
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
-        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
-    }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
-        this.createdStamp = createdStamp;
-    }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
-        this.createdTxStamp = createdTxStamp;
-    }
 
 }

@@ -59,7 +59,4 @@ public class InventoryItemDetailService {
         return value == null || value.isBlank();
     }
 
-    private boolean isBlank(String value) {
-        return value == null || value.isBlank();
-    }
 }

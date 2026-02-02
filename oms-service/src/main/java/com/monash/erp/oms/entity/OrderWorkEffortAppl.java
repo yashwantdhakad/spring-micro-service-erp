@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderWorkEffortAppl {
+public class OrderWorkEffortAppl extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,6 @@ public class OrderWorkEffortAppl {
     private String statusId;
     private BigDecimal quantity;
     private String serialNumber;
-    private LocalDateTime lastUpdatedStamp;
-    private LocalDateTime lastUpdatedTxStamp;
-    private LocalDateTime createdStamp;
-    private LocalDateTime createdTxStamp;
     private String orderWorkEfftApplTypeId;
     private BigDecimal assignedQuantity;
 
@@ -93,37 +89,8 @@ public class OrderWorkEffortAppl {
         this.serialNumber = serialNumber;
     }
 
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
 
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
-        this.lastUpdatedStamp = lastUpdatedStamp;
-    }
 
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
-        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
-    }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
-        this.createdStamp = createdStamp;
-    }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
-        this.createdTxStamp = createdTxStamp;
-    }
 
     public String getOrderWorkEfftApplTypeId() {
         return orderWorkEfftApplTypeId;

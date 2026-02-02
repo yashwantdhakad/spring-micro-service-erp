@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { OrderService } from 'src/app/services/order/order.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { ProductService } from 'src/app/services/product/product.service';
@@ -86,26 +86,34 @@ export class SODetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLookupData();
-    this.route.params.subscribe((params) => {
-      this.orderId = params['orderId'];
-      if (this.orderId) {
-        this.getOrder(this.orderId);
-      }
-    });
+    this.route.paramMap
+      .pipe(
+        map((params) => params.get('orderId') || ''),
+        filter((orderId) => orderId.length > 0),
+        distinctUntilChanged(),
+        switchMap((orderId) => {
+          this.orderId = orderId;
+          return this.getOrder(orderId);
+        })
+      )
+      .subscribe();
   }
 
-  getOrder(orderId: string): void {
+  getOrder(orderId: string) {
     this.isLoading = true;
 
-    forkJoin({
-      orderResponse: this.orderService.getOrder(orderId),
-      displayInfo: this.orderService.getPODisplayInfo(orderId),
-      shipments: this.orderService.getOrderShipments(orderId),
-      invoices: this.orderService.getOrderInvoices(orderId),
-      reservationStatus: this.orderService.getReservationStatus(orderId),
-      picklists: this.orderService.getOrderPicklists(orderId),
-    }).subscribe({
-      next: ({ orderResponse, displayInfo, shipments, invoices, reservationStatus, picklists }) => {
+    return forkJoin({
+      orderResponse: this.orderService.getOrder(orderId).pipe(catchError(() => of(null))),
+      displayInfo: this.orderService.getPODisplayInfo(orderId).pipe(catchError(() => of(null))),
+      shipments: this.orderService.getOrderShipments(orderId).pipe(catchError(() => of([]))),
+      invoices: this.orderService.getOrderInvoices(orderId).pipe(catchError(() => of([]))),
+      reservationStatus: this.orderService.getReservationStatus(orderId).pipe(catchError(() => of(null))),
+      picklists: this.orderService.getOrderPicklists(orderId).pipe(catchError(() => of([]))),
+    }).pipe(
+      tap(({ orderResponse, displayInfo, shipments, invoices, reservationStatus, picklists }) => {
+        if (!orderResponse || !displayInfo) {
+          return;
+        }
         this.parts = orderResponse.parts;
         this.primeProductNames(this.parts || []);
         this.contents = orderResponse?.contents;
@@ -148,14 +156,11 @@ export class SODetailComponent implements OnInit {
         } else {
           this.facilityAddress = null;
         }
-      },
-      error: (error) => {
+      }),
+      finalize(() => {
         this.isLoading = false;
-      },
-      complete: () => {
-        this.isLoading = false;
-      },
-    });
+      })
+    );
   }
 
   loadFacilityAddress(facilityId: string): void {

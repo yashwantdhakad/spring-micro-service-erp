@@ -1,13 +1,24 @@
 package com.monash.erp.party.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "party",
+        indexes = {
+                @Index(name = "idx_party_party_id", columnList = "party_id"),
+                @Index(name = "idx_party_party_type_id", columnList = "party_type_id"),
+                @Index(name = "idx_party_status_id", columnList = "status_id"),
+                @Index(name = "idx_party_external_id", columnList = "external_id")
+        }
+)
 public class Party {
 
     @Id

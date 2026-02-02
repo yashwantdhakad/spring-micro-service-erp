@@ -4,9 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "party_group",
+        indexes = {
+                @Index(name = "idx_party_group_party_id", columnList = "party_id"),
+                @Index(name = "idx_party_group_name", columnList = "group_name")
+        }
+)
 public class PartyGroup {
 
     @Id

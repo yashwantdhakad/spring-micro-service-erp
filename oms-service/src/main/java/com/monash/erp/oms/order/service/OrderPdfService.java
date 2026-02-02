@@ -15,7 +15,7 @@ import com.monash.erp.oms.order.dto.OrderDisplayInfoResponse;
 import com.monash.erp.oms.order.dto.OrderItemDto;
 import com.monash.erp.oms.order.dto.OrderPartDto;
 import com.monash.erp.oms.order.dto.PostalAddressDto;
-import com.monash.erp.oms.order.entity.OrderHeader;
+import com.monash.erp.oms.entity.OrderHeader;
 import com.monash.erp.oms.order.repository.OrderHeaderRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

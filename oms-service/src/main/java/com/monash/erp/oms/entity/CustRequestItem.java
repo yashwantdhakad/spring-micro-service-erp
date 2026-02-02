@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class CustRequestItem {
+public class CustRequestItem extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +32,6 @@ public class CustRequestItem {
     private String configId;
     private String description;
     private String story;
-    private LocalDateTime lastUpdatedStamp;
-    private LocalDateTime lastUpdatedTxStamp;
-    private LocalDateTime createdStamp;
-    private LocalDateTime createdTxStamp;
 
     public Long getId() {
         return id;
@@ -181,36 +177,7 @@ public class CustRequestItem {
         this.story = story;
     }
 
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
 
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
-        this.lastUpdatedStamp = lastUpdatedStamp;
-    }
 
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
-        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
-    }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
-        this.createdStamp = createdStamp;
-    }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
-        this.createdTxStamp = createdTxStamp;
-    }
 
 }

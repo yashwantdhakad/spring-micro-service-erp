@@ -1,14 +1,23 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-public class OrderItemBilling {
+@Table(
+        name = "order_item_billing",
+        indexes = {
+                @Index(name = "idx_order_item_billing_order_id", columnList = "order_id")
+        }
+)
+public class OrderItemBilling extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -94,4 +103,8 @@ public class OrderItemBilling {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
+
+
+
 }

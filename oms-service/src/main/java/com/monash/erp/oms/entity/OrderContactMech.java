@@ -1,12 +1,22 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
 
 @Entity
-public class OrderContactMech {
+@Table(
+        name = "order_contact_mech",
+        indexes = {
+                @Index(name = "idx_order_contact_mech_order_purpose", columnList = "order_id, contact_mech_purpose_type_id")
+        }
+)
+public class OrderContactMech extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +57,8 @@ public class OrderContactMech {
     public void setContactMechId(String contactMechId) {
         this.contactMechId = contactMechId;
     }
+
+
+
+
 }

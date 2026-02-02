@@ -4,8 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(
+        name = "shipment_item",
+        indexes = {
+                @Index(name = "idx_shipment_item_shipment_id", columnList = "shipment_id"),
+                @Index(name = "idx_shipment_item_shipment_item_seq", columnList = "shipment_id, shipment_item_seq_id"),
+                @Index(name = "idx_shipment_item_product_id", columnList = "product_id")
+        }
+)
 public class ShipmentItem {
 
     @Id

@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.repository;
 
-import com.monash.erp.oms.order.entity.OrderItemShipGrpInvRes;
+import com.monash.erp.oms.entity.OrderItemShipGrpInvRes;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;

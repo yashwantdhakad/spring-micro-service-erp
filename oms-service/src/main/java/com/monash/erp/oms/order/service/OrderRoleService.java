@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.service;
 
-import com.monash.erp.oms.order.entity.OrderRole;
+import com.monash.erp.oms.entity.OrderRole;
 import com.monash.erp.oms.order.repository.OrderRoleRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

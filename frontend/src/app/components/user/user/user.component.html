@@ -20,9 +20,6 @@
         />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
-      <a mat-raised-button color="primary" routerLink="/users/create">
-        {{ 'USER.CREATE_BUTTON' | translate }}
-      </a>
     </mat-card-actions>
     <mat-card-content>
       <table mat-table [dataSource]="items" matSort [matSortDisableClear]="true" (matSortChange)="onSortChange($event)">

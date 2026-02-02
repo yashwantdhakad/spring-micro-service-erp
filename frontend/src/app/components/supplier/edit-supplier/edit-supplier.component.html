@@ -14,11 +14,11 @@
         <input
           matInput
           [placeholder]="'SUPPLIER.SUPPLIER_NAME' | translate"
-          formControlName="organizationName"
+          formControlName="groupName"
         />
         <mat-error
           *ngIf="
-            updateSupplierForm.get('organizationName')?.hasError('required')
+            updateSupplierForm.get('groupName')?.hasError('required')
           "
           >{{ 'SUPPLIER.SUPPLIER_REQUIRED' | translate }}</mat-error
         >

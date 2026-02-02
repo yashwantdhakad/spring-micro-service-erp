@@ -4,9 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "picklist_role",
+        indexes = {
+                @Index(name = "idx_picklist_role_picklist_role", columnList = "picklist_id, role_type_id"),
+                @Index(name = "idx_picklist_role_thru_date", columnList = "thru_date")
+        }
+)
 public class PicklistRole {
 
     @Id

@@ -56,6 +56,19 @@ public class MigrationDataSourceConfig {
             .build();
     }
 
+    @Bean
+    @ConfigurationProperties("migration.datasource.order-target")
+    public DataSourceProperties orderTargetDataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean(name = "orderTargetDataSource")
+    public DataSource orderTargetDataSource() {
+        return orderTargetDataSourceProperties()
+            .initializeDataSourceBuilder()
+            .build();
+    }
+
     @Bean(name = "dataSource")
     public DataSource dataSource(@Qualifier("targetDataSource") DataSource targetDataSource) {
         return targetDataSource;
@@ -71,5 +84,12 @@ public class MigrationDataSourceConfig {
             @Qualifier("partyTargetDataSource") DataSource partyTargetDataSource
     ) {
         return new DataSourceTransactionManager(partyTargetDataSource);
+    }
+
+    @Bean(name = "orderTransactionManager")
+    public PlatformTransactionManager orderTransactionManager(
+            @Qualifier("orderTargetDataSource") DataSource orderTargetDataSource
+    ) {
+        return new DataSourceTransactionManager(orderTargetDataSource);
     }
 }

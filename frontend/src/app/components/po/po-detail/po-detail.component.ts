@@ -13,7 +13,7 @@ import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
 import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-po-detail',
@@ -116,96 +116,82 @@ export class PODetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLookupData();
-    this.route.params.subscribe((params) => {
-      this.orderId = params['orderId'];
-      if (this.orderId) {
-        this.isLoading = true;
-        this.getOrder(this.orderId);
-      }
-    });
+    this.route.paramMap
+      .pipe(
+        map((params) => params.get('orderId') || ''),
+        filter((orderId) => orderId.length > 0),
+        distinctUntilChanged(),
+        switchMap((orderId) => {
+          this.orderId = orderId;
+          return this.getOrder(orderId);
+        })
+      )
+      .subscribe();
   }
 
-  getOrder(orderId: string): void {
+  getOrder(orderId: string) {
     this.isLoading = true;
 
-    const order$ = this.orderService.getOrder(orderId);
-    const display$ = this.orderService.getPODisplayInfo(orderId);
-    const shipments$ = this.orderService.getOrderShipments(orderId);
-    const invoices$ = this.orderService.getOrderInvoices(orderId);
+    return forkJoin({
+      orderResponse: this.orderService.getOrder(orderId).pipe(catchError(() => of(null))),
+      displayInfo: this.orderService.getPODisplayInfo(orderId).pipe(catchError(() => of(null))),
+      shipments: this.orderService.getOrderShipments(orderId).pipe(catchError(() => of([]))),
+      invoices: this.orderService.getOrderInvoices(orderId).pipe(catchError(() => of([]))),
+    }).pipe(
+      tap(({ orderResponse, displayInfo, shipments, invoices }) => {
+        if (!orderResponse) {
+          return;
+        }
 
-    order$.subscribe({
-      next: (orderResponse) => {
-        this.parts = orderResponse.parts;
+        this.parts = orderResponse.parts || [];
         this.primeProductNames(this.parts || []);
-        this.contents = orderResponse.contents;
+        this.contents = orderResponse.contents || [];
 
-        display$.subscribe({
-          next: (displayResponse) => {
-            this.orderHeader = displayResponse.orderHeader;
-            this.statusItem = displayResponse.statusItem;
-            this.orderNotes = displayResponse.orderNoteList;
-            this.canApprove = this.statusItem?.statusId === 'ORDER_CREATED';
-            this.canReceive = this.statusItem?.statusId === 'ORDER_APPROVED';
+        if (displayInfo) {
+          this.orderHeader = displayInfo.orderHeader;
+          this.statusItem = displayInfo.statusItem;
+          this.orderNotes = displayInfo.orderNoteList || [];
+          this.canApprove = this.statusItem?.statusId === 'ORDER_CREATED';
+          this.canReceive = this.statusItem?.statusId === 'ORDER_APPROVED';
 
-            this.overviewFields = [
-              { label: 'COMMON.ID', value: this.orderHeader?.orderId },
-              { label: 'PO.ORDER_DATE', value: this.datePipe.transform(this.orderHeader?.entryDate, 'MMMM d, y') },
-              { label: 'COMMON.STATUS', value: this.statusItem?.description },
-            ];
+          this.overviewFields = [
+            { label: 'COMMON.ID', value: this.orderHeader?.orderId },
+            { label: 'PO.ORDER_DATE', value: this.datePipe.transform(this.orderHeader?.entryDate, 'MMMM d, y') },
+            { label: 'COMMON.STATUS', value: this.statusItem?.description },
+          ];
 
-            if (displayResponse?.firstPart?.vendorPartyId) {
-              this.vendorPartyId = displayResponse.firstPart.vendorPartyId;
-              this.loadVendorDetails(displayResponse.firstPart.vendorPartyId);
-            }
-
-            this.facilityId = displayResponse?.firstPart?.facilityId || this.orderHeader?.originFacilityId;
-            if (this.facilityId) {
-              this.loadFacilityAddress(this.facilityId);
-            }
-
-            const shippingContacts = (displayResponse?.orderContactMechList || [])
-              .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
-            this.orderShipToAddress = shippingContacts.length ? shippingContacts[0]?.postalAddress : null;
-          },
-          error: (error) => {
-            this.isLoading = false;
-          },
-          complete: () => {
-            this.isLoading = false;
+          if (displayInfo?.firstPart?.vendorPartyId) {
+            this.vendorPartyId = displayInfo.firstPart.vendorPartyId;
+            this.loadVendorDetails(displayInfo.firstPart.vendorPartyId);
           }
-        });
 
-        shipments$.subscribe({
-          next: (shipmentResponse) => {
-            this.shipments = Array.isArray(shipmentResponse) ? shipmentResponse : [];
-          },
-          error: () => {
-            this.shipments = [];
+          this.facilityId = displayInfo?.firstPart?.facilityId || this.orderHeader?.originFacilityId;
+          if (this.facilityId) {
+            this.loadFacilityAddress(this.facilityId);
           }
-        });
 
-        invoices$.subscribe({
-          next: (invoiceResponse) => {
-            const invoices = Array.isArray(invoiceResponse) ? invoiceResponse : [];
-            this.invoiceItems = invoices.flatMap((invoice: any) =>
-              (invoice.items || []).map((item: any) => ({
-                invoiceId: invoice.invoiceId,
-                currencyUomId: invoice.currencyUomId,
-                productId: item.productId,
-                quantity: item.quantity,
-                amount: item.amount
-              }))
-            );
-          },
-          error: () => {
-            this.invoiceItems = [];
-          }
-        });
-      },
-      error: (error) => {
+          const shippingContacts = (displayInfo?.orderContactMechList || [])
+            .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
+          this.orderShipToAddress = shippingContacts.length ? shippingContacts[0]?.postalAddress : null;
+        }
+
+        this.shipments = Array.isArray(shipments) ? shipments : [];
+
+        const invoiceList = Array.isArray(invoices) ? invoices : [];
+        this.invoiceItems = invoiceList.flatMap((invoice: any) =>
+          (invoice.items || []).map((item: any) => ({
+            invoiceId: invoice.invoiceId,
+            currencyUomId: invoice.currencyUomId,
+            productId: item.productId,
+            quantity: item.quantity,
+            amount: item.amount
+          }))
+        );
+      }),
+      finalize(() => {
         this.isLoading = false;
-      }
-    });
+      })
+    );
   }
 
   loadLookupData(): void {

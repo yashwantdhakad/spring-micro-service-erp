@@ -4,8 +4,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(
+        name = "work_effort_inventory_produced",
+        indexes = {
+                @Index(name = "idx_work_effort_inventory_produced_work_effort_id", columnList = "work_effort_id"),
+                @Index(name = "idx_work_effort_inventory_produced_inventory_item_id", columnList = "inventory_item_id")
+        }
+)
 public class WorkEffortInventoryProduced {
 
     @Id

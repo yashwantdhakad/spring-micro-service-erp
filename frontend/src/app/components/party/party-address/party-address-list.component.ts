@@ -20,12 +20,27 @@ export class PartyAddressListComponent {
 
   @Output() addressUpdated = new EventEmitter<string>();
 
+  showAllAddresses = false;
+
   constructor(private dialog: MatDialog, private partyService: PartyService,) { }
 
   get filteredAddresses() {
     return (this.addressList || []).filter(
       addr => addr?.contactMechPurposeId === this.purposeId
     );
+  }
+
+  get visibleAddresses() {
+    const list = this.filteredAddresses;
+    return this.showAllAddresses ? list : list.slice(0, 2);
+  }
+
+  get canToggleAddresses() {
+    return this.filteredAddresses.length > 2;
+  }
+
+  toggleAddresses(): void {
+    this.showAllAddresses = !this.showAllAddresses;
   }
 
 

@@ -4,8 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(
+        name = "picklist_bin",
+        indexes = {
+                @Index(name = "idx_picklist_bin_picklist_id", columnList = "picklist_id"),
+                @Index(name = "idx_picklist_bin_primary_order_id", columnList = "primary_order_id"),
+                @Index(name = "idx_picklist_bin_picklist_bin_id", columnList = "picklist_bin_id")
+        }
+)
 public class PicklistBin {
 
     @Id

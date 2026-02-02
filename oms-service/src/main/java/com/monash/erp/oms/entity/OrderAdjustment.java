@@ -1,15 +1,23 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderAdjustment {
+@Table(
+        name = "order_adjustment",
+        indexes = {
+                @Index(name = "idx_order_adjustment_order_id", columnList = "order_id")
+        }
+)
+public class OrderAdjustment extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +32,6 @@ public class OrderAdjustment {
     private String description;
     private BigDecimal amount;
     private BigDecimal recurringAmount;
-    private BigDecimal amountAlreadyIncluded;
     private String productPromoId;
     private String productPromoRuleId;
     private String productPromoActionSeqId;
@@ -40,14 +47,13 @@ public class OrderAdjustment {
     private String taxAuthGeoId;
     private String taxAuthPartyId;
     private String overrideGlAccountId;
-    private Boolean includeInTax;
-    private Boolean includeInShipping;
-    private Boolean isManual;
+    private String includeInTax;
+    private String includeInShipping;
     private LocalDateTime createdDate;
     private String createdByUserLogin;
-    private LocalDateTime lastModifiedDate;
-    private String lastModifiedByUserLogin;
     private String originalAdjustmentId;
+    private BigDecimal amountPerQuantity;
+    private BigDecimal percentage;
 
     public Long getId() {
         return id;
@@ -127,14 +133,6 @@ public class OrderAdjustment {
 
     public void setRecurringAmount(BigDecimal recurringAmount) {
         this.recurringAmount = recurringAmount;
-    }
-
-    public BigDecimal getAmountAlreadyIncluded() {
-        return amountAlreadyIncluded;
-    }
-
-    public void setAmountAlreadyIncluded(BigDecimal amountAlreadyIncluded) {
-        this.amountAlreadyIncluded = amountAlreadyIncluded;
     }
 
     public String getProductPromoId() {
@@ -257,28 +255,20 @@ public class OrderAdjustment {
         this.overrideGlAccountId = overrideGlAccountId;
     }
 
-    public Boolean getIncludeInTax() {
+    public String getIncludeInTax() {
         return includeInTax;
     }
 
-    public void setIncludeInTax(Boolean includeInTax) {
+    public void setIncludeInTax(String includeInTax) {
         this.includeInTax = includeInTax;
     }
 
-    public Boolean getIncludeInShipping() {
+    public String getIncludeInShipping() {
         return includeInShipping;
     }
 
-    public void setIncludeInShipping(Boolean includeInShipping) {
+    public void setIncludeInShipping(String includeInShipping) {
         this.includeInShipping = includeInShipping;
-    }
-
-    public Boolean getIsManual() {
-        return isManual;
-    }
-
-    public void setIsManual(Boolean isManual) {
-        this.isManual = isManual;
     }
 
     public LocalDateTime getCreatedDate() {
@@ -297,22 +287,6 @@ public class OrderAdjustment {
         this.createdByUserLogin = createdByUserLogin;
     }
 
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getLastModifiedByUserLogin() {
-        return lastModifiedByUserLogin;
-    }
-
-    public void setLastModifiedByUserLogin(String lastModifiedByUserLogin) {
-        this.lastModifiedByUserLogin = lastModifiedByUserLogin;
-    }
-
     public String getOriginalAdjustmentId() {
         return originalAdjustmentId;
     }
@@ -320,4 +294,24 @@ public class OrderAdjustment {
     public void setOriginalAdjustmentId(String originalAdjustmentId) {
         this.originalAdjustmentId = originalAdjustmentId;
     }
+
+    public BigDecimal getAmountPerQuantity() {
+        return amountPerQuantity;
+    }
+
+    public void setAmountPerQuantity(BigDecimal amountPerQuantity) {
+        this.amountPerQuantity = amountPerQuantity;
+    }
+
+    public BigDecimal getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(BigDecimal percentage) {
+        this.percentage = percentage;
+    }
+
+
+
+
 }

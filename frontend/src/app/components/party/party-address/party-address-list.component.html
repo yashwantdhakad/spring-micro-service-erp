@@ -1,6 +1,6 @@
 <ul class="custom-list">
   <ng-container *ngIf="filteredAddresses.length > 0; else noPrimaryAddressRecords">
-    <li class="custom-list-item" *ngFor="let address of filteredAddresses">
+    <li class="custom-list-item" *ngFor="let address of visibleAddresses">
       <strong>{{ 'PARTY.ADDRESS' | translate }}:</strong>
       <div>
         {{ address?.toName }}
@@ -30,6 +30,11 @@
                   })
                 ">delete</mat-icon>
       </div>
+    </li>
+    <li class="custom-list-item" *ngIf="canToggleAddresses">
+      <button mat-button color="primary" type="button" (click)="toggleAddresses()">
+        {{ (showAllAddresses ? 'COMMON.SHOW_LESS' : 'COMMON.SHOW_MORE') | translate }}
+      </button>
     </li>
   </ng-container>
 

@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.controller;
 
-import com.monash.erp.oms.order.entity.OrderItem;
+import com.monash.erp.oms.entity.OrderItem;
 import com.monash.erp.oms.order.service.OrderItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

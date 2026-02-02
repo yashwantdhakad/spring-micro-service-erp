@@ -4,9 +4,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "work_effort_good_standard",
+        indexes = {
+                @Index(name = "idx_wegs_work_effort_id", columnList = "work_effort_id"),
+                @Index(name = "idx_wegs_product_id", columnList = "product_id"),
+                @Index(name = "idx_wegs_status_id", columnList = "status_id"),
+                @Index(name = "idx_wegs_reference_number", columnList = "wegs_reference_number")
+        }
+)
 public class WorkEffortGoodStandard {
 
     @Id

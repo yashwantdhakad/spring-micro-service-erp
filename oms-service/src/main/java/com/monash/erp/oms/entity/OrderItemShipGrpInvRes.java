@@ -1,15 +1,26 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderItemShipGrpInvRes {
+@Table(
+        name = "order_item_ship_grp_inv_res",
+        indexes = {
+                @Index(name = "idx_order_item_ship_grp_inv_res_order_id", columnList = "order_id"),
+                @Index(name = "idx_order_item_ship_grp_inv_res_inventory_item_id", columnList = "inventory_item_id"),
+                @Index(name = "idx_order_item_ship_grp_inv_res_order_item", columnList = "order_id, order_item_seq_id"),
+                @Index(name = "idx_order_item_ship_grp_inv_res_qty_not_avail", columnList = "quantity_not_available")
+        }
+)
+public class OrderItemShipGrpInvRes extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +37,9 @@ public class OrderItemShipGrpInvRes {
     private LocalDateTime createdDatetime;
     private LocalDateTime promisedDatetime;
     private LocalDateTime currentPromisedDate;
-    private Boolean priority;
-    private Integer sequenceId;
+    private String priority;
+    private BigDecimal sequenceId;
+    private LocalDateTime pickStartDate;
 
     public Long getId() {
         return id;
@@ -125,19 +137,31 @@ public class OrderItemShipGrpInvRes {
         this.currentPromisedDate = currentPromisedDate;
     }
 
-    public Boolean getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Boolean priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
-    public Integer getSequenceId() {
+    public BigDecimal getSequenceId() {
         return sequenceId;
     }
 
-    public void setSequenceId(Integer sequenceId) {
+    public void setSequenceId(BigDecimal sequenceId) {
         this.sequenceId = sequenceId;
     }
+
+    public LocalDateTime getPickStartDate() {
+        return pickStartDate;
+    }
+
+    public void setPickStartDate(LocalDateTime pickStartDate) {
+        this.pickStartDate = pickStartDate;
+    }
+
+
+
+
 }

@@ -1,14 +1,23 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderItemShipGroup {
+@Table(
+        name = "order_item_ship_group",
+        indexes = {
+                @Index(name = "idx_order_item_ship_group_order_id", columnList = "order_id"),
+                @Index(name = "idx_order_item_ship_group_order_ship_group", columnList = "order_id, ship_group_seq_id")
+        }
+)
+public class OrderItemShipGroup extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +27,6 @@ public class OrderItemShipGroup {
     private String shipGroupSeqId;
     private String shipmentMethodTypeId;
     private String supplierPartyId;
-    private String supplierAgreementId;
     private String vendorPartyId;
     private String carrierPartyId;
     private String carrierRoleTypeId;
@@ -27,13 +35,16 @@ public class OrderItemShipGroup {
     private String telecomContactMechId;
     private String trackingNumber;
     private String shippingInstructions;
-    private Boolean maySplit;
+    private String maySplit;
     private String giftMessage;
-    private Boolean isGift;
+    private String isGift;
     private LocalDateTime shipAfterDate;
     private LocalDateTime shipByDate;
     private LocalDateTime estimatedShipDate;
     private LocalDateTime estimatedDeliveryDate;
+    private String carrierAccountNumber;
+    private String carrierService;
+    private String isSaturdayDelivery;
 
     public Long getId() {
         return id;
@@ -73,14 +84,6 @@ public class OrderItemShipGroup {
 
     public void setSupplierPartyId(String supplierPartyId) {
         this.supplierPartyId = supplierPartyId;
-    }
-
-    public String getSupplierAgreementId() {
-        return supplierAgreementId;
-    }
-
-    public void setSupplierAgreementId(String supplierAgreementId) {
-        this.supplierAgreementId = supplierAgreementId;
     }
 
     public String getVendorPartyId() {
@@ -147,11 +150,11 @@ public class OrderItemShipGroup {
         this.shippingInstructions = shippingInstructions;
     }
 
-    public Boolean getMaySplit() {
+    public String getMaySplit() {
         return maySplit;
     }
 
-    public void setMaySplit(Boolean maySplit) {
+    public void setMaySplit(String maySplit) {
         this.maySplit = maySplit;
     }
 
@@ -163,11 +166,11 @@ public class OrderItemShipGroup {
         this.giftMessage = giftMessage;
     }
 
-    public Boolean getIsGift() {
+    public String getIsGift() {
         return isGift;
     }
 
-    public void setIsGift(Boolean isGift) {
+    public void setIsGift(String isGift) {
         this.isGift = isGift;
     }
 
@@ -202,4 +205,32 @@ public class OrderItemShipGroup {
     public void setEstimatedDeliveryDate(LocalDateTime estimatedDeliveryDate) {
         this.estimatedDeliveryDate = estimatedDeliveryDate;
     }
+
+
+
+
+    public String getCarrierAccountNumber() {
+        return carrierAccountNumber;
+    }
+
+    public void setCarrierAccountNumber(String carrierAccountNumber) {
+        this.carrierAccountNumber = carrierAccountNumber;
+    }
+
+    public String getCarrierService() {
+        return carrierService;
+    }
+
+    public void setCarrierService(String carrierService) {
+        this.carrierService = carrierService;
+    }
+
+    public String getIsSaturdayDelivery() {
+        return isSaturdayDelivery;
+    }
+
+    public void setIsSaturdayDelivery(String isSaturdayDelivery) {
+        this.isSaturdayDelivery = isSaturdayDelivery;
+    }
+
 }

@@ -4,8 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(
+        name = "security_permission",
+        indexes = {
+                @Index(name = "idx_security_permission_permission_id", columnList = "permission_id")
+        }
+)
 public class SecurityPermission {
 
     @Id

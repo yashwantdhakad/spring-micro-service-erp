@@ -1,5 +1,6 @@
 package com.monash.erp.oms.order.service;
 
+import com.monash.erp.oms.common.entity.Geo;
 import com.monash.erp.oms.common.entity.StatusItem;
 import com.monash.erp.oms.common.repository.GeoRepository;
 import com.monash.erp.oms.common.repository.StatusItemRepository;
@@ -48,19 +49,19 @@ import com.monash.erp.oms.accounting.repository.AcctgTransEntryRepository;
 import com.monash.erp.oms.accounting.repository.AcctgTransRepository;
 import com.monash.erp.oms.accounting.repository.InvoiceItemRepository;
 import com.monash.erp.oms.accounting.repository.InvoiceRepository;
-import com.monash.erp.oms.order.entity.OrderAdjustment;
-import com.monash.erp.oms.order.entity.OrderContactMech;
-import com.monash.erp.oms.order.entity.OrderContent;
+import com.monash.erp.oms.entity.OrderAdjustment;
+import com.monash.erp.oms.entity.OrderContactMech;
+import com.monash.erp.oms.entity.OrderContent;
 import com.monash.erp.oms.order.entity.OrderContentInfo;
-import com.monash.erp.oms.order.entity.OrderHeader;
-import com.monash.erp.oms.order.entity.OrderItem;
-import com.monash.erp.oms.order.entity.OrderItemShipGrpInvRes;
-import com.monash.erp.oms.order.entity.OrderItemShipGroup;
+import com.monash.erp.oms.entity.OrderHeader;
+import com.monash.erp.oms.entity.OrderItem;
+import com.monash.erp.oms.entity.OrderItemShipGrpInvRes;
+import com.monash.erp.oms.entity.OrderItemShipGroup;
 import com.monash.erp.oms.order.entity.OrderItemShipGroupAssoc;
 import com.monash.erp.oms.order.entity.OrderNote;
-import com.monash.erp.oms.order.entity.OrderItemBilling;
-import com.monash.erp.oms.order.entity.OrderRole;
-import com.monash.erp.oms.order.entity.OrderStatus;
+import com.monash.erp.oms.entity.OrderItemBilling;
+import com.monash.erp.oms.entity.OrderRole;
+import com.monash.erp.oms.entity.OrderStatus;
 import com.monash.erp.oms.order.entity.PostalAddress;
 import com.monash.erp.oms.order.repository.OrderAdjustmentRepository;
 import com.monash.erp.oms.order.repository.OrderContactMechRepository;
@@ -210,30 +211,41 @@ public class OrderCompositeService {
     }
 
     public OrderListResponse listOrders(int page, int size, String queryString, String orderTypeId, String sortBy, String sortDirection) {
-        boolean sortRequested = !isBlank(sortBy);
-        Page<OrderHeader> orders;
-        if (sortRequested) {
-            PageRequest pageable = PageRequest.of(0, Integer.MAX_VALUE);
-            orders = loadOrders(queryString, orderTypeId, pageable);
-        } else {
-            PageRequest pageable = PageRequest.of(Math.max(page, 0), size, Sort.by("id").descending());
-            orders = loadOrders(queryString, orderTypeId, pageable);
+        PageRequest pageable = PageRequest.of(Math.max(page, 0), size, buildOrderSort(sortBy, sortDirection));
+        Page<OrderHeader> orders = loadOrders(queryString, orderTypeId, pageable);
+
+        List<OrderHeader> headers = orders.getContent();
+        if (headers.isEmpty()) {
+            return new OrderListResponse(new OrderListResponseMap(List.of(), orders.getTotalElements()));
         }
 
-        List<OrderListItem> items = orders.getContent().stream()
-                .map(this::toListItem)
+        List<String> orderIds = headers.stream()
+                .map(OrderHeader::getOrderId)
+                .filter(value -> !isBlank(value))
                 .collect(Collectors.toList());
 
-        if (sortRequested) {
-            items = sortOrderListItems(items, sortBy, resolveDirection(sortDirection));
-            long total = items.size();
-            int fromIndex = Math.max(page, 0) * size;
-            int toIndex = Math.min(fromIndex + size, items.size());
-            List<OrderListItem> pageSlice = fromIndex >= items.size()
-                    ? List.of()
-                    : items.subList(fromIndex, toIndex);
-            return new OrderListResponse(new OrderListResponseMap(pageSlice, total));
-        }
+        Map<String, OrderItemRepository.OrderItemAggregate> aggregates = orderItemRepository
+                .findAggregatesByOrderIdIn(orderIds)
+                .stream()
+                .collect(Collectors.toMap(OrderItemRepository.OrderItemAggregate::getOrderId, aggregate -> aggregate));
+
+        Map<String, OrderItemShipGroup> shipGroupMap = orderItemShipGroupRepository.findByOrderIdIn(orderIds).stream()
+                .filter(group -> !isBlank(group.getOrderId()))
+                .collect(Collectors.toMap(
+                        OrderItemShipGroup::getOrderId,
+                        group -> group,
+                        (left, right) -> left
+                ));
+
+        Map<String, OrderRole> billToRoles = orderRoleRepository
+                .findByOrderIdInAndRoleTypeId(orderIds, ROLE_BILL_TO_CUSTOMER)
+                .stream()
+                .filter(role -> !isBlank(role.getOrderId()))
+                .collect(Collectors.toMap(OrderRole::getOrderId, role -> role, (left, right) -> left));
+
+        List<OrderListItem> items = headers.stream()
+                .map(order -> toListItem(order, aggregates, shipGroupMap, billToRoles))
+                .collect(Collectors.toList());
 
         OrderListResponseMap responseMap = new OrderListResponseMap(items, orders.getTotalElements());
         return new OrderListResponse(responseMap);
@@ -990,38 +1002,53 @@ public class OrderCompositeService {
                 orderTypeId, queryString, orderTypeId, queryString, pageable);
     }
 
-    private OrderListItem toListItem(OrderHeader order) {
+    private OrderListItem toListItem(
+            OrderHeader order,
+            Map<String, OrderItemRepository.OrderItemAggregate> aggregates,
+            Map<String, OrderItemShipGroup> shipGroupMap,
+            Map<String, OrderRole> billToRoles
+    ) {
         OrderListItem item = new OrderListItem();
         item.setOrderId(order.getOrderId());
         item.setEntryDate(order.getEntryDate());
         BigDecimal grandTotal = order.getGrandTotal();
-        if (grandTotal == null) {
-            grandTotal = orderItemRepository.findByOrderId(order.getOrderId()).stream()
-                    .map(orderItem -> defaultIfNull(orderItem.getUnitPrice(), BigDecimal.ZERO)
-                            .multiply(defaultIfNull(orderItem.getQuantity(), BigDecimal.ONE)))
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        OrderItemRepository.OrderItemAggregate aggregate = aggregates.get(order.getOrderId());
+        if (grandTotal == null && aggregate != null && aggregate.getGrandTotal() != null) {
+            grandTotal = aggregate.getGrandTotal();
         }
         item.setGrandTotal(grandTotal);
         item.setStatusDescription(resolveStatusDescription(order.getStatusId()));
         item.setStoreName(order.getProductStoreId());
 
-        List<OrderItemShipGroup> shipGroups = orderItemShipGroupRepository.findByOrderId(order.getOrderId());
-        if (!shipGroups.isEmpty()) {
-            OrderItemShipGroup firstGroup = shipGroups.get(0);
+        OrderItemShipGroup firstGroup = shipGroupMap.get(order.getOrderId());
+        if (firstGroup != null) {
             item.setFacilityName(firstGroup.getFacilityId());
             item.setVendorOrganizationName(firstGroup.getVendorPartyId());
         }
 
-        String customerPartyId = resolveRole(order.getOrderId(), ROLE_BILL_TO_CUSTOMER);
+        OrderRole role = billToRoles.get(order.getOrderId());
+        String customerPartyId = role != null ? role.getPartyId() : null;
         item.setCustomerName(customerPartyId);
         item.setOrganizationName(customerPartyId);
 
-        BigDecimal quantityTotal = orderItemRepository.findByOrderId(order.getOrderId()).stream()
-                .map(OrderItem::getQuantity)
-                .filter(value -> value != null)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal quantityTotal = aggregate != null ? aggregate.getQuantityTotal() : null;
         item.setQuantityTotal(quantityTotal);
         return item;
+    }
+
+    private Sort buildOrderSort(String sortBy, String sortDirection) {
+        Sort.Direction direction = resolveDirection(sortDirection);
+        String sortField = isBlank(sortBy) ? "entryDate" : sortBy;
+        String mappedField = switch (sortField) {
+            case "orderId" -> "orderId";
+            case "orderDate" -> "orderDate";
+            case "entryDate" -> "entryDate";
+            case "statusId" -> "statusId";
+            case "orderName" -> "orderName";
+            case "grandTotal" -> "grandTotal";
+            default -> "entryDate";
+        };
+        return Sort.by(direction, mappedField);
     }
 
     private Sort.Direction resolveDirection(String sortDirection) {
@@ -1272,26 +1299,73 @@ public class OrderCompositeService {
     }
 
     private List<OrderContactMechDto> buildOrderContactMechs(String orderId) {
-        return orderContactMechRepository.findByOrderId(orderId).stream()
-                .map(this::toContactMechDto)
+        List<OrderContactMech> contactMechs = orderContactMechRepository.findByOrderId(orderId);
+        if (contactMechs.isEmpty()) {
+            return List.of();
+        }
+
+        List<String> contactMechIds = contactMechs.stream()
+                .map(OrderContactMech::getContactMechId)
+                .filter(value -> !isBlank(value))
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<String, PostalAddress> addressMap = postalAddressRepository.findByContactMechIdIn(contactMechIds).stream()
+                .filter(address -> !isBlank(address.getContactMechId()))
+                .collect(Collectors.toMap(PostalAddress::getContactMechId, address -> address, (left, right) -> left));
+
+        List<String> geoIds = addressMap.values().stream()
+                .map(PostalAddress::getStateProvinceGeoId)
+                .filter(value -> !isBlank(value))
+                .distinct()
+                .collect(Collectors.toList());
+        Map<String, GeoDto> geoMap = geoRepository.findByGeoIdIn(geoIds).stream()
+                .collect(Collectors.toMap(geo -> geo.getGeoId(), this::toGeoDto, (left, right) -> left));
+
+        return contactMechs.stream()
+                .map(contactMech -> toContactMechDto(contactMech, addressMap, geoMap))
                 .collect(Collectors.toList());
     }
 
-    private OrderContactMechDto toContactMechDto(OrderContactMech contactMech) {
+    private OrderContactMechDto toContactMechDto(
+            OrderContactMech contactMech,
+            Map<String, PostalAddress> addressMap,
+            Map<String, GeoDto> geoMap
+    ) {
         OrderContactMechDto dto = new OrderContactMechDto();
         dto.setContactMechPurposeTypeId(contactMech.getContactMechPurposeTypeId());
         dto.setContactMechId(contactMech.getContactMechId());
 
+        PostalAddress address = addressMap.get(contactMech.getContactMechId());
+        if (address != null) {
+            PostalAddressDto addressDto = toPostalAddressDto(address);
+            dto.setPostalAddress(addressDto);
+            GeoDto geo = geoMap.get(address.getStateProvinceGeoId());
+            if (geo == null && !isBlank(address.getStateProvinceGeoId())) {
+                geo = resolveGeo(address.getStateProvinceGeoId());
+            }
+            dto.setPostalAddressStateGeo(geo);
+        }
+        return dto;
+    }
+
+    private OrderContactMechDto toContactMechDto(OrderContactMech contactMech) {
+        if (contactMech == null) {
+            return null;
+        }
+        Map<String, PostalAddress> addressMap = new HashMap<>();
+        Map<String, GeoDto> geoMap = new HashMap<>();
         if (!isBlank(contactMech.getContactMechId())) {
             postalAddressRepository.findByContactMechId(contactMech.getContactMechId())
                     .ifPresent(address -> {
-                        PostalAddressDto addressDto = toPostalAddressDto(address);
-                        dto.setPostalAddress(addressDto);
+                        addressMap.put(address.getContactMechId(), address);
                         GeoDto geo = resolveGeo(address.getStateProvinceGeoId());
-                        dto.setPostalAddressStateGeo(geo);
+                        if (geo != null && !isBlank(address.getStateProvinceGeoId())) {
+                            geoMap.put(address.getStateProvinceGeoId(), geo);
+                        }
                     });
         }
-        return dto;
+        return toContactMechDto(contactMech, addressMap, geoMap);
     }
 
     private OrderContactMechDto attachOrderAddress(
@@ -1367,6 +1441,13 @@ public class OrderCompositeService {
         return geoRepository.findByGeoId(geoId)
                 .map(geo -> new GeoDto(geo.getGeoName()))
                 .orElse(new GeoDto(geoId));
+    }
+
+    private GeoDto toGeoDto(Geo geo) {
+        if (geo == null) {
+            return null;
+        }
+        return new GeoDto(geo.getGeoName());
     }
 
     private Optional<FacilityContactInfoDto> resolveShipFromContact(List<OrderContactMechDto> contactMechs) {

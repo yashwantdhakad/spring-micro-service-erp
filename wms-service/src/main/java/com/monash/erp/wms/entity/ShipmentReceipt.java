@@ -4,9 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "shipment_receipt",
+        indexes = {
+                @Index(name = "idx_shipment_receipt_inventory_item_id", columnList = "inventory_item_id"),
+                @Index(name = "idx_shipment_receipt_shipment_id", columnList = "shipment_id"),
+                @Index(name = "idx_shipment_receipt_order_id", columnList = "order_id")
+        }
+)
 public class ShipmentReceipt {
 
     @Id

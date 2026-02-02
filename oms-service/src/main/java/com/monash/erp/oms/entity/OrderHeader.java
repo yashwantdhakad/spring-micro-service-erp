@@ -1,15 +1,27 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-public class OrderHeader {
+@Table(
+        name = "order_header",
+        indexes = {
+                @Index(name = "idx_order_header_order_id", columnList = "order_id"),
+                @Index(name = "idx_order_header_order_type", columnList = "order_type_id"),
+                @Index(name = "idx_order_header_status_id", columnList = "status_id"),
+                @Index(name = "idx_order_header_type_order_id", columnList = "order_type_id, order_id"),
+                @Index(name = "idx_order_header_type_order_name", columnList = "order_type_id, order_name")
+        }
+)
+public class OrderHeader extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +33,7 @@ public class OrderHeader {
     private String externalId;
     private String salesChannelEnumId;
     private LocalDateTime orderDate;
-    private Boolean priority;
+    private String priority;
     private LocalDateTime entryDate;
     private LocalDateTime pickSheetPrintedDate;
     private String visitId;
@@ -34,17 +46,17 @@ public class OrderHeader {
     private String originFacilityId;
     private String webSiteId;
     private String productStoreId;
-    private String agreementId;
     private String terminalId;
     private String transactionId;
     private String autoOrderShoppingListId;
-    private Boolean needsInventoryIssuance;
-    private Boolean isRushOrder;
+    private String needsInventoryIssuance;
+    private String isRushOrder;
     private String internalCode;
     private BigDecimal remainingSubTotal;
     private BigDecimal grandTotal;
-    private Boolean isViewed;
-    private Boolean invoicePerShipment;
+    private String isViewed;
+    private String workEffortId;
+    private String overrideCreditLimit;
 
     public Long getId() {
         return id;
@@ -102,11 +114,11 @@ public class OrderHeader {
         this.orderDate = orderDate;
     }
 
-    public Boolean getPriority() {
+    public String getPriority() {
         return priority;
     }
 
-    public void setPriority(Boolean priority) {
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 
@@ -206,14 +218,6 @@ public class OrderHeader {
         this.productStoreId = productStoreId;
     }
 
-    public String getAgreementId() {
-        return agreementId;
-    }
-
-    public void setAgreementId(String agreementId) {
-        this.agreementId = agreementId;
-    }
-
     public String getTerminalId() {
         return terminalId;
     }
@@ -238,19 +242,19 @@ public class OrderHeader {
         this.autoOrderShoppingListId = autoOrderShoppingListId;
     }
 
-    public Boolean getNeedsInventoryIssuance() {
+    public String getNeedsInventoryIssuance() {
         return needsInventoryIssuance;
     }
 
-    public void setNeedsInventoryIssuance(Boolean needsInventoryIssuance) {
+    public void setNeedsInventoryIssuance(String needsInventoryIssuance) {
         this.needsInventoryIssuance = needsInventoryIssuance;
     }
 
-    public Boolean getIsRushOrder() {
+    public String getIsRushOrder() {
         return isRushOrder;
     }
 
-    public void setIsRushOrder(Boolean isRushOrder) {
+    public void setIsRushOrder(String isRushOrder) {
         this.isRushOrder = isRushOrder;
     }
 
@@ -278,19 +282,31 @@ public class OrderHeader {
         this.grandTotal = grandTotal;
     }
 
-    public Boolean getIsViewed() {
+    public String getIsViewed() {
         return isViewed;
     }
 
-    public void setIsViewed(Boolean isViewed) {
+    public void setIsViewed(String isViewed) {
         this.isViewed = isViewed;
     }
 
-    public Boolean getInvoicePerShipment() {
-        return invoicePerShipment;
+
+
+
+    public String getWorkEffortId() {
+        return workEffortId;
     }
 
-    public void setInvoicePerShipment(Boolean invoicePerShipment) {
-        this.invoicePerShipment = invoicePerShipment;
+    public void setWorkEffortId(String workEffortId) {
+        this.workEffortId = workEffortId;
     }
+
+    public String getOverrideCreditLimit() {
+        return overrideCreditLimit;
+    }
+
+    public void setOverrideCreditLimit(String overrideCreditLimit) {
+        this.overrideCreditLimit = overrideCreditLimit;
+    }
+
 }

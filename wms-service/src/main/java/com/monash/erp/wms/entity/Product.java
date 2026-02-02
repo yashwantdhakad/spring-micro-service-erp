@@ -5,13 +5,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "product")
+@Table(
+        name = "product",
+        indexes = {
+                @Index(name = "idx_product_product_id", columnList = "product_id"),
+                @Index(name = "idx_product_product_name", columnList = "product_name"),
+                @Index(name = "idx_product_internal_name", columnList = "internal_name"),
+                @Index(name = "idx_product_product_type_id", columnList = "product_type_id"),
+                @Index(name = "idx_product_primary_category_id", columnList = "primary_product_category_id")
+        }
+)
 public class Product {
 
     @Id

@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.controller;
 
-import com.monash.erp.oms.order.entity.OrderContactMech;
+import com.monash.erp.oms.entity.OrderContactMech;
 import com.monash.erp.oms.order.service.OrderContactMechService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

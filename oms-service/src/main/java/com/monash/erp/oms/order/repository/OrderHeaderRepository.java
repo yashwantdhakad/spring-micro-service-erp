@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.repository;
 
-import com.monash.erp.oms.order.entity.OrderHeader;
+import com.monash.erp.oms.entity.OrderHeader;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

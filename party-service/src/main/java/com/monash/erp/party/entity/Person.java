@@ -4,9 +4,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "person",
+        indexes = {
+                @Index(name = "idx_person_party_id", columnList = "party_id"),
+                @Index(name = "idx_person_first_name", columnList = "first_name"),
+                @Index(name = "idx_person_last_name", columnList = "last_name")
+        }
+)
 public class Person {
 
     @Id

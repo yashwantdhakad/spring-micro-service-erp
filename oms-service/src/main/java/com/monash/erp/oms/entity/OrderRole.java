@@ -1,12 +1,22 @@
-package com.monash.erp.oms.order.entity;
+package com.monash.erp.oms.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+
+import java.time.LocalDateTime;
 
 @Entity
-public class OrderRole {
+@Table(
+        name = "order_role",
+        indexes = {
+                @Index(name = "idx_order_role_order_role", columnList = "order_id, role_type_id")
+        }
+)
+public class OrderRole extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,4 +57,8 @@ public class OrderRole {
     public void setRoleTypeId(String roleTypeId) {
         this.roleTypeId = roleTypeId;
     }
+
+
+
+
 }

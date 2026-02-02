@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.service;
 
-import com.monash.erp.oms.order.entity.OrderContactMech;
+import com.monash.erp.oms.entity.OrderContactMech;
 import com.monash.erp.oms.order.repository.OrderContactMechRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

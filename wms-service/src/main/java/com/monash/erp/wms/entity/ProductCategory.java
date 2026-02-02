@@ -5,12 +5,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "product_category")
+@Table(
+        name = "product_category",
+        indexes = {
+                @Index(name = "idx_product_category_id", columnList = "PRODUCT_CATEGORY_ID"),
+                @Index(name = "idx_product_category_name", columnList = "CATEGORY_NAME")
+        }
+)
 public class ProductCategory {
 
     @Id

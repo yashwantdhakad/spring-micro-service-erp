@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.repository;
 
-import com.monash.erp.oms.order.entity.OrderContactMech;
+import com.monash.erp.oms.entity.OrderContactMech;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -5,11 +5,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "product_assoc")
+@Table(
+        name = "product_assoc",
+        indexes = {
+                @Index(name = "idx_product_assoc_product_id", columnList = "PRODUCT_ID"),
+                @Index(name = "idx_product_assoc_product_id_to", columnList = "PRODUCT_ID_TO"),
+                @Index(name = "idx_product_assoc_type_id", columnList = "PRODUCT_ASSOC_TYPE_ID"),
+                @Index(name = "idx_product_assoc_thru_date", columnList = "THRU_DATE")
+        }
+)
 public class ProductAssoc {
 
     @Id

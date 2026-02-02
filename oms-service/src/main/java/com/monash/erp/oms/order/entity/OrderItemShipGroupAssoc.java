@@ -4,11 +4,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
+
+import com.monash.erp.oms.entity.AuditableEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-public class OrderItemShipGroupAssoc {
+@Table(
+        name = "order_item_ship_group_assoc",
+        indexes = {
+                @Index(name = "idx_order_item_ship_group_assoc_order_id", columnList = "order_id"),
+                @Index(name = "idx_order_item_ship_group_assoc_order_ship_group", columnList = "order_id, ship_group_seq_id")
+        }
+)
+public class OrderItemShipGroupAssoc extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,4 +79,7 @@ public class OrderItemShipGroupAssoc {
     public void setCancelQuantity(BigDecimal cancelQuantity) {
         this.cancelQuantity = cancelQuantity;
     }
+
+
+
 }

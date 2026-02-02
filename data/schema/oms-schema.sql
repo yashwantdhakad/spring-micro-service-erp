@@ -3390,3 +3390,38 @@ CREATE TABLE uom_type (
   CREATED_STAMP datetime,
   CREATED_TX_STAMP datetime
 );
+
+CREATE INDEX idx_order_header_order_id ON order_header (ORDER_ID);
+CREATE INDEX idx_order_header_order_type ON order_header (ORDER_TYPE_ID);
+CREATE INDEX idx_order_header_status_id ON order_header (STATUS_ID);
+CREATE INDEX idx_order_header_type_order_id ON order_header (ORDER_TYPE_ID, ORDER_ID);
+CREATE INDEX idx_order_header_type_order_name ON order_header (ORDER_TYPE_ID, ORDER_NAME);
+
+CREATE INDEX idx_order_item_order_id ON order_item (ORDER_ID);
+CREATE INDEX idx_order_item_order_item_seq ON order_item (ORDER_ID, ORDER_ITEM_SEQ_ID);
+CREATE INDEX idx_order_item_product_id ON order_item (PRODUCT_ID);
+
+CREATE INDEX idx_order_item_ship_group_order_id ON order_item_ship_group (ORDER_ID);
+CREATE INDEX idx_order_item_ship_group_order_ship_group ON order_item_ship_group (ORDER_ID, SHIP_GROUP_SEQ_ID);
+
+CREATE INDEX idx_order_item_ship_group_assoc_order_id ON order_item_ship_group_assoc (ORDER_ID);
+CREATE INDEX idx_order_item_ship_group_assoc_order_ship_group ON order_item_ship_group_assoc (ORDER_ID, SHIP_GROUP_SEQ_ID);
+
+CREATE INDEX idx_order_item_ship_grp_inv_res_order_id ON order_item_ship_grp_inv_res (ORDER_ID);
+CREATE INDEX idx_order_item_ship_grp_inv_res_inventory_item_id ON order_item_ship_grp_inv_res (INVENTORY_ITEM_ID);
+CREATE INDEX idx_order_item_ship_grp_inv_res_order_item ON order_item_ship_grp_inv_res (ORDER_ID, ORDER_ITEM_SEQ_ID);
+CREATE INDEX idx_order_item_ship_grp_inv_res_qty_not_avail ON order_item_ship_grp_inv_res (QUANTITY_NOT_AVAILABLE);
+
+CREATE INDEX idx_order_role_order_role ON order_role (ORDER_ID, ROLE_TYPE_ID);
+CREATE INDEX idx_order_item_role_order_role ON order_item_role (ORDER_ID, ROLE_TYPE_ID);
+
+CREATE INDEX idx_order_contact_mech_order_purpose ON order_contact_mech (ORDER_ID, CONTACT_MECH_PURPOSE_TYPE_ID);
+CREATE INDEX idx_order_item_contact_mech_order_purpose ON order_item_contact_mech (ORDER_ID, CONTACT_MECH_PURPOSE_TYPE_ID);
+
+CREATE INDEX idx_order_adjustment_order_id ON order_adjustment (ORDER_ID);
+CREATE INDEX idx_order_item_billing_order_id ON order_item_billing (ORDER_ID);
+CREATE INDEX idx_order_item_note_order_id ON order_item_note (ORDER_ID);
+CREATE INDEX idx_order_content_order_id ON order_content (ORDER_ID);
+CREATE INDEX idx_order_content_order_content ON order_content (ORDER_ID, CONTENT_ID);
+
+CREATE INDEX idx_order_status_order_status_datetime ON order_status (ORDER_ID, STATUS_DATETIME);
