@@ -25,6 +25,8 @@ export class AppComponent {
     { code: 'es', label: 'Español' },
     { code: 'fr', label: 'Français' },
     { code: 'hi', label: 'हिन्दी' },
+    { code: 'ja', label: '日本語' },
+    { code: 'zh', label: '中文' },
   ];
 
   constructor(
