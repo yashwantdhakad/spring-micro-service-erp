@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, finalize, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { PicklistService } from 'src/app/services/picklist/picklist.service';
 import { CommonService } from 'src/app/services/common/common.service';
 

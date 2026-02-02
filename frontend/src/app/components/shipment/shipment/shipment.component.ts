@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
 import { ShipmentService } from 'src/app/services/shipment/shipment.service';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   standalone: false,

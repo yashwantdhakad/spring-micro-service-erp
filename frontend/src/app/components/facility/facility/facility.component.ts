@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { finalize } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
 import { FacilityService } from 'src/app/services/facility/facility.service';
 

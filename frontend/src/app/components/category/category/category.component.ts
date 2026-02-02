@@ -5,7 +5,7 @@ import { CategoryService } from 'src/app/services/category/category.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service'; // Import SnackbarService
 import { CommonService } from 'src/app/services/common/common.service';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   standalone: false,

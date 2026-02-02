@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ManufacturingService } from 'src/app/services/manufacturing/manufacturing.service';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   standalone: false,

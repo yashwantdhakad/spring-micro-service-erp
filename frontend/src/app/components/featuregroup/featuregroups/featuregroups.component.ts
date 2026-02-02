@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FeatureGroupService } from 'src/app/services/featuregroup/feature-group.service';
-import { finalize } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({

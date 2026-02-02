@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ProductService } from 'src/app/services/product/product.service';
 import { CommonService } from 'src/app/services/common/common.service';
 

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FeatureService } from 'src/app/services/features/feature.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
-import { finalize } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { AssetService } from 'src/app/services/asset/asset.service';
 import { CommonService } from 'src/app/services/common/common.service';
-import { Subject, finalize, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   standalone: false,

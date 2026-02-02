@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from 'src/app/services/order/order.service';
 import { DatePipe } from '@angular/common';
-import { finalize } from 'rxjs';
 import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
