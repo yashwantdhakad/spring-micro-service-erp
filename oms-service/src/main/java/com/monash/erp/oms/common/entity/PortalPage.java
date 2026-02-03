@@ -1,5 +1,8 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class PortalPage {
 
     @Id
@@ -29,76 +35,31 @@ public class PortalPage {
     private BigDecimal sequenceNum;
 
     private String securityGroupId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPortalPageId() {
-        return portalPageId;
-    }
-
-    public void setPortalPageId(String portalPageId) {
+public void setPortalPageId(String portalPageId) {
         this.portalPageId = portalPageId;
     }
-
-    public String getPortalPageName() {
-        return portalPageName;
-    }
-
-    public void setPortalPageName(String portalPageName) {
+public void setPortalPageName(String portalPageName) {
         this.portalPageName = portalPageName;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getOwnerUserLoginId() {
-        return ownerUserLoginId;
-    }
-
-    public void setOwnerUserLoginId(String ownerUserLoginId) {
+public void setOwnerUserLoginId(String ownerUserLoginId) {
         this.ownerUserLoginId = ownerUserLoginId;
     }
-
-    public String getOriginalPortalPageId() {
-        return originalPortalPageId;
-    }
-
-    public void setOriginalPortalPageId(String originalPortalPageId) {
+public void setOriginalPortalPageId(String originalPortalPageId) {
         this.originalPortalPageId = originalPortalPageId;
     }
-
-    public String getParentPortalPageId() {
-        return parentPortalPageId;
-    }
-
-    public void setParentPortalPageId(String parentPortalPageId) {
+public void setParentPortalPageId(String parentPortalPageId) {
         this.parentPortalPageId = parentPortalPageId;
     }
-
-    public BigDecimal getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(BigDecimal sequenceNum) {
+public void setSequenceNum(BigDecimal sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public String getSecurityGroupId() {
-        return securityGroupId;
-    }
-
-    public void setSecurityGroupId(String securityGroupId) {
+public void setSecurityGroupId(String securityGroupId) {
         this.securityGroupId = securityGroupId;
     }
 }

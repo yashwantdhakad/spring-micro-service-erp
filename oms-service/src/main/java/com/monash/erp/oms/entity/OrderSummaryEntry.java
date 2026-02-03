@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderSummaryEntry extends AuditableEntity {
 
     @Id
@@ -22,64 +28,26 @@ public class OrderSummaryEntry extends AuditableEntity {
     private BigDecimal totalQuantity;
     private BigDecimal grossSales;
     private BigDecimal productCost;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public LocalDate getEntryDate() {
-        return entryDate;
-    }
-
-    public void setEntryDate(LocalDate entryDate) {
+public void setEntryDate(LocalDate entryDate) {
         this.entryDate = entryDate;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getFacilityId() {
-        return facilityId;
-    }
-
-    public void setFacilityId(String facilityId) {
+public void setFacilityId(String facilityId) {
         this.facilityId = facilityId;
     }
-
-    public BigDecimal getTotalQuantity() {
-        return totalQuantity;
-    }
-
-    public void setTotalQuantity(BigDecimal totalQuantity) {
+public void setTotalQuantity(BigDecimal totalQuantity) {
         this.totalQuantity = totalQuantity;
     }
-
-    public BigDecimal getGrossSales() {
-        return grossSales;
-    }
-
-    public void setGrossSales(BigDecimal grossSales) {
+public void setGrossSales(BigDecimal grossSales) {
         this.grossSales = grossSales;
     }
-
-    public BigDecimal getProductCost() {
-        return productCost;
-    }
-
-    public void setProductCost(BigDecimal productCost) {
+public void setProductCost(BigDecimal productCost) {
         this.productCost = productCost;
     }
-
-
-
 
 }

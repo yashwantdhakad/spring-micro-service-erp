@@ -1,11 +1,17 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class BudgetRole {
 
     @Id
@@ -17,36 +23,16 @@ public class BudgetRole {
     private String partyId;
 
     private String roleTypeId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getBudgetId() {
-        return budgetId;
-    }
-
-    public void setBudgetId(String budgetId) {
+public void setBudgetId(String budgetId) {
         this.budgetId = budgetId;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getRoleTypeId() {
-        return roleTypeId;
-    }
-
-    public void setRoleTypeId(String roleTypeId) {
+public void setRoleTypeId(String roleTypeId) {
         this.roleTypeId = roleTypeId;
     }
 }

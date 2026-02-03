@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductStorePaymentSetting {
 
     @Id
@@ -20,76 +26,31 @@ public class ProductStorePaymentSetting {
     private String paymentGatewayConfigId;
     private String paymentPropertiesPath;
     private String applyToAllProducts;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
+public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
-
-    public String getPaymentMethodTypeId() {
-        return paymentMethodTypeId;
-    }
-
-    public void setPaymentMethodTypeId(String paymentMethodTypeId) {
+public void setPaymentMethodTypeId(String paymentMethodTypeId) {
         this.paymentMethodTypeId = paymentMethodTypeId;
     }
-
-    public String getPaymentServiceTypeEnumId() {
-        return paymentServiceTypeEnumId;
-    }
-
-    public void setPaymentServiceTypeEnumId(String paymentServiceTypeEnumId) {
+public void setPaymentServiceTypeEnumId(String paymentServiceTypeEnumId) {
         this.paymentServiceTypeEnumId = paymentServiceTypeEnumId;
     }
-
-    public String getPaymentService() {
-        return paymentService;
-    }
-
-    public void setPaymentService(String paymentService) {
+public void setPaymentService(String paymentService) {
         this.paymentService = paymentService;
     }
-
-    public String getPaymentCustomMethodId() {
-        return paymentCustomMethodId;
-    }
-
-    public void setPaymentCustomMethodId(String paymentCustomMethodId) {
+public void setPaymentCustomMethodId(String paymentCustomMethodId) {
         this.paymentCustomMethodId = paymentCustomMethodId;
     }
-
-    public String getPaymentGatewayConfigId() {
-        return paymentGatewayConfigId;
-    }
-
-    public void setPaymentGatewayConfigId(String paymentGatewayConfigId) {
+public void setPaymentGatewayConfigId(String paymentGatewayConfigId) {
         this.paymentGatewayConfigId = paymentGatewayConfigId;
     }
-
-    public String getPaymentPropertiesPath() {
-        return paymentPropertiesPath;
-    }
-
-    public void setPaymentPropertiesPath(String paymentPropertiesPath) {
+public void setPaymentPropertiesPath(String paymentPropertiesPath) {
         this.paymentPropertiesPath = paymentPropertiesPath;
     }
-
-    public String getApplyToAllProducts() {
-        return applyToAllProducts;
-    }
-
-    public void setApplyToAllProducts(String applyToAllProducts) {
+public void setApplyToAllProducts(String applyToAllProducts) {
         this.applyToAllProducts = applyToAllProducts;
     }
 

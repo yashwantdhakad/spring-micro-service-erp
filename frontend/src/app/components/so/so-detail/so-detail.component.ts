@@ -25,6 +25,7 @@ export class SODetailComponent implements OnInit {
   statusItem: any;
   canApprove = false;
   canPicklist = false;
+  canEditItems = false;
   shipToAddresses: any[] = [];
   firstPartInfo: any;
   customerPartyId: string | undefined;
@@ -34,6 +35,9 @@ export class SODetailComponent implements OnInit {
   createOrderNoteDialog: boolean = false;
   isLoading: boolean = false;
   showTable: boolean = false;
+  isSavingQuantity = false;
+  editingItemKey: string | null = null;
+  editingQuantity: number | null = null;
 
   pages: number = 0;
 
@@ -123,6 +127,8 @@ export class SODetailComponent implements OnInit {
         this.statusItem = displayInfo.statusItem;
         this.orderNotes = displayInfo.orderNoteList;
         this.firstPartInfo = displayInfo.firstPartInfo;
+        this.canEditItems = this.statusItem?.statusId === 'ORDER_CREATED'
+          || this.statusItem?.statusId === 'ORDER_APPROVED';
         this.shipToAddresses = (displayInfo?.orderContactMechList || [])
           .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
         this.shipments = Array.isArray(shipments) ? shipments : [];
@@ -164,6 +170,49 @@ export class SODetailComponent implements OnInit {
         this.cdr.detectChanges();
       })
     );
+  }
+
+  startEditQuantity(item: any): void {
+    if (!this.canEditItems || !item?.orderItemSeqId) {
+      return;
+    }
+    this.editingItemKey = this.getItemKey(item);
+    this.editingQuantity = Number(item?.quantity ?? 0);
+  }
+
+  cancelEditQuantity(): void {
+    this.editingItemKey = null;
+    this.editingQuantity = null;
+  }
+
+  saveQuantity(item: any): void {
+    if (!this.orderId || !item?.orderItemSeqId || this.editingQuantity === null) {
+      return;
+    }
+    const quantity = Number(this.editingQuantity);
+    if (Number.isNaN(quantity) || quantity < 0) {
+      return;
+    }
+    this.isSavingQuantity = true;
+    this.orderService.updateOrderItemQuantity(this.orderId, item.orderItemSeqId, quantity)
+      .pipe(finalize(() => {
+        this.isSavingQuantity = false;
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
+        next: (updated) => {
+          item.quantity = updated?.quantity ?? quantity;
+          this.cancelEditQuantity();
+        },
+      });
+  }
+
+  isEditingItem(item: any): boolean {
+    return this.getItemKey(item) === this.editingItemKey;
+  }
+
+  private getItemKey(item: any): string {
+    return `${item?.orderItemSeqId || ''}`;
   }
 
   loadFacilityAddress(facilityId: string): void {

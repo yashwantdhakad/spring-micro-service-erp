@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class SalesInvoiceItemFact {
 
     @Id
@@ -36,180 +42,70 @@ public class SalesInvoiceItemFact {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
+public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
     }
-
-    public String getInvoiceItemSeqId() {
-        return invoiceItemSeqId;
-    }
-
-    public void setInvoiceItemSeqId(String invoiceItemSeqId) {
+public void setInvoiceItemSeqId(String invoiceItemSeqId) {
         this.invoiceItemSeqId = invoiceItemSeqId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getInvoiceDateDimId() {
-        return invoiceDateDimId;
-    }
-
-    public void setInvoiceDateDimId(String invoiceDateDimId) {
+public void setInvoiceDateDimId(String invoiceDateDimId) {
         this.invoiceDateDimId = invoiceDateDimId;
     }
-
-    public String getProductDimId() {
-        return productDimId;
-    }
-
-    public void setProductDimId(String productDimId) {
+public void setProductDimId(String productDimId) {
         this.productDimId = productDimId;
     }
-
-    public String getBillToCustomerDimId() {
-        return billToCustomerDimId;
-    }
-
-    public void setBillToCustomerDimId(String billToCustomerDimId) {
+public void setBillToCustomerDimId(String billToCustomerDimId) {
         this.billToCustomerDimId = billToCustomerDimId;
     }
-
-    public String getOrigCurrencyDimId() {
-        return origCurrencyDimId;
-    }
-
-    public void setOrigCurrencyDimId(String origCurrencyDimId) {
+public void setOrigCurrencyDimId(String origCurrencyDimId) {
         this.origCurrencyDimId = origCurrencyDimId;
     }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(BigDecimal quantity) {
+public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-
-    public BigDecimal getExtGrossAmount() {
-        return extGrossAmount;
-    }
-
-    public void setExtGrossAmount(BigDecimal extGrossAmount) {
+public void setExtGrossAmount(BigDecimal extGrossAmount) {
         this.extGrossAmount = extGrossAmount;
     }
-
-    public BigDecimal getExtDiscountAmount() {
-        return extDiscountAmount;
-    }
-
-    public void setExtDiscountAmount(BigDecimal extDiscountAmount) {
+public void setExtDiscountAmount(BigDecimal extDiscountAmount) {
         this.extDiscountAmount = extDiscountAmount;
     }
-
-    public BigDecimal getExtNetAmount() {
-        return extNetAmount;
-    }
-
-    public void setExtNetAmount(BigDecimal extNetAmount) {
+public void setExtNetAmount(BigDecimal extNetAmount) {
         this.extNetAmount = extNetAmount;
     }
-
-    public BigDecimal getExtTaxAmount() {
-        return extTaxAmount;
-    }
-
-    public void setExtTaxAmount(BigDecimal extTaxAmount) {
+public void setExtTaxAmount(BigDecimal extTaxAmount) {
         this.extTaxAmount = extTaxAmount;
     }
-
-    public BigDecimal getExtManFixedCost() {
-        return extManFixedCost;
-    }
-
-    public void setExtManFixedCost(BigDecimal extManFixedCost) {
+public void setExtManFixedCost(BigDecimal extManFixedCost) {
         this.extManFixedCost = extManFixedCost;
     }
-
-    public BigDecimal getExtManVarCost() {
-        return extManVarCost;
-    }
-
-    public void setExtManVarCost(BigDecimal extManVarCost) {
+public void setExtManVarCost(BigDecimal extManVarCost) {
         this.extManVarCost = extManVarCost;
     }
-
-    public BigDecimal getExtStorageCost() {
-        return extStorageCost;
-    }
-
-    public void setExtStorageCost(BigDecimal extStorageCost) {
+public void setExtStorageCost(BigDecimal extStorageCost) {
         this.extStorageCost = extStorageCost;
     }
-
-    public BigDecimal getExtDistributionCost() {
-        return extDistributionCost;
-    }
-
-    public void setExtDistributionCost(BigDecimal extDistributionCost) {
+public void setExtDistributionCost(BigDecimal extDistributionCost) {
         this.extDistributionCost = extDistributionCost;
     }
-
-    public BigDecimal getContributionAmount() {
-        return contributionAmount;
-    }
-
-    public void setContributionAmount(BigDecimal contributionAmount) {
+public void setContributionAmount(BigDecimal contributionAmount) {
         this.contributionAmount = contributionAmount;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

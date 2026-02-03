@@ -8,10 +8,12 @@ import com.monash.erp.oms.order.dto.OrderDetailResponse;
 import com.monash.erp.oms.order.dto.OrderDisplayInfoResponse;
 import com.monash.erp.oms.order.dto.OrderHeaderDto;
 import com.monash.erp.oms.order.dto.OrderItemDto;
+import com.monash.erp.oms.order.dto.OrderItemQuantityUpdateRequest;
 import com.monash.erp.oms.order.dto.OrderItemRequest;
 import com.monash.erp.oms.order.dto.OrderListResponse;
 import com.monash.erp.oms.order.dto.OrderNoteDto;
 import com.monash.erp.oms.order.dto.OrderNoteRequest;
+import com.monash.erp.oms.order.dto.OrderStatusChangeRequest;
 import com.monash.erp.oms.order.dto.PurchaseOrderReceiveRequest;
 import com.monash.erp.oms.order.dto.PurchaseOrderReceiveResponse;
 import com.monash.erp.oms.order.dto.InvoiceSummaryDto;
@@ -112,14 +114,21 @@ public class OrderCompositeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.addItem(orderId, request));
     }
 
-    @PostMapping("/{orderId}/approve")
-    public OrderHeaderDto approve(@PathVariable String orderId) {
-        return orderCompositeService.approvePurchaseOrder(orderId);
+    @PostMapping("/{orderId}/status")
+    public OrderHeaderDto updateStatus(
+            @PathVariable String orderId,
+            @RequestBody OrderStatusChangeRequest request
+    ) {
+        return orderCompositeService.updateOrderStatus(orderId, request);
     }
 
-    @PostMapping("/{orderId}/approve-sales")
-    public OrderHeaderDto approveSales(@PathVariable String orderId) {
-        return orderCompositeService.approveSalesOrder(orderId);
+    @PutMapping("/{orderId}/items/{orderItemSeqId}/quantity")
+    public OrderItemDto updateItemQuantity(
+            @PathVariable String orderId,
+            @PathVariable String orderItemSeqId,
+            @RequestBody OrderItemQuantityUpdateRequest request
+    ) {
+        return orderCompositeService.updateOrderItemQuantity(orderId, orderItemSeqId, request);
     }
 
     @PostMapping("/{orderId}/receive")

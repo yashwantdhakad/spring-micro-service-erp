@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 @Data
 public class ProductAssocDto {
 
+    private Long id;
     private ProductSummary product;
     private ProductSummary toProduct;
     private ProductAssocTypeDto type;
     private LocalDateTime fromDate;
+    private LocalDateTime thruDate;
+    private String sequenceNum;
     private String quantity;
 }

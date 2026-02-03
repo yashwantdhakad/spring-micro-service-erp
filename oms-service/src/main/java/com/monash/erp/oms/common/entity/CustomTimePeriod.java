@@ -1,5 +1,8 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class CustomTimePeriod {
 
     @Id
@@ -30,76 +36,31 @@ public class CustomTimePeriod {
     private LocalDateTime thruDate;
 
     private Boolean isClosed;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCustomTimePeriodId() {
-        return customTimePeriodId;
-    }
-
-    public void setCustomTimePeriodId(String customTimePeriodId) {
+public void setCustomTimePeriodId(String customTimePeriodId) {
         this.customTimePeriodId = customTimePeriodId;
     }
-
-    public String getParentPeriodId() {
-        return parentPeriodId;
-    }
-
-    public void setParentPeriodId(String parentPeriodId) {
+public void setParentPeriodId(String parentPeriodId) {
         this.parentPeriodId = parentPeriodId;
     }
-
-    public String getPeriodTypeId() {
-        return periodTypeId;
-    }
-
-    public void setPeriodTypeId(String periodTypeId) {
+public void setPeriodTypeId(String periodTypeId) {
         this.periodTypeId = periodTypeId;
     }
-
-    public BigDecimal getPeriodNum() {
-        return periodNum;
-    }
-
-    public void setPeriodNum(BigDecimal periodNum) {
+public void setPeriodNum(BigDecimal periodNum) {
         this.periodNum = periodNum;
     }
-
-    public String getPeriodName() {
-        return periodName;
-    }
-
-    public void setPeriodName(String periodName) {
+public void setPeriodName(String periodName) {
         this.periodName = periodName;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public Boolean getIsClosed() {
-        return isClosed;
-    }
-
-    public void setIsClosed(Boolean isClosed) {
+public void setIsClosed(Boolean isClosed) {
         this.isClosed = isClosed;
     }
 }

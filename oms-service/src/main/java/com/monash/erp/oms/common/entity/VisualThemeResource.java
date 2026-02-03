@@ -1,11 +1,17 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class VisualThemeResource {
 
     @Id
@@ -19,44 +25,19 @@ public class VisualThemeResource {
     private String sequenceId;
 
     private String resourceValue;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getVisualThemeId() {
-        return visualThemeId;
-    }
-
-    public void setVisualThemeId(String visualThemeId) {
+public void setVisualThemeId(String visualThemeId) {
         this.visualThemeId = visualThemeId;
     }
-
-    public String getResourceTypeEnumId() {
-        return resourceTypeEnumId;
-    }
-
-    public void setResourceTypeEnumId(String resourceTypeEnumId) {
+public void setResourceTypeEnumId(String resourceTypeEnumId) {
         this.resourceTypeEnumId = resourceTypeEnumId;
     }
-
-    public String getSequenceId() {
-        return sequenceId;
-    }
-
-    public void setSequenceId(String sequenceId) {
+public void setSequenceId(String sequenceId) {
         this.sequenceId = sequenceId;
     }
-
-    public String getResourceValue() {
-        return resourceValue;
-    }
-
-    public void setResourceValue(String resourceValue) {
+public void setResourceValue(String resourceValue) {
         this.resourceValue = resourceValue;
     }
 }

@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ContentRevision {
 
     @Id
@@ -16,44 +22,19 @@ public class ContentRevision {
     private String contentRevisionSeqId;
     private String committedByPartyId;
     private String comments;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(String contentId) {
+public void setContentId(String contentId) {
         this.contentId = contentId;
     }
-
-    public String getContentRevisionSeqId() {
-        return contentRevisionSeqId;
-    }
-
-    public void setContentRevisionSeqId(String contentRevisionSeqId) {
+public void setContentRevisionSeqId(String contentRevisionSeqId) {
         this.contentRevisionSeqId = contentRevisionSeqId;
     }
-
-    public String getCommittedByPartyId() {
-        return committedByPartyId;
-    }
-
-    public void setCommittedByPartyId(String committedByPartyId) {
+public void setCommittedByPartyId(String committedByPartyId) {
         this.committedByPartyId = committedByPartyId;
     }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
+public void setComments(String comments) {
         this.comments = comments;
     }
 

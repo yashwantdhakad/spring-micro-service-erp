@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class CommEventContentAssoc extends AuditableEntity {
 
     @Id
@@ -21,64 +27,26 @@ public class CommEventContentAssoc extends AuditableEntity {
     private LocalDateTime fromDate;
     private LocalDateTime thruDate;
     private BigDecimal sequenceNum;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(String contentId) {
+public void setContentId(String contentId) {
         this.contentId = contentId;
     }
-
-    public String getCommunicationEventId() {
-        return communicationEventId;
-    }
-
-    public void setCommunicationEventId(String communicationEventId) {
+public void setCommunicationEventId(String communicationEventId) {
         this.communicationEventId = communicationEventId;
     }
-
-    public String getCommContentAssocTypeId() {
-        return commContentAssocTypeId;
-    }
-
-    public void setCommContentAssocTypeId(String commContentAssocTypeId) {
+public void setCommContentAssocTypeId(String commContentAssocTypeId) {
         this.commContentAssocTypeId = commContentAssocTypeId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public BigDecimal getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(BigDecimal sequenceNum) {
+public void setSequenceNum(BigDecimal sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-
-
 
 }

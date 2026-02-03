@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductContent {
 
     @Id
@@ -25,108 +31,43 @@ public class ProductContent {
     private String useTimeUomId;
     private String useRoleTypeId;
     private String sequenceNum;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(String contentId) {
+public void setContentId(String contentId) {
         this.contentId = contentId;
     }
-
-    public String getProductContentTypeId() {
-        return productContentTypeId;
-    }
-
-    public void setProductContentTypeId(String productContentTypeId) {
+public void setProductContentTypeId(String productContentTypeId) {
         this.productContentTypeId = productContentTypeId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public LocalDateTime getPurchaseFromDate() {
-        return purchaseFromDate;
-    }
-
-    public void setPurchaseFromDate(LocalDateTime purchaseFromDate) {
+public void setPurchaseFromDate(LocalDateTime purchaseFromDate) {
         this.purchaseFromDate = purchaseFromDate;
     }
-
-    public LocalDateTime getPurchaseThruDate() {
-        return purchaseThruDate;
-    }
-
-    public void setPurchaseThruDate(LocalDateTime purchaseThruDate) {
+public void setPurchaseThruDate(LocalDateTime purchaseThruDate) {
         this.purchaseThruDate = purchaseThruDate;
     }
-
-    public String getUseCountLimit() {
-        return useCountLimit;
-    }
-
-    public void setUseCountLimit(String useCountLimit) {
+public void setUseCountLimit(String useCountLimit) {
         this.useCountLimit = useCountLimit;
     }
-
-    public String getUseTime() {
-        return useTime;
-    }
-
-    public void setUseTime(String useTime) {
+public void setUseTime(String useTime) {
         this.useTime = useTime;
     }
-
-    public String getUseTimeUomId() {
-        return useTimeUomId;
-    }
-
-    public void setUseTimeUomId(String useTimeUomId) {
+public void setUseTimeUomId(String useTimeUomId) {
         this.useTimeUomId = useTimeUomId;
     }
-
-    public String getUseRoleTypeId() {
-        return useRoleTypeId;
-    }
-
-    public void setUseRoleTypeId(String useRoleTypeId) {
+public void setUseRoleTypeId(String useRoleTypeId) {
         this.useRoleTypeId = useRoleTypeId;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
 

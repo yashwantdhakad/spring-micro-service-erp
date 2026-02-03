@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class AddressMatchMap {
 
     @Id
@@ -22,68 +28,28 @@ public class AddressMatchMap {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getMapKey() {
-        return mapKey;
-    }
-
-    public void setMapKey(String mapKey) {
+public void setMapKey(String mapKey) {
         this.mapKey = mapKey;
     }
-
-    public String getMapValue() {
-        return mapValue;
-    }
-
-    public void setMapValue(String mapValue) {
+public void setMapValue(String mapValue) {
         this.mapValue = mapValue;
     }
-
-    public BigDecimal getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(BigDecimal sequenceNum) {
+public void setSequenceNum(BigDecimal sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

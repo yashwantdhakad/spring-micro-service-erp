@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>{{ 'BOM.ADD_COMPONENT' | translate }}</h2>
+<mat-dialog-content>
+  <div class="form-grid">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'BOM.COMPONENT' | translate }}</mat-label>
+      <mat-select [(ngModel)]="componentProductId" [disabled]="isEdit">
+        <mat-option *ngFor="let product of products" [value]="product.productId">
+          {{ product.productId }} - {{ product.productName || product.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'BOM.SEQ_NUM' | translate }}</mat-label>
+      <input matInput [(ngModel)]="sequenceNum" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'BOM.QTY' | translate }}</mat-label>
+      <input matInput type="number" [(ngModel)]="quantity" min="0" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'BOM.FROM_DATE' | translate }}</mat-label>
+      <input
+        matInput
+        [matDatepicker]="dialogFromPicker"
+        [(ngModel)]="fromDate"
+        (click)="dialogFromPicker.open()"
+      />
+      <mat-datepicker-toggle matSuffix [for]="dialogFromPicker"></mat-datepicker-toggle>
+      <mat-datepicker #dialogFromPicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()">{{ 'COMMON.CANCEL' | translate }}</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="isSaving">
+    {{ 'COMMON.SAVE' | translate }}
+  </button>
+</mat-dialog-actions>

@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ReturnItemBilling {
 
     @Id
@@ -26,100 +32,40 @@ public class ReturnItemBilling {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getReturnId() {
-        return returnId;
-    }
-
-    public void setReturnId(String returnId) {
+public void setReturnId(String returnId) {
         this.returnId = returnId;
     }
-
-    public String getReturnItemSeqId() {
-        return returnItemSeqId;
-    }
-
-    public void setReturnItemSeqId(String returnItemSeqId) {
+public void setReturnItemSeqId(String returnItemSeqId) {
         this.returnItemSeqId = returnItemSeqId;
     }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
+public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
     }
-
-    public String getInvoiceItemSeqId() {
-        return invoiceItemSeqId;
-    }
-
-    public void setInvoiceItemSeqId(String invoiceItemSeqId) {
+public void setInvoiceItemSeqId(String invoiceItemSeqId) {
         this.invoiceItemSeqId = invoiceItemSeqId;
     }
-
-    public String getShipmentReceiptId() {
-        return shipmentReceiptId;
-    }
-
-    public void setShipmentReceiptId(String shipmentReceiptId) {
+public void setShipmentReceiptId(String shipmentReceiptId) {
         this.shipmentReceiptId = shipmentReceiptId;
     }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(BigDecimal quantity) {
+public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
+public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

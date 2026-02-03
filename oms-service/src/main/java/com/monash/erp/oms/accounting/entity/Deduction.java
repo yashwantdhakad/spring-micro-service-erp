@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class Deduction {
 
     @Id
@@ -21,44 +27,19 @@ public class Deduction {
     private String paymentId;
 
     private BigDecimal amount;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getDeductionId() {
-        return deductionId;
-    }
-
-    public void setDeductionId(String deductionId) {
+public void setDeductionId(String deductionId) {
         this.deductionId = deductionId;
     }
-
-    public String getDeductionTypeId() {
-        return deductionTypeId;
-    }
-
-    public void setDeductionTypeId(String deductionTypeId) {
+public void setDeductionTypeId(String deductionTypeId) {
         this.deductionTypeId = deductionTypeId;
     }
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
+public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
     }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
+public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 }

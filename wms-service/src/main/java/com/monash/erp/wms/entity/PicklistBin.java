@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +19,9 @@ import jakarta.persistence.Table;
                 @Index(name = "idx_picklist_bin_picklist_bin_id", columnList = "picklist_bin_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class PicklistBin {
 
     @Id
@@ -27,52 +33,22 @@ public class PicklistBin {
     private String binLocationNumber;
     private String primaryOrderId;
     private String primaryShipGroupSeqId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPicklistBinId() {
-        return picklistBinId;
-    }
-
-    public void setPicklistBinId(String picklistBinId) {
+public void setPicklistBinId(String picklistBinId) {
         this.picklistBinId = picklistBinId;
     }
-
-    public String getPicklistId() {
-        return picklistId;
-    }
-
-    public void setPicklistId(String picklistId) {
+public void setPicklistId(String picklistId) {
         this.picklistId = picklistId;
     }
-
-    public String getBinLocationNumber() {
-        return binLocationNumber;
-    }
-
-    public void setBinLocationNumber(String binLocationNumber) {
+public void setBinLocationNumber(String binLocationNumber) {
         this.binLocationNumber = binLocationNumber;
     }
-
-    public String getPrimaryOrderId() {
-        return primaryOrderId;
-    }
-
-    public void setPrimaryOrderId(String primaryOrderId) {
+public void setPrimaryOrderId(String primaryOrderId) {
         this.primaryOrderId = primaryOrderId;
     }
-
-    public String getPrimaryShipGroupSeqId() {
-        return primaryShipGroupSeqId;
-    }
-
-    public void setPrimaryShipGroupSeqId(String primaryShipGroupSeqId) {
+public void setPrimaryShipGroupSeqId(String primaryShipGroupSeqId) {
         this.primaryShipGroupSeqId = primaryShipGroupSeqId;
     }
 

@@ -1,5 +1,8 @@
 package com.monash.erp.party.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +20,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_party_identification_id_value", columnList = "id_value")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class PartyIdentification {
 
     @Id
@@ -30,68 +36,28 @@ public class PartyIdentification {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getPartyIdentificationTypeId() {
-        return partyIdentificationTypeId;
-    }
-
-    public void setPartyIdentificationTypeId(String partyIdentificationTypeId) {
+public void setPartyIdentificationTypeId(String partyIdentificationTypeId) {
         this.partyIdentificationTypeId = partyIdentificationTypeId;
     }
-
-    public String getIdValue() {
-        return idValue;
-    }
-
-    public void setIdValue(String idValue) {
+public void setIdValue(String idValue) {
         this.idValue = idValue;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

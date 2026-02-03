@@ -1,5 +1,8 @@
 package com.monash.erp.party.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class PartySkill {
 
     @Id
@@ -25,92 +31,37 @@ public class PartySkill {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getSkillTypeId() {
-        return skillTypeId;
-    }
-
-    public void setSkillTypeId(String skillTypeId) {
+public void setSkillTypeId(String skillTypeId) {
         this.skillTypeId = skillTypeId;
     }
-
-    public BigDecimal getYearsExperience() {
-        return yearsExperience;
-    }
-
-    public void setYearsExperience(BigDecimal yearsExperience) {
+public void setYearsExperience(BigDecimal yearsExperience) {
         this.yearsExperience = yearsExperience;
     }
-
-    public BigDecimal getRating() {
-        return rating;
-    }
-
-    public void setRating(BigDecimal rating) {
+public void setRating(BigDecimal rating) {
         this.rating = rating;
     }
-
-    public BigDecimal getSkillLevel() {
-        return skillLevel;
-    }
-
-    public void setSkillLevel(BigDecimal skillLevel) {
+public void setSkillLevel(BigDecimal skillLevel) {
         this.skillLevel = skillLevel;
     }
-
-    public LocalDateTime getStartedUsingDate() {
-        return startedUsingDate;
-    }
-
-    public void setStartedUsingDate(LocalDateTime startedUsingDate) {
+public void setStartedUsingDate(LocalDateTime startedUsingDate) {
         this.startedUsingDate = startedUsingDate;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

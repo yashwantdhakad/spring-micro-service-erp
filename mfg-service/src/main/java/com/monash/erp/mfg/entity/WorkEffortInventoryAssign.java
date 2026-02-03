@@ -1,11 +1,17 @@
 package com.monash.erp.mfg.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class WorkEffortInventoryAssign {
 
     @Id
@@ -16,44 +22,19 @@ public class WorkEffortInventoryAssign {
     private String inventoryItemId;
     private String statusId;
     private String quantity;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getWorkEffortId() {
-        return workEffortId;
-    }
-
-    public void setWorkEffortId(String workEffortId) {
+public void setWorkEffortId(String workEffortId) {
         this.workEffortId = workEffortId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
+public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

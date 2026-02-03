@@ -1,11 +1,17 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class GiftCard {
 
     @Id
@@ -21,52 +27,22 @@ public class GiftCard {
     private String expireDate;
 
     private String contactMechId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPaymentMethodId() {
-        return paymentMethodId;
-    }
-
-    public void setPaymentMethodId(String paymentMethodId) {
+public void setPaymentMethodId(String paymentMethodId) {
         this.paymentMethodId = paymentMethodId;
     }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(String cardNumber) {
+public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
-
-    public String getPinNumber() {
-        return pinNumber;
-    }
-
-    public void setPinNumber(String pinNumber) {
+public void setPinNumber(String pinNumber) {
         this.pinNumber = pinNumber;
     }
-
-    public String getExpireDate() {
-        return expireDate;
-    }
-
-    public void setExpireDate(String expireDate) {
+public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
     }
-
-    public String getContactMechId() {
-        return contactMechId;
-    }
-
-    public void setContactMechId(String contactMechId) {
+public void setContactMechId(String contactMechId) {
         this.contactMechId = contactMechId;
     }
 }

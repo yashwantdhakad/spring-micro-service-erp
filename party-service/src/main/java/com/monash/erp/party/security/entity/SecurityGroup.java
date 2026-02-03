@@ -1,5 +1,8 @@
 package com.monash.erp.party.security.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +17,9 @@ import jakarta.persistence.Table;
                 @Index(name = "idx_security_group_group_id", columnList = "group_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class SecurityGroup {
 
     @Id
@@ -25,36 +31,16 @@ public class SecurityGroup {
     private String groupName;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
+public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
+public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

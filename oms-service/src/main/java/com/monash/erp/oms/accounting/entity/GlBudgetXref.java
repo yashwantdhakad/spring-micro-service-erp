@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class GlBudgetXref {
 
     @Id
@@ -24,52 +30,22 @@ public class GlBudgetXref {
     private LocalDateTime thruDate;
 
     private BigDecimal allocationPercentage;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getGlAccountId() {
-        return glAccountId;
-    }
-
-    public void setGlAccountId(String glAccountId) {
+public void setGlAccountId(String glAccountId) {
         this.glAccountId = glAccountId;
     }
-
-    public String getBudgetItemTypeId() {
-        return budgetItemTypeId;
-    }
-
-    public void setBudgetItemTypeId(String budgetItemTypeId) {
+public void setBudgetItemTypeId(String budgetItemTypeId) {
         this.budgetItemTypeId = budgetItemTypeId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public BigDecimal getAllocationPercentage() {
-        return allocationPercentage;
-    }
-
-    public void setAllocationPercentage(BigDecimal allocationPercentage) {
+public void setAllocationPercentage(BigDecimal allocationPercentage) {
         this.allocationPercentage = allocationPercentage;
     }
 }

@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class VisualThemeResource {
 
     @Id
@@ -22,76 +28,31 @@ public class VisualThemeResource {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getVisualThemeId() {
-        return visualThemeId;
-    }
-
-    public void setVisualThemeId(String visualThemeId) {
+public void setVisualThemeId(String visualThemeId) {
         this.visualThemeId = visualThemeId;
     }
-
-    public String getResourceTypeEnumId() {
-        return resourceTypeEnumId;
-    }
-
-    public void setResourceTypeEnumId(String resourceTypeEnumId) {
+public void setResourceTypeEnumId(String resourceTypeEnumId) {
         this.resourceTypeEnumId = resourceTypeEnumId;
     }
-
-    public String getSequenceId() {
-        return sequenceId;
-    }
-
-    public void setSequenceId(String sequenceId) {
+public void setSequenceId(String sequenceId) {
         this.sequenceId = sequenceId;
     }
-
-    public String getResourceValue() {
-        return resourceValue;
-    }
-
-    public void setResourceValue(String resourceValue) {
+public void setResourceValue(String resourceValue) {
         this.resourceValue = resourceValue;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

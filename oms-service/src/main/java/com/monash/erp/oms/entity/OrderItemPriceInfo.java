@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderItemPriceInfo extends AuditableEntity {
 
     @Id
@@ -23,80 +29,32 @@ public class OrderItemPriceInfo extends AuditableEntity {
     private BigDecimal modifyAmount;
     private String description;
     private String rateCode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderItemPriceInfoId() {
-        return orderItemPriceInfoId;
-    }
-
-    public void setOrderItemPriceInfoId(String orderItemPriceInfoId) {
+public void setOrderItemPriceInfoId(String orderItemPriceInfoId) {
         this.orderItemPriceInfoId = orderItemPriceInfoId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getProductPriceRuleId() {
-        return productPriceRuleId;
-    }
-
-    public void setProductPriceRuleId(String productPriceRuleId) {
+public void setProductPriceRuleId(String productPriceRuleId) {
         this.productPriceRuleId = productPriceRuleId;
     }
-
-    public String getProductPriceActionSeqId() {
-        return productPriceActionSeqId;
-    }
-
-    public void setProductPriceActionSeqId(String productPriceActionSeqId) {
+public void setProductPriceActionSeqId(String productPriceActionSeqId) {
         this.productPriceActionSeqId = productPriceActionSeqId;
     }
-
-    public BigDecimal getModifyAmount() {
-        return modifyAmount;
-    }
-
-    public void setModifyAmount(BigDecimal modifyAmount) {
+public void setModifyAmount(BigDecimal modifyAmount) {
         this.modifyAmount = modifyAmount;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getRateCode() {
-        return rateCode;
-    }
-
-    public void setRateCode(String rateCode) {
+public void setRateCode(String rateCode) {
         this.rateCode = rateCode;
     }
-
-
-
 
 }

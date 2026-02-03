@@ -13,6 +13,11 @@ import { CreateJobComponent } from './create-job/create-job.component';
 import { JobDetailComponent } from './job-detail/job-detail.component';
 import { ConsumableItemComponent } from './consumable-item/consumable-item.component';
 import { ProduceItemComponent } from './produce-item/produce-item.component';
+import { BomsComponent } from './boms/boms.component';
+import { BomDetailComponent } from './bom-detail/bom-detail.component';
+import { BomAddComponentDialogComponent } from './bom-add-component-dialog/bom-add-component-dialog.component';
+import { BomCreateComponent } from './bom-create/bom-create.component';
+import { BomCreateItemDialogComponent } from './bom-create-item-dialog/bom-create-item-dialog.component';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -24,6 +29,11 @@ import { MaterialModule } from '../../components/common/material/material.module
     JobDetailComponent,
     ConsumableItemComponent,
     ProduceItemComponent,
+    BomsComponent,
+    BomDetailComponent,
+    BomAddComponentDialogComponent,
+    BomCreateComponent,
+    BomCreateItemDialogComponent,
   ],
   imports: [
     CommonModule,

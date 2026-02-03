@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductFeatureGroupAndAppl {
 
     @Id
@@ -27,124 +33,49 @@ public class ProductFeatureGroupAndAppl {
     private String defaultSequenceNum;
     private String abbrev;
     private String idCode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductFeatureGroupId() {
-        return productFeatureGroupId;
-    }
-
-    public void setProductFeatureGroupId(String productFeatureGroupId) {
+public void setProductFeatureGroupId(String productFeatureGroupId) {
         this.productFeatureGroupId = productFeatureGroupId;
     }
-
-    public String getProductFeatureId() {
-        return productFeatureId;
-    }
-
-    public void setProductFeatureId(String productFeatureId) {
+public void setProductFeatureId(String productFeatureId) {
         this.productFeatureId = productFeatureId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public String getProductFeatureTypeId() {
-        return productFeatureTypeId;
-    }
-
-    public void setProductFeatureTypeId(String productFeatureTypeId) {
+public void setProductFeatureTypeId(String productFeatureTypeId) {
         this.productFeatureTypeId = productFeatureTypeId;
     }
-
-    public String getProductFeatureCategoryId() {
-        return productFeatureCategoryId;
-    }
-
-    public void setProductFeatureCategoryId(String productFeatureCategoryId) {
+public void setProductFeatureCategoryId(String productFeatureCategoryId) {
         this.productFeatureCategoryId = productFeatureCategoryId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getUomId() {
-        return uomId;
-    }
-
-    public void setUomId(String uomId) {
+public void setUomId(String uomId) {
         this.uomId = uomId;
     }
-
-    public String getNumberSpecified() {
-        return numberSpecified;
-    }
-
-    public void setNumberSpecified(String numberSpecified) {
+public void setNumberSpecified(String numberSpecified) {
         this.numberSpecified = numberSpecified;
     }
-
-    public String getDefaultAmount() {
-        return defaultAmount;
-    }
-
-    public void setDefaultAmount(String defaultAmount) {
+public void setDefaultAmount(String defaultAmount) {
         this.defaultAmount = defaultAmount;
     }
-
-    public String getDefaultSequenceNum() {
-        return defaultSequenceNum;
-    }
-
-    public void setDefaultSequenceNum(String defaultSequenceNum) {
+public void setDefaultSequenceNum(String defaultSequenceNum) {
         this.defaultSequenceNum = defaultSequenceNum;
     }
-
-    public String getAbbrev() {
-        return abbrev;
-    }
-
-    public void setAbbrev(String abbrev) {
+public void setAbbrev(String abbrev) {
         this.abbrev = abbrev;
     }
-
-    public String getIdCode() {
-        return idCode;
-    }
-
-    public void setIdCode(String idCode) {
+public void setIdCode(String idCode) {
         this.idCode = idCode;
     }
 

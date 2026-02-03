@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class TemporalExpression {
 
     @Id
@@ -28,116 +34,46 @@ public class TemporalExpression {
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getTempExprId() {
-        return tempExprId;
-    }
-
-    public void setTempExprId(String tempExprId) {
+public void setTempExprId(String tempExprId) {
         this.tempExprId = tempExprId;
     }
-
-    public String getTempExprTypeId() {
-        return tempExprTypeId;
-    }
-
-    public void setTempExprTypeId(String tempExprTypeId) {
+public void setTempExprTypeId(String tempExprTypeId) {
         this.tempExprTypeId = tempExprTypeId;
     }
-
-    public LocalDateTime getDate1() {
-        return date1;
-    }
-
-    public void setDate1(LocalDateTime date1) {
+public void setDate1(LocalDateTime date1) {
         this.date1 = date1;
     }
-
-    public LocalDateTime getDate2() {
-        return date2;
-    }
-
-    public void setDate2(LocalDateTime date2) {
+public void setDate2(LocalDateTime date2) {
         this.date2 = date2;
     }
-
-    public BigDecimal getInteger1() {
-        return integer1;
-    }
-
-    public void setInteger1(BigDecimal integer1) {
+public void setInteger1(BigDecimal integer1) {
         this.integer1 = integer1;
     }
-
-    public BigDecimal getInteger2() {
-        return integer2;
-    }
-
-    public void setInteger2(BigDecimal integer2) {
+public void setInteger2(BigDecimal integer2) {
         this.integer2 = integer2;
     }
-
-    public String getString1() {
-        return string1;
-    }
-
-    public void setString1(String string1) {
+public void setString1(String string1) {
         this.string1 = string1;
     }
-
-    public String getString2() {
-        return string2;
-    }
-
-    public void setString2(String string2) {
+public void setString2(String string2) {
         this.string2 = string2;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

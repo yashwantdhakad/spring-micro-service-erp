@@ -1,5 +1,8 @@
 package com.monash.erp.party.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class PayrollPreference {
 
     @Id
@@ -32,148 +38,58 @@ public class PayrollPreference {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getRoleTypeId() {
-        return roleTypeId;
-    }
-
-    public void setRoleTypeId(String roleTypeId) {
+public void setRoleTypeId(String roleTypeId) {
         this.roleTypeId = roleTypeId;
     }
-
-    public String getPayrollPreferenceSeqId() {
-        return payrollPreferenceSeqId;
-    }
-
-    public void setPayrollPreferenceSeqId(String payrollPreferenceSeqId) {
+public void setPayrollPreferenceSeqId(String payrollPreferenceSeqId) {
         this.payrollPreferenceSeqId = payrollPreferenceSeqId;
     }
-
-    public String getDeductionTypeId() {
-        return deductionTypeId;
-    }
-
-    public void setDeductionTypeId(String deductionTypeId) {
+public void setDeductionTypeId(String deductionTypeId) {
         this.deductionTypeId = deductionTypeId;
     }
-
-    public String getPaymentMethodTypeId() {
-        return paymentMethodTypeId;
-    }
-
-    public void setPaymentMethodTypeId(String paymentMethodTypeId) {
+public void setPaymentMethodTypeId(String paymentMethodTypeId) {
         this.paymentMethodTypeId = paymentMethodTypeId;
     }
-
-    public String getPeriodTypeId() {
-        return periodTypeId;
-    }
-
-    public void setPeriodTypeId(String periodTypeId) {
+public void setPeriodTypeId(String periodTypeId) {
         this.periodTypeId = periodTypeId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public BigDecimal getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(BigDecimal percentage) {
+public void setPercentage(BigDecimal percentage) {
         this.percentage = percentage;
     }
-
-    public BigDecimal getFlatAmount() {
-        return flatAmount;
-    }
-
-    public void setFlatAmount(BigDecimal flatAmount) {
+public void setFlatAmount(BigDecimal flatAmount) {
         this.flatAmount = flatAmount;
     }
-
-    public String getRoutingNumber() {
-        return routingNumber;
-    }
-
-    public void setRoutingNumber(String routingNumber) {
+public void setRoutingNumber(String routingNumber) {
         this.routingNumber = routingNumber;
     }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
+public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
     }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
+public void setBankName(String bankName) {
         this.bankName = bankName;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

@@ -1,5 +1,8 @@
 package com.monash.erp.party.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +19,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_party_group_name", columnList = "group_name")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class PartyGroup {
 
     @Id
@@ -49,228 +55,88 @@ public class PartyGroup {
     private String salesChannel;
     private String salesCatRegion;
     private String division;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
+public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-
-    public String getGroupNameLocal() {
-        return groupNameLocal;
-    }
-
-    public void setGroupNameLocal(String groupNameLocal) {
+public void setGroupNameLocal(String groupNameLocal) {
         this.groupNameLocal = groupNameLocal;
     }
-
-    public String getOfficeSiteName() {
-        return officeSiteName;
-    }
-
-    public void setOfficeSiteName(String officeSiteName) {
+public void setOfficeSiteName(String officeSiteName) {
         this.officeSiteName = officeSiteName;
     }
-
-    public String getAnnualRevenue() {
-        return annualRevenue;
-    }
-
-    public void setAnnualRevenue(String annualRevenue) {
+public void setAnnualRevenue(String annualRevenue) {
         this.annualRevenue = annualRevenue;
     }
-
-    public String getNumEmployees() {
-        return numEmployees;
-    }
-
-    public void setNumEmployees(String numEmployees) {
+public void setNumEmployees(String numEmployees) {
         this.numEmployees = numEmployees;
     }
-
-    public String getTickerSymbol() {
-        return tickerSymbol;
-    }
-
-    public void setTickerSymbol(String tickerSymbol) {
+public void setTickerSymbol(String tickerSymbol) {
         this.tickerSymbol = tickerSymbol;
     }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
+public void setComments(String comments) {
         this.comments = comments;
     }
-
-    public String getLogoImageUrl() {
-        return logoImageUrl;
-    }
-
-    public void setLogoImageUrl(String logoImageUrl) {
+public void setLogoImageUrl(String logoImageUrl) {
         this.logoImageUrl = logoImageUrl;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getEasaCerReq() {
-        return easaCerReq;
-    }
-
-    public void setEasaCerReq(String easaCerReq) {
+public void setEasaCerReq(String easaCerReq) {
         this.easaCerReq = easaCerReq;
     }
-
-    public String getIsBlackListed() {
-        return isBlackListed;
-    }
-
-    public void setIsBlackListed(String isBlackListed) {
+public void setIsBlackListed(String isBlackListed) {
         this.isBlackListed = isBlackListed;
     }
-
-    public String getDrugProgReq() {
-        return drugProgReq;
-    }
-
-    public void setDrugProgReq(String drugProgReq) {
+public void setDrugProgReq(String drugProgReq) {
         this.drugProgReq = drugProgReq;
     }
-
-    public String getMilitaryContract() {
-        return militaryContract;
-    }
-
-    public void setMilitaryContract(String militaryContract) {
+public void setMilitaryContract(String militaryContract) {
         this.militaryContract = militaryContract;
     }
-
-    public String getPmaAllowed() {
-        return pmaAllowed;
-    }
-
-    public void setPmaAllowed(String pmaAllowed) {
+public void setPmaAllowed(String pmaAllowed) {
         this.pmaAllowed = pmaAllowed;
     }
-
-    public String getExchgAllowed() {
-        return exchgAllowed;
-    }
-
-    public void setExchgAllowed(String exchgAllowed) {
+public void setExchgAllowed(String exchgAllowed) {
         this.exchgAllowed = exchgAllowed;
     }
-
-    public String getPropRepAllowed() {
-        return propRepAllowed;
-    }
-
-    public void setPropRepAllowed(String propRepAllowed) {
+public void setPropRepAllowed(String propRepAllowed) {
         this.propRepAllowed = propRepAllowed;
     }
-
-    public String getTraceReq() {
-        return traceReq;
-    }
-
-    public void setTraceReq(String traceReq) {
+public void setTraceReq(String traceReq) {
         this.traceReq = traceReq;
     }
-
-    public String getCreditLimit() {
-        return creditLimit;
-    }
-
-    public void setCreditLimit(String creditLimit) {
+public void setCreditLimit(String creditLimit) {
         this.creditLimit = creditLimit;
     }
-
-    public String getCreditTerms() {
-        return creditTerms;
-    }
-
-    public void setCreditTerms(String creditTerms) {
+public void setCreditTerms(String creditTerms) {
         this.creditTerms = creditTerms;
     }
-
-    public String getPriceShowOnPackSlip() {
-        return priceShowOnPackSlip;
-    }
-
-    public void setPriceShowOnPackSlip(String priceShowOnPackSlip) {
+public void setPriceShowOnPackSlip(String priceShowOnPackSlip) {
         this.priceShowOnPackSlip = priceShowOnPackSlip;
     }
-
-    public String getSalesChannel() {
-        return salesChannel;
-    }
-
-    public void setSalesChannel(String salesChannel) {
+public void setSalesChannel(String salesChannel) {
         this.salesChannel = salesChannel;
     }
-
-    public String getSalesCatRegion() {
-        return salesCatRegion;
-    }
-
-    public void setSalesCatRegion(String salesCatRegion) {
+public void setSalesCatRegion(String salesCatRegion) {
         this.salesCatRegion = salesCatRegion;
     }
-
-    public String getDivision() {
-        return division;
-    }
-
-    public void setDivision(String division) {
+public void setDivision(String division) {
         this.division = division;
     }
 

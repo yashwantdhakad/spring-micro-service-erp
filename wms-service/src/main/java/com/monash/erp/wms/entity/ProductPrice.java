@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +23,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_product_price_from_date", columnList = "FROM_DATE")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductPrice {
 
     @Id
@@ -82,164 +88,64 @@ public class ProductPrice {
 
     @Column(name = "OEM_PARTY_ID", length = 20)
     private String oemPartyId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getProductPriceTypeId() {
-        return productPriceTypeId;
-    }
-
-    public void setProductPriceTypeId(String productPriceTypeId) {
+public void setProductPriceTypeId(String productPriceTypeId) {
         this.productPriceTypeId = productPriceTypeId;
     }
-
-    public String getProductPricePurposeId() {
-        return productPricePurposeId;
-    }
-
-    public void setProductPricePurposeId(String productPricePurposeId) {
+public void setProductPricePurposeId(String productPricePurposeId) {
         this.productPricePurposeId = productPricePurposeId;
     }
-
-    public String getCurrencyUomId() {
-        return currencyUomId;
-    }
-
-    public void setCurrencyUomId(String currencyUomId) {
+public void setCurrencyUomId(String currencyUomId) {
         this.currencyUomId = currencyUomId;
     }
-
-    public String getProductStoreGroupId() {
-        return productStoreGroupId;
-    }
-
-    public void setProductStoreGroupId(String productStoreGroupId) {
+public void setProductStoreGroupId(String productStoreGroupId) {
         this.productStoreGroupId = productStoreGroupId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
+public void setPrice(String price) {
         this.price = price;
     }
-
-    public String getTermUomId() {
-        return termUomId;
-    }
-
-    public void setTermUomId(String termUomId) {
+public void setTermUomId(String termUomId) {
         this.termUomId = termUomId;
     }
-
-    public String getCustomPriceCalcService() {
-        return customPriceCalcService;
-    }
-
-    public void setCustomPriceCalcService(String customPriceCalcService) {
+public void setCustomPriceCalcService(String customPriceCalcService) {
         this.customPriceCalcService = customPriceCalcService;
     }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
+public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
-
-    public String getCreatedByUserLogin() {
-        return createdByUserLogin;
-    }
-
-    public void setCreatedByUserLogin(String createdByUserLogin) {
+public void setCreatedByUserLogin(String createdByUserLogin) {
         this.createdByUserLogin = createdByUserLogin;
     }
-
-    public LocalDateTime getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
-
-    public String getLastModifiedByUserLogin() {
-        return lastModifiedByUserLogin;
-    }
-
-    public void setLastModifiedByUserLogin(String lastModifiedByUserLogin) {
+public void setLastModifiedByUserLogin(String lastModifiedByUserLogin) {
         this.lastModifiedByUserLogin = lastModifiedByUserLogin;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getOemPartyId() {
-        return oemPartyId;
-    }
-
-    public void setOemPartyId(String oemPartyId) {
+public void setOemPartyId(String oemPartyId) {
         this.oemPartyId = oemPartyId;
     }
 }

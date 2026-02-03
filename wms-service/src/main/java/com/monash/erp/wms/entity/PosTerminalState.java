@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class PosTerminalState {
 
     @Id
@@ -32,148 +38,58 @@ public class PosTerminalState {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPosTerminalId() {
-        return posTerminalId;
-    }
-
-    public void setPosTerminalId(String posTerminalId) {
+public void setPosTerminalId(String posTerminalId) {
         this.posTerminalId = posTerminalId;
     }
-
-    public LocalDateTime getOpenedDate() {
-        return openedDate;
-    }
-
-    public void setOpenedDate(LocalDateTime openedDate) {
+public void setOpenedDate(LocalDateTime openedDate) {
         this.openedDate = openedDate;
     }
-
-    public LocalDateTime getClosedDate() {
-        return closedDate;
-    }
-
-    public void setClosedDate(LocalDateTime closedDate) {
+public void setClosedDate(LocalDateTime closedDate) {
         this.closedDate = closedDate;
     }
-
-    public String getStartingTxId() {
-        return startingTxId;
-    }
-
-    public void setStartingTxId(String startingTxId) {
+public void setStartingTxId(String startingTxId) {
         this.startingTxId = startingTxId;
     }
-
-    public String getEndingTxId() {
-        return endingTxId;
-    }
-
-    public void setEndingTxId(String endingTxId) {
+public void setEndingTxId(String endingTxId) {
         this.endingTxId = endingTxId;
     }
-
-    public String getOpenedByUserLoginId() {
-        return openedByUserLoginId;
-    }
-
-    public void setOpenedByUserLoginId(String openedByUserLoginId) {
+public void setOpenedByUserLoginId(String openedByUserLoginId) {
         this.openedByUserLoginId = openedByUserLoginId;
     }
-
-    public String getClosedByUserLoginId() {
-        return closedByUserLoginId;
-    }
-
-    public void setClosedByUserLoginId(String closedByUserLoginId) {
+public void setClosedByUserLoginId(String closedByUserLoginId) {
         this.closedByUserLoginId = closedByUserLoginId;
     }
-
-    public BigDecimal getStartingDrawerAmount() {
-        return startingDrawerAmount;
-    }
-
-    public void setStartingDrawerAmount(BigDecimal startingDrawerAmount) {
+public void setStartingDrawerAmount(BigDecimal startingDrawerAmount) {
         this.startingDrawerAmount = startingDrawerAmount;
     }
-
-    public BigDecimal getActualEndingCash() {
-        return actualEndingCash;
-    }
-
-    public void setActualEndingCash(BigDecimal actualEndingCash) {
+public void setActualEndingCash(BigDecimal actualEndingCash) {
         this.actualEndingCash = actualEndingCash;
     }
-
-    public BigDecimal getActualEndingCheck() {
-        return actualEndingCheck;
-    }
-
-    public void setActualEndingCheck(BigDecimal actualEndingCheck) {
+public void setActualEndingCheck(BigDecimal actualEndingCheck) {
         this.actualEndingCheck = actualEndingCheck;
     }
-
-    public BigDecimal getActualEndingCc() {
-        return actualEndingCc;
-    }
-
-    public void setActualEndingCc(BigDecimal actualEndingCc) {
+public void setActualEndingCc(BigDecimal actualEndingCc) {
         this.actualEndingCc = actualEndingCc;
     }
-
-    public BigDecimal getActualEndingGc() {
-        return actualEndingGc;
-    }
-
-    public void setActualEndingGc(BigDecimal actualEndingGc) {
+public void setActualEndingGc(BigDecimal actualEndingGc) {
         this.actualEndingGc = actualEndingGc;
     }
-
-    public BigDecimal getActualEndingOther() {
-        return actualEndingOther;
-    }
-
-    public void setActualEndingOther(BigDecimal actualEndingOther) {
+public void setActualEndingOther(BigDecimal actualEndingOther) {
         this.actualEndingOther = actualEndingOther;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

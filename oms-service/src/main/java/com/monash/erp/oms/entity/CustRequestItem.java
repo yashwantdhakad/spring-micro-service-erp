@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class CustRequestItem extends AuditableEntity {
 
     @Id
@@ -32,152 +38,59 @@ public class CustRequestItem extends AuditableEntity {
     private String configId;
     private String description;
     private String story;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCustRequestId() {
-        return custRequestId;
-    }
-
-    public void setCustRequestId(String custRequestId) {
+public void setCustRequestId(String custRequestId) {
         this.custRequestId = custRequestId;
     }
-
-    public String getCustRequestItemSeqId() {
-        return custRequestItemSeqId;
-    }
-
-    public void setCustRequestItemSeqId(String custRequestItemSeqId) {
+public void setCustRequestItemSeqId(String custRequestItemSeqId) {
         this.custRequestItemSeqId = custRequestItemSeqId;
     }
-
-    public String getCustRequestResolutionId() {
-        return custRequestResolutionId;
-    }
-
-    public void setCustRequestResolutionId(String custRequestResolutionId) {
+public void setCustRequestResolutionId(String custRequestResolutionId) {
         this.custRequestResolutionId = custRequestResolutionId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public BigDecimal getPriority() {
-        return priority;
-    }
-
-    public void setPriority(BigDecimal priority) {
+public void setPriority(BigDecimal priority) {
         this.priority = priority;
     }
-
-    public BigDecimal getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(BigDecimal sequenceNum) {
+public void setSequenceNum(BigDecimal sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public LocalDateTime getRequiredByDate() {
-        return requiredByDate;
-    }
-
-    public void setRequiredByDate(LocalDateTime requiredByDate) {
+public void setRequiredByDate(LocalDateTime requiredByDate) {
         this.requiredByDate = requiredByDate;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(BigDecimal quantity) {
+public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-
-    public BigDecimal getSelectedAmount() {
-        return selectedAmount;
-    }
-
-    public void setSelectedAmount(BigDecimal selectedAmount) {
+public void setSelectedAmount(BigDecimal selectedAmount) {
         this.selectedAmount = selectedAmount;
     }
-
-    public BigDecimal getMaximumAmount() {
-        return maximumAmount;
-    }
-
-    public void setMaximumAmount(BigDecimal maximumAmount) {
+public void setMaximumAmount(BigDecimal maximumAmount) {
         this.maximumAmount = maximumAmount;
     }
-
-    public LocalDateTime getReservStart() {
-        return reservStart;
-    }
-
-    public void setReservStart(LocalDateTime reservStart) {
+public void setReservStart(LocalDateTime reservStart) {
         this.reservStart = reservStart;
     }
-
-    public BigDecimal getReservLength() {
-        return reservLength;
-    }
-
-    public void setReservLength(BigDecimal reservLength) {
+public void setReservLength(BigDecimal reservLength) {
         this.reservLength = reservLength;
     }
-
-    public BigDecimal getReservPersons() {
-        return reservPersons;
-    }
-
-    public void setReservPersons(BigDecimal reservPersons) {
+public void setReservPersons(BigDecimal reservPersons) {
         this.reservPersons = reservPersons;
     }
-
-    public String getConfigId() {
-        return configId;
-    }
-
-    public void setConfigId(String configId) {
+public void setConfigId(String configId) {
         this.configId = configId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getStory() {
-        return story;
-    }
-
-    public void setStory(String story) {
+public void setStory(String story) {
         this.story = story;
     }
-
-
-
 
 }

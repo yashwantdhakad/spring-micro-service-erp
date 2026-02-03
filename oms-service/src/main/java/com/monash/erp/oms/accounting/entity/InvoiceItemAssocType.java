@@ -1,17 +1,22 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class InvoiceItemAssocType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     private String invoiceItemAssocTypeId;
 
@@ -20,44 +25,19 @@ public class InvoiceItemAssocType {
     private Boolean hasTable;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getInvoiceItemAssocTypeId() {
-        return invoiceItemAssocTypeId;
-    }
-
-    public void setInvoiceItemAssocTypeId(String invoiceItemAssocTypeId) {
+public void setInvoiceItemAssocTypeId(String invoiceItemAssocTypeId) {
         this.invoiceItemAssocTypeId = invoiceItemAssocTypeId;
     }
-
-    public String getParentTypeId() {
-        return parentTypeId;
-    }
-
-    public void setParentTypeId(String parentTypeId) {
+public void setParentTypeId(String parentTypeId) {
         this.parentTypeId = parentTypeId;
     }
-
-    public Boolean getHasTable() {
-        return hasTable;
-    }
-
-    public void setHasTable(Boolean hasTable) {
+public void setHasTable(Boolean hasTable) {
         this.hasTable = hasTable;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +20,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_order_adjustment_order_id", columnList = "order_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderAdjustment extends AuditableEntity {
 
     @Id
@@ -54,264 +60,101 @@ public class OrderAdjustment extends AuditableEntity {
     private String originalAdjustmentId;
     private BigDecimal amountPerQuantity;
     private BigDecimal percentage;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderAdjustmentId() {
-        return orderAdjustmentId;
-    }
-
-    public void setOrderAdjustmentId(String orderAdjustmentId) {
+public void setOrderAdjustmentId(String orderAdjustmentId) {
         this.orderAdjustmentId = orderAdjustmentId;
     }
-
-    public String getOrderAdjustmentTypeId() {
-        return orderAdjustmentTypeId;
-    }
-
-    public void setOrderAdjustmentTypeId(String orderAdjustmentTypeId) {
+public void setOrderAdjustmentTypeId(String orderAdjustmentTypeId) {
         this.orderAdjustmentTypeId = orderAdjustmentTypeId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getShipGroupSeqId() {
-        return shipGroupSeqId;
-    }
-
-    public void setShipGroupSeqId(String shipGroupSeqId) {
+public void setShipGroupSeqId(String shipGroupSeqId) {
         this.shipGroupSeqId = shipGroupSeqId;
     }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
+public void setComments(String comments) {
         this.comments = comments;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
+public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
-
-    public BigDecimal getRecurringAmount() {
-        return recurringAmount;
-    }
-
-    public void setRecurringAmount(BigDecimal recurringAmount) {
+public void setRecurringAmount(BigDecimal recurringAmount) {
         this.recurringAmount = recurringAmount;
     }
-
-    public String getProductPromoId() {
-        return productPromoId;
-    }
-
-    public void setProductPromoId(String productPromoId) {
+public void setProductPromoId(String productPromoId) {
         this.productPromoId = productPromoId;
     }
-
-    public String getProductPromoRuleId() {
-        return productPromoRuleId;
-    }
-
-    public void setProductPromoRuleId(String productPromoRuleId) {
+public void setProductPromoRuleId(String productPromoRuleId) {
         this.productPromoRuleId = productPromoRuleId;
     }
-
-    public String getProductPromoActionSeqId() {
-        return productPromoActionSeqId;
-    }
-
-    public void setProductPromoActionSeqId(String productPromoActionSeqId) {
+public void setProductPromoActionSeqId(String productPromoActionSeqId) {
         this.productPromoActionSeqId = productPromoActionSeqId;
     }
-
-    public String getProductFeatureId() {
-        return productFeatureId;
-    }
-
-    public void setProductFeatureId(String productFeatureId) {
+public void setProductFeatureId(String productFeatureId) {
         this.productFeatureId = productFeatureId;
     }
-
-    public String getCorrespondingProductId() {
-        return correspondingProductId;
-    }
-
-    public void setCorrespondingProductId(String correspondingProductId) {
+public void setCorrespondingProductId(String correspondingProductId) {
         this.correspondingProductId = correspondingProductId;
     }
-
-    public String getTaxAuthorityRateSeqId() {
-        return taxAuthorityRateSeqId;
-    }
-
-    public void setTaxAuthorityRateSeqId(String taxAuthorityRateSeqId) {
+public void setTaxAuthorityRateSeqId(String taxAuthorityRateSeqId) {
         this.taxAuthorityRateSeqId = taxAuthorityRateSeqId;
     }
-
-    public String getSourceReferenceId() {
-        return sourceReferenceId;
-    }
-
-    public void setSourceReferenceId(String sourceReferenceId) {
+public void setSourceReferenceId(String sourceReferenceId) {
         this.sourceReferenceId = sourceReferenceId;
     }
-
-    public BigDecimal getSourcePercentage() {
-        return sourcePercentage;
-    }
-
-    public void setSourcePercentage(BigDecimal sourcePercentage) {
+public void setSourcePercentage(BigDecimal sourcePercentage) {
         this.sourcePercentage = sourcePercentage;
     }
-
-    public String getCustomerReferenceId() {
-        return customerReferenceId;
-    }
-
-    public void setCustomerReferenceId(String customerReferenceId) {
+public void setCustomerReferenceId(String customerReferenceId) {
         this.customerReferenceId = customerReferenceId;
     }
-
-    public String getPrimaryGeoId() {
-        return primaryGeoId;
-    }
-
-    public void setPrimaryGeoId(String primaryGeoId) {
+public void setPrimaryGeoId(String primaryGeoId) {
         this.primaryGeoId = primaryGeoId;
     }
-
-    public String getSecondaryGeoId() {
-        return secondaryGeoId;
-    }
-
-    public void setSecondaryGeoId(String secondaryGeoId) {
+public void setSecondaryGeoId(String secondaryGeoId) {
         this.secondaryGeoId = secondaryGeoId;
     }
-
-    public BigDecimal getExemptAmount() {
-        return exemptAmount;
-    }
-
-    public void setExemptAmount(BigDecimal exemptAmount) {
+public void setExemptAmount(BigDecimal exemptAmount) {
         this.exemptAmount = exemptAmount;
     }
-
-    public String getTaxAuthGeoId() {
-        return taxAuthGeoId;
-    }
-
-    public void setTaxAuthGeoId(String taxAuthGeoId) {
+public void setTaxAuthGeoId(String taxAuthGeoId) {
         this.taxAuthGeoId = taxAuthGeoId;
     }
-
-    public String getTaxAuthPartyId() {
-        return taxAuthPartyId;
-    }
-
-    public void setTaxAuthPartyId(String taxAuthPartyId) {
+public void setTaxAuthPartyId(String taxAuthPartyId) {
         this.taxAuthPartyId = taxAuthPartyId;
     }
-
-    public String getOverrideGlAccountId() {
-        return overrideGlAccountId;
-    }
-
-    public void setOverrideGlAccountId(String overrideGlAccountId) {
+public void setOverrideGlAccountId(String overrideGlAccountId) {
         this.overrideGlAccountId = overrideGlAccountId;
     }
-
-    public String getIncludeInTax() {
-        return includeInTax;
-    }
-
-    public void setIncludeInTax(String includeInTax) {
+public void setIncludeInTax(String includeInTax) {
         this.includeInTax = includeInTax;
     }
-
-    public String getIncludeInShipping() {
-        return includeInShipping;
-    }
-
-    public void setIncludeInShipping(String includeInShipping) {
+public void setIncludeInShipping(String includeInShipping) {
         this.includeInShipping = includeInShipping;
     }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
+public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
-
-    public String getCreatedByUserLogin() {
-        return createdByUserLogin;
-    }
-
-    public void setCreatedByUserLogin(String createdByUserLogin) {
+public void setCreatedByUserLogin(String createdByUserLogin) {
         this.createdByUserLogin = createdByUserLogin;
     }
-
-    public String getOriginalAdjustmentId() {
-        return originalAdjustmentId;
-    }
-
-    public void setOriginalAdjustmentId(String originalAdjustmentId) {
+public void setOriginalAdjustmentId(String originalAdjustmentId) {
         this.originalAdjustmentId = originalAdjustmentId;
     }
-
-    public BigDecimal getAmountPerQuantity() {
-        return amountPerQuantity;
-    }
-
-    public void setAmountPerQuantity(BigDecimal amountPerQuantity) {
+public void setAmountPerQuantity(BigDecimal amountPerQuantity) {
         this.amountPerQuantity = amountPerQuantity;
     }
-
-    public BigDecimal getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(BigDecimal percentage) {
+public void setPercentage(BigDecimal percentage) {
         this.percentage = percentage;
     }
-
-
-
 
 }

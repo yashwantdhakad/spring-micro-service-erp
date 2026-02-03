@@ -22,6 +22,7 @@ import com.monash.erp.oms.order.dto.OrderDetailResponse;
 import com.monash.erp.oms.order.dto.OrderDisplayInfoResponse;
 import com.monash.erp.oms.order.dto.OrderHeaderDto;
 import com.monash.erp.oms.order.dto.OrderItemDto;
+import com.monash.erp.oms.order.dto.OrderItemQuantityUpdateRequest;
 import com.monash.erp.oms.order.dto.OrderItemRequest;
 import com.monash.erp.oms.order.dto.OrderListItem;
 import com.monash.erp.oms.order.dto.OrderListResponse;
@@ -30,6 +31,7 @@ import com.monash.erp.oms.order.dto.OrderNoteDto;
 import com.monash.erp.oms.order.dto.OrderNoteRequest;
 import com.monash.erp.oms.order.dto.OrderPartDto;
 import com.monash.erp.oms.order.dto.OrderRoleDto;
+import com.monash.erp.oms.order.dto.OrderStatusChangeRequest;
 import com.monash.erp.oms.order.dto.OrderStatusDto;
 import com.monash.erp.oms.order.dto.OrganizationDto;
 import com.monash.erp.oms.order.dto.PostalAddressDto;
@@ -111,6 +113,7 @@ import java.util.stream.Collectors;
 public class OrderCompositeService {
 
     private static final String DEFAULT_STATUS = "ORDER_CREATED";
+    private static final String STATUS_CREATED = "ORDER_CREATED";
     private static final String DEFAULT_ITEM_STATUS = "ITEM_CREATED";
     private static final String DEFAULT_CURRENCY = "USD";
     private static final String ROLE_BILL_TO_CUSTOMER = "BILL_TO_CUSTOMER";
@@ -446,6 +449,61 @@ public class OrderCompositeService {
             note.setUserId(request.getUserId());
         }
         return toNoteDto(orderNoteRepository.save(note));
+    }
+
+    public OrderHeaderDto updateOrderStatus(String orderId, OrderStatusChangeRequest request) {
+        if (request == null || isBlank(request.getStatusId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status is required");
+        }
+        OrderHeader header = getOrderHeader(orderId);
+        String statusId = request.getStatusId();
+        header.setStatusId(statusId);
+        orderHeaderRepository.save(header);
+        createOrderStatus(orderId, statusId);
+
+        if (STATUS_APPROVED.equals(statusId)) {
+            List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+            for (OrderItem item : items) {
+                item.setStatusId(ITEM_APPROVED);
+            }
+            orderItemRepository.saveAll(items);
+
+            for (OrderItem item : items) {
+                createItemStatus(orderId, item.getOrderItemSeqId(), ITEM_APPROVED);
+            }
+
+            if ("SALES_ORDER".equalsIgnoreCase(header.getOrderTypeId())) {
+                reserveInventoryForOrder(orderId);
+            }
+        }
+
+        return toHeaderDto(header);
+    }
+
+    public OrderItemDto updateOrderItemQuantity(
+            String orderId,
+            String orderItemSeqId,
+            OrderItemQuantityUpdateRequest request
+    ) {
+        if (request == null || request.getQuantity() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity is required");
+        }
+        OrderHeader header = getOrderHeader(orderId);
+        String statusId = header.getStatusId();
+        if (!STATUS_CREATED.equals(statusId) && !STATUS_APPROVED.equals(statusId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Order is not editable");
+        }
+
+        OrderItem item = orderItemRepository.findByOrderIdAndOrderItemSeqId(orderId, orderItemSeqId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order item not found"));
+        item.setQuantity(request.getQuantity());
+        orderItemRepository.save(item);
+
+        BigDecimal receivedQuantity = fetchReceivedQuantities(orderId)
+                .getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
+        BigDecimal remainingQuantity = Optional.ofNullable(item.getQuantity()).orElse(BigDecimal.ZERO)
+                .subtract(receivedQuantity);
+        return toItemDto(item, receivedQuantity, remainingQuantity);
     }
 
     public OrderHeaderDto approvePurchaseOrder(String orderId) {

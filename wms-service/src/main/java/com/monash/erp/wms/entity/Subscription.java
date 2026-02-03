@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class Subscription {
 
     @Id
@@ -51,300 +57,115 @@ public class Subscription {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getSubscriptionId() {
-        return subscriptionId;
-    }
-
-    public void setSubscriptionId(String subscriptionId) {
+public void setSubscriptionId(String subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getSubscriptionResourceId() {
-        return subscriptionResourceId;
-    }
-
-    public void setSubscriptionResourceId(String subscriptionResourceId) {
+public void setSubscriptionResourceId(String subscriptionResourceId) {
         this.subscriptionResourceId = subscriptionResourceId;
     }
-
-    public String getCommunicationEventId() {
-        return communicationEventId;
-    }
-
-    public void setCommunicationEventId(String communicationEventId) {
+public void setCommunicationEventId(String communicationEventId) {
         this.communicationEventId = communicationEventId;
     }
-
-    public String getContactMechId() {
-        return contactMechId;
-    }
-
-    public void setContactMechId(String contactMechId) {
+public void setContactMechId(String contactMechId) {
         this.contactMechId = contactMechId;
     }
-
-    public String getOriginatedFromPartyId() {
-        return originatedFromPartyId;
-    }
-
-    public void setOriginatedFromPartyId(String originatedFromPartyId) {
+public void setOriginatedFromPartyId(String originatedFromPartyId) {
         this.originatedFromPartyId = originatedFromPartyId;
     }
-
-    public String getOriginatedFromRoleTypeId() {
-        return originatedFromRoleTypeId;
-    }
-
-    public void setOriginatedFromRoleTypeId(String originatedFromRoleTypeId) {
+public void setOriginatedFromRoleTypeId(String originatedFromRoleTypeId) {
         this.originatedFromRoleTypeId = originatedFromRoleTypeId;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getRoleTypeId() {
-        return roleTypeId;
-    }
-
-    public void setRoleTypeId(String roleTypeId) {
+public void setRoleTypeId(String roleTypeId) {
         this.roleTypeId = roleTypeId;
     }
-
-    public String getPartyNeedId() {
-        return partyNeedId;
-    }
-
-    public void setPartyNeedId(String partyNeedId) {
+public void setPartyNeedId(String partyNeedId) {
         this.partyNeedId = partyNeedId;
     }
-
-    public String getNeedTypeId() {
-        return needTypeId;
-    }
-
-    public void setNeedTypeId(String needTypeId) {
+public void setNeedTypeId(String needTypeId) {
         this.needTypeId = needTypeId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getProductCategoryId() {
-        return productCategoryId;
-    }
-
-    public void setProductCategoryId(String productCategoryId) {
+public void setProductCategoryId(String productCategoryId) {
         this.productCategoryId = productCategoryId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getSubscriptionTypeId() {
-        return subscriptionTypeId;
-    }
-
-    public void setSubscriptionTypeId(String subscriptionTypeId) {
+public void setSubscriptionTypeId(String subscriptionTypeId) {
         this.subscriptionTypeId = subscriptionTypeId;
     }
-
-    public String getExternalSubscriptionId() {
-        return externalSubscriptionId;
-    }
-
-    public void setExternalSubscriptionId(String externalSubscriptionId) {
+public void setExternalSubscriptionId(String externalSubscriptionId) {
         this.externalSubscriptionId = externalSubscriptionId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public LocalDateTime getPurchaseFromDate() {
-        return purchaseFromDate;
-    }
-
-    public void setPurchaseFromDate(LocalDateTime purchaseFromDate) {
+public void setPurchaseFromDate(LocalDateTime purchaseFromDate) {
         this.purchaseFromDate = purchaseFromDate;
     }
-
-    public LocalDateTime getPurchaseThruDate() {
-        return purchaseThruDate;
-    }
-
-    public void setPurchaseThruDate(LocalDateTime purchaseThruDate) {
+public void setPurchaseThruDate(LocalDateTime purchaseThruDate) {
         this.purchaseThruDate = purchaseThruDate;
     }
-
-    public BigDecimal getMaxLifeTime() {
-        return maxLifeTime;
-    }
-
-    public void setMaxLifeTime(BigDecimal maxLifeTime) {
+public void setMaxLifeTime(BigDecimal maxLifeTime) {
         this.maxLifeTime = maxLifeTime;
     }
-
-    public String getMaxLifeTimeUomId() {
-        return maxLifeTimeUomId;
-    }
-
-    public void setMaxLifeTimeUomId(String maxLifeTimeUomId) {
+public void setMaxLifeTimeUomId(String maxLifeTimeUomId) {
         this.maxLifeTimeUomId = maxLifeTimeUomId;
     }
-
-    public BigDecimal getAvailableTime() {
-        return availableTime;
-    }
-
-    public void setAvailableTime(BigDecimal availableTime) {
+public void setAvailableTime(BigDecimal availableTime) {
         this.availableTime = availableTime;
     }
-
-    public String getAvailableTimeUomId() {
-        return availableTimeUomId;
-    }
-
-    public void setAvailableTimeUomId(String availableTimeUomId) {
+public void setAvailableTimeUomId(String availableTimeUomId) {
         this.availableTimeUomId = availableTimeUomId;
     }
-
-    public BigDecimal getUseCountLimit() {
-        return useCountLimit;
-    }
-
-    public void setUseCountLimit(BigDecimal useCountLimit) {
+public void setUseCountLimit(BigDecimal useCountLimit) {
         this.useCountLimit = useCountLimit;
     }
-
-    public BigDecimal getUseTime() {
-        return useTime;
-    }
-
-    public void setUseTime(BigDecimal useTime) {
+public void setUseTime(BigDecimal useTime) {
         this.useTime = useTime;
     }
-
-    public String getUseTimeUomId() {
-        return useTimeUomId;
-    }
-
-    public void setUseTimeUomId(String useTimeUomId) {
+public void setUseTimeUomId(String useTimeUomId) {
         this.useTimeUomId = useTimeUomId;
     }
-
-    public String getAutomaticExtend() {
-        return automaticExtend;
-    }
-
-    public void setAutomaticExtend(String automaticExtend) {
+public void setAutomaticExtend(String automaticExtend) {
         this.automaticExtend = automaticExtend;
     }
-
-    public BigDecimal getCanclAutmExtTime() {
-        return canclAutmExtTime;
-    }
-
-    public void setCanclAutmExtTime(BigDecimal canclAutmExtTime) {
+public void setCanclAutmExtTime(BigDecimal canclAutmExtTime) {
         this.canclAutmExtTime = canclAutmExtTime;
     }
-
-    public String getCanclAutmExtTimeUomId() {
-        return canclAutmExtTimeUomId;
-    }
-
-    public void setCanclAutmExtTimeUomId(String canclAutmExtTimeUomId) {
+public void setCanclAutmExtTimeUomId(String canclAutmExtTimeUomId) {
         this.canclAutmExtTimeUomId = canclAutmExtTimeUomId;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

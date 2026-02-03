@@ -1,5 +1,8 @@
 package com.monash.erp.mfg.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class WorkEffortInvRes {
 
     @Id
@@ -24,100 +30,40 @@ public class WorkEffortInvRes {
     private LocalDateTime promisedDatetime;
     private LocalDateTime currentPromisedDate;
     private String sequenceId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getWorkEffortId() {
-        return workEffortId;
-    }
-
-    public void setWorkEffortId(String workEffortId) {
+public void setWorkEffortId(String workEffortId) {
         this.workEffortId = workEffortId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getWegsProductId() {
-        return wegsProductId;
-    }
-
-    public void setWegsProductId(String wegsProductId) {
+public void setWegsProductId(String wegsProductId) {
         this.wegsProductId = wegsProductId;
     }
-
-    public String getReserveOrderEnumId() {
-        return reserveOrderEnumId;
-    }
-
-    public void setReserveOrderEnumId(String reserveOrderEnumId) {
+public void setReserveOrderEnumId(String reserveOrderEnumId) {
         this.reserveOrderEnumId = reserveOrderEnumId;
     }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
+public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
-
-    public String getQuantityNotAvailable() {
-        return quantityNotAvailable;
-    }
-
-    public void setQuantityNotAvailable(String quantityNotAvailable) {
+public void setQuantityNotAvailable(String quantityNotAvailable) {
         this.quantityNotAvailable = quantityNotAvailable;
     }
-
-    public LocalDateTime getReservedDatetime() {
-        return reservedDatetime;
-    }
-
-    public void setReservedDatetime(LocalDateTime reservedDatetime) {
+public void setReservedDatetime(LocalDateTime reservedDatetime) {
         this.reservedDatetime = reservedDatetime;
     }
-
-    public LocalDateTime getCreatedDatetime() {
-        return createdDatetime;
-    }
-
-    public void setCreatedDatetime(LocalDateTime createdDatetime) {
+public void setCreatedDatetime(LocalDateTime createdDatetime) {
         this.createdDatetime = createdDatetime;
     }
-
-    public LocalDateTime getPromisedDatetime() {
-        return promisedDatetime;
-    }
-
-    public void setPromisedDatetime(LocalDateTime promisedDatetime) {
+public void setPromisedDatetime(LocalDateTime promisedDatetime) {
         this.promisedDatetime = promisedDatetime;
     }
-
-    public LocalDateTime getCurrentPromisedDate() {
-        return currentPromisedDate;
-    }
-
-    public void setCurrentPromisedDate(LocalDateTime currentPromisedDate) {
+public void setCurrentPromisedDate(LocalDateTime currentPromisedDate) {
         this.currentPromisedDate = currentPromisedDate;
     }
-
-    public String getSequenceId() {
-        return sequenceId;
-    }
-
-    public void setSequenceId(String sequenceId) {
+public void setSequenceId(String sequenceId) {
         this.sequenceId = sequenceId;
     }
 

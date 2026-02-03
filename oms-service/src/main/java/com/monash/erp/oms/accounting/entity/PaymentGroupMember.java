@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,12 +12,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class PaymentGroupMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     private String paymentGroupId;
 
@@ -25,52 +30,22 @@ public class PaymentGroupMember {
     private LocalDateTime thruDate;
 
     private BigDecimal sequenceNum;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPaymentGroupId() {
-        return paymentGroupId;
-    }
-
-    public void setPaymentGroupId(String paymentGroupId) {
+public void setPaymentGroupId(String paymentGroupId) {
         this.paymentGroupId = paymentGroupId;
     }
-
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
+public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public BigDecimal getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(BigDecimal sequenceNum) {
+public void setSequenceNum(BigDecimal sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
 }

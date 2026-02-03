@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class BillingAccount {
 
     @Id
@@ -30,76 +36,31 @@ public class BillingAccount {
     private String description;
 
     private String externalAccountId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getBillingAccountId() {
-        return billingAccountId;
-    }
-
-    public void setBillingAccountId(String billingAccountId) {
+public void setBillingAccountId(String billingAccountId) {
         this.billingAccountId = billingAccountId;
     }
-
-    public BigDecimal getAccountLimit() {
-        return accountLimit;
-    }
-
-    public void setAccountLimit(BigDecimal accountLimit) {
+public void setAccountLimit(BigDecimal accountLimit) {
         this.accountLimit = accountLimit;
     }
-
-    public String getAccountCurrencyUomId() {
-        return accountCurrencyUomId;
-    }
-
-    public void setAccountCurrencyUomId(String accountCurrencyUomId) {
+public void setAccountCurrencyUomId(String accountCurrencyUomId) {
         this.accountCurrencyUomId = accountCurrencyUomId;
     }
-
-    public String getContactMechId() {
-        return contactMechId;
-    }
-
-    public void setContactMechId(String contactMechId) {
+public void setContactMechId(String contactMechId) {
         this.contactMechId = contactMechId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getExternalAccountId() {
-        return externalAccountId;
-    }
-
-    public void setExternalAccountId(String externalAccountId) {
+public void setExternalAccountId(String externalAccountId) {
         this.externalAccountId = externalAccountId;
     }
 }

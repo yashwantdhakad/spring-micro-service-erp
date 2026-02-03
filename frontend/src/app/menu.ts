@@ -437,6 +437,26 @@ export const menuItems = [
       },
       children: [
         {
+          path: '/jobs/boms',
+          name: 'MENU.BOMS',
+          nav: ['side'],
+          meta: {
+            title: 'MENU.BOMS',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
+        {
+          path: '/jobs/boms/create',
+          name: 'MENU.CREATE_BOM',
+          nav: ['side'],
+          meta: {
+            title: 'MENU.CREATE_BOM',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
+        {
           path: '/jobs',
           name: 'MENU.JOBS',
           nav: ['side'],

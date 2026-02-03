@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class AudioDataResource {
 
     @Id
@@ -14,28 +20,13 @@ public class AudioDataResource {
 
     private String dataResourceId;
     private String audioData;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getDataResourceId() {
-        return dataResourceId;
-    }
-
-    public void setDataResourceId(String dataResourceId) {
+public void setDataResourceId(String dataResourceId) {
         this.dataResourceId = dataResourceId;
     }
-
-    public String getAudioData() {
-        return audioData;
-    }
-
-    public void setAudioData(String audioData) {
+public void setAudioData(String audioData) {
         this.audioData = audioData;
     }
 

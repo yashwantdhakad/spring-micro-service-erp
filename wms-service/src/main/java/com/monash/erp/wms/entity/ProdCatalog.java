@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProdCatalog {
 
     @Id
@@ -21,84 +27,34 @@ public class ProdCatalog {
     private String templatePathPrefix;
     private String viewAllowPermReqd;
     private String purchaseAllowPermReqd;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProdCatalogId() {
-        return prodCatalogId;
-    }
-
-    public void setProdCatalogId(String prodCatalogId) {
+public void setProdCatalogId(String prodCatalogId) {
         this.prodCatalogId = prodCatalogId;
     }
-
-    public String getCatalogName() {
-        return catalogName;
-    }
-
-    public void setCatalogName(String catalogName) {
+public void setCatalogName(String catalogName) {
         this.catalogName = catalogName;
     }
-
-    public String getUseQuickAdd() {
-        return useQuickAdd;
-    }
-
-    public void setUseQuickAdd(String useQuickAdd) {
+public void setUseQuickAdd(String useQuickAdd) {
         this.useQuickAdd = useQuickAdd;
     }
-
-    public String getStyleSheet() {
-        return styleSheet;
-    }
-
-    public void setStyleSheet(String styleSheet) {
+public void setStyleSheet(String styleSheet) {
         this.styleSheet = styleSheet;
     }
-
-    public String getHeaderLogo() {
-        return headerLogo;
-    }
-
-    public void setHeaderLogo(String headerLogo) {
+public void setHeaderLogo(String headerLogo) {
         this.headerLogo = headerLogo;
     }
-
-    public String getContentPathPrefix() {
-        return contentPathPrefix;
-    }
-
-    public void setContentPathPrefix(String contentPathPrefix) {
+public void setContentPathPrefix(String contentPathPrefix) {
         this.contentPathPrefix = contentPathPrefix;
     }
-
-    public String getTemplatePathPrefix() {
-        return templatePathPrefix;
-    }
-
-    public void setTemplatePathPrefix(String templatePathPrefix) {
+public void setTemplatePathPrefix(String templatePathPrefix) {
         this.templatePathPrefix = templatePathPrefix;
     }
-
-    public String getViewAllowPermReqd() {
-        return viewAllowPermReqd;
-    }
-
-    public void setViewAllowPermReqd(String viewAllowPermReqd) {
+public void setViewAllowPermReqd(String viewAllowPermReqd) {
         this.viewAllowPermReqd = viewAllowPermReqd;
     }
-
-    public String getPurchaseAllowPermReqd() {
-        return purchaseAllowPermReqd;
-    }
-
-    public void setPurchaseAllowPermReqd(String purchaseAllowPermReqd) {
+public void setPurchaseAllowPermReqd(String purchaseAllowPermReqd) {
         this.purchaseAllowPermReqd = purchaseAllowPermReqd;
     }
 

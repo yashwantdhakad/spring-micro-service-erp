@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductReview {
 
     @Id
@@ -22,84 +28,34 @@ public class ProductReview {
     private LocalDateTime postedDateTime;
     private String productRating;
     private String productReview;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductReviewId() {
-        return productReviewId;
-    }
-
-    public void setProductReviewId(String productReviewId) {
+public void setProductReviewId(String productReviewId) {
         this.productReviewId = productReviewId;
     }
-
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
+public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getUserLoginId() {
-        return userLoginId;
-    }
-
-    public void setUserLoginId(String userLoginId) {
+public void setUserLoginId(String userLoginId) {
         this.userLoginId = userLoginId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getPostedAnonymous() {
-        return postedAnonymous;
-    }
-
-    public void setPostedAnonymous(String postedAnonymous) {
+public void setPostedAnonymous(String postedAnonymous) {
         this.postedAnonymous = postedAnonymous;
     }
-
-    public LocalDateTime getPostedDateTime() {
-        return postedDateTime;
-    }
-
-    public void setPostedDateTime(LocalDateTime postedDateTime) {
+public void setPostedDateTime(LocalDateTime postedDateTime) {
         this.postedDateTime = postedDateTime;
     }
-
-    public String getProductRating() {
-        return productRating;
-    }
-
-    public void setProductRating(String productRating) {
+public void setProductRating(String productRating) {
         this.productRating = productRating;
     }
-
-    public String getProductReview() {
-        return productReview;
-    }
-
-    public void setProductReview(String productReview) {
+public void setProductReview(String productReview) {
         this.productReview = productReview;
     }
 

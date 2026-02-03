@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ContentSearchResult {
 
     @Id
@@ -20,68 +26,28 @@ public class ContentSearchResult {
     private String numResults;
     private String secondsTotal;
     private LocalDateTime searchDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getContentSearchResultId() {
-        return contentSearchResultId;
-    }
-
-    public void setContentSearchResultId(String contentSearchResultId) {
+public void setContentSearchResultId(String contentSearchResultId) {
         this.contentSearchResultId = contentSearchResultId;
     }
-
-    public String getVisitId() {
-        return visitId;
-    }
-
-    public void setVisitId(String visitId) {
+public void setVisitId(String visitId) {
         this.visitId = visitId;
     }
-
-    public String getOrderByName() {
-        return orderByName;
-    }
-
-    public void setOrderByName(String orderByName) {
+public void setOrderByName(String orderByName) {
         this.orderByName = orderByName;
     }
-
-    public String getIsAscending() {
-        return isAscending;
-    }
-
-    public void setIsAscending(String isAscending) {
+public void setIsAscending(String isAscending) {
         this.isAscending = isAscending;
     }
-
-    public String getNumResults() {
-        return numResults;
-    }
-
-    public void setNumResults(String numResults) {
+public void setNumResults(String numResults) {
         this.numResults = numResults;
     }
-
-    public String getSecondsTotal() {
-        return secondsTotal;
-    }
-
-    public void setSecondsTotal(String secondsTotal) {
+public void setSecondsTotal(String secondsTotal) {
         this.secondsTotal = secondsTotal;
     }
-
-    public LocalDateTime getSearchDate() {
-        return searchDate;
-    }
-
-    public void setSearchDate(LocalDateTime searchDate) {
+public void setSearchDate(LocalDateTime searchDate) {
         this.searchDate = searchDate;
     }
 

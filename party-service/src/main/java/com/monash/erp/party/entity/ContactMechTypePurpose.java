@@ -1,11 +1,17 @@
 package com.monash.erp.party.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ContactMechTypePurpose {
 
     @Id
@@ -14,28 +20,13 @@ public class ContactMechTypePurpose {
 
     private String contactMechTypeId;
     private String contactMechPurposeTypeId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getContactMechTypeId() {
-        return contactMechTypeId;
-    }
-
-    public void setContactMechTypeId(String contactMechTypeId) {
+public void setContactMechTypeId(String contactMechTypeId) {
         this.contactMechTypeId = contactMechTypeId;
     }
-
-    public String getContactMechPurposeTypeId() {
-        return contactMechPurposeTypeId;
-    }
-
-    public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
+public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
         this.contactMechPurposeTypeId = contactMechPurposeTypeId;
     }
 

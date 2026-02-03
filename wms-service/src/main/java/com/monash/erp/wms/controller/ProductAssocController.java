@@ -1,5 +1,6 @@
 package com.monash.erp.wms.controller;
 
+import com.monash.erp.wms.dto.ProductAssocUpdateRequest;
 import com.monash.erp.wms.entity.ProductAssoc;
 import com.monash.erp.wms.service.ProductAssocService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.util.List;
 
@@ -46,9 +48,19 @@ public class ProductAssocController {
         return service.update(id, entity);
     }
 
+    @PatchMapping("/{id}")
+    public ProductAssoc updateFields(@PathVariable Long id, @RequestBody ProductAssocUpdateRequest request) {
+        return service.updateFields(id, request.getQuantity(), request.getFromDate(), request.getSequenceNum());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/expire")
+    public ProductAssoc expire(@PathVariable Long id) {
+        return service.expire(id);
     }
 }

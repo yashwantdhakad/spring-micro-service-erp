@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class AccommodationMap {
 
     @Id
@@ -24,84 +30,34 @@ public class AccommodationMap {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getAccommodationMapId() {
-        return accommodationMapId;
-    }
-
-    public void setAccommodationMapId(String accommodationMapId) {
+public void setAccommodationMapId(String accommodationMapId) {
         this.accommodationMapId = accommodationMapId;
     }
-
-    public String getAccommodationClassId() {
-        return accommodationClassId;
-    }
-
-    public void setAccommodationClassId(String accommodationClassId) {
+public void setAccommodationClassId(String accommodationClassId) {
         this.accommodationClassId = accommodationClassId;
     }
-
-    public String getFixedAssetId() {
-        return fixedAssetId;
-    }
-
-    public void setFixedAssetId(String fixedAssetId) {
+public void setFixedAssetId(String fixedAssetId) {
         this.fixedAssetId = fixedAssetId;
     }
-
-    public String getAccommodationMapTypeId() {
-        return accommodationMapTypeId;
-    }
-
-    public void setAccommodationMapTypeId(String accommodationMapTypeId) {
+public void setAccommodationMapTypeId(String accommodationMapTypeId) {
         this.accommodationMapTypeId = accommodationMapTypeId;
     }
-
-    public BigDecimal getNumberOfSpaces() {
-        return numberOfSpaces;
-    }
-
-    public void setNumberOfSpaces(BigDecimal numberOfSpaces) {
+public void setNumberOfSpaces(BigDecimal numberOfSpaces) {
         this.numberOfSpaces = numberOfSpaces;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

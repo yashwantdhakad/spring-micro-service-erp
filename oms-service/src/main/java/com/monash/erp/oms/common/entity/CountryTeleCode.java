@@ -1,11 +1,17 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class CountryTeleCode {
 
     @Id
@@ -15,28 +21,13 @@ public class CountryTeleCode {
     private String countryCode;
 
     private String teleCode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
+public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
     }
-
-    public String getTeleCode() {
-        return teleCode;
-    }
-
-    public void setTeleCode(String teleCode) {
+public void setTeleCode(String teleCode) {
         this.teleCode = teleCode;
     }
 }

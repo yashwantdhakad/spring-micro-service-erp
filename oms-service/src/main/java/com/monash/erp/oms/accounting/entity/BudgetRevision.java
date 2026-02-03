@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class BudgetRevision {
 
     @Id
@@ -19,36 +25,16 @@ public class BudgetRevision {
     private String revisionSeqId;
 
     private LocalDateTime dateRevised;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getBudgetId() {
-        return budgetId;
-    }
-
-    public void setBudgetId(String budgetId) {
+public void setBudgetId(String budgetId) {
         this.budgetId = budgetId;
     }
-
-    public String getRevisionSeqId() {
-        return revisionSeqId;
-    }
-
-    public void setRevisionSeqId(String revisionSeqId) {
+public void setRevisionSeqId(String revisionSeqId) {
         this.revisionSeqId = revisionSeqId;
     }
-
-    public LocalDateTime getDateRevised() {
-        return dateRevised;
-    }
-
-    public void setDateRevised(LocalDateTime dateRevised) {
+public void setDateRevised(LocalDateTime dateRevised) {
         this.dateRevised = dateRevised;
     }
 }

@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class FixedAssetMeter {
 
     @Id
@@ -28,68 +34,28 @@ public class FixedAssetMeter {
     private String maintHistSeqId;
 
     private String workEffortId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getFixedAssetId() {
-        return fixedAssetId;
-    }
-
-    public void setFixedAssetId(String fixedAssetId) {
+public void setFixedAssetId(String fixedAssetId) {
         this.fixedAssetId = fixedAssetId;
     }
-
-    public String getProductMeterTypeId() {
-        return productMeterTypeId;
-    }
-
-    public void setProductMeterTypeId(String productMeterTypeId) {
+public void setProductMeterTypeId(String productMeterTypeId) {
         this.productMeterTypeId = productMeterTypeId;
     }
-
-    public LocalDateTime getReadingDate() {
-        return readingDate;
-    }
-
-    public void setReadingDate(LocalDateTime readingDate) {
+public void setReadingDate(LocalDateTime readingDate) {
         this.readingDate = readingDate;
     }
-
-    public BigDecimal getMeterValue() {
-        return meterValue;
-    }
-
-    public void setMeterValue(BigDecimal meterValue) {
+public void setMeterValue(BigDecimal meterValue) {
         this.meterValue = meterValue;
     }
-
-    public String getReadingReasonEnumId() {
-        return readingReasonEnumId;
-    }
-
-    public void setReadingReasonEnumId(String readingReasonEnumId) {
+public void setReadingReasonEnumId(String readingReasonEnumId) {
         this.readingReasonEnumId = readingReasonEnumId;
     }
-
-    public String getMaintHistSeqId() {
-        return maintHistSeqId;
-    }
-
-    public void setMaintHistSeqId(String maintHistSeqId) {
+public void setMaintHistSeqId(String maintHistSeqId) {
         this.maintHistSeqId = maintHistSeqId;
     }
-
-    public String getWorkEffortId() {
-        return workEffortId;
-    }
-
-    public void setWorkEffortId(String workEffortId) {
+public void setWorkEffortId(String workEffortId) {
         this.workEffortId = workEffortId;
     }
 }

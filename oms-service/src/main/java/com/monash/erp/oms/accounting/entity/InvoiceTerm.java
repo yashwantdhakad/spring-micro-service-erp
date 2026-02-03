@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,12 +11,14 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class InvoiceTerm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     private String invoiceTermId;
 
@@ -32,84 +37,34 @@ public class InvoiceTerm {
     private String description;
 
     private String uomId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getInvoiceTermId() {
-        return invoiceTermId;
-    }
-
-    public void setInvoiceTermId(String invoiceTermId) {
+public void setInvoiceTermId(String invoiceTermId) {
         this.invoiceTermId = invoiceTermId;
     }
-
-    public String getTermTypeId() {
-        return termTypeId;
-    }
-
-    public void setTermTypeId(String termTypeId) {
+public void setTermTypeId(String termTypeId) {
         this.termTypeId = termTypeId;
     }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
+public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
     }
-
-    public String getInvoiceItemSeqId() {
-        return invoiceItemSeqId;
-    }
-
-    public void setInvoiceItemSeqId(String invoiceItemSeqId) {
+public void setInvoiceItemSeqId(String invoiceItemSeqId) {
         this.invoiceItemSeqId = invoiceItemSeqId;
     }
-
-    public BigDecimal getTermValue() {
-        return termValue;
-    }
-
-    public void setTermValue(BigDecimal termValue) {
+public void setTermValue(BigDecimal termValue) {
         this.termValue = termValue;
     }
-
-    public BigDecimal getTermDays() {
-        return termDays;
-    }
-
-    public void setTermDays(BigDecimal termDays) {
+public void setTermDays(BigDecimal termDays) {
         this.termDays = termDays;
     }
-
-    public String getTextValue() {
-        return textValue;
-    }
-
-    public void setTextValue(String textValue) {
+public void setTextValue(String textValue) {
         this.textValue = textValue;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getUomId() {
-        return uomId;
-    }
-
-    public void setUomId(String uomId) {
+public void setUomId(String uomId) {
         this.uomId = uomId;
     }
 }

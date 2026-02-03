@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +24,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_order_header_type_order_name", columnList = "order_type_id, order_name")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderHeader extends AuditableEntity {
 
     @Id
@@ -57,255 +63,97 @@ public class OrderHeader extends AuditableEntity {
     private String isViewed;
     private String workEffortId;
     private String overrideCreditLimit;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderTypeId() {
-        return orderTypeId;
-    }
-
-    public void setOrderTypeId(String orderTypeId) {
+public void setOrderTypeId(String orderTypeId) {
         this.orderTypeId = orderTypeId;
     }
-
-    public String getOrderName() {
-        return orderName;
-    }
-
-    public void setOrderName(String orderName) {
+public void setOrderName(String orderName) {
         this.orderName = orderName;
     }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
+public void setExternalId(String externalId) {
         this.externalId = externalId;
     }
-
-    public String getSalesChannelEnumId() {
-        return salesChannelEnumId;
-    }
-
-    public void setSalesChannelEnumId(String salesChannelEnumId) {
+public void setSalesChannelEnumId(String salesChannelEnumId) {
         this.salesChannelEnumId = salesChannelEnumId;
     }
-
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
+public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
-
-    public String getPriority() {
-        return priority;
-    }
-
-    public void setPriority(String priority) {
+public void setPriority(String priority) {
         this.priority = priority;
     }
-
-    public LocalDateTime getEntryDate() {
-        return entryDate;
-    }
-
-    public void setEntryDate(LocalDateTime entryDate) {
+public void setEntryDate(LocalDateTime entryDate) {
         this.entryDate = entryDate;
     }
-
-    public LocalDateTime getPickSheetPrintedDate() {
-        return pickSheetPrintedDate;
-    }
-
-    public void setPickSheetPrintedDate(LocalDateTime pickSheetPrintedDate) {
+public void setPickSheetPrintedDate(LocalDateTime pickSheetPrintedDate) {
         this.pickSheetPrintedDate = pickSheetPrintedDate;
     }
-
-    public String getVisitId() {
-        return visitId;
-    }
-
-    public void setVisitId(String visitId) {
+public void setVisitId(String visitId) {
         this.visitId = visitId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
+public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
-
-    public String getFirstAttemptOrderId() {
-        return firstAttemptOrderId;
-    }
-
-    public void setFirstAttemptOrderId(String firstAttemptOrderId) {
+public void setFirstAttemptOrderId(String firstAttemptOrderId) {
         this.firstAttemptOrderId = firstAttemptOrderId;
     }
-
-    public String getCurrencyUom() {
-        return currencyUom;
-    }
-
-    public void setCurrencyUom(String currencyUom) {
+public void setCurrencyUom(String currencyUom) {
         this.currencyUom = currencyUom;
     }
-
-    public String getSyncStatusId() {
-        return syncStatusId;
-    }
-
-    public void setSyncStatusId(String syncStatusId) {
+public void setSyncStatusId(String syncStatusId) {
         this.syncStatusId = syncStatusId;
     }
-
-    public String getBillingAccountId() {
-        return billingAccountId;
-    }
-
-    public void setBillingAccountId(String billingAccountId) {
+public void setBillingAccountId(String billingAccountId) {
         this.billingAccountId = billingAccountId;
     }
-
-    public String getOriginFacilityId() {
-        return originFacilityId;
-    }
-
-    public void setOriginFacilityId(String originFacilityId) {
+public void setOriginFacilityId(String originFacilityId) {
         this.originFacilityId = originFacilityId;
     }
-
-    public String getWebSiteId() {
-        return webSiteId;
-    }
-
-    public void setWebSiteId(String webSiteId) {
+public void setWebSiteId(String webSiteId) {
         this.webSiteId = webSiteId;
     }
-
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
+public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
-
-    public String getTerminalId() {
-        return terminalId;
-    }
-
-    public void setTerminalId(String terminalId) {
+public void setTerminalId(String terminalId) {
         this.terminalId = terminalId;
     }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
+public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
-
-    public String getAutoOrderShoppingListId() {
-        return autoOrderShoppingListId;
-    }
-
-    public void setAutoOrderShoppingListId(String autoOrderShoppingListId) {
+public void setAutoOrderShoppingListId(String autoOrderShoppingListId) {
         this.autoOrderShoppingListId = autoOrderShoppingListId;
     }
-
-    public String getNeedsInventoryIssuance() {
-        return needsInventoryIssuance;
-    }
-
-    public void setNeedsInventoryIssuance(String needsInventoryIssuance) {
+public void setNeedsInventoryIssuance(String needsInventoryIssuance) {
         this.needsInventoryIssuance = needsInventoryIssuance;
     }
-
-    public String getIsRushOrder() {
-        return isRushOrder;
-    }
-
-    public void setIsRushOrder(String isRushOrder) {
+public void setIsRushOrder(String isRushOrder) {
         this.isRushOrder = isRushOrder;
     }
-
-    public String getInternalCode() {
-        return internalCode;
-    }
-
-    public void setInternalCode(String internalCode) {
+public void setInternalCode(String internalCode) {
         this.internalCode = internalCode;
     }
-
-    public BigDecimal getRemainingSubTotal() {
-        return remainingSubTotal;
-    }
-
-    public void setRemainingSubTotal(BigDecimal remainingSubTotal) {
+public void setRemainingSubTotal(BigDecimal remainingSubTotal) {
         this.remainingSubTotal = remainingSubTotal;
     }
-
-    public BigDecimal getGrandTotal() {
-        return grandTotal;
-    }
-
-    public void setGrandTotal(BigDecimal grandTotal) {
+public void setGrandTotal(BigDecimal grandTotal) {
         this.grandTotal = grandTotal;
     }
-
-    public String getIsViewed() {
-        return isViewed;
-    }
-
-    public void setIsViewed(String isViewed) {
+public void setIsViewed(String isViewed) {
         this.isViewed = isViewed;
     }
-
-
-
-
-    public String getWorkEffortId() {
-        return workEffortId;
-    }
-
-    public void setWorkEffortId(String workEffortId) {
+public void setWorkEffortId(String workEffortId) {
         this.workEffortId = workEffortId;
     }
-
-    public String getOverrideCreditLimit() {
-        return overrideCreditLimit;
-    }
-
-    public void setOverrideCreditLimit(String overrideCreditLimit) {
+public void setOverrideCreditLimit(String overrideCreditLimit) {
         this.overrideCreditLimit = overrideCreditLimit;
     }
 

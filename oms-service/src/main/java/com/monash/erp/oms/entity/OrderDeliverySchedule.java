@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderDeliverySchedule extends AuditableEntity {
 
     @Id
@@ -26,104 +32,41 @@ public class OrderDeliverySchedule extends AuditableEntity {
     private BigDecimal totalWeight;
     private String totalWeightUomId;
     private String statusId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public LocalDateTime getEstimatedReadyDate() {
-        return estimatedReadyDate;
-    }
-
-    public void setEstimatedReadyDate(LocalDateTime estimatedReadyDate) {
+public void setEstimatedReadyDate(LocalDateTime estimatedReadyDate) {
         this.estimatedReadyDate = estimatedReadyDate;
     }
-
-    public BigDecimal getCartons() {
-        return cartons;
-    }
-
-    public void setCartons(BigDecimal cartons) {
+public void setCartons(BigDecimal cartons) {
         this.cartons = cartons;
     }
-
-    public BigDecimal getSkidsPallets() {
-        return skidsPallets;
-    }
-
-    public void setSkidsPallets(BigDecimal skidsPallets) {
+public void setSkidsPallets(BigDecimal skidsPallets) {
         this.skidsPallets = skidsPallets;
     }
-
-    public BigDecimal getUnitsPieces() {
-        return unitsPieces;
-    }
-
-    public void setUnitsPieces(BigDecimal unitsPieces) {
+public void setUnitsPieces(BigDecimal unitsPieces) {
         this.unitsPieces = unitsPieces;
     }
-
-    public BigDecimal getTotalCubicSize() {
-        return totalCubicSize;
-    }
-
-    public void setTotalCubicSize(BigDecimal totalCubicSize) {
+public void setTotalCubicSize(BigDecimal totalCubicSize) {
         this.totalCubicSize = totalCubicSize;
     }
-
-    public String getTotalCubicUomId() {
-        return totalCubicUomId;
-    }
-
-    public void setTotalCubicUomId(String totalCubicUomId) {
+public void setTotalCubicUomId(String totalCubicUomId) {
         this.totalCubicUomId = totalCubicUomId;
     }
-
-    public BigDecimal getTotalWeight() {
-        return totalWeight;
-    }
-
-    public void setTotalWeight(BigDecimal totalWeight) {
+public void setTotalWeight(BigDecimal totalWeight) {
         this.totalWeight = totalWeight;
     }
-
-    public String getTotalWeightUomId() {
-        return totalWeightUomId;
-    }
-
-    public void setTotalWeightUomId(String totalWeightUomId) {
+public void setTotalWeightUomId(String totalWeightUomId) {
         this.totalWeightUomId = totalWeightUomId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-
-
 
 }

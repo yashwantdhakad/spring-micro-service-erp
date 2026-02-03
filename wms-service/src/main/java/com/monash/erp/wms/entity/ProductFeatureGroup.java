@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductFeatureGroup {
 
     @Id
@@ -14,28 +20,13 @@ public class ProductFeatureGroup {
 
     private String productFeatureGroupId;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductFeatureGroupId() {
-        return productFeatureGroupId;
-    }
-
-    public void setProductFeatureGroupId(String productFeatureGroupId) {
+public void setProductFeatureGroupId(String productFeatureGroupId) {
         this.productFeatureGroupId = productFeatureGroupId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

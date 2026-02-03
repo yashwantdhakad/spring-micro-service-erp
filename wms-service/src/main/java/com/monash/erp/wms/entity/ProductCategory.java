@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +21,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_product_category_name", columnList = "CATEGORY_NAME")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductCategory {
 
     @Id
@@ -72,140 +78,55 @@ public class ProductCategory {
 
     @Column(name = "IS_COUNTABLE", length = 1)
     private String isCountable;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductCategoryId() {
-        return productCategoryId;
-    }
-
-    public void setProductCategoryId(String productCategoryId) {
+public void setProductCategoryId(String productCategoryId) {
         this.productCategoryId = productCategoryId;
     }
-
-    public String getProductCategoryTypeId() {
-        return productCategoryTypeId;
-    }
-
-    public void setProductCategoryTypeId(String productCategoryTypeId) {
+public void setProductCategoryTypeId(String productCategoryTypeId) {
         this.productCategoryTypeId = productCategoryTypeId;
     }
-
-    public String getPrimaryParentCategoryId() {
-        return primaryParentCategoryId;
-    }
-
-    public void setPrimaryParentCategoryId(String primaryParentCategoryId) {
+public void setPrimaryParentCategoryId(String primaryParentCategoryId) {
         this.primaryParentCategoryId = primaryParentCategoryId;
     }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
+public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getLongDescription() {
-        return longDescription;
-    }
-
-    public void setLongDescription(String longDescription) {
+public void setLongDescription(String longDescription) {
         this.longDescription = longDescription;
     }
-
-    public String getCategoryImageUrl() {
-        return categoryImageUrl;
-    }
-
-    public void setCategoryImageUrl(String categoryImageUrl) {
+public void setCategoryImageUrl(String categoryImageUrl) {
         this.categoryImageUrl = categoryImageUrl;
     }
-
-    public String getLinkOneImageUrl() {
-        return linkOneImageUrl;
-    }
-
-    public void setLinkOneImageUrl(String linkOneImageUrl) {
+public void setLinkOneImageUrl(String linkOneImageUrl) {
         this.linkOneImageUrl = linkOneImageUrl;
     }
-
-    public String getLinkTwoImageUrl() {
-        return linkTwoImageUrl;
-    }
-
-    public void setLinkTwoImageUrl(String linkTwoImageUrl) {
+public void setLinkTwoImageUrl(String linkTwoImageUrl) {
         this.linkTwoImageUrl = linkTwoImageUrl;
     }
-
-    public String getDetailScreen() {
-        return detailScreen;
-    }
-
-    public void setDetailScreen(String detailScreen) {
+public void setDetailScreen(String detailScreen) {
         this.detailScreen = detailScreen;
     }
-
-    public String getShowInSelect() {
-        return showInSelect;
-    }
-
-    public void setShowInSelect(String showInSelect) {
+public void setShowInSelect(String showInSelect) {
         this.showInSelect = showInSelect;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getIsCountable() {
-        return isCountable;
-    }
-
-    public void setIsCountable(String isCountable) {
+public void setIsCountable(String isCountable) {
         this.isCountable = isCountable;
     }
 }

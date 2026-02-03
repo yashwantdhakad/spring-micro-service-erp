@@ -1,43 +1,33 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class InvoiceNote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String invoiceId;
 
     private String noteId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
+public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
     }
-
-    public String getNoteId() {
-        return noteId;
-    }
-
-    public void setNoteId(String noteId) {
+public void setNoteId(String noteId) {
         this.noteId = noteId;
     }
 }

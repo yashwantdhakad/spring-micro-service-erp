@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class NoteData {
 
     @Id
@@ -26,108 +32,43 @@ public class NoteData {
     private String moreInfoItemId;
     private String noteParty;
     private String createdByUserLogin;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getNoteId() {
-        return noteId;
-    }
-
-    public void setNoteId(String noteId) {
+public void setNoteId(String noteId) {
         this.noteId = noteId;
     }
-
-    public String getNoteName() {
-        return noteName;
-    }
-
-    public void setNoteName(String noteName) {
+public void setNoteName(String noteName) {
         this.noteName = noteName;
     }
-
-    public String getNoteInfo() {
-        return noteInfo;
-    }
-
-    public void setNoteInfo(String noteInfo) {
+public void setNoteInfo(String noteInfo) {
         this.noteInfo = noteInfo;
     }
-
-    public LocalDateTime getNoteDateTime() {
-        return noteDateTime;
-    }
-
-    public void setNoteDateTime(LocalDateTime noteDateTime) {
+public void setNoteDateTime(LocalDateTime noteDateTime) {
         this.noteDateTime = noteDateTime;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getMoreInfoPortletId() {
-        return moreInfoPortletId;
-    }
-
-    public void setMoreInfoPortletId(String moreInfoPortletId) {
+public void setMoreInfoPortletId(String moreInfoPortletId) {
         this.moreInfoPortletId = moreInfoPortletId;
     }
-
-    public String getMoreInfoItemId() {
-        return moreInfoItemId;
-    }
-
-    public void setMoreInfoItemId(String moreInfoItemId) {
+public void setMoreInfoItemId(String moreInfoItemId) {
         this.moreInfoItemId = moreInfoItemId;
     }
-
-    public String getNoteParty() {
-        return noteParty;
-    }
-
-    public void setNoteParty(String noteParty) {
+public void setNoteParty(String noteParty) {
         this.noteParty = noteParty;
     }
-
-    public String getCreatedByUserLogin() {
-        return createdByUserLogin;
-    }
-
-    public void setCreatedByUserLogin(String createdByUserLogin) {
+public void setCreatedByUserLogin(String createdByUserLogin) {
         this.createdByUserLogin = createdByUserLogin;
     }
 

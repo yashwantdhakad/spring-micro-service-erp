@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +19,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_facility_name", columnList = "facility_name")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class Facility {
 
     @Id
@@ -40,156 +46,61 @@ public class Facility {
     private String defaultWeightUomId;
     private String geoPointId;
     private String facilityLevel;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getFacilityId() {
-        return facilityId;
-    }
-
-    public void setFacilityId(String facilityId) {
+public void setFacilityId(String facilityId) {
         this.facilityId = facilityId;
     }
-
-    public String getFacilityTypeId() {
-        return facilityTypeId;
-    }
-
-    public void setFacilityTypeId(String facilityTypeId) {
+public void setFacilityTypeId(String facilityTypeId) {
         this.facilityTypeId = facilityTypeId;
     }
-
-    public String getParentFacilityId() {
-        return parentFacilityId;
-    }
-
-    public void setParentFacilityId(String parentFacilityId) {
+public void setParentFacilityId(String parentFacilityId) {
         this.parentFacilityId = parentFacilityId;
     }
-
-    public String getOwnerPartyId() {
-        return ownerPartyId;
-    }
-
-    public void setOwnerPartyId(String ownerPartyId) {
+public void setOwnerPartyId(String ownerPartyId) {
         this.ownerPartyId = ownerPartyId;
     }
-
-    public String getDefaultInventoryItemTypeId() {
-        return defaultInventoryItemTypeId;
-    }
-
-    public void setDefaultInventoryItemTypeId(String defaultInventoryItemTypeId) {
+public void setDefaultInventoryItemTypeId(String defaultInventoryItemTypeId) {
         this.defaultInventoryItemTypeId = defaultInventoryItemTypeId;
     }
-
-    public String getFacilityName() {
-        return facilityName;
-    }
-
-    public void setFacilityName(String facilityName) {
+public void setFacilityName(String facilityName) {
         this.facilityName = facilityName;
     }
-
-    public String getPrimaryFacilityGroupId() {
-        return primaryFacilityGroupId;
-    }
-
-    public void setPrimaryFacilityGroupId(String primaryFacilityGroupId) {
+public void setPrimaryFacilityGroupId(String primaryFacilityGroupId) {
         this.primaryFacilityGroupId = primaryFacilityGroupId;
     }
-
-    public String getFacilitySize() {
-        return facilitySize;
-    }
-
-    public void setFacilitySize(String facilitySize) {
+public void setFacilitySize(String facilitySize) {
         this.facilitySize = facilitySize;
     }
-
-    public String getFacilitySizeUomId() {
-        return facilitySizeUomId;
-    }
-
-    public void setFacilitySizeUomId(String facilitySizeUomId) {
+public void setFacilitySizeUomId(String facilitySizeUomId) {
         this.facilitySizeUomId = facilitySizeUomId;
     }
-
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
+public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
-
-    public String getDefaultDaysToShip() {
-        return defaultDaysToShip;
-    }
-
-    public void setDefaultDaysToShip(String defaultDaysToShip) {
+public void setDefaultDaysToShip(String defaultDaysToShip) {
         this.defaultDaysToShip = defaultDaysToShip;
     }
-
-    public LocalDateTime getOpenedDate() {
-        return openedDate;
-    }
-
-    public void setOpenedDate(LocalDateTime openedDate) {
+public void setOpenedDate(LocalDateTime openedDate) {
         this.openedDate = openedDate;
     }
-
-    public LocalDateTime getClosedDate() {
-        return closedDate;
-    }
-
-    public void setClosedDate(LocalDateTime closedDate) {
+public void setClosedDate(LocalDateTime closedDate) {
         this.closedDate = closedDate;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getDefaultDimensionUomId() {
-        return defaultDimensionUomId;
-    }
-
-    public void setDefaultDimensionUomId(String defaultDimensionUomId) {
+public void setDefaultDimensionUomId(String defaultDimensionUomId) {
         this.defaultDimensionUomId = defaultDimensionUomId;
     }
-
-    public String getDefaultWeightUomId() {
-        return defaultWeightUomId;
-    }
-
-    public void setDefaultWeightUomId(String defaultWeightUomId) {
+public void setDefaultWeightUomId(String defaultWeightUomId) {
         this.defaultWeightUomId = defaultWeightUomId;
     }
-
-    public String getGeoPointId() {
-        return geoPointId;
-    }
-
-    public void setGeoPointId(String geoPointId) {
+public void setGeoPointId(String geoPointId) {
         this.geoPointId = geoPointId;
     }
-
-    public String getFacilityLevel() {
-        return facilityLevel;
-    }
-
-    public void setFacilityLevel(String facilityLevel) {
+public void setFacilityLevel(String facilityLevel) {
         this.facilityLevel = facilityLevel;
     }
 

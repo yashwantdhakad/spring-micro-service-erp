@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class QuoteContactMech extends AuditableEntity {
 
     @Id
@@ -17,40 +23,17 @@ public class QuoteContactMech extends AuditableEntity {
     private String quoteId;
     private String contactMechPurposeTypeId;
     private String contactMechId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getQuoteId() {
-        return quoteId;
-    }
-
-    public void setQuoteId(String quoteId) {
+public void setQuoteId(String quoteId) {
         this.quoteId = quoteId;
     }
-
-    public String getContactMechPurposeTypeId() {
-        return contactMechPurposeTypeId;
-    }
-
-    public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
+public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
         this.contactMechPurposeTypeId = contactMechPurposeTypeId;
     }
-
-    public String getContactMechId() {
-        return contactMechId;
-    }
-
-    public void setContactMechId(String contactMechId) {
+public void setContactMechId(String contactMechId) {
         this.contactMechId = contactMechId;
     }
-
-
-
 
 }

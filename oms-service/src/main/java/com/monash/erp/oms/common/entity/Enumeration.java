@@ -1,11 +1,17 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class Enumeration {
 
     @Id
@@ -21,52 +27,22 @@ public class Enumeration {
     private String sequenceId;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getEnumId() {
-        return enumId;
-    }
-
-    public void setEnumId(String enumId) {
+public void setEnumId(String enumId) {
         this.enumId = enumId;
     }
-
-    public String getEnumTypeId() {
-        return enumTypeId;
-    }
-
-    public void setEnumTypeId(String enumTypeId) {
+public void setEnumTypeId(String enumTypeId) {
         this.enumTypeId = enumTypeId;
     }
-
-    public String getEnumCode() {
-        return enumCode;
-    }
-
-    public void setEnumCode(String enumCode) {
+public void setEnumCode(String enumCode) {
         this.enumCode = enumCode;
     }
-
-    public String getSequenceId() {
-        return sequenceId;
-    }
-
-    public void setSequenceId(String sequenceId) {
+public void setSequenceId(String sequenceId) {
         this.sequenceId = sequenceId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

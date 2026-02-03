@@ -1,5 +1,8 @@
 package com.monash.erp.party.security.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +17,9 @@ import jakarta.persistence.Table;
                 @Index(name = "idx_security_permission_permission_id", columnList = "permission_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class SecurityPermission {
 
     @Id
@@ -23,28 +29,13 @@ public class SecurityPermission {
     private String permissionId;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPermissionId() {
-        return permissionId;
-    }
-
-    public void setPermissionId(String permissionId) {
+public void setPermissionId(String permissionId) {
         this.permissionId = permissionId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

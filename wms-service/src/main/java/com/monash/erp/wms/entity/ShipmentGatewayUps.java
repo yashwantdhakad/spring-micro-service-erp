@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ShipmentGatewayUps {
 
     @Id
@@ -33,180 +39,70 @@ public class ShipmentGatewayUps {
     private String codFundsCode;
     private String defaultReturnLabelMemo;
     private String defaultReturnLabelSubject;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getShipmentGatewayConfigId() {
-        return shipmentGatewayConfigId;
-    }
-
-    public void setShipmentGatewayConfigId(String shipmentGatewayConfigId) {
+public void setShipmentGatewayConfigId(String shipmentGatewayConfigId) {
         this.shipmentGatewayConfigId = shipmentGatewayConfigId;
     }
-
-    public String getConnectUrl() {
-        return connectUrl;
-    }
-
-    public void setConnectUrl(String connectUrl) {
+public void setConnectUrl(String connectUrl) {
         this.connectUrl = connectUrl;
     }
-
-    public String getConnectTimeout() {
-        return connectTimeout;
-    }
-
-    public void setConnectTimeout(String connectTimeout) {
+public void setConnectTimeout(String connectTimeout) {
         this.connectTimeout = connectTimeout;
     }
-
-    public String getShipperNumber() {
-        return shipperNumber;
-    }
-
-    public void setShipperNumber(String shipperNumber) {
+public void setShipperNumber(String shipperNumber) {
         this.shipperNumber = shipperNumber;
     }
-
-    public String getBillShipperAccountNumber() {
-        return billShipperAccountNumber;
-    }
-
-    public void setBillShipperAccountNumber(String billShipperAccountNumber) {
+public void setBillShipperAccountNumber(String billShipperAccountNumber) {
         this.billShipperAccountNumber = billShipperAccountNumber;
     }
-
-    public String getAccessLicenseNumber() {
-        return accessLicenseNumber;
-    }
-
-    public void setAccessLicenseNumber(String accessLicenseNumber) {
+public void setAccessLicenseNumber(String accessLicenseNumber) {
         this.accessLicenseNumber = accessLicenseNumber;
     }
-
-    public String getAccessUserId() {
-        return accessUserId;
-    }
-
-    public void setAccessUserId(String accessUserId) {
+public void setAccessUserId(String accessUserId) {
         this.accessUserId = accessUserId;
     }
-
-    public String getAccessPassword() {
-        return accessPassword;
-    }
-
-    public void setAccessPassword(String accessPassword) {
+public void setAccessPassword(String accessPassword) {
         this.accessPassword = accessPassword;
     }
-
-    public String getSaveCertInfo() {
-        return saveCertInfo;
-    }
-
-    public void setSaveCertInfo(String saveCertInfo) {
+public void setSaveCertInfo(String saveCertInfo) {
         this.saveCertInfo = saveCertInfo;
     }
-
-    public String getSaveCertPath() {
-        return saveCertPath;
-    }
-
-    public void setSaveCertPath(String saveCertPath) {
+public void setSaveCertPath(String saveCertPath) {
         this.saveCertPath = saveCertPath;
     }
-
-    public String getShipperPickupType() {
-        return shipperPickupType;
-    }
-
-    public void setShipperPickupType(String shipperPickupType) {
+public void setShipperPickupType(String shipperPickupType) {
         this.shipperPickupType = shipperPickupType;
     }
-
-    public String getCustomerClassification() {
-        return customerClassification;
-    }
-
-    public void setCustomerClassification(String customerClassification) {
+public void setCustomerClassification(String customerClassification) {
         this.customerClassification = customerClassification;
     }
-
-    public String getMaxEstimateWeight() {
-        return maxEstimateWeight;
-    }
-
-    public void setMaxEstimateWeight(String maxEstimateWeight) {
+public void setMaxEstimateWeight(String maxEstimateWeight) {
         this.maxEstimateWeight = maxEstimateWeight;
     }
-
-    public String getMinEstimateWeight() {
-        return minEstimateWeight;
-    }
-
-    public void setMinEstimateWeight(String minEstimateWeight) {
+public void setMinEstimateWeight(String minEstimateWeight) {
         this.minEstimateWeight = minEstimateWeight;
     }
-
-    public String getCodAllowCod() {
-        return codAllowCod;
-    }
-
-    public void setCodAllowCod(String codAllowCod) {
+public void setCodAllowCod(String codAllowCod) {
         this.codAllowCod = codAllowCod;
     }
-
-    public String getCodSurchargeAmount() {
-        return codSurchargeAmount;
-    }
-
-    public void setCodSurchargeAmount(String codSurchargeAmount) {
+public void setCodSurchargeAmount(String codSurchargeAmount) {
         this.codSurchargeAmount = codSurchargeAmount;
     }
-
-    public String getCodSurchargeCurrencyUomId() {
-        return codSurchargeCurrencyUomId;
-    }
-
-    public void setCodSurchargeCurrencyUomId(String codSurchargeCurrencyUomId) {
+public void setCodSurchargeCurrencyUomId(String codSurchargeCurrencyUomId) {
         this.codSurchargeCurrencyUomId = codSurchargeCurrencyUomId;
     }
-
-    public String getCodSurchargeApplyToPackage() {
-        return codSurchargeApplyToPackage;
-    }
-
-    public void setCodSurchargeApplyToPackage(String codSurchargeApplyToPackage) {
+public void setCodSurchargeApplyToPackage(String codSurchargeApplyToPackage) {
         this.codSurchargeApplyToPackage = codSurchargeApplyToPackage;
     }
-
-    public String getCodFundsCode() {
-        return codFundsCode;
-    }
-
-    public void setCodFundsCode(String codFundsCode) {
+public void setCodFundsCode(String codFundsCode) {
         this.codFundsCode = codFundsCode;
     }
-
-    public String getDefaultReturnLabelMemo() {
-        return defaultReturnLabelMemo;
-    }
-
-    public void setDefaultReturnLabelMemo(String defaultReturnLabelMemo) {
+public void setDefaultReturnLabelMemo(String defaultReturnLabelMemo) {
         this.defaultReturnLabelMemo = defaultReturnLabelMemo;
     }
-
-    public String getDefaultReturnLabelSubject() {
-        return defaultReturnLabelSubject;
-    }
-
-    public void setDefaultReturnLabelSubject(String defaultReturnLabelSubject) {
+public void setDefaultReturnLabelSubject(String defaultReturnLabelSubject) {
         this.defaultReturnLabelSubject = defaultReturnLabelSubject;
     }
 

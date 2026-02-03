@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ShippingDocument {
 
     @Id
@@ -17,52 +23,22 @@ public class ShippingDocument {
     private String shipmentItemSeqId;
     private String shipmentPackageSeqId;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getDocumentId() {
-        return documentId;
-    }
-
-    public void setDocumentId(String documentId) {
+public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
-
-    public String getShipmentId() {
-        return shipmentId;
-    }
-
-    public void setShipmentId(String shipmentId) {
+public void setShipmentId(String shipmentId) {
         this.shipmentId = shipmentId;
     }
-
-    public String getShipmentItemSeqId() {
-        return shipmentItemSeqId;
-    }
-
-    public void setShipmentItemSeqId(String shipmentItemSeqId) {
+public void setShipmentItemSeqId(String shipmentItemSeqId) {
         this.shipmentItemSeqId = shipmentItemSeqId;
     }
-
-    public String getShipmentPackageSeqId() {
-        return shipmentPackageSeqId;
-    }
-
-    public void setShipmentPackageSeqId(String shipmentPackageSeqId) {
+public void setShipmentPackageSeqId(String shipmentPackageSeqId) {
         this.shipmentPackageSeqId = shipmentPackageSeqId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

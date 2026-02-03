@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class FinAccount {
 
     @Id
@@ -48,148 +54,58 @@ public class FinAccount {
     private BigDecimal actualBalance;
 
     private BigDecimal availableBalance;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getFinAccountId() {
-        return finAccountId;
-    }
-
-    public void setFinAccountId(String finAccountId) {
+public void setFinAccountId(String finAccountId) {
         this.finAccountId = finAccountId;
     }
-
-    public String getFinAccountTypeId() {
-        return finAccountTypeId;
-    }
-
-    public void setFinAccountTypeId(String finAccountTypeId) {
+public void setFinAccountTypeId(String finAccountTypeId) {
         this.finAccountTypeId = finAccountTypeId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getFinAccountName() {
-        return finAccountName;
-    }
-
-    public void setFinAccountName(String finAccountName) {
+public void setFinAccountName(String finAccountName) {
         this.finAccountName = finAccountName;
     }
-
-    public String getFinAccountCode() {
-        return finAccountCode;
-    }
-
-    public void setFinAccountCode(String finAccountCode) {
+public void setFinAccountCode(String finAccountCode) {
         this.finAccountCode = finAccountCode;
     }
-
-    public String getFinAccountPin() {
-        return finAccountPin;
-    }
-
-    public void setFinAccountPin(String finAccountPin) {
+public void setFinAccountPin(String finAccountPin) {
         this.finAccountPin = finAccountPin;
     }
-
-    public String getCurrencyUomId() {
-        return currencyUomId;
-    }
-
-    public void setCurrencyUomId(String currencyUomId) {
+public void setCurrencyUomId(String currencyUomId) {
         this.currencyUomId = currencyUomId;
     }
-
-    public String getOrganizationPartyId() {
-        return organizationPartyId;
-    }
-
-    public void setOrganizationPartyId(String organizationPartyId) {
+public void setOrganizationPartyId(String organizationPartyId) {
         this.organizationPartyId = organizationPartyId;
     }
-
-    public String getOwnerPartyId() {
-        return ownerPartyId;
-    }
-
-    public void setOwnerPartyId(String ownerPartyId) {
+public void setOwnerPartyId(String ownerPartyId) {
         this.ownerPartyId = ownerPartyId;
     }
-
-    public String getPostToGlAccountId() {
-        return postToGlAccountId;
-    }
-
-    public void setPostToGlAccountId(String postToGlAccountId) {
+public void setPostToGlAccountId(String postToGlAccountId) {
         this.postToGlAccountId = postToGlAccountId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public Boolean getIsRefundable() {
-        return isRefundable;
-    }
-
-    public void setIsRefundable(Boolean isRefundable) {
+public void setIsRefundable(Boolean isRefundable) {
         this.isRefundable = isRefundable;
     }
-
-    public String getReplenishPaymentId() {
-        return replenishPaymentId;
-    }
-
-    public void setReplenishPaymentId(String replenishPaymentId) {
+public void setReplenishPaymentId(String replenishPaymentId) {
         this.replenishPaymentId = replenishPaymentId;
     }
-
-    public BigDecimal getReplenishLevel() {
-        return replenishLevel;
-    }
-
-    public void setReplenishLevel(BigDecimal replenishLevel) {
+public void setReplenishLevel(BigDecimal replenishLevel) {
         this.replenishLevel = replenishLevel;
     }
-
-    public BigDecimal getActualBalance() {
-        return actualBalance;
-    }
-
-    public void setActualBalance(BigDecimal actualBalance) {
+public void setActualBalance(BigDecimal actualBalance) {
         this.actualBalance = actualBalance;
     }
-
-    public BigDecimal getAvailableBalance() {
-        return availableBalance;
-    }
-
-    public void setAvailableBalance(BigDecimal availableBalance) {
+public void setAvailableBalance(BigDecimal availableBalance) {
         this.availableBalance = availableBalance;
     }
 }

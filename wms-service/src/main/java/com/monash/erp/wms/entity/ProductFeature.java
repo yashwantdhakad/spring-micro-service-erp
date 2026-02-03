@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductFeature {
 
     @Id
@@ -22,92 +28,37 @@ public class ProductFeature {
     private String defaultSequenceNum;
     private String abbrev;
     private String idCode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductFeatureId() {
-        return productFeatureId;
-    }
-
-    public void setProductFeatureId(String productFeatureId) {
+public void setProductFeatureId(String productFeatureId) {
         this.productFeatureId = productFeatureId;
     }
-
-    public String getProductFeatureTypeId() {
-        return productFeatureTypeId;
-    }
-
-    public void setProductFeatureTypeId(String productFeatureTypeId) {
+public void setProductFeatureTypeId(String productFeatureTypeId) {
         this.productFeatureTypeId = productFeatureTypeId;
     }
-
-    public String getProductFeatureCategoryId() {
-        return productFeatureCategoryId;
-    }
-
-    public void setProductFeatureCategoryId(String productFeatureCategoryId) {
+public void setProductFeatureCategoryId(String productFeatureCategoryId) {
         this.productFeatureCategoryId = productFeatureCategoryId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getUomId() {
-        return uomId;
-    }
-
-    public void setUomId(String uomId) {
+public void setUomId(String uomId) {
         this.uomId = uomId;
     }
-
-    public String getNumberSpecified() {
-        return numberSpecified;
-    }
-
-    public void setNumberSpecified(String numberSpecified) {
+public void setNumberSpecified(String numberSpecified) {
         this.numberSpecified = numberSpecified;
     }
-
-    public String getDefaultAmount() {
-        return defaultAmount;
-    }
-
-    public void setDefaultAmount(String defaultAmount) {
+public void setDefaultAmount(String defaultAmount) {
         this.defaultAmount = defaultAmount;
     }
-
-    public String getDefaultSequenceNum() {
-        return defaultSequenceNum;
-    }
-
-    public void setDefaultSequenceNum(String defaultSequenceNum) {
+public void setDefaultSequenceNum(String defaultSequenceNum) {
         this.defaultSequenceNum = defaultSequenceNum;
     }
-
-    public String getAbbrev() {
-        return abbrev;
-    }
-
-    public void setAbbrev(String abbrev) {
+public void setAbbrev(String abbrev) {
         this.abbrev = abbrev;
     }
-
-    public String getIdCode() {
-        return idCode;
-    }
-
-    public void setIdCode(String idCode) {
+public void setIdCode(String idCode) {
         this.idCode = idCode;
     }
 

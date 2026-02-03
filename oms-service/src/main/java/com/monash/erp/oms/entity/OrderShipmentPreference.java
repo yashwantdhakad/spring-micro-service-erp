@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderShipmentPreference extends AuditableEntity {
 
     @Id
@@ -26,112 +32,44 @@ public class OrderShipmentPreference extends AuditableEntity {
     private String isGift;
     private LocalDateTime shipAfterDate;
     private LocalDateTime shipBeforeDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getShipmentMethodTypeId() {
-        return shipmentMethodTypeId;
-    }
-
-    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
+public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
         this.shipmentMethodTypeId = shipmentMethodTypeId;
     }
-
-    public String getCarrierPartyId() {
-        return carrierPartyId;
-    }
-
-    public void setCarrierPartyId(String carrierPartyId) {
+public void setCarrierPartyId(String carrierPartyId) {
         this.carrierPartyId = carrierPartyId;
     }
-
-    public String getCarrierRoleTypeId() {
-        return carrierRoleTypeId;
-    }
-
-    public void setCarrierRoleTypeId(String carrierRoleTypeId) {
+public void setCarrierRoleTypeId(String carrierRoleTypeId) {
         this.carrierRoleTypeId = carrierRoleTypeId;
     }
-
-    public String getTrackingNumber() {
-        return trackingNumber;
-    }
-
-    public void setTrackingNumber(String trackingNumber) {
+public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
     }
-
-    public String getShippingInstructions() {
-        return shippingInstructions;
-    }
-
-    public void setShippingInstructions(String shippingInstructions) {
+public void setShippingInstructions(String shippingInstructions) {
         this.shippingInstructions = shippingInstructions;
     }
-
-    public String getMaySplit() {
-        return maySplit;
-    }
-
-    public void setMaySplit(String maySplit) {
+public void setMaySplit(String maySplit) {
         this.maySplit = maySplit;
     }
-
-    public String getGiftMessage() {
-        return giftMessage;
-    }
-
-    public void setGiftMessage(String giftMessage) {
+public void setGiftMessage(String giftMessage) {
         this.giftMessage = giftMessage;
     }
-
-    public String getIsGift() {
-        return isGift;
-    }
-
-    public void setIsGift(String isGift) {
+public void setIsGift(String isGift) {
         this.isGift = isGift;
     }
-
-    public LocalDateTime getShipAfterDate() {
-        return shipAfterDate;
-    }
-
-    public void setShipAfterDate(LocalDateTime shipAfterDate) {
+public void setShipAfterDate(LocalDateTime shipAfterDate) {
         this.shipAfterDate = shipAfterDate;
     }
-
-    public LocalDateTime getShipBeforeDate() {
-        return shipBeforeDate;
-    }
-
-    public void setShipBeforeDate(LocalDateTime shipBeforeDate) {
+public void setShipBeforeDate(LocalDateTime shipBeforeDate) {
         this.shipBeforeDate = shipBeforeDate;
     }
-
-
-
 
 }

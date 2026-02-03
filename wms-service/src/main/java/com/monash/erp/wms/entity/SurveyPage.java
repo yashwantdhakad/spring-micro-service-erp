@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class SurveyPage {
 
     @Id
@@ -16,44 +22,19 @@ public class SurveyPage {
     private String surveyPageSeqId;
     private String pageName;
     private String sequenceNum;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getSurveyId() {
-        return surveyId;
-    }
-
-    public void setSurveyId(String surveyId) {
+public void setSurveyId(String surveyId) {
         this.surveyId = surveyId;
     }
-
-    public String getSurveyPageSeqId() {
-        return surveyPageSeqId;
-    }
-
-    public void setSurveyPageSeqId(String surveyPageSeqId) {
+public void setSurveyPageSeqId(String surveyPageSeqId) {
         this.surveyPageSeqId = surveyPageSeqId;
     }
-
-    public String getPageName() {
-        return pageName;
-    }
-
-    public void setPageName(String pageName) {
+public void setPageName(String pageName) {
         this.pageName = pageName;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
 

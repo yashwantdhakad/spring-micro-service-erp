@@ -34,10 +34,14 @@ export class PODetailComponent implements OnInit {
   facilityId: string | undefined;
   canApprove = false;
   canReceive = false;
+  canEditItems = false;
 
   addPOItemDialog: boolean = false;
   createOrderNoteDialog: boolean = false;
   isLoading: boolean = false;
+  isSavingQuantity = false;
+  editingItemKey: string | null = null;
+  editingQuantity: number | null = null;
 
   pages: number = 0;
 
@@ -155,6 +159,8 @@ export class PODetailComponent implements OnInit {
           this.orderNotes = displayInfo.orderNoteList || [];
           this.canApprove = this.statusItem?.statusId === 'ORDER_CREATED';
           this.canReceive = this.statusItem?.statusId === 'ORDER_APPROVED';
+          this.canEditItems = this.statusItem?.statusId === 'ORDER_CREATED'
+            || this.statusItem?.statusId === 'ORDER_APPROVED';
 
           this.overviewFields = [
             { label: 'COMMON.ID', value: this.orderHeader?.orderId },
@@ -195,6 +201,50 @@ export class PODetailComponent implements OnInit {
         this.cdr.detectChanges();
       })
     );
+  }
+
+  startEditQuantity(item: any): void {
+    if (!this.canEditItems || !item?.orderItemSeqId) {
+      return;
+    }
+    this.editingItemKey = this.getItemKey(item);
+    this.editingQuantity = Number(item?.quantity ?? 0);
+  }
+
+  cancelEditQuantity(): void {
+    this.editingItemKey = null;
+    this.editingQuantity = null;
+  }
+
+  saveQuantity(item: any): void {
+    if (!this.orderId || !item?.orderItemSeqId || this.editingQuantity === null) {
+      return;
+    }
+    const quantity = Number(this.editingQuantity);
+    if (Number.isNaN(quantity) || quantity < 0) {
+      return;
+    }
+    this.isSavingQuantity = true;
+    this.orderService.updateOrderItemQuantity(this.orderId, item.orderItemSeqId, quantity)
+      .pipe(finalize(() => {
+        this.isSavingQuantity = false;
+        this.cdr.detectChanges();
+      }))
+      .subscribe({
+        next: (updated) => {
+          item.quantity = updated?.quantity ?? quantity;
+          item.remainingQuantity = updated?.remainingQuantity ?? item.remainingQuantity;
+          this.cancelEditQuantity();
+        },
+      });
+  }
+
+  isEditingItem(item: any): boolean {
+    return this.getItemKey(item) === this.editingItemKey;
+  }
+
+  private getItemKey(item: any): string {
+    return `${item?.orderItemSeqId || ''}`;
   }
 
   loadLookupData(): void {

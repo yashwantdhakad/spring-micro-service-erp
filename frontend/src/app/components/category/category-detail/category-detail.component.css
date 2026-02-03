@@ -1,0 +1,9 @@
+.category-products-table {
+  min-height: 320px;
+  max-height: 520px;
+  overflow: auto;
+}
+
+.category-products-table table {
+  width: 100%;
+}

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -41,5 +43,33 @@ public class ProductAssocService {
 
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    public ProductAssoc expire(Long id) {
+        ProductAssoc assoc = get(id);
+        assoc.setThruDate(LocalDateTime.now());
+        return repository.save(assoc);
+    }
+
+    public ProductAssoc updateFields(Long id, String quantity, String fromDate, String sequenceNum) {
+        ProductAssoc assoc = get(id);
+        if (quantity != null) {
+            assoc.setQuantity(quantity);
+        }
+        if (sequenceNum != null) {
+            assoc.setSequenceNum(sequenceNum);
+        }
+        if (fromDate != null) {
+            assoc.setFromDate(parseDate(fromDate));
+        }
+        return repository.save(assoc);
+    }
+
+    private LocalDateTime parseDate(String value) {
+        try {
+            return OffsetDateTime.parse(value).toLocalDateTime();
+        } catch (Exception ignored) {
+            return LocalDateTime.parse(value);
+        }
     }
 }

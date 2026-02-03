@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class InventoryCountVariance {
 
     @Id
@@ -35,172 +41,67 @@ public class InventoryCountVariance {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getInventoryCountId() {
-        return inventoryCountId;
-    }
-
-    public void setInventoryCountId(String inventoryCountId) {
+public void setInventoryCountId(String inventoryCountId) {
         this.inventoryCountId = inventoryCountId;
     }
-
-    public String getInventoryCountItemSeqId() {
-        return inventoryCountItemSeqId;
-    }
-
-    public void setInventoryCountItemSeqId(String inventoryCountItemSeqId) {
+public void setInventoryCountItemSeqId(String inventoryCountItemSeqId) {
         this.inventoryCountItemSeqId = inventoryCountItemSeqId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getProductIdentifier() {
-        return productIdentifier;
-    }
-
-    public void setProductIdentifier(String productIdentifier) {
+public void setProductIdentifier(String productIdentifier) {
         this.productIdentifier = productIdentifier;
     }
-
-    public String getLocationSeqId() {
-        return locationSeqId;
-    }
-
-    public void setLocationSeqId(String locationSeqId) {
+public void setLocationSeqId(String locationSeqId) {
         this.locationSeqId = locationSeqId;
     }
-
-    public BigDecimal getSystemQuantityOnHand() {
-        return systemQuantityOnHand;
-    }
-
-    public void setSystemQuantityOnHand(BigDecimal systemQuantityOnHand) {
+public void setSystemQuantityOnHand(BigDecimal systemQuantityOnHand) {
         this.systemQuantityOnHand = systemQuantityOnHand;
     }
-
-    public BigDecimal getActualQuantityOnHand() {
-        return actualQuantityOnHand;
-    }
-
-    public void setActualQuantityOnHand(BigDecimal actualQuantityOnHand) {
+public void setActualQuantityOnHand(BigDecimal actualQuantityOnHand) {
         this.actualQuantityOnHand = actualQuantityOnHand;
     }
-
-    public BigDecimal getVarianceQuantityOnHand() {
-        return varianceQuantityOnHand;
-    }
-
-    public void setVarianceQuantityOnHand(BigDecimal varianceQuantityOnHand) {
+public void setVarianceQuantityOnHand(BigDecimal varianceQuantityOnHand) {
         this.varianceQuantityOnHand = varianceQuantityOnHand;
     }
-
-    public BigDecimal getUnitCost() {
-        return unitCost;
-    }
-
-    public void setUnitCost(BigDecimal unitCost) {
+public void setUnitCost(BigDecimal unitCost) {
         this.unitCost = unitCost;
     }
-
-    public BigDecimal getTotalCost() {
-        return totalCost;
-    }
-
-    public void setTotalCost(BigDecimal totalCost) {
+public void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
     }
-
-    public BigDecimal getActualCost() {
-        return actualCost;
-    }
-
-    public void setActualCost(BigDecimal actualCost) {
+public void setActualCost(BigDecimal actualCost) {
         this.actualCost = actualCost;
     }
-
-    public BigDecimal getCostVariance() {
-        return costVariance;
-    }
-
-    public void setCostVariance(BigDecimal costVariance) {
+public void setCostVariance(BigDecimal costVariance) {
         this.costVariance = costVariance;
     }
-
-    public BigDecimal getActualValue() {
-        return actualValue;
-    }
-
-    public void setActualValue(BigDecimal actualValue) {
+public void setActualValue(BigDecimal actualValue) {
         this.actualValue = actualValue;
     }
-
-    public BigDecimal getTotalValue() {
-        return totalValue;
-    }
-
-    public void setTotalValue(BigDecimal totalValue) {
+public void setTotalValue(BigDecimal totalValue) {
         this.totalValue = totalValue;
     }
-
-    public BigDecimal getValueVariance() {
-        return valueVariance;
-    }
-
-    public void setValueVariance(BigDecimal valueVariance) {
+public void setValueVariance(BigDecimal valueVariance) {
         this.valueVariance = valueVariance;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

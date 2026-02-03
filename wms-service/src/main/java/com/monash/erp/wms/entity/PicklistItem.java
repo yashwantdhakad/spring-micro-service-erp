@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +20,9 @@ import jakarta.persistence.Table;
                 @Index(name = "idx_picklist_item_status_id", columnList = "item_status_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class PicklistItem {
 
     @Id
@@ -30,68 +36,28 @@ public class PicklistItem {
     private String inventoryItemId;
     private String itemStatusId;
     private String quantity;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPicklistBinId() {
-        return picklistBinId;
-    }
-
-    public void setPicklistBinId(String picklistBinId) {
+public void setPicklistBinId(String picklistBinId) {
         this.picklistBinId = picklistBinId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getShipGroupSeqId() {
-        return shipGroupSeqId;
-    }
-
-    public void setShipGroupSeqId(String shipGroupSeqId) {
+public void setShipGroupSeqId(String shipGroupSeqId) {
         this.shipGroupSeqId = shipGroupSeqId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getItemStatusId() {
-        return itemStatusId;
-    }
-
-    public void setItemStatusId(String itemStatusId) {
+public void setItemStatusId(String itemStatusId) {
         this.itemStatusId = itemStatusId;
     }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
+public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 

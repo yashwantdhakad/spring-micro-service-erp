@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ContentApproval {
 
     @Id
@@ -22,84 +28,34 @@ public class ContentApproval {
     private LocalDateTime approvalDate;
     private String sequenceNum;
     private String comments;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getContentApprovalId() {
-        return contentApprovalId;
-    }
-
-    public void setContentApprovalId(String contentApprovalId) {
+public void setContentApprovalId(String contentApprovalId) {
         this.contentApprovalId = contentApprovalId;
     }
-
-    public String getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(String contentId) {
+public void setContentId(String contentId) {
         this.contentId = contentId;
     }
-
-    public String getContentRevisionSeqId() {
-        return contentRevisionSeqId;
-    }
-
-    public void setContentRevisionSeqId(String contentRevisionSeqId) {
+public void setContentRevisionSeqId(String contentRevisionSeqId) {
         this.contentRevisionSeqId = contentRevisionSeqId;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getRoleTypeId() {
-        return roleTypeId;
-    }
-
-    public void setRoleTypeId(String roleTypeId) {
+public void setRoleTypeId(String roleTypeId) {
         this.roleTypeId = roleTypeId;
     }
-
-    public String getApprovalStatusId() {
-        return approvalStatusId;
-    }
-
-    public void setApprovalStatusId(String approvalStatusId) {
+public void setApprovalStatusId(String approvalStatusId) {
         this.approvalStatusId = approvalStatusId;
     }
-
-    public LocalDateTime getApprovalDate() {
-        return approvalDate;
-    }
-
-    public void setApprovalDate(LocalDateTime approvalDate) {
+public void setApprovalDate(LocalDateTime approvalDate) {
         this.approvalDate = approvalDate;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
+public void setComments(String comments) {
         this.comments = comments;
     }
 

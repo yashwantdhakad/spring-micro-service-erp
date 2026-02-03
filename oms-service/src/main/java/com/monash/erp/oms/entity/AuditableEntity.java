@@ -1,10 +1,16 @@
 package com.monash.erp.oms.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import jakarta.persistence.MappedSuperclass;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@NoArgsConstructor
+@Setter
+@Getter
 public abstract class AuditableEntity {
 
     private LocalDateTime lastUpdatedStamp;
@@ -12,35 +18,4 @@ public abstract class AuditableEntity {
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
 
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
-        this.lastUpdatedStamp = lastUpdatedStamp;
-    }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
-        this.lastUpdatedTxStamp = lastUpdatedTxStamp;
-    }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
-        this.createdStamp = createdStamp;
-    }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
-        this.createdTxStamp = createdTxStamp;
-    }
 }

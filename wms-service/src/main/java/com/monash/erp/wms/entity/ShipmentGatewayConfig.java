@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ShipmentGatewayConfig {
 
     @Id
@@ -15,36 +21,16 @@ public class ShipmentGatewayConfig {
     private String shipmentGatewayConfigId;
     private String shipmentGatewayConfTypeId;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getShipmentGatewayConfigId() {
-        return shipmentGatewayConfigId;
-    }
-
-    public void setShipmentGatewayConfigId(String shipmentGatewayConfigId) {
+public void setShipmentGatewayConfigId(String shipmentGatewayConfigId) {
         this.shipmentGatewayConfigId = shipmentGatewayConfigId;
     }
-
-    public String getShipmentGatewayConfTypeId() {
-        return shipmentGatewayConfTypeId;
-    }
-
-    public void setShipmentGatewayConfTypeId(String shipmentGatewayConfTypeId) {
+public void setShipmentGatewayConfTypeId(String shipmentGatewayConfTypeId) {
         this.shipmentGatewayConfTypeId = shipmentGatewayConfTypeId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

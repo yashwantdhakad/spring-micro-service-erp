@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class InventoryItemVariance {
 
     @Id
@@ -18,60 +24,25 @@ public class InventoryItemVariance {
     private String availableToPromiseVar;
     private String quantityOnHandVar;
     private String comments;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getPhysicalInventoryId() {
-        return physicalInventoryId;
-    }
-
-    public void setPhysicalInventoryId(String physicalInventoryId) {
+public void setPhysicalInventoryId(String physicalInventoryId) {
         this.physicalInventoryId = physicalInventoryId;
     }
-
-    public String getVarianceReasonId() {
-        return varianceReasonId;
-    }
-
-    public void setVarianceReasonId(String varianceReasonId) {
+public void setVarianceReasonId(String varianceReasonId) {
         this.varianceReasonId = varianceReasonId;
     }
-
-    public String getAvailableToPromiseVar() {
-        return availableToPromiseVar;
-    }
-
-    public void setAvailableToPromiseVar(String availableToPromiseVar) {
+public void setAvailableToPromiseVar(String availableToPromiseVar) {
         this.availableToPromiseVar = availableToPromiseVar;
     }
-
-    public String getQuantityOnHandVar() {
-        return quantityOnHandVar;
-    }
-
-    public void setQuantityOnHandVar(String quantityOnHandVar) {
+public void setQuantityOnHandVar(String quantityOnHandVar) {
         this.quantityOnHandVar = quantityOnHandVar;
     }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
+public void setComments(String comments) {
         this.comments = comments;
     }
 

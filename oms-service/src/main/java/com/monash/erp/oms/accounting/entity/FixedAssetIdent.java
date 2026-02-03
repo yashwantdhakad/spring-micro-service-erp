@@ -1,11 +1,17 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class FixedAssetIdent {
 
     @Id
@@ -17,36 +23,16 @@ public class FixedAssetIdent {
     private String fixedAssetIdentTypeId;
 
     private String idValue;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getFixedAssetId() {
-        return fixedAssetId;
-    }
-
-    public void setFixedAssetId(String fixedAssetId) {
+public void setFixedAssetId(String fixedAssetId) {
         this.fixedAssetId = fixedAssetId;
     }
-
-    public String getFixedAssetIdentTypeId() {
-        return fixedAssetIdentTypeId;
-    }
-
-    public void setFixedAssetIdentTypeId(String fixedAssetIdentTypeId) {
+public void setFixedAssetIdentTypeId(String fixedAssetIdentTypeId) {
         this.fixedAssetIdentTypeId = fixedAssetIdentTypeId;
     }
-
-    public String getIdValue() {
-        return idValue;
-    }
-
-    public void setIdValue(String idValue) {
+public void setIdValue(String idValue) {
         this.idValue = idValue;
     }
 }

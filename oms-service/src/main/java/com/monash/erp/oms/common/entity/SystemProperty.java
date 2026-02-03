@@ -1,11 +1,17 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class SystemProperty {
 
     @Id
@@ -19,44 +25,19 @@ public class SystemProperty {
     private String systemPropertyValue;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getSystemResourceId() {
-        return systemResourceId;
-    }
-
-    public void setSystemResourceId(String systemResourceId) {
+public void setSystemResourceId(String systemResourceId) {
         this.systemResourceId = systemResourceId;
     }
-
-    public String getSystemPropertyId() {
-        return systemPropertyId;
-    }
-
-    public void setSystemPropertyId(String systemPropertyId) {
+public void setSystemPropertyId(String systemPropertyId) {
         this.systemPropertyId = systemPropertyId;
     }
-
-    public String getSystemPropertyValue() {
-        return systemPropertyValue;
-    }
-
-    public void setSystemPropertyValue(String systemPropertyValue) {
+public void setSystemPropertyValue(String systemPropertyValue) {
         this.systemPropertyValue = systemPropertyValue;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

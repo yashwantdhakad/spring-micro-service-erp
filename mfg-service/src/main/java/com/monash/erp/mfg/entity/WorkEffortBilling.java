@@ -1,11 +1,17 @@
 package com.monash.erp.mfg.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class WorkEffortBilling {
 
     @Id
@@ -16,44 +22,19 @@ public class WorkEffortBilling {
     private String invoiceId;
     private String invoiceItemSeqId;
     private String percentage;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getWorkEffortId() {
-        return workEffortId;
-    }
-
-    public void setWorkEffortId(String workEffortId) {
+public void setWorkEffortId(String workEffortId) {
         this.workEffortId = workEffortId;
     }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
+public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
     }
-
-    public String getInvoiceItemSeqId() {
-        return invoiceItemSeqId;
-    }
-
-    public void setInvoiceItemSeqId(String invoiceItemSeqId) {
+public void setInvoiceItemSeqId(String invoiceItemSeqId) {
         this.invoiceItemSeqId = invoiceItemSeqId;
     }
-
-    public String getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(String percentage) {
+public void setPercentage(String percentage) {
         this.percentage = percentage;
     }
 

@@ -303,7 +303,26 @@
                 {{ 'SO.QUANTITY' | translate }}
               </th>
               <td mat-cell class="text-right" *matCellDef="let item">
-                {{ item.quantity }}
+                <ng-container *ngIf="canEditItems; else readonlyQty">
+                  <ng-container *ngIf="isEditingItem(item); else qtyDisplay">
+                    <mat-form-field appearance="outline" class="inline-edit-field">
+                      <input matInput type="number" [(ngModel)]="editingQuantity" />
+                    </mat-form-field>
+                    <button mat-icon-button color="primary" (click)="saveQuantity(item)" [disabled]="isSavingQuantity">
+                      <mat-icon>check</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="cancelEditQuantity()" [disabled]="isSavingQuantity">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </ng-container>
+                  <ng-template #qtyDisplay>
+                    {{ item.quantity }}
+                    <button mat-icon-button color="primary" (click)="startEditQuantity(item)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  </ng-template>
+                </ng-container>
+                <ng-template #readonlyQty>{{ item.quantity }}</ng-template>
               </td>
             </ng-container>
             <ng-container matColumnDef="pickedQuantity">

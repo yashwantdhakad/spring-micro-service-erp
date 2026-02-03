@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class AgreementAttribute extends AuditableEntity {
 
     @Id
@@ -17,40 +23,17 @@ public class AgreementAttribute extends AuditableEntity {
     private String agreementId;
     private String attrName;
     private String attrValue;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getAgreementId() {
-        return agreementId;
-    }
-
-    public void setAgreementId(String agreementId) {
+public void setAgreementId(String agreementId) {
         this.agreementId = agreementId;
     }
-
-    public String getAttrName() {
-        return attrName;
-    }
-
-    public void setAttrName(String attrName) {
+public void setAttrName(String attrName) {
         this.attrName = attrName;
     }
-
-    public String getAttrValue() {
-        return attrValue;
-    }
-
-    public void setAttrValue(String attrValue) {
+public void setAttrValue(String attrValue) {
         this.attrValue = attrValue;
     }
-
-
-
 
 }

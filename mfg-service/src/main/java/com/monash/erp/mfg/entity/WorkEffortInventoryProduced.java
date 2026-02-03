@@ -1,5 +1,8 @@
 package com.monash.erp.mfg.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,6 +18,9 @@ import jakarta.persistence.Table;
                 @Index(name = "idx_work_effort_inventory_produced_inventory_item_id", columnList = "inventory_item_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class WorkEffortInventoryProduced {
 
     @Id
@@ -23,28 +29,13 @@ public class WorkEffortInventoryProduced {
 
     private String workEffortId;
     private String inventoryItemId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getWorkEffortId() {
-        return workEffortId;
-    }
-
-    public void setWorkEffortId(String workEffortId) {
+public void setWorkEffortId(String workEffortId) {
         this.workEffortId = workEffortId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
 

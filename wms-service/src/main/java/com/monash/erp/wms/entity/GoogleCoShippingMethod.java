@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class GoogleCoShippingMethod {
 
     @Id
@@ -27,108 +33,43 @@ public class GoogleCoShippingMethod {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getShipmentMethodName() {
-        return shipmentMethodName;
-    }
-
-    public void setShipmentMethodName(String shipmentMethodName) {
+public void setShipmentMethodName(String shipmentMethodName) {
         this.shipmentMethodName = shipmentMethodName;
     }
-
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
+public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
+public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
-
-    public BigDecimal getAdditionalAmount() {
-        return additionalAmount;
-    }
-
-    public void setAdditionalAmount(BigDecimal additionalAmount) {
+public void setAdditionalAmount(BigDecimal additionalAmount) {
         this.additionalAmount = additionalAmount;
     }
-
-    public BigDecimal getAdditionalPercent() {
-        return additionalPercent;
-    }
-
-    public void setAdditionalPercent(BigDecimal additionalPercent) {
+public void setAdditionalPercent(BigDecimal additionalPercent) {
         this.additionalPercent = additionalPercent;
     }
-
-    public String getMethodTypeEnumId() {
-        return methodTypeEnumId;
-    }
-
-    public void setMethodTypeEnumId(String methodTypeEnumId) {
+public void setMethodTypeEnumId(String methodTypeEnumId) {
         this.methodTypeEnumId = methodTypeEnumId;
     }
-
-    public String getCarrierPartyId() {
-        return carrierPartyId;
-    }
-
-    public void setCarrierPartyId(String carrierPartyId) {
+public void setCarrierPartyId(String carrierPartyId) {
         this.carrierPartyId = carrierPartyId;
     }
-
-    public String getShipmentMethodTypeId() {
-        return shipmentMethodTypeId;
-    }
-
-    public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
+public void setShipmentMethodTypeId(String shipmentMethodTypeId) {
         this.shipmentMethodTypeId = shipmentMethodTypeId;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

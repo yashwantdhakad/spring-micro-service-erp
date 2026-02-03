@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order_item_q_a_override")
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderItemQAOverride extends AuditableEntity {
 
     @Id
@@ -20,48 +26,20 @@ public class OrderItemQAOverride extends AuditableEntity {
     private String orderItemSeqId;
     private String userLoginId;
     private String note;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getUserLoginId() {
-        return userLoginId;
-    }
-
-    public void setUserLoginId(String userLoginId) {
+public void setUserLoginId(String userLoginId) {
         this.userLoginId = userLoginId;
     }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
+public void setNote(String note) {
         this.note = note;
     }
-
-
-
 
 }

@@ -432,10 +432,13 @@ public class ProductCompositeService {
         List<ProductAssocDto> results = new ArrayList<>();
         for (ProductAssoc assoc : activeAssocs) {
             ProductAssocDto dto = new ProductAssocDto();
+            dto.setId(assoc.getId());
             dto.setProduct(getProductSummary(assoc.getProductId(), productCache));
             dto.setToProduct(getProductSummary(assoc.getProductIdTo(), productCache));
             dto.setType(getAssocType(assoc.getProductAssocTypeId()));
             dto.setFromDate(assoc.getFromDate());
+            dto.setThruDate(assoc.getThruDate());
+            dto.setSequenceNum(assoc.getSequenceNum());
             dto.setQuantity(assoc.getQuantity());
             results.add(dto);
         }
@@ -445,10 +448,13 @@ public class ProductCompositeService {
     private ProductAssocDto toAssocDto(ProductAssoc assoc) {
         Map<String, ProductSummary> productCache = new HashMap<>();
         ProductAssocDto dto = new ProductAssocDto();
+        dto.setId(assoc.getId());
         dto.setProduct(getProductSummary(assoc.getProductId(), productCache));
         dto.setToProduct(getProductSummary(assoc.getProductIdTo(), productCache));
         dto.setType(getAssocType(assoc.getProductAssocTypeId()));
         dto.setFromDate(assoc.getFromDate());
+        dto.setThruDate(assoc.getThruDate());
+        dto.setSequenceNum(assoc.getSequenceNum());
         dto.setQuantity(assoc.getQuantity());
         return dto;
     }

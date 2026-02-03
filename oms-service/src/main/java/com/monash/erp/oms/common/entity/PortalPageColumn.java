@@ -1,5 +1,8 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class PortalPageColumn {
 
     @Id
@@ -21,44 +27,19 @@ public class PortalPageColumn {
     private BigDecimal columnWidthPixels;
 
     private BigDecimal columnWidthPercentage;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPortalPageId() {
-        return portalPageId;
-    }
-
-    public void setPortalPageId(String portalPageId) {
+public void setPortalPageId(String portalPageId) {
         this.portalPageId = portalPageId;
     }
-
-    public String getColumnSeqId() {
-        return columnSeqId;
-    }
-
-    public void setColumnSeqId(String columnSeqId) {
+public void setColumnSeqId(String columnSeqId) {
         this.columnSeqId = columnSeqId;
     }
-
-    public BigDecimal getColumnWidthPixels() {
-        return columnWidthPixels;
-    }
-
-    public void setColumnWidthPixels(BigDecimal columnWidthPixels) {
+public void setColumnWidthPixels(BigDecimal columnWidthPixels) {
         this.columnWidthPixels = columnWidthPixels;
     }
-
-    public BigDecimal getColumnWidthPercentage() {
-        return columnWidthPercentage;
-    }
-
-    public void setColumnWidthPercentage(BigDecimal columnWidthPercentage) {
+public void setColumnWidthPercentage(BigDecimal columnWidthPercentage) {
         this.columnWidthPercentage = columnWidthPercentage;
     }
 }

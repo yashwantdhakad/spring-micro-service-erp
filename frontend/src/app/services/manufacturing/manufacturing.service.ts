@@ -36,6 +36,39 @@ export class ManufacturingService {
     return this.apiService.get(`/mfg/api/jobs/bom?${params.toString()}`);
   }
 
+  getBoms(pageIndex: number, pageSize: number, queryString: string, bomTypeId?: string): Observable<any> {
+    const params = new URLSearchParams();
+    params.append('page', pageIndex.toString());
+    params.append('size', pageSize.toString());
+    if (queryString) {
+      params.append('queryString', queryString);
+    }
+    if (bomTypeId) {
+      params.append('bomTypeId', bomTypeId);
+    }
+    return this.apiService.get(`/wms/api/boms?${params.toString()}`);
+  }
+
+  getProductDetail(productId: string): Observable<any> {
+    return this.apiService.get(`/wms/api/products/${encodeURIComponent(productId)}`);
+  }
+
+  getProductAssocTypes(): Observable<any[]> {
+    return this.apiService.get('/wms/api/product-assoc-types');
+  }
+
+  addProductAssoc(productId: string, payload: any): Observable<any> {
+    return this.apiService.post(`/wms/api/products/${encodeURIComponent(productId)}/assocs`, payload);
+  }
+
+  updateProductAssoc(assocId: number, payload: any): Observable<any> {
+    return this.apiService.patch(`/wms/api/product-assocs/${assocId}`, payload);
+  }
+
+  expireProductAssoc(assocId: number): Observable<any> {
+    return this.apiService.post(`/wms/api/product-assocs/${assocId}/expire`, {});
+  }
+
   approveJob(workEffortId: string): Observable<any> {
     return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/approve`, {});
   }

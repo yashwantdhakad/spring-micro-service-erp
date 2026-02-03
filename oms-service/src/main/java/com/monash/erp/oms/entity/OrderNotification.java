@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderNotification extends AuditableEntity {
 
     @Id
@@ -19,56 +25,23 @@ public class OrderNotification extends AuditableEntity {
     private String emailType;
     private String comments;
     private LocalDateTime notificationDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderNotificationId() {
-        return orderNotificationId;
-    }
-
-    public void setOrderNotificationId(String orderNotificationId) {
+public void setOrderNotificationId(String orderNotificationId) {
         this.orderNotificationId = orderNotificationId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getEmailType() {
-        return emailType;
-    }
-
-    public void setEmailType(String emailType) {
+public void setEmailType(String emailType) {
         this.emailType = emailType;
     }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
+public void setComments(String comments) {
         this.comments = comments;
     }
-
-    public LocalDateTime getNotificationDate() {
-        return notificationDate;
-    }
-
-    public void setNotificationDate(LocalDateTime notificationDate) {
+public void setNotificationDate(LocalDateTime notificationDate) {
         this.notificationDate = notificationDate;
     }
-
-
-
 
 }

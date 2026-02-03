@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +22,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_product_assoc_thru_date", columnList = "THRU_DATE")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductAssoc {
 
     @Id
@@ -84,172 +90,67 @@ public class ProductAssoc {
 
     @Column(name = "OEM_PARTY_ID", length = 20)
     private String oemPartyId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getProductIdTo() {
-        return productIdTo;
-    }
-
-    public void setProductIdTo(String productIdTo) {
+public void setProductIdTo(String productIdTo) {
         this.productIdTo = productIdTo;
     }
-
-    public String getProductAssocTypeId() {
-        return productAssocTypeId;
-    }
-
-    public void setProductAssocTypeId(String productAssocTypeId) {
+public void setProductAssocTypeId(String productAssocTypeId) {
         this.productAssocTypeId = productAssocTypeId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
+public void setReason(String reason) {
         this.reason = reason;
     }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
+public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
-
-    public String getScrapFactor() {
-        return scrapFactor;
-    }
-
-    public void setScrapFactor(String scrapFactor) {
+public void setScrapFactor(String scrapFactor) {
         this.scrapFactor = scrapFactor;
     }
-
-    public String getInstruction() {
-        return instruction;
-    }
-
-    public void setInstruction(String instruction) {
+public void setInstruction(String instruction) {
         this.instruction = instruction;
     }
-
-    public String getRoutingWorkEffortId() {
-        return routingWorkEffortId;
-    }
-
-    public void setRoutingWorkEffortId(String routingWorkEffortId) {
+public void setRoutingWorkEffortId(String routingWorkEffortId) {
         this.routingWorkEffortId = routingWorkEffortId;
     }
-
-    public String getEstimateCalcMethod() {
-        return estimateCalcMethod;
-    }
-
-    public void setEstimateCalcMethod(String estimateCalcMethod) {
+public void setEstimateCalcMethod(String estimateCalcMethod) {
         this.estimateCalcMethod = estimateCalcMethod;
     }
-
-    public String getRecurrenceInfoId() {
-        return recurrenceInfoId;
-    }
-
-    public void setRecurrenceInfoId(String recurrenceInfoId) {
+public void setRecurrenceInfoId(String recurrenceInfoId) {
         this.recurrenceInfoId = recurrenceInfoId;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getDrawingItemNumber() {
-        return drawingItemNumber;
-    }
-
-    public void setDrawingItemNumber(String drawingItemNumber) {
+public void setDrawingItemNumber(String drawingItemNumber) {
         this.drawingItemNumber = drawingItemNumber;
     }
-
-    public String getUsageHours() {
-        return usageHours;
-    }
-
-    public void setUsageHours(String usageHours) {
+public void setUsageHours(String usageHours) {
         this.usageHours = usageHours;
     }
-
-    public String getOemPartyId() {
-        return oemPartyId;
-    }
-
-    public void setOemPartyId(String oemPartyId) {
+public void setOemPartyId(String oemPartyId) {
         this.oemPartyId = oemPartyId;
     }
 }

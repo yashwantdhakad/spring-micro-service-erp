@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductFeatureAppl {
 
     @Id
@@ -21,76 +27,31 @@ public class ProductFeatureAppl {
     private String sequenceNum;
     private String amount;
     private String recurringAmount;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getProductFeatureId() {
-        return productFeatureId;
-    }
-
-    public void setProductFeatureId(String productFeatureId) {
+public void setProductFeatureId(String productFeatureId) {
         this.productFeatureId = productFeatureId;
     }
-
-    public String getProductFeatureApplTypeId() {
-        return productFeatureApplTypeId;
-    }
-
-    public void setProductFeatureApplTypeId(String productFeatureApplTypeId) {
+public void setProductFeatureApplTypeId(String productFeatureApplTypeId) {
         this.productFeatureApplTypeId = productFeatureApplTypeId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public String getAmount() {
-        return amount;
-    }
-
-    public void setAmount(String amount) {
+public void setAmount(String amount) {
         this.amount = amount;
     }
-
-    public String getRecurringAmount() {
-        return recurringAmount;
-    }
-
-    public void setRecurringAmount(String recurringAmount) {
+public void setRecurringAmount(String recurringAmount) {
         this.recurringAmount = recurringAmount;
     }
 

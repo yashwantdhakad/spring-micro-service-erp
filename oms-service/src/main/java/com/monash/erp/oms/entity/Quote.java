@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class Quote extends AuditableEntity {
 
     @Id
@@ -27,119 +33,46 @@ public class Quote extends AuditableEntity {
     private String quoteName;
     private String description;
     private String externalId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getQuoteId() {
-        return quoteId;
-    }
-
-    public void setQuoteId(String quoteId) {
+public void setQuoteId(String quoteId) {
         this.quoteId = quoteId;
     }
-
-    public String getQuoteTypeId() {
-        return quoteTypeId;
-    }
-
-    public void setQuoteTypeId(String quoteTypeId) {
+public void setQuoteTypeId(String quoteTypeId) {
         this.quoteTypeId = quoteTypeId;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public LocalDateTime getIssueDate() {
-        return issueDate;
-    }
-
-    public void setIssueDate(LocalDateTime issueDate) {
+public void setIssueDate(LocalDateTime issueDate) {
         this.issueDate = issueDate;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getCurrencyUomId() {
-        return currencyUomId;
-    }
-
-    public void setCurrencyUomId(String currencyUomId) {
+public void setCurrencyUomId(String currencyUomId) {
         this.currencyUomId = currencyUomId;
     }
-
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
+public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
-
-    public String getSalesChannelEnumId() {
-        return salesChannelEnumId;
-    }
-
-    public void setSalesChannelEnumId(String salesChannelEnumId) {
+public void setSalesChannelEnumId(String salesChannelEnumId) {
         this.salesChannelEnumId = salesChannelEnumId;
     }
-
-    public LocalDateTime getValidFromDate() {
-        return validFromDate;
-    }
-
-    public void setValidFromDate(LocalDateTime validFromDate) {
+public void setValidFromDate(LocalDateTime validFromDate) {
         this.validFromDate = validFromDate;
     }
-
-    public LocalDateTime getValidThruDate() {
-        return validThruDate;
-    }
-
-    public void setValidThruDate(LocalDateTime validThruDate) {
+public void setValidThruDate(LocalDateTime validThruDate) {
         this.validThruDate = validThruDate;
     }
-
-    public String getQuoteName() {
-        return quoteName;
-    }
-
-    public void setQuoteName(String quoteName) {
+public void setQuoteName(String quoteName) {
         this.quoteName = quoteName;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-
-
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
+public void setExternalId(String externalId) {
         this.externalId = externalId;
     }
 

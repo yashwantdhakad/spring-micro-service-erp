@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class StandardTimePeriod extends AuditableEntity {
 
     @Id
@@ -18,48 +24,20 @@ public class StandardTimePeriod extends AuditableEntity {
     private String periodTypeId;
     private LocalDateTime fromDate;
     private LocalDateTime thruDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getStandardTimePeriodId() {
-        return standardTimePeriodId;
-    }
-
-    public void setStandardTimePeriodId(String standardTimePeriodId) {
+public void setStandardTimePeriodId(String standardTimePeriodId) {
         this.standardTimePeriodId = standardTimePeriodId;
     }
-
-    public String getPeriodTypeId() {
-        return periodTypeId;
-    }
-
-    public void setPeriodTypeId(String periodTypeId) {
+public void setPeriodTypeId(String periodTypeId) {
         this.periodTypeId = periodTypeId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-
-
 
 }

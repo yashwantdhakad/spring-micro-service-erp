@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductType {
 
     @Id
@@ -18,60 +24,25 @@ public class ProductType {
     private String isDigital;
     private String hasTable;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductTypeId() {
-        return productTypeId;
-    }
-
-    public void setProductTypeId(String productTypeId) {
+public void setProductTypeId(String productTypeId) {
         this.productTypeId = productTypeId;
     }
-
-    public String getParentTypeId() {
-        return parentTypeId;
-    }
-
-    public void setParentTypeId(String parentTypeId) {
+public void setParentTypeId(String parentTypeId) {
         this.parentTypeId = parentTypeId;
     }
-
-    public String getIsPhysical() {
-        return isPhysical;
-    }
-
-    public void setIsPhysical(String isPhysical) {
+public void setIsPhysical(String isPhysical) {
         this.isPhysical = isPhysical;
     }
-
-    public String getIsDigital() {
-        return isDigital;
-    }
-
-    public void setIsDigital(String isDigital) {
+public void setIsDigital(String isDigital) {
         this.isDigital = isDigital;
     }
-
-    public String getHasTable() {
-        return hasTable;
-    }
-
-    public void setHasTable(String hasTable) {
+public void setHasTable(String hasTable) {
         this.hasTable = hasTable;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

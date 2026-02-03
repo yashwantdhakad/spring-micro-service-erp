@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ApiGatewayRequest {
 
     @Id
@@ -26,108 +32,43 @@ public class ApiGatewayRequest {
     private String internalId;
     private String flowType;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getGatewayRequestId() {
-        return gatewayRequestId;
-    }
-
-    public void setGatewayRequestId(String gatewayRequestId) {
+public void setGatewayRequestId(String gatewayRequestId) {
         this.gatewayRequestId = gatewayRequestId;
     }
-
-    public String getGatewayRequest() {
-        return gatewayRequest;
-    }
-
-    public void setGatewayRequest(String gatewayRequest) {
+public void setGatewayRequest(String gatewayRequest) {
         this.gatewayRequest = gatewayRequest;
     }
-
-    public String getGatewayResponse() {
-        return gatewayResponse;
-    }
-
-    public void setGatewayResponse(String gatewayResponse) {
+public void setGatewayResponse(String gatewayResponse) {
         this.gatewayResponse = gatewayResponse;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
+public void setExternalId(String externalId) {
         this.externalId = externalId;
     }
-
-    public String getInternalId() {
-        return internalId;
-    }
-
-    public void setInternalId(String internalId) {
+public void setInternalId(String internalId) {
         this.internalId = internalId;
     }
-
-    public String getFlowType() {
-        return flowType;
-    }
-
-    public void setFlowType(String flowType) {
+public void setFlowType(String flowType) {
         this.flowType = flowType;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

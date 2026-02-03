@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class FacilityLocation {
 
     @Id
@@ -21,84 +27,34 @@ public class FacilityLocation {
     private String levelId;
     private String positionId;
     private String geoPointId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getFacilityId() {
-        return facilityId;
-    }
-
-    public void setFacilityId(String facilityId) {
+public void setFacilityId(String facilityId) {
         this.facilityId = facilityId;
     }
-
-    public String getLocationSeqId() {
-        return locationSeqId;
-    }
-
-    public void setLocationSeqId(String locationSeqId) {
+public void setLocationSeqId(String locationSeqId) {
         this.locationSeqId = locationSeqId;
     }
-
-    public String getLocationTypeEnumId() {
-        return locationTypeEnumId;
-    }
-
-    public void setLocationTypeEnumId(String locationTypeEnumId) {
+public void setLocationTypeEnumId(String locationTypeEnumId) {
         this.locationTypeEnumId = locationTypeEnumId;
     }
-
-    public String getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(String areaId) {
+public void setAreaId(String areaId) {
         this.areaId = areaId;
     }
-
-    public String getAisleId() {
-        return aisleId;
-    }
-
-    public void setAisleId(String aisleId) {
+public void setAisleId(String aisleId) {
         this.aisleId = aisleId;
     }
-
-    public String getSectionId() {
-        return sectionId;
-    }
-
-    public void setSectionId(String sectionId) {
+public void setSectionId(String sectionId) {
         this.sectionId = sectionId;
     }
-
-    public String getLevelId() {
-        return levelId;
-    }
-
-    public void setLevelId(String levelId) {
+public void setLevelId(String levelId) {
         this.levelId = levelId;
     }
-
-    public String getPositionId() {
-        return positionId;
-    }
-
-    public void setPositionId(String positionId) {
+public void setPositionId(String positionId) {
         this.positionId = positionId;
     }
-
-    public String getGeoPointId() {
-        return geoPointId;
-    }
-
-    public void setGeoPointId(String geoPointId) {
+public void setGeoPointId(String geoPointId) {
         this.geoPointId = geoPointId;
     }
 

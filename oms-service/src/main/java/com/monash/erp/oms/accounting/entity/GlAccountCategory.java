@@ -1,11 +1,17 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class GlAccountCategory {
 
     @Id
@@ -17,36 +23,16 @@ public class GlAccountCategory {
     private String glAccountCategoryTypeId;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getGlAccountCategoryId() {
-        return glAccountCategoryId;
-    }
-
-    public void setGlAccountCategoryId(String glAccountCategoryId) {
+public void setGlAccountCategoryId(String glAccountCategoryId) {
         this.glAccountCategoryId = glAccountCategoryId;
     }
-
-    public String getGlAccountCategoryTypeId() {
-        return glAccountCategoryTypeId;
-    }
-
-    public void setGlAccountCategoryTypeId(String glAccountCategoryTypeId) {
+public void setGlAccountCategoryTypeId(String glAccountCategoryTypeId) {
         this.glAccountCategoryTypeId = glAccountCategoryTypeId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

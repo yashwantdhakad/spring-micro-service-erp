@@ -1,5 +1,8 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class Uom {
 
     @Id
@@ -23,52 +29,22 @@ public class Uom {
     private BigDecimal numericCode;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getUomId() {
-        return uomId;
-    }
-
-    public void setUomId(String uomId) {
+public void setUomId(String uomId) {
         this.uomId = uomId;
     }
-
-    public String getUomTypeId() {
-        return uomTypeId;
-    }
-
-    public void setUomTypeId(String uomTypeId) {
+public void setUomTypeId(String uomTypeId) {
         this.uomTypeId = uomTypeId;
     }
-
-    public String getAbbreviation() {
-        return abbreviation;
-    }
-
-    public void setAbbreviation(String abbreviation) {
+public void setAbbreviation(String abbreviation) {
         this.abbreviation = abbreviation;
     }
-
-    public BigDecimal getNumericCode() {
-        return numericCode;
-    }
-
-    public void setNumericCode(BigDecimal numericCode) {
+public void setNumericCode(BigDecimal numericCode) {
         this.numericCode = numericCode;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

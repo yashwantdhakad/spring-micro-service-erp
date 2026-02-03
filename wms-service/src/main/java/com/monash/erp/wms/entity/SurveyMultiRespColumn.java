@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class SurveyMultiRespColumn {
 
     @Id
@@ -17,52 +23,22 @@ public class SurveyMultiRespColumn {
     private String surveyMultiRespColId;
     private String columnTitle;
     private String sequenceNum;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getSurveyId() {
-        return surveyId;
-    }
-
-    public void setSurveyId(String surveyId) {
+public void setSurveyId(String surveyId) {
         this.surveyId = surveyId;
     }
-
-    public String getSurveyMultiRespId() {
-        return surveyMultiRespId;
-    }
-
-    public void setSurveyMultiRespId(String surveyMultiRespId) {
+public void setSurveyMultiRespId(String surveyMultiRespId) {
         this.surveyMultiRespId = surveyMultiRespId;
     }
-
-    public String getSurveyMultiRespColId() {
-        return surveyMultiRespColId;
-    }
-
-    public void setSurveyMultiRespColId(String surveyMultiRespColId) {
+public void setSurveyMultiRespColId(String surveyMultiRespColId) {
         this.surveyMultiRespColId = surveyMultiRespColId;
     }
-
-    public String getColumnTitle() {
-        return columnTitle;
-    }
-
-    public void setColumnTitle(String columnTitle) {
+public void setColumnTitle(String columnTitle) {
         this.columnTitle = columnTitle;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
 

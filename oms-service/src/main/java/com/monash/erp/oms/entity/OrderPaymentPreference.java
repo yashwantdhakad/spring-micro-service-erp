@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderPaymentPreference extends AuditableEntity {
 
     @Id
@@ -37,192 +43,74 @@ public class OrderPaymentPreference extends AuditableEntity {
     private String needsNsfRetry;
     private LocalDateTime createdDate;
     private String createdByUserLogin;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderPaymentPreferenceId() {
-        return orderPaymentPreferenceId;
-    }
-
-    public void setOrderPaymentPreferenceId(String orderPaymentPreferenceId) {
+public void setOrderPaymentPreferenceId(String orderPaymentPreferenceId) {
         this.orderPaymentPreferenceId = orderPaymentPreferenceId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getShipGroupSeqId() {
-        return shipGroupSeqId;
-    }
-
-    public void setShipGroupSeqId(String shipGroupSeqId) {
+public void setShipGroupSeqId(String shipGroupSeqId) {
         this.shipGroupSeqId = shipGroupSeqId;
     }
-
-    public String getProductPricePurposeId() {
-        return productPricePurposeId;
-    }
-
-    public void setProductPricePurposeId(String productPricePurposeId) {
+public void setProductPricePurposeId(String productPricePurposeId) {
         this.productPricePurposeId = productPricePurposeId;
     }
-
-    public String getPaymentMethodTypeId() {
-        return paymentMethodTypeId;
-    }
-
-    public void setPaymentMethodTypeId(String paymentMethodTypeId) {
+public void setPaymentMethodTypeId(String paymentMethodTypeId) {
         this.paymentMethodTypeId = paymentMethodTypeId;
     }
-
-    public String getPaymentMethodId() {
-        return paymentMethodId;
-    }
-
-    public void setPaymentMethodId(String paymentMethodId) {
+public void setPaymentMethodId(String paymentMethodId) {
         this.paymentMethodId = paymentMethodId;
     }
-
-    public String getFinAccountId() {
-        return finAccountId;
-    }
-
-    public void setFinAccountId(String finAccountId) {
+public void setFinAccountId(String finAccountId) {
         this.finAccountId = finAccountId;
     }
-
-    public String getSecurityCode() {
-        return securityCode;
-    }
-
-    public void setSecurityCode(String securityCode) {
+public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
     }
-
-    public String getTrack2() {
-        return track2;
-    }
-
-    public void setTrack2(String track2) {
+public void setTrack2(String track2) {
         this.track2 = track2;
     }
-
-    public String getPresentFlag() {
-        return presentFlag;
-    }
-
-    public void setPresentFlag(String presentFlag) {
+public void setPresentFlag(String presentFlag) {
         this.presentFlag = presentFlag;
     }
-
-    public String getSwipedFlag() {
-        return swipedFlag;
-    }
-
-    public void setSwipedFlag(String swipedFlag) {
+public void setSwipedFlag(String swipedFlag) {
         this.swipedFlag = swipedFlag;
     }
-
-    public String getOverflowFlag() {
-        return overflowFlag;
-    }
-
-    public void setOverflowFlag(String overflowFlag) {
+public void setOverflowFlag(String overflowFlag) {
         this.overflowFlag = overflowFlag;
     }
-
-    public BigDecimal getMaxAmount() {
-        return maxAmount;
-    }
-
-    public void setMaxAmount(BigDecimal maxAmount) {
+public void setMaxAmount(BigDecimal maxAmount) {
         this.maxAmount = maxAmount;
     }
-
-    public BigDecimal getProcessAttempt() {
-        return processAttempt;
-    }
-
-    public void setProcessAttempt(BigDecimal processAttempt) {
+public void setProcessAttempt(BigDecimal processAttempt) {
         this.processAttempt = processAttempt;
     }
-
-    public String getBillingPostalCode() {
-        return billingPostalCode;
-    }
-
-    public void setBillingPostalCode(String billingPostalCode) {
+public void setBillingPostalCode(String billingPostalCode) {
         this.billingPostalCode = billingPostalCode;
     }
-
-    public String getManualAuthCode() {
-        return manualAuthCode;
-    }
-
-    public void setManualAuthCode(String manualAuthCode) {
+public void setManualAuthCode(String manualAuthCode) {
         this.manualAuthCode = manualAuthCode;
     }
-
-    public String getManualRefNum() {
-        return manualRefNum;
-    }
-
-    public void setManualRefNum(String manualRefNum) {
+public void setManualRefNum(String manualRefNum) {
         this.manualRefNum = manualRefNum;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getNeedsNsfRetry() {
-        return needsNsfRetry;
-    }
-
-    public void setNeedsNsfRetry(String needsNsfRetry) {
+public void setNeedsNsfRetry(String needsNsfRetry) {
         this.needsNsfRetry = needsNsfRetry;
     }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
+public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
-
-    public String getCreatedByUserLogin() {
-        return createdByUserLogin;
-    }
-
-    public void setCreatedByUserLogin(String createdByUserLogin) {
+public void setCreatedByUserLogin(String createdByUserLogin) {
         this.createdByUserLogin = createdByUserLogin;
     }
-
-
-
 
 }

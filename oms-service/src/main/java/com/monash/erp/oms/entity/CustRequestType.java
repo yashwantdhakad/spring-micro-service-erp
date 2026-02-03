@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class CustRequestType extends AuditableEntity {
 
     @Id
@@ -19,56 +25,23 @@ public class CustRequestType extends AuditableEntity {
     private String hasTable;
     private String description;
     private String partyId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCustRequestTypeId() {
-        return custRequestTypeId;
-    }
-
-    public void setCustRequestTypeId(String custRequestTypeId) {
+public void setCustRequestTypeId(String custRequestTypeId) {
         this.custRequestTypeId = custRequestTypeId;
     }
-
-    public String getParentTypeId() {
-        return parentTypeId;
-    }
-
-    public void setParentTypeId(String parentTypeId) {
+public void setParentTypeId(String parentTypeId) {
         this.parentTypeId = parentTypeId;
     }
-
-    public String getHasTable() {
-        return hasTable;
-    }
-
-    public void setHasTable(String hasTable) {
+public void setHasTable(String hasTable) {
         this.hasTable = hasTable;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-
-
 
 }

@@ -1,5 +1,8 @@
 package com.monash.erp.party.security.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class TarpittedLoginView {
 
     @Id
@@ -19,36 +25,16 @@ public class TarpittedLoginView {
     private String userLoginId;
 
     private BigDecimal tarpitReleaseDateTime;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getViewNameId() {
-        return viewNameId;
-    }
-
-    public void setViewNameId(String viewNameId) {
+public void setViewNameId(String viewNameId) {
         this.viewNameId = viewNameId;
     }
-
-    public String getUserLoginId() {
-        return userLoginId;
-    }
-
-    public void setUserLoginId(String userLoginId) {
+public void setUserLoginId(String userLoginId) {
         this.userLoginId = userLoginId;
     }
-
-    public BigDecimal getTarpitReleaseDateTime() {
-        return tarpitReleaseDateTime;
-    }
-
-    public void setTarpitReleaseDateTime(BigDecimal tarpitReleaseDateTime) {
+public void setTarpitReleaseDateTime(BigDecimal tarpitReleaseDateTime) {
         this.tarpitReleaseDateTime = tarpitReleaseDateTime;
     }
 }

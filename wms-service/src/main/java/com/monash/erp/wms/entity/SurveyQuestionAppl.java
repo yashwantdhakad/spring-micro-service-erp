@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,6 +10,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class SurveyQuestionAppl {
 
     @Id
@@ -25,108 +31,43 @@ public class SurveyQuestionAppl {
     private String externalFieldRef;
     private String withSurveyQuestionId;
     private String withSurveyOptionSeqId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getSurveyId() {
-        return surveyId;
-    }
-
-    public void setSurveyId(String surveyId) {
+public void setSurveyId(String surveyId) {
         this.surveyId = surveyId;
     }
-
-    public String getSurveyQuestionId() {
-        return surveyQuestionId;
-    }
-
-    public void setSurveyQuestionId(String surveyQuestionId) {
+public void setSurveyQuestionId(String surveyQuestionId) {
         this.surveyQuestionId = surveyQuestionId;
     }
-
-    public LocalDateTime getFromDate() {
-        return fromDate;
-    }
-
-    public void setFromDate(LocalDateTime fromDate) {
+public void setFromDate(LocalDateTime fromDate) {
         this.fromDate = fromDate;
     }
-
-    public LocalDateTime getThruDate() {
-        return thruDate;
-    }
-
-    public void setThruDate(LocalDateTime thruDate) {
+public void setThruDate(LocalDateTime thruDate) {
         this.thruDate = thruDate;
     }
-
-    public String getSurveyPageSeqId() {
-        return surveyPageSeqId;
-    }
-
-    public void setSurveyPageSeqId(String surveyPageSeqId) {
+public void setSurveyPageSeqId(String surveyPageSeqId) {
         this.surveyPageSeqId = surveyPageSeqId;
     }
-
-    public String getSurveyMultiRespId() {
-        return surveyMultiRespId;
-    }
-
-    public void setSurveyMultiRespId(String surveyMultiRespId) {
+public void setSurveyMultiRespId(String surveyMultiRespId) {
         this.surveyMultiRespId = surveyMultiRespId;
     }
-
-    public String getSurveyMultiRespColId() {
-        return surveyMultiRespColId;
-    }
-
-    public void setSurveyMultiRespColId(String surveyMultiRespColId) {
+public void setSurveyMultiRespColId(String surveyMultiRespColId) {
         this.surveyMultiRespColId = surveyMultiRespColId;
     }
-
-    public String getRequiredField() {
-        return requiredField;
-    }
-
-    public void setRequiredField(String requiredField) {
+public void setRequiredField(String requiredField) {
         this.requiredField = requiredField;
     }
-
-    public String getSequenceNum() {
-        return sequenceNum;
-    }
-
-    public void setSequenceNum(String sequenceNum) {
+public void setSequenceNum(String sequenceNum) {
         this.sequenceNum = sequenceNum;
     }
-
-    public String getExternalFieldRef() {
-        return externalFieldRef;
-    }
-
-    public void setExternalFieldRef(String externalFieldRef) {
+public void setExternalFieldRef(String externalFieldRef) {
         this.externalFieldRef = externalFieldRef;
     }
-
-    public String getWithSurveyQuestionId() {
-        return withSurveyQuestionId;
-    }
-
-    public void setWithSurveyQuestionId(String withSurveyQuestionId) {
+public void setWithSurveyQuestionId(String withSurveyQuestionId) {
         this.withSurveyQuestionId = withSurveyQuestionId;
     }
-
-    public String getWithSurveyOptionSeqId() {
-        return withSurveyOptionSeqId;
-    }
-
-    public void setWithSurveyOptionSeqId(String withSurveyOptionSeqId) {
+public void setWithSurveyOptionSeqId(String withSurveyOptionSeqId) {
         this.withSurveyOptionSeqId = withSurveyOptionSeqId;
     }
 

@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class WebUserPreference {
 
     @Id
@@ -17,52 +23,22 @@ public class WebUserPreference {
     private String visitId;
     private String webPreferenceTypeId;
     private String webPreferenceValue;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getUserLoginId() {
-        return userLoginId;
-    }
-
-    public void setUserLoginId(String userLoginId) {
+public void setUserLoginId(String userLoginId) {
         this.userLoginId = userLoginId;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getVisitId() {
-        return visitId;
-    }
-
-    public void setVisitId(String visitId) {
+public void setVisitId(String visitId) {
         this.visitId = visitId;
     }
-
-    public String getWebPreferenceTypeId() {
-        return webPreferenceTypeId;
-    }
-
-    public void setWebPreferenceTypeId(String webPreferenceTypeId) {
+public void setWebPreferenceTypeId(String webPreferenceTypeId) {
         this.webPreferenceTypeId = webPreferenceTypeId;
     }
-
-    public String getWebPreferenceValue() {
-        return webPreferenceValue;
-    }
-
-    public void setWebPreferenceValue(String webPreferenceValue) {
+public void setWebPreferenceValue(String webPreferenceValue) {
         this.webPreferenceValue = webPreferenceValue;
     }
 

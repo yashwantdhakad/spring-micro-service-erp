@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ProductStoreFinActSetting {
 
     @Id
@@ -34,164 +40,64 @@ public class ProductStoreFinActSetting {
     private LocalDateTime lastUpdatedTxStamp;
     private LocalDateTime createdStamp;
     private LocalDateTime createdTxStamp;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getProductStoreId() {
-        return productStoreId;
-    }
-
-    public void setProductStoreId(String productStoreId) {
+public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
-
-    public String getFinAccountTypeId() {
-        return finAccountTypeId;
-    }
-
-    public void setFinAccountTypeId(String finAccountTypeId) {
+public void setFinAccountTypeId(String finAccountTypeId) {
         this.finAccountTypeId = finAccountTypeId;
     }
-
-    public String getRequirePinCode() {
-        return requirePinCode;
-    }
-
-    public void setRequirePinCode(String requirePinCode) {
+public void setRequirePinCode(String requirePinCode) {
         this.requirePinCode = requirePinCode;
     }
-
-    public String getValidateGCFinAcct() {
-        return validateGCFinAcct;
-    }
-
-    public void setValidateGCFinAcct(String validateGCFinAcct) {
+public void setValidateGCFinAcct(String validateGCFinAcct) {
         this.validateGCFinAcct = validateGCFinAcct;
     }
-
-    public BigDecimal getAccountCodeLength() {
-        return accountCodeLength;
-    }
-
-    public void setAccountCodeLength(BigDecimal accountCodeLength) {
+public void setAccountCodeLength(BigDecimal accountCodeLength) {
         this.accountCodeLength = accountCodeLength;
     }
-
-    public BigDecimal getPinCodeLength() {
-        return pinCodeLength;
-    }
-
-    public void setPinCodeLength(BigDecimal pinCodeLength) {
+public void setPinCodeLength(BigDecimal pinCodeLength) {
         this.pinCodeLength = pinCodeLength;
     }
-
-    public BigDecimal getAccountValidDays() {
-        return accountValidDays;
-    }
-
-    public void setAccountValidDays(BigDecimal accountValidDays) {
+public void setAccountValidDays(BigDecimal accountValidDays) {
         this.accountValidDays = accountValidDays;
     }
-
-    public BigDecimal getAuthValidDays() {
-        return authValidDays;
-    }
-
-    public void setAuthValidDays(BigDecimal authValidDays) {
+public void setAuthValidDays(BigDecimal authValidDays) {
         this.authValidDays = authValidDays;
     }
-
-    public String getPurchaseSurveyId() {
-        return purchaseSurveyId;
-    }
-
-    public void setPurchaseSurveyId(String purchaseSurveyId) {
+public void setPurchaseSurveyId(String purchaseSurveyId) {
         this.purchaseSurveyId = purchaseSurveyId;
     }
-
-    public String getPurchSurveySendTo() {
-        return purchSurveySendTo;
-    }
-
-    public void setPurchSurveySendTo(String purchSurveySendTo) {
+public void setPurchSurveySendTo(String purchSurveySendTo) {
         this.purchSurveySendTo = purchSurveySendTo;
     }
-
-    public String getPurchSurveyCopyMe() {
-        return purchSurveyCopyMe;
-    }
-
-    public void setPurchSurveyCopyMe(String purchSurveyCopyMe) {
+public void setPurchSurveyCopyMe(String purchSurveyCopyMe) {
         this.purchSurveyCopyMe = purchSurveyCopyMe;
     }
-
-    public String getAllowAuthToNegative() {
-        return allowAuthToNegative;
-    }
-
-    public void setAllowAuthToNegative(String allowAuthToNegative) {
+public void setAllowAuthToNegative(String allowAuthToNegative) {
         this.allowAuthToNegative = allowAuthToNegative;
     }
-
-    public BigDecimal getMinBalance() {
-        return minBalance;
-    }
-
-    public void setMinBalance(BigDecimal minBalance) {
+public void setMinBalance(BigDecimal minBalance) {
         this.minBalance = minBalance;
     }
-
-    public BigDecimal getReplenishThreshold() {
-        return replenishThreshold;
-    }
-
-    public void setReplenishThreshold(BigDecimal replenishThreshold) {
+public void setReplenishThreshold(BigDecimal replenishThreshold) {
         this.replenishThreshold = replenishThreshold;
     }
-
-    public String getReplenishMethodEnumId() {
-        return replenishMethodEnumId;
-    }
-
-    public void setReplenishMethodEnumId(String replenishMethodEnumId) {
+public void setReplenishMethodEnumId(String replenishMethodEnumId) {
         this.replenishMethodEnumId = replenishMethodEnumId;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
 

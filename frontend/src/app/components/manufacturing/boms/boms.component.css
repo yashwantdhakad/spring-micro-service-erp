@@ -1,0 +1,22 @@
+.bom-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-field {
+  min-width: 220px;
+}
+
+.muted {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 12px;
+}

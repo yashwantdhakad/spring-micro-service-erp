@@ -1,11 +1,17 @@
 package com.monash.erp.party.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class PartyClassificationGroup {
 
     @Id
@@ -16,44 +22,19 @@ public class PartyClassificationGroup {
     private String partyClassificationTypeId;
     private String parentGroupId;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getPartyClassificationGroupId() {
-        return partyClassificationGroupId;
-    }
-
-    public void setPartyClassificationGroupId(String partyClassificationGroupId) {
+public void setPartyClassificationGroupId(String partyClassificationGroupId) {
         this.partyClassificationGroupId = partyClassificationGroupId;
     }
-
-    public String getPartyClassificationTypeId() {
-        return partyClassificationTypeId;
-    }
-
-    public void setPartyClassificationTypeId(String partyClassificationTypeId) {
+public void setPartyClassificationTypeId(String partyClassificationTypeId) {
         this.partyClassificationTypeId = partyClassificationTypeId;
     }
-
-    public String getParentGroupId() {
-        return parentGroupId;
-    }
-
-    public void setParentGroupId(String parentGroupId) {
+public void setParentGroupId(String parentGroupId) {
         this.parentGroupId = parentGroupId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderAdjustmentTypeAttr extends AuditableEntity {
 
     @Id
@@ -16,32 +22,14 @@ public class OrderAdjustmentTypeAttr extends AuditableEntity {
 
     private String orderAdjustmentTypeId;
     private String attrName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderAdjustmentTypeId() {
-        return orderAdjustmentTypeId;
-    }
-
-    public void setOrderAdjustmentTypeId(String orderAdjustmentTypeId) {
+public void setOrderAdjustmentTypeId(String orderAdjustmentTypeId) {
         this.orderAdjustmentTypeId = orderAdjustmentTypeId;
     }
-
-    public String getAttrName() {
-        return attrName;
-    }
-
-    public void setAttrName(String attrName) {
+public void setAttrName(String attrName) {
         this.attrName = attrName;
     }
-
-
-
 
 }

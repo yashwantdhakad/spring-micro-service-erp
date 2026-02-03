@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class CommunicationEvent extends AuditableEntity {
 
     @Id
@@ -41,232 +47,89 @@ public class CommunicationEvent extends AuditableEntity {
     private String ccString;
     private String bccString;
     private String messageId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCommunicationEventId() {
-        return communicationEventId;
-    }
-
-    public void setCommunicationEventId(String communicationEventId) {
+public void setCommunicationEventId(String communicationEventId) {
         this.communicationEventId = communicationEventId;
     }
-
-    public String getCommunicationEventTypeId() {
-        return communicationEventTypeId;
-    }
-
-    public void setCommunicationEventTypeId(String communicationEventTypeId) {
+public void setCommunicationEventTypeId(String communicationEventTypeId) {
         this.communicationEventTypeId = communicationEventTypeId;
     }
-
-    public String getOrigCommEventId() {
-        return origCommEventId;
-    }
-
-    public void setOrigCommEventId(String origCommEventId) {
+public void setOrigCommEventId(String origCommEventId) {
         this.origCommEventId = origCommEventId;
     }
-
-    public String getParentCommEventId() {
-        return parentCommEventId;
-    }
-
-    public void setParentCommEventId(String parentCommEventId) {
+public void setParentCommEventId(String parentCommEventId) {
         this.parentCommEventId = parentCommEventId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getContactMechTypeId() {
-        return contactMechTypeId;
-    }
-
-    public void setContactMechTypeId(String contactMechTypeId) {
+public void setContactMechTypeId(String contactMechTypeId) {
         this.contactMechTypeId = contactMechTypeId;
     }
-
-    public String getContactMechIdFrom() {
-        return contactMechIdFrom;
-    }
-
-    public void setContactMechIdFrom(String contactMechIdFrom) {
+public void setContactMechIdFrom(String contactMechIdFrom) {
         this.contactMechIdFrom = contactMechIdFrom;
     }
-
-    public String getContactMechIdTo() {
-        return contactMechIdTo;
-    }
-
-    public void setContactMechIdTo(String contactMechIdTo) {
+public void setContactMechIdTo(String contactMechIdTo) {
         this.contactMechIdTo = contactMechIdTo;
     }
-
-    public String getRoleTypeIdFrom() {
-        return roleTypeIdFrom;
-    }
-
-    public void setRoleTypeIdFrom(String roleTypeIdFrom) {
+public void setRoleTypeIdFrom(String roleTypeIdFrom) {
         this.roleTypeIdFrom = roleTypeIdFrom;
     }
-
-    public String getRoleTypeIdTo() {
-        return roleTypeIdTo;
-    }
-
-    public void setRoleTypeIdTo(String roleTypeIdTo) {
+public void setRoleTypeIdTo(String roleTypeIdTo) {
         this.roleTypeIdTo = roleTypeIdTo;
     }
-
-    public String getPartyIdFrom() {
-        return partyIdFrom;
-    }
-
-    public void setPartyIdFrom(String partyIdFrom) {
+public void setPartyIdFrom(String partyIdFrom) {
         this.partyIdFrom = partyIdFrom;
     }
-
-    public String getPartyIdTo() {
-        return partyIdTo;
-    }
-
-    public void setPartyIdTo(String partyIdTo) {
+public void setPartyIdTo(String partyIdTo) {
         this.partyIdTo = partyIdTo;
     }
-
-    public LocalDateTime getEntryDate() {
-        return entryDate;
-    }
-
-    public void setEntryDate(LocalDateTime entryDate) {
+public void setEntryDate(LocalDateTime entryDate) {
         this.entryDate = entryDate;
     }
-
-    public LocalDateTime getDatetimeStarted() {
-        return datetimeStarted;
-    }
-
-    public void setDatetimeStarted(LocalDateTime datetimeStarted) {
+public void setDatetimeStarted(LocalDateTime datetimeStarted) {
         this.datetimeStarted = datetimeStarted;
     }
-
-    public LocalDateTime getDatetimeEnded() {
-        return datetimeEnded;
-    }
-
-    public void setDatetimeEnded(LocalDateTime datetimeEnded) {
+public void setDatetimeEnded(LocalDateTime datetimeEnded) {
         this.datetimeEnded = datetimeEnded;
     }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
+public void setSubject(String subject) {
         this.subject = subject;
     }
-
-    public String getContentMimeTypeId() {
-        return contentMimeTypeId;
-    }
-
-    public void setContentMimeTypeId(String contentMimeTypeId) {
+public void setContentMimeTypeId(String contentMimeTypeId) {
         this.contentMimeTypeId = contentMimeTypeId;
     }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
+public void setContent(String content) {
         this.content = content;
     }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
+public void setNote(String note) {
         this.note = note;
     }
-
-    public String getReasonEnumId() {
-        return reasonEnumId;
-    }
-
-    public void setReasonEnumId(String reasonEnumId) {
+public void setReasonEnumId(String reasonEnumId) {
         this.reasonEnumId = reasonEnumId;
     }
-
-    public String getContactListId() {
-        return contactListId;
-    }
-
-    public void setContactListId(String contactListId) {
+public void setContactListId(String contactListId) {
         this.contactListId = contactListId;
     }
-
-    public String getHeaderString() {
-        return headerString;
-    }
-
-    public void setHeaderString(String headerString) {
+public void setHeaderString(String headerString) {
         this.headerString = headerString;
     }
-
-    public String getFromString() {
-        return fromString;
-    }
-
-    public void setFromString(String fromString) {
+public void setFromString(String fromString) {
         this.fromString = fromString;
     }
-
-    public String getToString() {
-        return toString;
-    }
-
-    public void setToString(String toString) {
+public void setToString(String toString) {
         this.toString = toString;
     }
-
-    public String getCcString() {
-        return ccString;
-    }
-
-    public void setCcString(String ccString) {
+public void setCcString(String ccString) {
         this.ccString = ccString;
     }
-
-    public String getBccString() {
-        return bccString;
-    }
-
-    public void setBccString(String bccString) {
+public void setBccString(String bccString) {
         this.bccString = bccString;
     }
-
-    public String getMessageId() {
-        return messageId;
-    }
-
-    public void setMessageId(String messageId) {
+public void setMessageId(String messageId) {
         this.messageId = messageId;
     }
-
-
-
 
 }

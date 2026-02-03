@@ -1,5 +1,8 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ServerHit {
 
     @Id
@@ -35,172 +41,67 @@ public class ServerHit {
     private String partyId;
     private String idByIpContactMechId;
     private String refByWebContactMechId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getVisitId() {
-        return visitId;
-    }
-
-    public void setVisitId(String visitId) {
+public void setVisitId(String visitId) {
         this.visitId = visitId;
     }
-
-    public String getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(String contentId) {
+public void setContentId(String contentId) {
         this.contentId = contentId;
     }
-
-    public LocalDateTime getHitStartDateTime() {
-        return hitStartDateTime;
-    }
-
-    public void setHitStartDateTime(LocalDateTime hitStartDateTime) {
+public void setHitStartDateTime(LocalDateTime hitStartDateTime) {
         this.hitStartDateTime = hitStartDateTime;
     }
-
-    public String getHitTypeId() {
-        return hitTypeId;
-    }
-
-    public void setHitTypeId(String hitTypeId) {
+public void setHitTypeId(String hitTypeId) {
         this.hitTypeId = hitTypeId;
     }
-
-    public BigDecimal getNumOfBytes() {
-        return numOfBytes;
-    }
-
-    public void setNumOfBytes(BigDecimal numOfBytes) {
+public void setNumOfBytes(BigDecimal numOfBytes) {
         this.numOfBytes = numOfBytes;
     }
-
-    public BigDecimal getRunningTimeMillis() {
-        return runningTimeMillis;
-    }
-
-    public void setRunningTimeMillis(BigDecimal runningTimeMillis) {
+public void setRunningTimeMillis(BigDecimal runningTimeMillis) {
         this.runningTimeMillis = runningTimeMillis;
     }
-
-    public String getUserLoginId() {
-        return userLoginId;
-    }
-
-    public void setUserLoginId(String userLoginId) {
+public void setUserLoginId(String userLoginId) {
         this.userLoginId = userLoginId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public String getRequestUrl() {
-        return requestUrl;
-    }
-
-    public void setRequestUrl(String requestUrl) {
+public void setRequestUrl(String requestUrl) {
         this.requestUrl = requestUrl;
     }
-
-    public String getReferrerUrl() {
-        return referrerUrl;
-    }
-
-    public void setReferrerUrl(String referrerUrl) {
+public void setReferrerUrl(String referrerUrl) {
         this.referrerUrl = referrerUrl;
     }
-
-    public String getServerIpAddress() {
-        return serverIpAddress;
-    }
-
-    public void setServerIpAddress(String serverIpAddress) {
+public void setServerIpAddress(String serverIpAddress) {
         this.serverIpAddress = serverIpAddress;
     }
-
-    public String getServerHostName() {
-        return serverHostName;
-    }
-
-    public void setServerHostName(String serverHostName) {
+public void setServerHostName(String serverHostName) {
         this.serverHostName = serverHostName;
     }
-
-    public LocalDateTime getLastUpdatedStamp() {
-        return lastUpdatedStamp;
-    }
-
-    public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
+public void setLastUpdatedStamp(LocalDateTime lastUpdatedStamp) {
         this.lastUpdatedStamp = lastUpdatedStamp;
     }
-
-    public LocalDateTime getLastUpdatedTxStamp() {
-        return lastUpdatedTxStamp;
-    }
-
-    public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
+public void setLastUpdatedTxStamp(LocalDateTime lastUpdatedTxStamp) {
         this.lastUpdatedTxStamp = lastUpdatedTxStamp;
     }
-
-    public LocalDateTime getCreatedStamp() {
-        return createdStamp;
-    }
-
-    public void setCreatedStamp(LocalDateTime createdStamp) {
+public void setCreatedStamp(LocalDateTime createdStamp) {
         this.createdStamp = createdStamp;
     }
-
-    public LocalDateTime getCreatedTxStamp() {
-        return createdTxStamp;
-    }
-
-    public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
+public void setCreatedTxStamp(LocalDateTime createdTxStamp) {
         this.createdTxStamp = createdTxStamp;
     }
-
-    public String getInternalContentId() {
-        return internalContentId;
-    }
-
-    public void setInternalContentId(String internalContentId) {
+public void setInternalContentId(String internalContentId) {
         this.internalContentId = internalContentId;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getIdByIpContactMechId() {
-        return idByIpContactMechId;
-    }
-
-    public void setIdByIpContactMechId(String idByIpContactMechId) {
+public void setIdByIpContactMechId(String idByIpContactMechId) {
         this.idByIpContactMechId = idByIpContactMechId;
     }
-
-    public String getRefByWebContactMechId() {
-        return refByWebContactMechId;
-    }
-
-    public void setRefByWebContactMechId(String refByWebContactMechId) {
+public void setRefByWebContactMechId(String refByWebContactMechId) {
         this.refByWebContactMechId = refByWebContactMechId;
     }
 

@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderInventoryItemAppl extends AuditableEntity {
 
     @Id
@@ -22,72 +28,29 @@ public class OrderInventoryItemAppl extends AuditableEntity {
     private String statusId;
     private BigDecimal quantity;
     private BigDecimal amountConsumed;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getInventoryItemSeqId() {
-        return inventoryItemSeqId;
-    }
-
-    public void setInventoryItemSeqId(String inventoryItemSeqId) {
+public void setInventoryItemSeqId(String inventoryItemSeqId) {
         this.inventoryItemSeqId = inventoryItemSeqId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getStatusId() {
-        return statusId;
-    }
-
-    public void setStatusId(String statusId) {
+public void setStatusId(String statusId) {
         this.statusId = statusId;
     }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(BigDecimal quantity) {
+public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-
-    public BigDecimal getAmountConsumed() {
-        return amountConsumed;
-    }
-
-    public void setAmountConsumed(BigDecimal amountConsumed) {
+public void setAmountConsumed(BigDecimal amountConsumed) {
         this.amountConsumed = amountConsumed;
     }
-
-
-
 
 }

@@ -1,0 +1,149 @@
+<ng-container *ngIf="isLoading; else content">
+  <mat-progress-spinner
+    [diameter]="100"
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</ng-container>
+
+<ng-template #content>
+  <mat-list>
+    <mat-list-item>
+      <a [routerLink]="['/jobs/boms']">{{ 'BOM.TITLE' | translate }}</a> / {{ productId }}
+    </mat-list-item>
+  </mat-list>
+
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'BOM.OVERVIEW' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="overview-grid">
+        <div class="overview-item">
+          <strong>{{ 'BOM.PRODUCT' | translate }}:</strong>
+          <a [routerLink]="['/products', productId]">{{ productId }}</a>
+          <div class="muted">{{ productName }}</div>
+        </div>
+        <div class="overview-item">
+          <strong>{{ 'BOM.TYPE' | translate }}:</strong>
+          {{ bomTypeLabel }}
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <br />
+
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'BOM.COMPONENTS' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="openAddComponentDialog()"
+        >add</mat-icon>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="components">
+        <ng-container matColumnDef="seq">
+          <th mat-header-cell *matHeaderCellDef>Seq #</th>
+          <td mat-cell *matCellDef="let item">{{ item.seq }}</td>
+        </ng-container>
+        <ng-container matColumnDef="component">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.COMPONENT' | translate }}</th>
+          <td mat-cell *matCellDef="let item">
+            <a *ngIf="item.componentId" [routerLink]="['/products', item.componentId]">
+              {{ item.componentId }}
+            </a>
+            <div class="muted">{{ item.componentName }}</div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="sequenceNum">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.SEQ_NUM' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.sequenceNum || '-' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.QTY' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+        </ng-container>
+        <ng-container matColumnDef="fromDate">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.FROM_DATE' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.fromDate | date : "MMMM d, y" }}</td>
+        </ng-container>
+        <ng-container matColumnDef="thruDate">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.THRU_DATE' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.thruDate | date : "MMMM d, y" }}</td>
+        </ng-container>
+        <ng-container matColumnDef="scrap">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.SCRAP' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.scrap }}</td>
+        </ng-container>
+        <ng-container matColumnDef="inst">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.INST' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.inst }}</td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let item">
+            <mat-icon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="openEditComponentDialog(item)"
+            >edit</mat-icon>
+            <mat-icon
+              class="custom-mat-icon custom-icon-align"
+              color="warn"
+              (click)="confirmDeleteComponent(item)"
+            >delete</mat-icon>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="componentColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: componentColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <br />
+
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>{{ 'BOM.SIMULATION' | translate }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="bomSimulationRows">
+        <ng-container matColumnDef="level">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.LEVEL' | translate }}</th>
+          <td mat-cell *matCellDef="let item">
+            <span class="level-badge">{{ item.level }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="productId">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.PRODUCT_ID' | translate }}</th>
+          <td mat-cell *matCellDef="let item">
+            <div class="tree-cell" [style.padding-left.px]="item.level * 16">
+              <span class="tree-node"></span>
+              <a [routerLink]="['/products', item.productId]">{{ item.productId }}</a>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="virtual">
+          <th mat-header-cell *matHeaderCellDef>Virtual</th>
+          <td mat-cell *matCellDef="let item">{{ item.virtual || '-' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.PRODUCT_NAME' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.productName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>{{ 'BOM.QTY' | translate }}</th>
+          <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="simulationColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: simulationColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

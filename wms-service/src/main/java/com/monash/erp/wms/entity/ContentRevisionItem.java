@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class ContentRevisionItem {
 
     @Id
@@ -17,52 +23,22 @@ public class ContentRevisionItem {
     private String itemContentId;
     private String oldDataResourceId;
     private String newDataResourceId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getContentId() {
-        return contentId;
-    }
-
-    public void setContentId(String contentId) {
+public void setContentId(String contentId) {
         this.contentId = contentId;
     }
-
-    public String getContentRevisionSeqId() {
-        return contentRevisionSeqId;
-    }
-
-    public void setContentRevisionSeqId(String contentRevisionSeqId) {
+public void setContentRevisionSeqId(String contentRevisionSeqId) {
         this.contentRevisionSeqId = contentRevisionSeqId;
     }
-
-    public String getItemContentId() {
-        return itemContentId;
-    }
-
-    public void setItemContentId(String itemContentId) {
+public void setItemContentId(String itemContentId) {
         this.itemContentId = itemContentId;
     }
-
-    public String getOldDataResourceId() {
-        return oldDataResourceId;
-    }
-
-    public void setOldDataResourceId(String oldDataResourceId) {
+public void setOldDataResourceId(String oldDataResourceId) {
         this.oldDataResourceId = oldDataResourceId;
     }
-
-    public String getNewDataResourceId() {
-        return newDataResourceId;
-    }
-
-    public void setNewDataResourceId(String newDataResourceId) {
+public void setNewDataResourceId(String newDataResourceId) {
         this.newDataResourceId = newDataResourceId;
     }
 

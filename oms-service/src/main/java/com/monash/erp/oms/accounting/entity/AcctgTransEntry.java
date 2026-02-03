@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class AcctgTransEntry {
 
     @Id
@@ -64,212 +70,82 @@ public class AcctgTransEntry {
     private String settlementTermId;
 
     private Boolean isSummary;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getAcctgTransId() {
-        return acctgTransId;
-    }
-
-    public void setAcctgTransId(String acctgTransId) {
+public void setAcctgTransId(String acctgTransId) {
         this.acctgTransId = acctgTransId;
     }
-
-    public String getAcctgTransEntrySeqId() {
-        return acctgTransEntrySeqId;
-    }
-
-    public void setAcctgTransEntrySeqId(String acctgTransEntrySeqId) {
+public void setAcctgTransEntrySeqId(String acctgTransEntrySeqId) {
         this.acctgTransEntrySeqId = acctgTransEntrySeqId;
     }
-
-    public String getAcctgTransEntryTypeId() {
-        return acctgTransEntryTypeId;
-    }
-
-    public void setAcctgTransEntryTypeId(String acctgTransEntryTypeId) {
+public void setAcctgTransEntryTypeId(String acctgTransEntryTypeId) {
         this.acctgTransEntryTypeId = acctgTransEntryTypeId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getVoucherRef() {
-        return voucherRef;
-    }
-
-    public void setVoucherRef(String voucherRef) {
+public void setVoucherRef(String voucherRef) {
         this.voucherRef = voucherRef;
     }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
+public void setPartyId(String partyId) {
         this.partyId = partyId;
     }
-
-    public String getRoleTypeId() {
-        return roleTypeId;
-    }
-
-    public void setRoleTypeId(String roleTypeId) {
+public void setRoleTypeId(String roleTypeId) {
         this.roleTypeId = roleTypeId;
     }
-
-    public String getTheirPartyId() {
-        return theirPartyId;
-    }
-
-    public void setTheirPartyId(String theirPartyId) {
+public void setTheirPartyId(String theirPartyId) {
         this.theirPartyId = theirPartyId;
     }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
+public void setProductId(String productId) {
         this.productId = productId;
     }
-
-    public String getTheirProductId() {
-        return theirProductId;
-    }
-
-    public void setTheirProductId(String theirProductId) {
+public void setTheirProductId(String theirProductId) {
         this.theirProductId = theirProductId;
     }
-
-    public String getInventoryItemId() {
-        return inventoryItemId;
-    }
-
-    public void setInventoryItemId(String inventoryItemId) {
+public void setInventoryItemId(String inventoryItemId) {
         this.inventoryItemId = inventoryItemId;
     }
-
-    public String getGlAccountTypeId() {
-        return glAccountTypeId;
-    }
-
-    public void setGlAccountTypeId(String glAccountTypeId) {
+public void setGlAccountTypeId(String glAccountTypeId) {
         this.glAccountTypeId = glAccountTypeId;
     }
-
-    public String getGlAccountId() {
-        return glAccountId;
-    }
-
-    public void setGlAccountId(String glAccountId) {
+public void setGlAccountId(String glAccountId) {
         this.glAccountId = glAccountId;
     }
-
-    public String getOrganizationPartyId() {
-        return organizationPartyId;
-    }
-
-    public void setOrganizationPartyId(String organizationPartyId) {
+public void setOrganizationPartyId(String organizationPartyId) {
         this.organizationPartyId = organizationPartyId;
     }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
+public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
-
-    public String getCurrencyUomId() {
-        return currencyUomId;
-    }
-
-    public void setCurrencyUomId(String currencyUomId) {
+public void setCurrencyUomId(String currencyUomId) {
         this.currencyUomId = currencyUomId;
     }
-
-    public BigDecimal getOrigAmount() {
-        return origAmount;
-    }
-
-    public void setOrigAmount(BigDecimal origAmount) {
+public void setOrigAmount(BigDecimal origAmount) {
         this.origAmount = origAmount;
     }
-
-    public String getOrigCurrencyUomId() {
-        return origCurrencyUomId;
-    }
-
-    public void setOrigCurrencyUomId(String origCurrencyUomId) {
+public void setOrigCurrencyUomId(String origCurrencyUomId) {
         this.origCurrencyUomId = origCurrencyUomId;
     }
-
-    public Boolean getDebitCreditFlag() {
-        return debitCreditFlag;
-    }
-
-    public void setDebitCreditFlag(Boolean debitCreditFlag) {
+public void setDebitCreditFlag(Boolean debitCreditFlag) {
         this.debitCreditFlag = debitCreditFlag;
     }
-
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
+public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
+public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
-
-    public String getTaxId() {
-        return taxId;
-    }
-
-    public void setTaxId(String taxId) {
+public void setTaxId(String taxId) {
         this.taxId = taxId;
     }
-
-    public String getReconcileStatusId() {
-        return reconcileStatusId;
-    }
-
-    public void setReconcileStatusId(String reconcileStatusId) {
+public void setReconcileStatusId(String reconcileStatusId) {
         this.reconcileStatusId = reconcileStatusId;
     }
-
-    public String getSettlementTermId() {
-        return settlementTermId;
-    }
-
-    public void setSettlementTermId(String settlementTermId) {
+public void setSettlementTermId(String settlementTermId) {
         this.settlementTermId = settlementTermId;
     }
-
-    public Boolean getIsSummary() {
-        return isSummary;
-    }
-
-    public void setIsSummary(Boolean isSummary) {
+public void setIsSummary(Boolean isSummary) {
         this.isSummary = isSummary;
     }
 }

@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +19,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_order_item_contact_mech_order_purpose", columnList = "order_id, contact_mech_purpose_type_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderItemContactMech extends AuditableEntity {
 
     @Id
@@ -26,48 +32,20 @@ public class OrderItemContactMech extends AuditableEntity {
     private String orderItemSeqId;
     private String contactMechPurposeTypeId;
     private String contactMechId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getContactMechPurposeTypeId() {
-        return contactMechPurposeTypeId;
-    }
-
-    public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
+public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
         this.contactMechPurposeTypeId = contactMechPurposeTypeId;
     }
-
-    public String getContactMechId() {
-        return contactMechId;
-    }
-
-    public void setContactMechId(String contactMechId) {
+public void setContactMechId(String contactMechId) {
         this.contactMechId = contactMechId;
     }
-
-
-
 
 }

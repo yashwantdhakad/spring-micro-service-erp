@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,6 +20,9 @@ import java.time.LocalDateTime;
                 @Index(name = "idx_order_item_billing_order_id", columnList = "order_id")
         }
 )
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderItemBilling extends AuditableEntity {
 
     @Id
@@ -31,80 +37,32 @@ public class OrderItemBilling extends AuditableEntity {
     private String shipmentReceiptId;
     private BigDecimal quantity;
     private BigDecimal amount;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getInvoiceId() {
-        return invoiceId;
-    }
-
-    public void setInvoiceId(String invoiceId) {
+public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
     }
-
-    public String getInvoiceItemSeqId() {
-        return invoiceItemSeqId;
-    }
-
-    public void setInvoiceItemSeqId(String invoiceItemSeqId) {
+public void setInvoiceItemSeqId(String invoiceItemSeqId) {
         this.invoiceItemSeqId = invoiceItemSeqId;
     }
-
-    public String getItemIssuanceId() {
-        return itemIssuanceId;
-    }
-
-    public void setItemIssuanceId(String itemIssuanceId) {
+public void setItemIssuanceId(String itemIssuanceId) {
         this.itemIssuanceId = itemIssuanceId;
     }
-
-    public String getShipmentReceiptId() {
-        return shipmentReceiptId;
-    }
-
-    public void setShipmentReceiptId(String shipmentReceiptId) {
+public void setShipmentReceiptId(String shipmentReceiptId) {
         this.shipmentReceiptId = shipmentReceiptId;
     }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(BigDecimal quantity) {
+public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
+public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
-
-
-
 
 }

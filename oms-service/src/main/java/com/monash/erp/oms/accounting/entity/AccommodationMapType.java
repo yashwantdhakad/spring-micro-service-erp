@@ -1,11 +1,17 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class AccommodationMapType {
 
     @Id
@@ -15,28 +21,13 @@ public class AccommodationMapType {
     private String accommodationMapTypeId;
 
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getAccommodationMapTypeId() {
-        return accommodationMapTypeId;
-    }
-
-    public void setAccommodationMapTypeId(String accommodationMapTypeId) {
+public void setAccommodationMapTypeId(String accommodationMapTypeId) {
         this.accommodationMapTypeId = accommodationMapTypeId;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 }

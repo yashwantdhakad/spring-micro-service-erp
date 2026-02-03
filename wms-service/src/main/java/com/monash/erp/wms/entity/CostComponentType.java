@@ -1,11 +1,17 @@
 package com.monash.erp.wms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class CostComponentType {
 
     @Id
@@ -16,44 +22,19 @@ public class CostComponentType {
     private String parentTypeId;
     private String hasTable;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCostComponentTypeId() {
-        return costComponentTypeId;
-    }
-
-    public void setCostComponentTypeId(String costComponentTypeId) {
+public void setCostComponentTypeId(String costComponentTypeId) {
         this.costComponentTypeId = costComponentTypeId;
     }
-
-    public String getParentTypeId() {
-        return parentTypeId;
-    }
-
-    public void setParentTypeId(String parentTypeId) {
+public void setParentTypeId(String parentTypeId) {
         this.parentTypeId = parentTypeId;
     }
-
-    public String getHasTable() {
-        return hasTable;
-    }
-
-    public void setHasTable(String hasTable) {
+public void setHasTable(String hasTable) {
         this.hasTable = hasTable;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
+public void setDescription(String description) {
         this.description = description;
     }
 

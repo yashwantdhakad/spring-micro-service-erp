@@ -1,5 +1,8 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class UomConversion {
 
     @Id
@@ -25,60 +31,25 @@ public class UomConversion {
     private BigDecimal decimalScale;
 
     private String roundingMode;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getUomId() {
-        return uomId;
-    }
-
-    public void setUomId(String uomId) {
+public void setUomId(String uomId) {
         this.uomId = uomId;
     }
-
-    public String getUomIdTo() {
-        return uomIdTo;
-    }
-
-    public void setUomIdTo(String uomIdTo) {
+public void setUomIdTo(String uomIdTo) {
         this.uomIdTo = uomIdTo;
     }
-
-    public BigDecimal getConversionFactor() {
-        return conversionFactor;
-    }
-
-    public void setConversionFactor(BigDecimal conversionFactor) {
+public void setConversionFactor(BigDecimal conversionFactor) {
         this.conversionFactor = conversionFactor;
     }
-
-    public String getCustomMethodId() {
-        return customMethodId;
-    }
-
-    public void setCustomMethodId(String customMethodId) {
+public void setCustomMethodId(String customMethodId) {
         this.customMethodId = customMethodId;
     }
-
-    public BigDecimal getDecimalScale() {
-        return decimalScale;
-    }
-
-    public void setDecimalScale(BigDecimal decimalScale) {
+public void setDecimalScale(BigDecimal decimalScale) {
         this.decimalScale = decimalScale;
     }
-
-    public String getRoundingMode() {
-        return roundingMode;
-    }
-
-    public void setRoundingMode(String roundingMode) {
+public void setRoundingMode(String roundingMode) {
         this.roundingMode = roundingMode;
     }
 }

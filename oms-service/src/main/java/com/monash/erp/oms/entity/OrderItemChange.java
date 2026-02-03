@@ -1,5 +1,8 @@
 package com.monash.erp.oms.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class OrderItemChange extends AuditableEntity {
 
     @Id
@@ -27,112 +33,44 @@ public class OrderItemChange extends AuditableEntity {
     private String itemDescription;
     private String reasonEnumId;
     private String changeComments;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getOrderItemChangeId() {
-        return orderItemChangeId;
-    }
-
-    public void setOrderItemChangeId(String orderItemChangeId) {
+public void setOrderItemChangeId(String orderItemChangeId) {
         this.orderItemChangeId = orderItemChangeId;
     }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
+public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
+public void setOrderItemSeqId(String orderItemSeqId) {
         this.orderItemSeqId = orderItemSeqId;
     }
-
-    public String getChangeTypeEnumId() {
-        return changeTypeEnumId;
-    }
-
-    public void setChangeTypeEnumId(String changeTypeEnumId) {
+public void setChangeTypeEnumId(String changeTypeEnumId) {
         this.changeTypeEnumId = changeTypeEnumId;
     }
-
-    public LocalDateTime getChangeDatetime() {
-        return changeDatetime;
-    }
-
-    public void setChangeDatetime(LocalDateTime changeDatetime) {
+public void setChangeDatetime(LocalDateTime changeDatetime) {
         this.changeDatetime = changeDatetime;
     }
-
-    public String getChangeUserLogin() {
-        return changeUserLogin;
-    }
-
-    public void setChangeUserLogin(String changeUserLogin) {
+public void setChangeUserLogin(String changeUserLogin) {
         this.changeUserLogin = changeUserLogin;
     }
-
-    public BigDecimal getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(BigDecimal quantity) {
+public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
-
-    public BigDecimal getCancelQuantity() {
-        return cancelQuantity;
-    }
-
-    public void setCancelQuantity(BigDecimal cancelQuantity) {
+public void setCancelQuantity(BigDecimal cancelQuantity) {
         this.cancelQuantity = cancelQuantity;
     }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
+public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
-
-    public String getItemDescription() {
-        return itemDescription;
-    }
-
-    public void setItemDescription(String itemDescription) {
+public void setItemDescription(String itemDescription) {
         this.itemDescription = itemDescription;
     }
-
-    public String getReasonEnumId() {
-        return reasonEnumId;
-    }
-
-    public void setReasonEnumId(String reasonEnumId) {
+public void setReasonEnumId(String reasonEnumId) {
         this.reasonEnumId = reasonEnumId;
     }
-
-    public String getChangeComments() {
-        return changeComments;
-    }
-
-    public void setChangeComments(String changeComments) {
+public void setChangeComments(String changeComments) {
         this.changeComments = changeComments;
     }
-
-
-
 
 }

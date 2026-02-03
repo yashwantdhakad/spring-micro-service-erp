@@ -1,11 +1,17 @@
 package com.monash.erp.mfg.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class WorkEffortDeliverableProd {
 
     @Id
@@ -14,28 +20,13 @@ public class WorkEffortDeliverableProd {
 
     private String workEffortId;
     private String deliverableId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getWorkEffortId() {
-        return workEffortId;
-    }
-
-    public void setWorkEffortId(String workEffortId) {
+public void setWorkEffortId(String workEffortId) {
         this.workEffortId = workEffortId;
     }
-
-    public String getDeliverableId() {
-        return deliverableId;
-    }
-
-    public void setDeliverableId(String deliverableId) {
+public void setDeliverableId(String deliverableId) {
         this.deliverableId = deliverableId;
     }
 

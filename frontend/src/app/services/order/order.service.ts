@@ -67,13 +67,11 @@ export class OrderService {
   }
 
   approvePurchaseOrder(orderId: string): Observable<any> {
-    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/approve`;
-    return this.apiService.post(url, {});
+    return this.updateOrderStatus(orderId, 'ORDER_APPROVED');
   }
 
   approveSalesOrder(orderId: string): Observable<any> {
-    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/approve-sales`;
-    return this.apiService.post(url, {});
+    return this.updateOrderStatus(orderId, 'ORDER_APPROVED');
   }
 
   receivePurchaseOrder(orderId: string, payload: any): Observable<any> {
@@ -144,6 +142,16 @@ export class OrderService {
   addItem(params: any): Observable<any> {
     const url = `/oms/api/orders/${encodeURIComponent(params.orderId)}/items`;
     return this.apiService.post(url, params);
+  }
+
+  updateOrderStatus(orderId: string, statusId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/status`;
+    return this.apiService.post(url, { statusId });
+  }
+
+  updateOrderItemQuantity(orderId: string, orderItemSeqId: string, quantity: number): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/items/${encodeURIComponent(orderItemSeqId)}/quantity`;
+    return this.apiService.put(url, { quantity });
   }
 
   getProductStores(): Observable<any> {

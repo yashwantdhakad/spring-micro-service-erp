@@ -1,5 +1,8 @@
 package com.monash.erp.oms.accounting.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,9 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class GlJournal {
 
     @Id
@@ -23,52 +29,22 @@ public class GlJournal {
     private Boolean isPosted;
 
     private LocalDateTime postedDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getGlJournalId() {
-        return glJournalId;
-    }
-
-    public void setGlJournalId(String glJournalId) {
+public void setGlJournalId(String glJournalId) {
         this.glJournalId = glJournalId;
     }
-
-    public String getGlJournalName() {
-        return glJournalName;
-    }
-
-    public void setGlJournalName(String glJournalName) {
+public void setGlJournalName(String glJournalName) {
         this.glJournalName = glJournalName;
     }
-
-    public String getOrganizationPartyId() {
-        return organizationPartyId;
-    }
-
-    public void setOrganizationPartyId(String organizationPartyId) {
+public void setOrganizationPartyId(String organizationPartyId) {
         this.organizationPartyId = organizationPartyId;
     }
-
-    public Boolean getIsPosted() {
-        return isPosted;
-    }
-
-    public void setIsPosted(Boolean isPosted) {
+public void setIsPosted(Boolean isPosted) {
         this.isPosted = isPosted;
     }
-
-    public LocalDateTime getPostedDate() {
-        return postedDate;
-    }
-
-    public void setPostedDate(LocalDateTime postedDate) {
+public void setPostedDate(LocalDateTime postedDate) {
         this.postedDate = postedDate;
     }
 }

@@ -1,11 +1,17 @@
 package com.monash.erp.oms.common.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
+@NoArgsConstructor
+@Setter
+@Getter
 public class UomGroup {
 
     @Id
@@ -15,28 +21,13 @@ public class UomGroup {
     private String uomGroupId;
 
     private String uomId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
+public void setId(Long id) {
         this.id = id;
     }
-
-    public String getUomGroupId() {
-        return uomGroupId;
-    }
-
-    public void setUomGroupId(String uomGroupId) {
+public void setUomGroupId(String uomGroupId) {
         this.uomGroupId = uomGroupId;
     }
-
-    public String getUomId() {
-        return uomId;
-    }
-
-    public void setUomId(String uomId) {
+public void setUomId(String uomId) {
         this.uomId = uomId;
     }
 }
