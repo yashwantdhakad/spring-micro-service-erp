@@ -1,21 +1,13 @@
 package com.monash.erp.oms.order.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class OrderListResponse {
 
     private OrderListResponseMap responseMap;
-
-    public OrderListResponse() {
-    }
-
-    public OrderListResponse(OrderListResponseMap responseMap) {
-        this.responseMap = responseMap;
-    }
-
-    public OrderListResponseMap getResponseMap() {
-        return responseMap;
-    }
-
-    public void setResponseMap(OrderListResponseMap responseMap) {
-        this.responseMap = responseMap;
-    }
 }

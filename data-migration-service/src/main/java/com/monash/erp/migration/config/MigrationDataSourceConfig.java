@@ -2,13 +2,12 @@ package com.monash.erp.migration.config;
 
 import javax.sql.DataSource;
 
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.batch.BatchDataSource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -23,7 +22,6 @@ public class MigrationDataSourceConfig {
 
     @Bean(name = "targetDataSource")
     @Primary
-    @BatchDataSource
     @ConfigurationProperties("migration.datasource.target")
     public DataSource targetDataSource() {
         return DataSourceBuilder.create().build();

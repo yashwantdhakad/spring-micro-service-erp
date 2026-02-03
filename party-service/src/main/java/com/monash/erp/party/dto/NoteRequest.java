@@ -1,34 +1,16 @@
 package com.monash.erp.party.dto;
 
+import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class NoteRequest {
 
     private String noteText;
     private LocalDateTime noteDate;
     private String createdBy;
-
-    public String getNoteText() {
-        return noteText;
-    }
-
-    public void setNoteText(String noteText) {
-        this.noteText = noteText;
-    }
-
-    public LocalDateTime getNoteDate() {
-        return noteDate;
-    }
-
-    public void setNoteDate(LocalDateTime noteDate) {
-        this.noteDate = noteDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
 }

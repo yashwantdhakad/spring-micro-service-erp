@@ -1,30 +1,14 @@
 package com.monash.erp.party.security.dto;
 
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class SecurityGroupSummary {
 
     private String groupId;
     private String groupName;
-
-    public SecurityGroupSummary() {}
-
-    public SecurityGroupSummary(String groupId, String groupName) {
-        this.groupId = groupId;
-        this.groupName = groupName;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getGroupName() {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
 }

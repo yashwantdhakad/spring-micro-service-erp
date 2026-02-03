@@ -1,5 +1,8 @@
 package com.monash.erp.wms.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
 import com.monash.erp.wms.entity.Shipment;
 import com.monash.erp.wms.entity.ShipmentItem;
 import com.monash.erp.wms.entity.ShipmentPackage;
@@ -11,6 +14,9 @@ import com.monash.erp.wms.entity.ShipmentStatus;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ShipmentDetailResponse {
 
     private Shipment shipment;
@@ -21,91 +27,4 @@ public class ShipmentDetailResponse {
     private List<ShipmentPackageContent> packageContents;
     private List<ShipmentPackageRouteSeg> packageRouteSegments;
     private List<ShipmentReceipt> receipts;
-
-    public ShipmentDetailResponse() {
-    }
-
-    public ShipmentDetailResponse(
-            Shipment shipment,
-            List<ShipmentItem> items,
-            List<ShipmentRouteSegment> routeSegments,
-            List<ShipmentStatus> statuses,
-            List<ShipmentPackage> packages,
-            List<ShipmentPackageContent> packageContents,
-            List<ShipmentPackageRouteSeg> packageRouteSegments,
-            List<ShipmentReceipt> receipts
-    ) {
-        this.shipment = shipment;
-        this.items = items;
-        this.routeSegments = routeSegments;
-        this.statuses = statuses;
-        this.packages = packages;
-        this.packageContents = packageContents;
-        this.packageRouteSegments = packageRouteSegments;
-        this.receipts = receipts;
-    }
-
-    public Shipment getShipment() {
-        return shipment;
-    }
-
-    public void setShipment(Shipment shipment) {
-        this.shipment = shipment;
-    }
-
-    public List<ShipmentItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ShipmentItem> items) {
-        this.items = items;
-    }
-
-    public List<ShipmentRouteSegment> getRouteSegments() {
-        return routeSegments;
-    }
-
-    public void setRouteSegments(List<ShipmentRouteSegment> routeSegments) {
-        this.routeSegments = routeSegments;
-    }
-
-    public List<ShipmentStatus> getStatuses() {
-        return statuses;
-    }
-
-    public void setStatuses(List<ShipmentStatus> statuses) {
-        this.statuses = statuses;
-    }
-
-    public List<ShipmentPackage> getPackages() {
-        return packages;
-    }
-
-    public void setPackages(List<ShipmentPackage> packages) {
-        this.packages = packages;
-    }
-
-    public List<ShipmentPackageContent> getPackageContents() {
-        return packageContents;
-    }
-
-    public void setPackageContents(List<ShipmentPackageContent> packageContents) {
-        this.packageContents = packageContents;
-    }
-
-    public List<ShipmentPackageRouteSeg> getPackageRouteSegments() {
-        return packageRouteSegments;
-    }
-
-    public void setPackageRouteSegments(List<ShipmentPackageRouteSeg> packageRouteSegments) {
-        this.packageRouteSegments = packageRouteSegments;
-    }
-
-    public List<ShipmentReceipt> getReceipts() {
-        return receipts;
-    }
-
-    public void setReceipts(List<ShipmentReceipt> receipts) {
-        this.receipts = receipts;
-    }
 }

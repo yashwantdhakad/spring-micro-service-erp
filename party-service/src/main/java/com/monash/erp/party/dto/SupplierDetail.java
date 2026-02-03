@@ -1,7 +1,13 @@
 package com.monash.erp.party.dto;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.Getter;
 import java.util.List;
 
+@NoArgsConstructor
+@Setter
+@Getter
 public class SupplierDetail {
 
     private SupplierProfile party;
@@ -29,77 +35,5 @@ public class SupplierDetail {
         this.payments = List.of();
         this.partyNoteList = partyNoteList;
         this.contentList = List.of();
-    }
-
-    public SupplierProfile getParty() {
-        return party;
-    }
-
-    public void setParty(SupplierProfile party) {
-        this.party = party;
-    }
-
-    public List<RoleSummary> getPartyRoleList() {
-        return partyRoleList;
-    }
-
-    public void setPartyRoleList(List<RoleSummary> partyRoleList) {
-        this.partyRoleList = partyRoleList;
-    }
-
-    public List<Object> getPartyIdentificationList() {
-        return partyIdentificationList;
-    }
-
-    public void setPartyIdentificationList(List<Object> partyIdentificationList) {
-        this.partyIdentificationList = partyIdentificationList;
-    }
-
-    public List<EmailDto> getEmailAddressList() {
-        return emailAddressList;
-    }
-
-    public void setEmailAddressList(List<EmailDto> emailAddressList) {
-        this.emailAddressList = emailAddressList;
-    }
-
-    public List<PhoneDto> getTelecomNumberList() {
-        return telecomNumberList;
-    }
-
-    public void setTelecomNumberList(List<PhoneDto> telecomNumberList) {
-        this.telecomNumberList = telecomNumberList;
-    }
-
-    public List<AddressDto> getPostalAddressList() {
-        return postalAddressList;
-    }
-
-    public void setPostalAddressList(List<AddressDto> postalAddressList) {
-        this.postalAddressList = postalAddressList;
-    }
-
-    public List<Object> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(List<Object> payments) {
-        this.payments = payments;
-    }
-
-    public List<NoteDto> getPartyNoteList() {
-        return partyNoteList;
-    }
-
-    public void setPartyNoteList(List<NoteDto> partyNoteList) {
-        this.partyNoteList = partyNoteList;
-    }
-
-    public List<PartyContentDto> getContentList() {
-        return contentList;
-    }
-
-    public void setContentList(List<PartyContentDto> contentList) {
-        this.contentList = contentList;
     }
 }

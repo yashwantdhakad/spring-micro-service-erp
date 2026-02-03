@@ -1,31 +1,14 @@
 package com.monash.erp.oms.order.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class OrderRoleDto {
 
     private String partyId;
     private String roleTypeId;
-
-    public OrderRoleDto() {
-    }
-
-    public OrderRoleDto(String partyId, String roleTypeId) {
-        this.partyId = partyId;
-        this.roleTypeId = roleTypeId;
-    }
-
-    public String getPartyId() {
-        return partyId;
-    }
-
-    public void setPartyId(String partyId) {
-        this.partyId = partyId;
-    }
-
-    public String getRoleTypeId() {
-        return roleTypeId;
-    }
-
-    public void setRoleTypeId(String roleTypeId) {
-        this.roleTypeId = roleTypeId;
-    }
 }

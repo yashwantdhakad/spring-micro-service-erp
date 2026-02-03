@@ -1,5 +1,12 @@
 package com.monash.erp.wms.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class PurchaseOrderReceiveItemRequest {
 
     private String orderItemSeqId;
@@ -7,44 +14,4 @@ public class PurchaseOrderReceiveItemRequest {
     private String quantity;
     private String unitCost;
     private String locationSeqId;
-
-    public String getOrderItemSeqId() {
-        return orderItemSeqId;
-    }
-
-    public void setOrderItemSeqId(String orderItemSeqId) {
-        this.orderItemSeqId = orderItemSeqId;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public String getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getUnitCost() {
-        return unitCost;
-    }
-
-    public void setUnitCost(String unitCost) {
-        this.unitCost = unitCost;
-    }
-
-    public String getLocationSeqId() {
-        return locationSeqId;
-    }
-
-    public void setLocationSeqId(String locationSeqId) {
-        this.locationSeqId = locationSeqId;
-    }
 }

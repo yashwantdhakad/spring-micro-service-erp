@@ -18,22 +18,22 @@ spring:
 migration:
   datasource:
     source:
-      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_SOURCE:ares}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_SOURCE:ares}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: ${DB_USER:root}
       password: ${DB_PASSWORD:123456}
     target:
-      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_TARGET:wmsdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_TARGET:wmsdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: ${DB_USER:root}
       password: ${DB_PASSWORD:123456}
     party-target:
-      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_PARTY_TARGET:partydb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_PARTY_TARGET:partydb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: ${DB_USER:root}
       password: ${DB_PASSWORD:123456}
     order-target:
-      url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_ORDER_TARGET:omsdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_ORDER_TARGET:omsdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: ${DB_USER:root}
       password: ${DB_PASSWORD:123456}

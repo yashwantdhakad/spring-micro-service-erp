@@ -1,14 +1,13 @@
 package com.monash.erp.wms.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ProductCategoryRequest {
 
     private String productCategoryId;
-
-    public String getProductCategoryId() {
-        return productCategoryId;
-    }
-
-    public void setProductCategoryId(String productCategoryId) {
-        this.productCategoryId = productCategoryId;
-    }
 }

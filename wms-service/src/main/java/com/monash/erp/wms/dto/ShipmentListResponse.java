@@ -1,21 +1,13 @@
 package com.monash.erp.wms.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ShipmentListResponse {
 
     private ShipmentListResponseMap responseMap;
-
-    public ShipmentListResponse() {
-    }
-
-    public ShipmentListResponse(ShipmentListResponseMap responseMap) {
-        this.responseMap = responseMap;
-    }
-
-    public ShipmentListResponseMap getResponseMap() {
-        return responseMap;
-    }
-
-    public void setResponseMap(ShipmentListResponseMap responseMap) {
-        this.responseMap = responseMap;
-    }
 }

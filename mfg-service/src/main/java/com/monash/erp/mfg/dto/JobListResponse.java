@@ -1,21 +1,13 @@
 package com.monash.erp.mfg.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class JobListResponse {
 
     private JobListResponseMap responseMap;
-
-    public JobListResponse() {
-    }
-
-    public JobListResponse(JobListResponseMap responseMap) {
-        this.responseMap = responseMap;
-    }
-
-    public JobListResponseMap getResponseMap() {
-        return responseMap;
-    }
-
-    public void setResponseMap(JobListResponseMap responseMap) {
-        this.responseMap = responseMap;
-    }
 }
