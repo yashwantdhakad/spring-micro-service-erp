@@ -659,5 +659,14 @@
   "USERNAME": "ユーザー名",
   "USERNAME_PLACEHOLDER": "ユーザー名を入力",
   "USERNAME_REQUIRED": "ユーザー名は必須です",
-  "WELCOME": "アプリケーションへようこそ"
+  "WELCOME": "アプリケーションへようこそ",
+  "LANGUAGE": {
+    "ENGLISH": "英語",
+    "SPANISH": "スペイン語",
+    "FRENCH": "フランス語",
+    "HINDI": "ヒンディー語",
+    "JAPANESE": "日本語",
+    "CHINESE": "中国語",
+    "GERMAN": "ドイツ語"
+}
 }

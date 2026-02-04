@@ -22,12 +22,13 @@ export class AppComponent {
   items = menuItems;
   currentLanguage = 'en';
   languages = [
-    { code: 'en', label: 'English' },
-    { code: 'es', label: 'Español' },
-    { code: 'fr', label: 'Français' },
-    { code: 'hi', label: 'हिन्दी' },
-    { code: 'ja', label: '日本語' },
-    { code: 'zh', label: '中文' },
+    { code: 'en', labelKey: 'LANGUAGE.ENGLISH' },
+    { code: 'es', labelKey: 'LANGUAGE.SPANISH' },
+    { code: 'fr', labelKey: 'LANGUAGE.FRENCH' },
+    { code: 'hi', labelKey: 'LANGUAGE.HINDI' },
+    { code: 'ja', labelKey: 'LANGUAGE.JAPANESE' },
+    { code: 'zh', labelKey: 'LANGUAGE.CHINESE' },
+    { code: 'de', labelKey: 'LANGUAGE.GERMAN' },
   ];
 
   constructor(
@@ -100,7 +101,8 @@ export class AppComponent {
   }
 
   getCurrentLanguageLabel(): string {
-    return this.languages.find((lang) => lang.code === this.currentLanguage)?.label || this.currentLanguage;
+    const key = this.languages.find((lang) => lang.code === this.currentLanguage)?.labelKey;
+    return key ? this.translate.instant(key) : this.currentLanguage;
   }
 
   logout(): void {

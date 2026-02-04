@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 import { ManufacturingService } from 'src/app/services/manufacturing/manufacturing.service';
 import { ProductService } from 'src/app/services/product/product.service';
 
@@ -13,14 +14,13 @@ import { ProductService } from 'src/app/services/product/product.service';
 })
 export class BomAddComponentDialogComponent implements OnInit {
   productId = '';
-  products: any[] = [];
-  componentProductId = '';
+  componentProductControl = new FormControl('');
+  filteredProducts$!: Observable<any[]>;
   quantity = 1;
   assocTypeId = '';
   sequenceNum = '';
   fromDate: Date | null = null;
   isSaving = false;
-  queryString = '';
   isEdit = false;
   assocId: number | null = null;
 
@@ -28,14 +28,15 @@ export class BomAddComponentDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<BomAddComponentDialogComponent>,
     private manufacturingService: ManufacturingService,
-    private productService: ProductService
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
   ) {
     this.productId = data?.productId;
     this.assocTypeId = data?.bomTypeId || '';
     this.isEdit = data?.mode === 'edit';
     this.assocId = data?.assocId ?? null;
     if (data?.componentProductId) {
-      this.componentProductId = data.componentProductId;
+      this.componentProductControl.setValue(data.componentProductId);
     }
     if (data?.quantity) {
       this.quantity = Number(data.quantity) || this.quantity;
@@ -50,21 +51,35 @@ export class BomAddComponentDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadProducts();
-  }
-
-  loadProducts(): void {
-    const keyword = this.queryString || '';
-    this.productService.getProducts(0, keyword).pipe(
-      map((response: any) => Array.isArray(response?.documentList) ? response.documentList : []),
-      catchError(() => of([]))
-    ).subscribe((list) => {
-      this.products = list;
-    });
+    this.filteredProducts$ = this.componentProductControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((value) => this.searchProducts(value))
+    );
+    if (this.isEdit) {
+      this.componentProductControl.disable({ emitEvent: false });
+    }
   }
 
   save(): void {
-    if (!this.productId || !this.componentProductId || !this.assocTypeId) {
+    const componentProductId = this.componentProductControl.value || '';
+    console.log('[BOM Add Component] submit', {
+      productId: this.productId,
+      componentProductId,
+      assocTypeId: this.assocTypeId,
+      sequenceNum: this.sequenceNum,
+      quantity: this.quantity,
+      fromDate: this.fromDate,
+      isEdit: this.isEdit,
+      assocId: this.assocId,
+    });
+    if (!this.productId || !componentProductId || !this.assocTypeId) {
+      console.warn('[BOM Add Component] missing required fields', {
+        productId: this.productId,
+        componentProductId,
+        assocTypeId: this.assocTypeId,
+      });
       return;
     }
     this.isSaving = true;
@@ -74,12 +89,15 @@ export class BomAddComponentDialogComponent implements OnInit {
         fromDate: this.toIsoString(this.fromDate) || new Date().toISOString(),
         sequenceNum: this.sequenceNum || undefined,
       };
+      console.log('[BOM Add Component] update payload', payload);
       this.manufacturingService.updateProductAssoc(this.assocId, payload).subscribe({
         next: () => {
+          console.log('[BOM Add Component] update success');
           this.isSaving = false;
           this.dialogRef.close(true);
         },
-        error: () => {
+        error: (error) => {
+          console.error('[BOM Add Component] update error', error);
           this.isSaving = false;
         },
       });
@@ -87,18 +105,21 @@ export class BomAddComponentDialogComponent implements OnInit {
     }
 
     const payload = {
-      toProductId: this.componentProductId,
+      toProductId: componentProductId,
       productAssocTypeEnumId: this.assocTypeId,
       quantity: String(this.quantity || 1),
       fromDate: this.toIsoString(this.fromDate) || new Date().toISOString(),
       sequenceNum: this.sequenceNum || undefined,
     };
+    console.log('[BOM Add Component] create payload', payload);
     this.manufacturingService.addProductAssoc(this.productId, payload).subscribe({
       next: () => {
+        console.log('[BOM Add Component] create success');
         this.isSaving = false;
         this.dialogRef.close(true);
       },
-      error: () => {
+      error: (error) => {
+        console.error('[BOM Add Component] create error', error);
         this.isSaving = false;
       },
     });
@@ -117,5 +138,20 @@ export class BomAddComponentDialogComponent implements OnInit {
     }
     const parsed = new Date(value);
     return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString();
+  }
+
+  private searchProducts(value: string | null): Observable<any[]> {
+    if (!value || typeof value !== 'string') {
+      return of([]);
+    }
+    const keyword = value.trim();
+    if (!keyword) {
+      return of([]);
+    }
+    return this.productService.getProducts(0, keyword).pipe(
+      map((response: any) => Array.isArray(response?.documentList) ? response.documentList : []),
+      map((items: any[]) => items.filter((item) => item?.isVirtual !== 'Y')),
+      catchError(() => of([]))
+    );
   }
 }

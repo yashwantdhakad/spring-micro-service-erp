@@ -25,6 +25,10 @@ public class SupplierProductService {
         return repository.findByPartyId(partyId);
     }
 
+    public List<SupplierProduct> listByProductId(String productId) {
+        return repository.findByProductId(productId);
+    }
+
     public Optional<SupplierProduct> findLatestByPartyAndProduct(String partyId, String productId) {
         return repository.findTopByPartyIdAndProductIdOrderByIdDesc(partyId, productId);
     }

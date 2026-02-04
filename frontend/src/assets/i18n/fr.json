@@ -659,5 +659,14 @@
   "USERNAME": "Nom d'utilisateur",
   "USERNAME_PLACEHOLDER": "Entrez votre nom d'utilisateur",
   "USERNAME_REQUIRED": "Le nom d'utilisateur est requis",
-  "WELCOME": "Bienvenue dans notre application"
+  "WELCOME": "Bienvenue dans notre application",
+  "LANGUAGE": {
+    "ENGLISH": "Anglais",
+    "SPANISH": "Espagnol",
+    "FRENCH": "Français",
+    "HINDI": "Hindi",
+    "JAPANESE": "Japonais",
+    "CHINESE": "Chinois",
+    "GERMAN": "Allemand"
+}
 }

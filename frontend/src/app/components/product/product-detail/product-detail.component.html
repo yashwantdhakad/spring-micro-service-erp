@@ -12,42 +12,94 @@
       / {{ productDetail?.productId }}
     </mat-list-item>
   </mat-list>
-  <mat-card class="mat-elevation-z10">
-    <mat-card-header>
-      <mat-card-title> {{ 'PRODUCT.OVERVIEW_TITLE' | translate }} </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <ul class="custom-list">
-        <li class="custom-list-item">
-          <strong>{{ 'COMMON.PRODUCT_ID' | translate }}:</strong>
-          {{ productDetail?.productId }}
-        </li>
-        <li class="custom-list-item">
-          <strong>{{ 'COMMON.NAME' | translate }}:</strong>
-          {{ productDetail?.productName }}
-          <mat-icon
-            matListIcon
-            class="custom-mat-icon custom-icon-align"
-            color="primary"
-            (click)="editProductDialog()"
-            >edit</mat-icon
-          >
-        </li>
-        <li class="custom-list-item">
-          <strong>{{ 'PRODUCT.INTERNAL_NAME' | translate }}:</strong>
-          {{ productDetail?.internalName }}
-        </li>
-        <li class="custom-list-item">
-          <strong>{{ 'COMMON.DESCRIPTION' | translate }}:</strong>
-          {{ productDetail?.description }}
-        </li>
-        <li class="custom-list-item">
-          <strong>{{ 'COMMON.TYPE' | translate }}:</strong>
-          {{ productTypeLabel || productDetail?.productTypeId }}
-        </li>
-      </ul>
-    </mat-card-content>
-  </mat-card>
+  <div fxLayout="row wrap" fxLayout.xs="column">
+    <mat-card fxFlex.gt-xs="50%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title> {{ 'PRODUCT.OVERVIEW_TITLE' | translate }} </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <li class="custom-list-item">
+            <strong>{{ 'COMMON.PRODUCT_ID' | translate }}:</strong>
+            {{ productDetail?.productId }}
+          </li>
+          <li class="custom-list-item">
+            <strong>{{ 'COMMON.NAME' | translate }}:</strong>
+            {{ productDetail?.productName }}
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="primary"
+              (click)="editProductDialog()"
+              >edit</mat-icon
+            >
+          </li>
+          <li class="custom-list-item">
+            <strong>{{ 'PRODUCT.INTERNAL_NAME' | translate }}:</strong>
+            {{ productDetail?.internalName }}
+          </li>
+          <li class="custom-list-item">
+            <strong>{{ 'COMMON.DESCRIPTION' | translate }}:</strong>
+            {{ productDetail?.description }}
+          </li>
+          <li class="custom-list-item">
+            <strong>{{ 'COMMON.TYPE' | translate }}:</strong>
+            {{ productTypeLabel || productDetail?.productTypeId }}
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card fxFlex.gt-xs="48%" class="card-margin mat-elevation-z10">
+      <mat-card-header>
+        <mat-card-title>{{ 'PRODUCT.CONFIGURATIONS_TITLE' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="custom-list">
+          <li class="custom-list-item config-row">
+            <strong>{{ 'PRODUCT.CONFIG_TAXABLE' | translate }}:</strong>
+            <mat-checkbox
+              [checked]="isFlagEnabled(productDetail?.taxable)"
+              (change)="updateConfiguration('taxable', $event.checked)"
+              [disabled]="isConfigSaving"
+            ></mat-checkbox>
+          </li>
+          <li class="custom-list-item config-row">
+            <strong>{{ 'PRODUCT.CONFIG_RETURNABLE' | translate }}:</strong>
+            <mat-checkbox
+              [checked]="isFlagEnabled(productDetail?.returnable)"
+              (change)="updateConfiguration('returnable', $event.checked)"
+              [disabled]="isConfigSaving"
+            ></mat-checkbox>
+          </li>
+          <li class="custom-list-item config-row">
+            <strong>{{ 'PRODUCT.CONFIG_APPLY_PROMOTIONS' | translate }}:</strong>
+            <mat-checkbox
+              [checked]="isFlagEnabled(productDetail?.includeInPromotions)"
+              (change)="updateConfiguration('includeInPromotions', $event.checked)"
+              [disabled]="isConfigSaving"
+            ></mat-checkbox>
+          </li>
+          <li class="custom-list-item config-row">
+            <strong>{{ 'PRODUCT.CONFIG_SERIALIZED' | translate }}:</strong>
+            <mat-checkbox
+              [checked]="isFlagEnabled(productDetail?.serialized)"
+              (change)="updateConfiguration('serialized', $event.checked)"
+              [disabled]="isConfigSaving"
+            ></mat-checkbox>
+          </li>
+          <li class="custom-list-item config-row">
+            <strong>{{ 'PRODUCT.CONFIG_REQUIRE_INSPECTION' | translate }}:</strong>
+            <mat-checkbox
+              [checked]="isFlagEnabled(productDetail?.requireInspection)"
+              (change)="updateConfiguration('requireInspection', $event.checked)"
+              [disabled]="isConfigSaving"
+            ></mat-checkbox>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
@@ -75,6 +127,57 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="inventorySummaryColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: inventorySummaryColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
+        {{ 'SUPPLIER.SUPPLIER_PRODUCTS' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="addSupplierProductDialog()"
+          >add</mat-icon
+        >
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="supplierProducts">
+        <ng-container matColumnDef="partyId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.SUPPLIER_NAME' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.partyId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="supplierProductName">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.SUPPLIER_PRODUCT_NAME' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.supplierProductName }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="lastPrice">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.LAST_PRICE' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.lastPrice }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="action">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            <mat-icon
+              matListIcon
+              class="custom-mat-icon custom-icon-align"
+              color="warn"
+              (click)="deleteSupplierProduct(item)"
+              >delete</mat-icon
+            >
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="supplierProductColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: supplierProductColumns"></tr>
       </table>
     </mat-card-content>
   </mat-card>

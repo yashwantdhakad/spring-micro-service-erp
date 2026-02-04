@@ -5,9 +5,24 @@
   <mat-card-content mat-dialog-content>
     <mat-dialog-content>
       <form [formGroup]="supplierProductForm" fxLayout="column" fxLayoutGap="16px">
-        <mat-form-field appearance="outline" appearance="outline">
+        <input *ngIf="isPartyLocked" type="hidden" formControlName="partyId" />
+
+        <mat-form-field appearance="outline" *ngIf="!isPartyLocked">
+          <mat-label>{{ 'SUPPLIER.SUPPLIER_NAME' | translate }}</mat-label>
+          <input matInput formControlName="partyId" [matAutocomplete]="supplierAuto" />
+          <mat-autocomplete #supplierAuto="matAutocomplete"
+            (optionSelected)="onSupplierSelected($event.option.value)">
+            <mat-option *ngFor="let supplier of filteredSuppliers$ | async" [value]="supplier.partyId">
+              {{ supplier.partyId }} - {{ supplier.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <input *ngIf="isProductLocked" type="hidden" formControlName="productId" />
+
+        <mat-form-field appearance="outline">
           <mat-label>{{ 'COMMON.PRODUCT' | translate }}</mat-label>
-          <input matInput formControlName="productId" [matAutocomplete]="supplierProductAuto" />
+          <input matInput formControlName="productId" [matAutocomplete]="supplierProductAuto" [readonly]="isProductLocked" />
           <mat-autocomplete #supplierProductAuto="matAutocomplete"
             (optionSelected)="onSupplierProductSelected($event.option.value)">
             <mat-option *ngFor="let product of filteredProducts$ | async" [value]="product.productId">

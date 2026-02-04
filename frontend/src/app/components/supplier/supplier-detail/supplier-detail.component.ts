@@ -105,8 +105,11 @@ export class SupplierDetailComponent implements OnDestroy {
       .pipe(select(selectGeoList), takeUntil(this.destroy$))
       .subscribe((geoListObject: any) => {
       if (geoListObject) {
-        this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
-        this.states = filterGeoRecords(geoListObject, 'STATE');
+        setTimeout(() => {
+          this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
+          this.states = filterGeoRecords(geoListObject, 'STATE');
+          this.cdr.markForCheck();
+        }, 0);
       }
     });
 
@@ -144,12 +147,16 @@ export class SupplierDetailComponent implements OnDestroy {
         this.payments = payments;
         this.partyNotes = partyNoteList;
         this.contents = Array.isArray(contentList) ? contentList : [];
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: () => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       },
     });
   }
@@ -157,10 +164,16 @@ export class SupplierDetailComponent implements OnDestroy {
   loadSupplierProducts(partyId: string): void {
     this.supplierProductService.listByParty(partyId).subscribe({
       next: (items) => {
-        this.supplierProducts = Array.isArray(items) ? items : [];
+        setTimeout(() => {
+          this.supplierProducts = Array.isArray(items) ? items : [];
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: () => {
-        this.supplierProducts = [];
+        setTimeout(() => {
+          this.supplierProducts = [];
+          this.cdr.markForCheck();
+        }, 0);
       },
     });
   }

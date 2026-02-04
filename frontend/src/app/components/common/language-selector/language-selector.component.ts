@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface LanguageOption {
   code: string;
-  label: string;
+  labelKey: string;
 }
 
 @Component({

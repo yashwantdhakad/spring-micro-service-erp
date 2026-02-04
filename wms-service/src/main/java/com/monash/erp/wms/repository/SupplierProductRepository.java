@@ -9,5 +9,7 @@ import java.util.Optional;
 public interface SupplierProductRepository extends JpaRepository<SupplierProduct, Long> {
     List<SupplierProduct> findByPartyId(String partyId);
 
+    List<SupplierProduct> findByProductId(String productId);
+
     Optional<SupplierProduct> findTopByPartyIdAndProductIdOrderByIdDesc(String partyId, String productId);
 }

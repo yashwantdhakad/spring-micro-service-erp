@@ -5,7 +5,7 @@
       <mat-label>{{ 'COMMON.SELECT_LANGUAGE' | translate }}</mat-label>
       <mat-select [(value)]="selectedLanguage">
         <mat-option *ngFor="let lang of languages" [value]="lang.code">
-          {{ lang.label }} ({{ lang.code.toUpperCase() }})
+          {{ lang.labelKey | translate }} ({{ lang.code.toUpperCase() }})
         </mat-option>
       </mat-select>
     </mat-form-field>

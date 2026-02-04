@@ -176,6 +176,9 @@ public class Product {
     private String includeInPromotions;
 
     @Column(length = 1)
+    private String requireInspection;
+
+    @Column(length = 1)
     private String isVirtual;
 
     @Column(length = 1)

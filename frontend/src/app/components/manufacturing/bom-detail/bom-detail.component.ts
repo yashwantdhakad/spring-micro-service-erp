@@ -97,6 +97,9 @@ export class BomDetailComponent implements OnInit {
         if (!this.bomTypeId && this.components.length) {
           this.bomTypeId = this.components[0].assocTypeId || '';
         }
+        if (!this.bomTypeId) {
+          this.bomTypeId = this.getDefaultBomTypeId();
+        }
 
         this.bomSimulationRows = this.buildSimulationRows();
       }),
@@ -117,7 +120,7 @@ export class BomDetailComponent implements OnInit {
         width: '520px',
         data: {
           productId: this.productId,
-          bomTypeId: this.bomTypeId,
+          bomTypeId: this.bomTypeId || this.getDefaultBomTypeId(),
         },
       })
       .afterClosed()
@@ -199,5 +202,17 @@ export class BomDetailComponent implements OnInit {
   private isBomType(typeId?: string): boolean {
     const value = (typeId || '').toUpperCase();
     return value.includes('BOM') || value.includes('COMPONENT');
+  }
+
+  private getDefaultBomTypeId(): string {
+    const bomTypes = this.bomTypes.filter((type: any) => this.isBomType(type?.productAssocTypeId));
+    if (!bomTypes.length) {
+      return '';
+    }
+    const preferred =
+      bomTypes.find((type: any) =>
+        (type?.productAssocTypeId || '').toUpperCase().includes('BILL_OF_MATERIAL')
+      ) || bomTypes[0];
+    return preferred?.productAssocTypeId || '';
   }
 }

@@ -527,6 +527,14 @@
     "CONTENT_TITLE": "Content",
     "CREATED_SUCCESS": "Product created successfully",
     "CREATE_TITLE": "Create Product",
+    "CONFIGURATIONS_TITLE": "Configurations",
+    "CONFIG_TAXABLE": "Taxable",
+    "CONFIG_RETURNABLE": "Returnable",
+    "CONFIG_APPLY_PROMOTIONS": "Apply Promotions",
+    "CONFIG_SERIALIZED": "Serialized",
+    "CONFIG_REQUIRE_INSPECTION": "Require inspection",
+    "CONFIG_UPDATE_SUCCESS": "Configurations updated.",
+    "CONFIG_UPDATE_ERROR": "Failed to update configurations.",
     "DELETE_PRICE_MESSAGE": "Are you sure you want to delete this price?",
     "DELETE_PRICE_TITLE": "Delete Price",
     "EDIT_TITLE": "Edit Product",
@@ -688,5 +696,14 @@
   "USERNAME": "Username",
   "USERNAME_PLACEHOLDER": "Enter your username",
   "USERNAME_REQUIRED": "Username is required",
-  "WELCOME": "Welcome to our application"
+  "WELCOME": "Welcome to our application",
+  "LANGUAGE": {
+    "ENGLISH": "English",
+    "SPANISH": "Spanish",
+    "FRENCH": "French",
+    "HINDI": "Hindi",
+    "JAPANESE": "Japanese",
+    "CHINESE": "Chinese",
+    "GERMAN": "German"
+  }
 }

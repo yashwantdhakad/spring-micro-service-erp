@@ -659,5 +659,14 @@
   "USERNAME": "用户名",
   "USERNAME_PLACEHOLDER": "请输入您的用户名",
   "USERNAME_REQUIRED": "用户名是必填项",
-  "WELCOME": "欢迎使用我们的应用"
+  "WELCOME": "欢迎使用我们的应用",
+  "LANGUAGE": {
+    "ENGLISH": "英语",
+    "SPANISH": "西班牙语",
+    "FRENCH": "法语",
+    "HINDI": "印地语",
+    "JAPANESE": "日语",
+    "CHINESE": "中文",
+    "GERMAN": "德语"
+}
 }

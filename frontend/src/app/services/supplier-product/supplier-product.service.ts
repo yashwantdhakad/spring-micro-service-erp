@@ -13,6 +13,11 @@ export class SupplierProductService {
     return this.apiService.get<any[]>(url);
   }
 
+  listByProduct(productId: string): Observable<any[]> {
+    const url = `/wms/api/supplier-products?productId=${encodeURIComponent(productId)}`;
+    return this.apiService.get<any[]>(url);
+  }
+
   getLatestByPartyAndProduct(partyId: string, productId: string): Observable<any> {
     const url = `/wms/api/supplier-products/by-party-product?partyId=${encodeURIComponent(
       partyId

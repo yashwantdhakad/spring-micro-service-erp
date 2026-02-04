@@ -14,6 +14,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 
 // Shared Angular Material Modules
 import { MaterialModule } from '../../components/common/material/material.module';
+import { SupplierModule } from '../supplier/supplier.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MaterialModule } from '../../components/common/material/material.module
 
     // Shared Material Module
     MaterialModule,
+    SupplierModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

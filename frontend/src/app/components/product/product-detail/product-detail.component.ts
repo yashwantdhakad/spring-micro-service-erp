@@ -16,6 +16,8 @@ import { ProductAssocComponent } from '../product-assoc/product-assoc.component'
 import { ProductContentComponent } from '../product-content/product-content.component';
 import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { SupplierProductService } from 'src/app/services/supplier-product/supplier-product.service';
+import { SupplierProductDialogComponent } from 'src/app/components/supplier/supplier-product-dialog/supplier-product-dialog.component';
 
 @Component({
   standalone: false,
@@ -67,6 +69,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   toAssocColumns: string[] = ['productName', 'description', 'fromDate'];
   inventorySummary: any[] = [];
   inventorySummaryColumns: string[] = ['facility', 'atpTotal', 'qohTotal'];
+  supplierProducts: any[] = [];
+  supplierProductColumns: string[] = ['partyId', 'supplierProductName', 'lastPrice', 'action'];
+  isConfigSaving = false;
 
   productPriceData: any;
   productCategoryData: any;
@@ -83,6 +88,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private snackbarService: SnackbarService,
     private commonService: CommonService,
+    private supplierProductService: SupplierProductService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -167,6 +173,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.assocs = assocs;
         this.toAssocs = toAssocs;
         this.loadInventorySummary(productId);
+        this.loadSupplierProducts(productId);
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -180,10 +187,33 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   loadInventorySummary(productId: string): void {
     this.productService.getInventorySummary(productId).subscribe({
       next: (summary) => {
-        this.inventorySummary = Array.isArray(summary) ? summary : [];
+        setTimeout(() => {
+          this.inventorySummary = Array.isArray(summary) ? summary : [];
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: () => {
-        this.inventorySummary = [];
+        setTimeout(() => {
+          this.inventorySummary = [];
+          this.cdr.markForCheck();
+        }, 0);
+      },
+    });
+  }
+
+  loadSupplierProducts(productId: string): void {
+    this.supplierProductService.listByProduct(productId).subscribe({
+      next: (items) => {
+        setTimeout(() => {
+          this.supplierProducts = Array.isArray(items) ? items : [];
+          this.cdr.markForCheck();
+        }, 0);
+      },
+      error: () => {
+        setTimeout(() => {
+          this.supplierProducts = [];
+          this.cdr.markForCheck();
+        }, 0);
       },
     });
   }
@@ -229,6 +259,37 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   getPricePurposeDescription(purposeId: string): string {
     return this.pricePurposeMap.get(purposeId) || purposeId;
+  }
+
+  isFlagEnabled(value: any): boolean {
+    return value === 'Y' || value === true;
+  }
+
+  updateConfiguration(field: string, checked: boolean): void {
+    if (!this.productId || this.isConfigSaving) {
+      return;
+    }
+    const payload: any = {
+      productId: this.productId,
+      [field]: checked ? 'Y' : 'N',
+    };
+    this.isConfigSaving = true;
+    this.productService.updateProduct(payload).pipe(
+      finalize(() => {
+        this.isConfigSaving = false;
+        this.cdr.markForCheck();
+      })
+    ).subscribe({
+      next: () => {
+        if (this.productDetail) {
+          this.productDetail[field] = checked ? 'Y' : 'N';
+        }
+        this.snackbarService.showSuccess(this.translate.instant('PRODUCT.CONFIG_UPDATE_SUCCESS'));
+      },
+      error: () => {
+        this.snackbarService.showError(this.translate.instant('PRODUCT.CONFIG_UPDATE_ERROR'));
+      },
+    });
   }
 
 
@@ -362,5 +423,41 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.getProduct(result.productId);
         }
       });
+  }
+
+  addSupplierProductDialog(): void {
+    if (!this.productId) {
+      return;
+    }
+    this.dialog
+      .open(SupplierProductDialogComponent, {
+        data: { productId: this.productId },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result && this.productId) {
+          this.loadSupplierProducts(this.productId);
+        }
+      });
+  }
+
+  deleteSupplierProduct(item: any): void {
+    if (!item?.id) {
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Supplier Product',
+        message: 'Are you sure you want to delete this supplier product?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.supplierProductService.delete(item.id).subscribe({
+          next: () => this.loadSupplierProducts(this.productId || ''),
+        });
+      }
+    });
   }
 }

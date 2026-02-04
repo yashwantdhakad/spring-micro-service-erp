@@ -180,6 +180,21 @@ public class ProductCompositeService {
         if (request.getInternalName() != null) {
             existing.setInternalName(request.getInternalName());
         }
+        if (request.getTaxable() != null) {
+            existing.setTaxable(request.getTaxable());
+        }
+        if (request.getReturnable() != null) {
+            existing.setReturnable(request.getReturnable());
+        }
+        if (request.getIncludeInPromotions() != null) {
+            existing.setIncludeInPromotions(request.getIncludeInPromotions());
+        }
+        if (request.getSerialized() != null) {
+            existing.setSerialized(request.getSerialized());
+        }
+        if (request.getRequireInspection() != null) {
+            existing.setRequireInspection(request.getRequireInspection());
+        }
 
         return productRepository.save(existing);
     }

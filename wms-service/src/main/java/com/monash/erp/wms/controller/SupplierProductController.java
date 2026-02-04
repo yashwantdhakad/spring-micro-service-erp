@@ -27,9 +27,15 @@ public class SupplierProductController {
     }
 
     @GetMapping
-    public List<SupplierProduct> list(@RequestParam(required = false) String partyId) {
+    public List<SupplierProduct> list(
+            @RequestParam(required = false) String partyId,
+            @RequestParam(required = false) String productId
+    ) {
         if (partyId != null && !partyId.isBlank()) {
             return service.listByPartyId(partyId);
+        }
+        if (productId != null && !productId.isBlank()) {
+            return service.listByProductId(productId);
         }
         return service.list();
     }

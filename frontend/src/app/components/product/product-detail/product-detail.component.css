@@ -7,3 +7,35 @@
   max-height: 360px;
   overflow: auto;
 }
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px 20px;
+  align-items: start;
+}
+
+
+.config-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  line-height: 1.2;
+}
+
+.config-row mat-checkbox {
+  margin-left: 4px;
+}
+
+:host ::ng-deep .config-row .mat-mdc-checkbox {
+  transform: scale(0.85);
+  transform-origin: left center;
+  min-height: 0;
+}
+
+:host ::ng-deep .config-row .mat-mdc-checkbox .mdc-form-field {
+  min-height: 0;
+  height: 24px;
+  align-items: center;
+}

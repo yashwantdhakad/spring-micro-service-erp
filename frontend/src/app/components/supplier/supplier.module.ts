@@ -43,6 +43,9 @@ import { MaterialModule } from '../../components/common/material/material.module
             }
         }),
     ],
+    exports: [
+        SupplierProductDialogComponent,
+    ],
 })
 export class SupplierModule { }
 
