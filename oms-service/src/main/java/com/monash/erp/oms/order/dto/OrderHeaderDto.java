@@ -16,4 +16,6 @@ public class OrderHeaderDto {
     private String currencyUomId;
     private String productStoreId;
     private BigDecimal grandTotal;
+    private String orderTypeId;
+    private String orderName;
 }

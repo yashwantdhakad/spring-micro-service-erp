@@ -455,6 +455,7 @@
     "NOTES": "Notes",
     "NOTE_DATE": "Date de la note",
     "ORDER_DATE": "Date de commande",
+    "ORDER_TYPE": "Order Type",
     "OVERVIEW": "Aperçu",
     "PARTS": "Pièces",
     "PART_DETAILS": "Détails de la pièce",
@@ -483,7 +484,15 @@
     "TITLE": "Commandes",
     "TITLE_COL": "Titre",
     "TOTAL": "Total",
-    "TOTAL_AMOUNT": "Montant total"
+    "TOTAL_AMOUNT": "Montant total",
+    "PAYMENT_TERMS_PREFERENCES": "Payment Terms and Preferences",
+    "PAYMENT_TERMS": "Terms",
+    "PAYMENT_PREFERENCES": "Preferences",
+    "RATE": "Rate",
+    "DAYS": "Days",
+    "AMOUNT": "Amount",
+    "PAYMENT_TERM": "Payment Term",
+    "PAYMENT_METHOD": "Payment Method"
   },
   "PRODUCT": {
     "ASSOCIATED_FROM_TITLE": "Associé depuis",
@@ -591,7 +600,11 @@
     "TITLE_COL": "Titre",
     "TOTAL": "Total",
     "TOTAL_AMOUNT": "Montant total",
-    "VENDOR_REQUIRED": "L'organisation du vendeur est requise."
+    "VENDOR_REQUIRED": "L'organisation du vendeur est requise.",
+    "AMOUNT_SUMMARY": "Amount Summary",
+    "SUBTOTAL": "Subtotal",
+    "SHIPPING_AMOUNT": "Shipping",
+    "DISCOUNT_AMOUNT": "Discount"
   },
   "SUBMIT_LOGIN": "Se connecter",
   "SUPPLIER": {
@@ -668,5 +681,5 @@
     "JAPANESE": "Japonais",
     "CHINESE": "Chinois",
     "GERMAN": "Allemand"
-}
+  }
 }

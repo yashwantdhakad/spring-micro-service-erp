@@ -2,6 +2,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PartyAddressListComponent } from '../../party/party-address/party-address-list.component';
+import { ShippingInstructionDialogComponent } from '../../order/shipping-instruction-dialog/shipping-instruction-dialog.component';
 import { MaterialModule } from '../../common/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -13,7 +14,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [PartyAddressListComponent],
+  declarations: [PartyAddressListComponent, ShippingInstructionDialogComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -27,6 +28,6 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     })
   ],
-  exports: [PartyAddressListComponent] // So other modules can use it
+  exports: [PartyAddressListComponent, ShippingInstructionDialogComponent] // So other modules can use it
 })
 export class SharedModule { }

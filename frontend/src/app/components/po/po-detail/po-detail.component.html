@@ -12,28 +12,130 @@
       / {{ orderHeader?.orderId }}
     </mat-list-item>
   </mat-list>
+  <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px">
+    <mat-card class="mat-elevation-z10 po-overview-card" fxFlex.gt-xs="48%">
+      <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
+        <mat-card-title>{{ 'PO.OVERVIEW' | translate }}</mat-card-title>
+        <div fxLayout="row" fxLayoutGap="12px">
+          <button mat-icon-button color="primary" (click)="openPdf()" aria-label="Open PDF">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+          <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
+            {{ 'COMMON.APPROVE' | translate }}
+          </button>
+          <button mat-raised-button color="accent" *ngIf="canReceive" (click)="goToReceive()">
+            Receive
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="po-overview-list">
+          <div class="po-overview-row" *ngFor="let field of overviewFields">
+            <span class="po-overview-label">{{ field.label | translate }}:</span>
+            <span class="po-overview-value">{{ field.value }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="mat-elevation-z10 po-summary-card" fxFlex.gt-xs="48%">
+      <mat-card-header>
+        <mat-card-title>{{ 'PO.AMOUNT_SUMMARY' | translate }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="po-summary-list">
+          <div class="po-summary-row">
+            <span class="po-summary-label">{{ 'PO.SUBTOTAL' | translate }}:</span>
+            <span class="po-summary-value">{{ itemSubtotal | currency : orderHeader?.currencyUomId }}</span>
+          </div>
+          <div class="po-summary-row">
+            <span class="po-summary-label">{{ 'PO.SHIPPING_AMOUNT' | translate }}:</span>
+            <span class="po-summary-value">{{ shippingTotal | currency : orderHeader?.currencyUomId }}</span>
+          </div>
+          <div class="po-summary-row">
+            <span class="po-summary-label">{{ 'PO.DISCOUNT_AMOUNT' | translate }}:</span>
+            <span class="po-summary-value">{{ discountTotal | currency : orderHeader?.currencyUomId }}</span>
+          </div>
+          <div class="po-summary-row">
+            <span class="po-summary-label">{{ 'PO.TOTAL' | translate }}:</span>
+            <span class="po-summary-value">{{ orderTotal | currency : orderHeader?.currencyUomId }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <br />
   <mat-card class="mat-elevation-z10">
-    <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
-      <mat-card-title>{{ 'PO.OVERVIEW' | translate }}</mat-card-title>
-      <div fxLayout="row" fxLayoutGap="12px">
-        <button mat-icon-button color="primary" (click)="openPdf()" aria-label="Open PDF">
-          <mat-icon>picture_as_pdf</mat-icon>
-        </button>
-        <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
-          {{ 'COMMON.APPROVE' | translate }}
-        </button>
-        <button mat-raised-button color="accent" *ngIf="canReceive" (click)="goToReceive()">
-          Receive
-        </button>
-      </div>
+    <mat-card-header>
+      <mat-card-title>{{ 'PO.PAYMENT_TERMS_PREFERENCES' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-list>
-        <mat-list-item *ngFor="let field of overviewFields">
-          <span matListItemTitle>{{ field.label | translate }}:</span>
-          <span matListItemLine>{{ field.value }}</span>
-        </mat-list-item>
-      </mat-list>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <mat-card fxFlex.gt-xs="48%" class="card-margin mat-elevation-z10">
+          <mat-card-header>
+            <mat-card-title>{{ 'PO.PAYMENT_TERMS' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="orderTerms">
+              <ng-container matColumnDef="termTypeId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PO.PAYMENT_TERM' | translate }}</th>
+                <td mat-cell class="text-left" *matCellDef="let term">
+                  {{ term?.description || term?.termTypeId }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="termValue">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PO.RATE' | translate }}</th>
+                <td mat-cell class="text-left" *matCellDef="let term">
+                  {{ term?.termValue || '-' }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="termDays">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PO.DAYS' | translate }}</th>
+                <td mat-cell class="text-left" *matCellDef="let term">
+                  {{ term?.termDays || '-' }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="termColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: termColumns"></tr>
+              <tr *ngIf="!orderTerms.length">
+                <td class="text-left" colspan="3">{{ 'COMMON.NOT_AVAILABLE' | translate }}</td>
+              </tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card fxFlex.gt-xs="48%" class="card-margin mat-elevation-z10">
+          <mat-card-header>
+            <mat-card-title>{{ 'PO.PAYMENT_PREFERENCES' | translate }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="orderPaymentPreferences">
+              <ng-container matColumnDef="paymentMethodTypeId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PO.PAYMENT_METHOD' | translate }}</th>
+                <td mat-cell class="text-left" *matCellDef="let pref">
+                  {{ pref?.paymentMethodTypeId || '-' }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="statusId">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
+                <td mat-cell class="text-left" *matCellDef="let pref">
+                  {{ pref?.statusId || '-' }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="maxAmount">
+                <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PO.AMOUNT' | translate }}</th>
+                <td mat-cell class="text-left" *matCellDef="let pref">
+                  {{ pref?.maxAmount || '-' }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="preferenceColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: preferenceColumns"></tr>
+              <tr *ngIf="!orderPaymentPreferences.length">
+                <td class="text-left" colspan="3">{{ 'COMMON.NOT_AVAILABLE' | translate }}</td>
+              </tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </mat-card-content>
   </mat-card>
   <br />
@@ -111,6 +213,16 @@
               <li class="custom-list-item">
                 <strong>{{ 'PO.SHIP_BEFORE_DATE' | translate }}:</strong>
                 {{ part?.shipBeforeDate | date : "MMMM d, y" }}
+              </li>
+              <li class="custom-list-item">
+                <strong>{{ 'PO.SHIPPING_INST' | translate }}:</strong>
+                {{ part?.shippingInstructions || '-' }}
+                <mat-icon
+                  matListIcon
+                  class="custom-mat-icon custom-icon-align"
+                  color="primary"
+                  (click)="editShippingInstructions(part)"
+                >edit</mat-icon>
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'PO.PART_TOTAL' | translate }}:</strong>

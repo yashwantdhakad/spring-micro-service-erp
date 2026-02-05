@@ -1,3 +1,52 @@
 .mat-grid-tile-content {
   justify-content: left!important;
 }
+
+.so-overview-card,
+.so-summary-card {
+  min-height: 220px;
+}
+
+.so-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.so-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.so-summary-label {
+  text-align: right;
+  min-width: 120px;
+}
+
+.so-summary-value {
+  text-align: right;
+  min-width: 120px;
+}
+
+.so-overview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.so-overview-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.so-overview-label {
+  font-weight: 600;
+  min-width: 120px;
+}
+
+.so-overview-value {
+  text-align: left;
+}

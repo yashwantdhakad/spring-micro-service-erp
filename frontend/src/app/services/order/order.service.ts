@@ -154,6 +154,11 @@ export class OrderService {
     return this.apiService.put(url, { quantity });
   }
 
+  updateShippingInstructions(orderId: string, shipGroupSeqId: string, shippingInstructions: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/ship-groups/${encodeURIComponent(shipGroupSeqId)}/shipping-instructions`;
+    return this.apiService.put(url, { shippingInstructions });
+  }
+
   getProductStores(): Observable<any> {
     const url = '/wms/api/product-stores';
     return this.apiService.get(url);

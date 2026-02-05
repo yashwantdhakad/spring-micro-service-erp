@@ -484,6 +484,7 @@
     "NOTES": "Hinweise",
     "NOTE_DATE": "Hinweisdatum",
     "ORDER_DATE": "Bestelldatum",
+    "ORDER_TYPE": "Order Type",
     "OVERVIEW": "Übersicht",
     "PARTS": "Teile",
     "PART_DETAILS": "Teiledetails",
@@ -512,7 +513,15 @@
     "TITLE": "Einkaufsbestellungen",
     "TITLE_COL": "Titel",
     "TOTAL": "Gesamt",
-    "TOTAL_AMOUNT": "Gesamtbetrag"
+    "TOTAL_AMOUNT": "Gesamtbetrag",
+    "PAYMENT_TERMS_PREFERENCES": "Payment Terms and Preferences",
+    "PAYMENT_TERMS": "Terms",
+    "PAYMENT_PREFERENCES": "Preferences",
+    "RATE": "Rate",
+    "DAYS": "Days",
+    "AMOUNT": "Amount",
+    "PAYMENT_TERM": "Payment Term",
+    "PAYMENT_METHOD": "Payment Method"
   },
   "PRODUCT": {
     "ASSOCIATED_FROM_TITLE": "Zugeordnet von",
@@ -628,7 +637,11 @@
     "TITLE_COL": "Titel",
     "TOTAL": "Gesamt",
     "TOTAL_AMOUNT": "Gesamtbetrag",
-    "VENDOR_REQUIRED": "Lieferantenorganisation ist erforderlich."
+    "VENDOR_REQUIRED": "Lieferantenorganisation ist erforderlich.",
+    "AMOUNT_SUMMARY": "Amount Summary",
+    "SUBTOTAL": "Subtotal",
+    "SHIPPING_AMOUNT": "Shipping",
+    "DISCOUNT_AMOUNT": "Discount"
   },
   "SUBMIT_LOGIN": "Anmelden",
   "SUPPLIER": {

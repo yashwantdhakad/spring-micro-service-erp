@@ -1,0 +1,8 @@
+::ng-deep .mat-horizontal-stepper-header {
+  padding: 0 8px;
+}
+
+::ng-deep .mat-horizontal-stepper-header-container {
+  justify-content: flex-start;
+  gap: 2px;
+}

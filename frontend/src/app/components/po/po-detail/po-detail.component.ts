@@ -12,6 +12,7 @@ import { AddEditAddressComponent } from 'src/app/components/party/add-edit-addre
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
+import { ShippingInstructionDialogComponent } from '../../order/shipping-instruction-dialog/shipping-instruction-dialog.component';
 import { forkJoin, of } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 
@@ -40,6 +41,10 @@ export class PODetailComponent implements OnInit {
   createOrderNoteDialog: boolean = false;
   isLoading: boolean = false;
   isSavingQuantity = false;
+  itemSubtotal = 0;
+  shippingTotal = 0;
+  discountTotal = 0;
+  orderTotal = 0;
   editingItemKey: string | null = null;
   editingQuantity: number | null = null;
 
@@ -101,6 +106,10 @@ export class PODetailComponent implements OnInit {
   productItemData: any;
 
   overviewFields: { label: string, value: any }[] = [];
+  orderTerms: any[] = [];
+  orderPaymentPreferences: any[] = [];
+  termColumns: string[] = ['termTypeId', 'termValue', 'termDays'];
+  preferenceColumns: string[] = ['paymentMethodTypeId', 'statusId', 'maxAmount'];
   statusDescriptionMap = new Map<string, string>();
   shipmentTypeMap = new Map<string, string>();
   orderItemTypeMap = new Map<string, string>();
@@ -157,6 +166,9 @@ export class PODetailComponent implements OnInit {
           this.orderHeader = displayInfo.orderHeader;
           this.statusItem = displayInfo.statusItem;
           this.orderNotes = displayInfo.orderNoteList || [];
+          this.orderTerms = displayInfo.orderTermList || [];
+          this.orderPaymentPreferences = displayInfo.orderPaymentPreferenceList || [];
+          this.calculateSummary(displayInfo.orderAdjustmentList || []);
           this.canApprove = this.statusItem?.statusId === 'ORDER_CREATED';
           this.canReceive = this.statusItem?.statusId === 'ORDER_APPROVED';
           this.canEditItems = this.statusItem?.statusId === 'ORDER_CREATED'
@@ -178,7 +190,7 @@ export class PODetailComponent implements OnInit {
             this.loadFacilityAddress(this.facilityId);
           }
 
-          const shippingContacts = (displayInfo?.orderContactMechList || [])
+        const shippingContacts = (displayInfo?.orderContactMechList || [])
             .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
           this.orderShipToAddress = shippingContacts.length ? shippingContacts[0]?.postalAddress : null;
         }
@@ -198,9 +210,27 @@ export class PODetailComponent implements OnInit {
       }),
       finalize(() => {
         this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => this.cdr.markForCheck(), 0);
       })
     );
+  }
+
+  private calculateSummary(adjustments: any[]): void {
+    const shipping = adjustments
+      .filter((adj: any) => adj?.orderAdjustmentTypeId === 'SHIPPING_CHARGES')
+      .reduce((sum: number, adj: any) => sum + Number(adj?.amount ?? 0), 0);
+
+    const discount = adjustments
+      .filter((adj: any) => adj?.orderAdjustmentTypeId === 'DISCOUNT_ADJUSTMENT')
+      .reduce((sum: number, adj: any) => sum + Number(adj?.amount ?? 0), 0);
+
+    const itemSubtotal = (this.parts || [])
+      .reduce((sum: number, part: any) => sum + Number(part?.partTotal ?? 0), 0);
+
+    this.shippingTotal = shipping;
+    this.discountTotal = discount;
+    this.itemSubtotal = itemSubtotal;
+    this.orderTotal = itemSubtotal + shipping + discount;
   }
 
   startEditQuantity(item: any): void {
@@ -228,7 +258,7 @@ export class PODetailComponent implements OnInit {
     this.orderService.updateOrderItemQuantity(this.orderId, item.orderItemSeqId, quantity)
       .pipe(finalize(() => {
         this.isSavingQuantity = false;
-        this.cdr.detectChanges();
+        setTimeout(() => this.cdr.markForCheck(), 0);
       }))
       .subscribe({
         next: (updated) => {
@@ -399,6 +429,26 @@ export class PODetailComponent implements OnInit {
       });
   }
 
+  editShippingInstructions(part: any): void {
+    if (!this.orderId || !part?.orderPartSeqId) {
+      return;
+    }
+    this.dialog.open(ShippingInstructionDialogComponent, {
+      data: {
+        titleKey: 'PO.SHIPPING_INST',
+        shippingInstructions: part?.shippingInstructions || '',
+      },
+    }).afterClosed().subscribe((value) => {
+      if (value === null || value === undefined) {
+        return;
+      }
+      this.orderService.updateShippingInstructions(this.orderId as string, part.orderPartSeqId, value)
+        .subscribe(() => {
+          this.getOrder(this.orderId as string);
+        });
+    });
+  }
+
   openOrderContent(item: any): void {
     if (!this.orderId || !item?.contentId) {
       return;
@@ -418,7 +468,7 @@ export class PODetailComponent implements OnInit {
     this.partyService.getSupplier(partyId).subscribe({
       next: (response) => {
         const supplierDetail = response?.supplierDetail;
-        this.vendorName = supplierDetail?.party?.groupName || partyId;
+        const vendorName = supplierDetail?.party?.groupName || partyId;
         const addresses = Array.isArray(supplierDetail?.postalAddressList)
           ? supplierDetail.postalAddressList
           : [];
@@ -435,12 +485,20 @@ export class PODetailComponent implements OnInit {
         if (!selected && addresses.length) {
           selected = addresses[0];
         }
-        this.vendorAddresses = selected ? [selected] : [];
+        const vendorAddresses = selected ? [selected] : [];
+        setTimeout(() => {
+          this.vendorName = vendorName;
+          this.vendorAddresses = vendorAddresses;
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: () => {
-        this.vendorName = partyId;
-        this.vendorAddresses = [];
-      },
+        setTimeout(() => {
+          this.vendorName = partyId;
+          this.vendorAddresses = [];
+          this.cdr.markForCheck();
+        }, 0);
+      }
     });
   }
 
@@ -474,20 +532,32 @@ export class PODetailComponent implements OnInit {
           contactMechId = mechList[0].contactMechId;
         }
         if (!contactMechId) {
-          this.facilityAddress = null;
+          setTimeout(() => {
+            this.facilityAddress = null;
+            this.cdr.markForCheck();
+          }, 0);
           return;
         }
         this.partyService.getPostalAddressByContactMechId(contactMechId).subscribe({
           next: (address) => {
-            this.facilityAddress = address;
+            setTimeout(() => {
+              this.facilityAddress = address;
+              this.cdr.markForCheck();
+            }, 0);
           },
           error: () => {
-            this.facilityAddress = null;
+            setTimeout(() => {
+              this.facilityAddress = null;
+              this.cdr.markForCheck();
+            }, 0);
           },
         });
       },
       error: () => {
-        this.facilityAddress = null;
+        setTimeout(() => {
+          this.facilityAddress = null;
+          this.cdr.markForCheck();
+        }, 0);
       },
     });
   }

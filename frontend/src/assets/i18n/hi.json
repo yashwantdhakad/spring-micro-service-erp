@@ -455,6 +455,7 @@
     "NOTES": "नोट्स",
     "NOTE_DATE": "नोट की तिथि",
     "ORDER_DATE": "ऑर्डर की तिथि",
+    "ORDER_TYPE": "Order Type",
     "OVERVIEW": "अवलोकन",
     "PARTS": "पुर्जे",
     "PART_DETAILS": "पुर्जा विवरण",
@@ -483,7 +484,15 @@
     "TITLE": "ऑर्डर",
     "TITLE_COL": "शीर्षक",
     "TOTAL": "कुल",
-    "TOTAL_AMOUNT": "कुल राशि"
+    "TOTAL_AMOUNT": "कुल राशि",
+    "PAYMENT_TERMS_PREFERENCES": "Payment Terms and Preferences",
+    "PAYMENT_TERMS": "Terms",
+    "PAYMENT_PREFERENCES": "Preferences",
+    "RATE": "Rate",
+    "DAYS": "Days",
+    "AMOUNT": "Amount",
+    "PAYMENT_TERM": "Payment Term",
+    "PAYMENT_METHOD": "Payment Method"
   },
   "PRODUCT": {
     "ASSOCIATED_FROM_TITLE": "यहाँ से संबद्ध",
@@ -591,7 +600,11 @@
     "TITLE_COL": "शीर्षक",
     "TOTAL": "कुल",
     "TOTAL_AMOUNT": "कुल राशि",
-    "VENDOR_REQUIRED": "विक्रेता संगठन अनिवार्य है।"
+    "VENDOR_REQUIRED": "विक्रेता संगठन अनिवार्य है।",
+    "AMOUNT_SUMMARY": "Amount Summary",
+    "SUBTOTAL": "Subtotal",
+    "SHIPPING_AMOUNT": "Shipping",
+    "DISCOUNT_AMOUNT": "Discount"
   },
   "SUBMIT_LOGIN": "लॉगिन",
   "SUPPLIER": {
@@ -668,5 +681,5 @@
     "JAPANESE": "जापानी",
     "CHINESE": "चीनी",
     "GERMAN": "जर्मन"
-}
+  }
 }

@@ -19,6 +19,7 @@ import { OrderService } from 'src/app/services/order/order.service';
 import { PartyService } from 'src/app/services/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
+import { AddEditPhoneComponent } from 'src/app/components/party/add-edit-phone/add-edit-phone.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductService } from 'src/app/services/product/product.service';
 
@@ -31,18 +32,38 @@ import { ProductService } from 'src/app/services/product/product.service';
 export class CreateSOComponent implements OnInit, OnDestroy {
   isLoading = false;
   orderForm: FormGroup;
+  paymentForm: FormGroup;
 
   productStores: any[] = [];
   facilities: any[] = [];
   filteredCustomers$: Observable<any[]> = of([]);
   filteredProducts: Observable<any[]>[] = [];
   customerAddresses: any[] = [];
+  customerPhones: any[] = [];
   destroy$ = new Subject<void>();
   itemTypes = [
     { id: 'PRODUCT_ORDER_ITEM', label: 'Product' },
     { id: 'WORK_ORDER_ITEM', label: 'Work' },
     { id: 'RENTAL_ORDER_ITEM', label: 'Rental' },
     { id: 'BULK_ORDER_ITEM', label: 'Bulk' },
+  ];
+  shipByOptions = [
+    { id: 'FEDEX@GROUND', label: 'FedEx Ground' },
+    { id: 'FEDEX@SECOND_DAY', label: 'FedEx Second Day' },
+    { id: 'FEDEX@NEXT_DAY', label: 'FedEx Next Day' },
+    { id: 'UPS@GROUND', label: 'UPS Ground' },
+    { id: 'UPS@SECOND_DAY', label: 'UPS Second Day' },
+    { id: 'UPS@NEXT_DAY', label: 'UPS Next Day' },
+  ];
+  paymentTerms = [
+    { id: 'NET_30', label: 'Net 30' },
+    { id: 'NET_15', label: 'Net 15' },
+    { id: 'DUE_ON_RECEIPT', label: 'Due on Receipt' },
+  ];
+  paymentMethods = [
+    { id: 'CREDIT_CARD', label: 'Credit Card' },
+    { id: 'EFT_ACCOUNT', label: 'EFT Account' },
+    { id: 'WIRE_TRANSFER', label: 'Wire Transfer' },
   ];
 
   constructor(
@@ -60,10 +81,20 @@ export class CreateSOComponent implements OnInit, OnDestroy {
       vendorPartyId: ['', Validators.required],
       facilityId: ['', Validators.required],
       customerPartyId: ['', Validators.required],
+      customerPhone: [null],
       shipBeforeDate: [''],
       estimatedDeliveryDate: [''],
+      poNumber: [''],
+      shippingInstructions: [''],
       shippingAddress: [null],
       items: this.fb.array([this.buildItemGroup()]),
+    });
+
+    this.paymentForm = this.fb.group({
+      shipByMethod: [''],
+      paymentTerm: [''],
+      paymentMethod: [''],
+      paymentInstructions: [''],
     });
   }
 
@@ -118,9 +149,12 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     this.orderForm.get('customerPartyId')?.setValue(partyId);
     if (partyId) {
       this.loadCustomerAddresses(partyId);
+      this.loadCustomerPhones(partyId);
     } else {
       this.customerAddresses = [];
+      this.customerPhones = [];
       this.orderForm.get('shippingAddress')?.setValue(null);
+      this.orderForm.get('customerPhone')?.setValue(null);
     }
   }
 
@@ -167,6 +201,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     }
   }
 
+
   createOrder(): void {
     if (this.orderForm.invalid) return;
     if (this.items.length === 0) {
@@ -176,8 +211,10 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     const values = this.orderForm.value;
     const shippingAddress = this.buildOrderAddress(values.shippingAddress);
+    const { customerPhone, ...rest } = values;
     const payload = {
-      ...values,
+      ...rest,
+      ...this.paymentForm.value,
       shippingAddress,
     };
 
@@ -219,6 +256,52 @@ export class CreateSOComponent implements OnInit, OnDestroy {
         this.customerAddresses = [];
       },
     });
+  }
+
+  loadCustomerPhones(partyId: string): void {
+    const primary$ = this.partyService.getPartyTelecomContactMechByPurpose(partyId, 'PRIMARY_PHONE', 'customer');
+    const shipping$ = this.partyService.getPartyTelecomContactMechByPurpose(partyId, 'PHONE_SHIPPING', 'customer');
+
+    forkJoin({ primary: primary$, shipping: shipping$ }).subscribe({
+      next: ({ primary, shipping }: { primary: any; shipping: any }) => {
+        const primaryList = Array.isArray(primary) ? primary : [];
+        const shippingList = Array.isArray(shipping) ? shipping : [];
+        const phones = ([] as any[]).concat(primaryList, shippingList);
+        const unique = new Map(phones.map((phone: any) => [phone.contactMechId, phone]));
+        this.customerPhones = Array.from(unique.values());
+        const current = this.orderForm.get('customerPhone')?.value;
+        if (!current && this.customerPhones.length) {
+          this.orderForm.get('customerPhone')?.setValue(this.customerPhones[0]);
+        }
+      },
+      error: () => {
+        this.customerPhones = [];
+      },
+    });
+  }
+
+  addCustomerPhone(): void {
+    const partyId = this.orderForm.get('customerPartyId')?.value;
+    if (!partyId) {
+      return;
+    }
+    const addEditPhoneData = {
+      partyId,
+      contactMechPurposeId: 'PRIMARY_PHONE',
+    };
+    this.dialog.open(AddEditPhoneComponent, {
+      data: { addEditPhoneData },
+    }).afterClosed().subscribe(() => {
+      this.loadCustomerPhones(partyId);
+    });
+  }
+
+  formatPhone(phone: any): string {
+    if (!phone) {
+      return '';
+    }
+    const parts = [phone.countryCode, phone.areaCode, phone.contactNumber].filter(Boolean);
+    return parts.join(' ');
   }
 
   addCustomerAddress(): void {
@@ -374,5 +457,19 @@ export class CreateSOComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  isSubmitDisabled(): boolean {
+    return this.orderForm.invalid || this.items.invalid;
+  }
+
+  getMissingFieldsTooltip(): string {
+    const missing: string[] = [];
+    if (this.orderForm.get('productStoreId')?.invalid) missing.push('Store');
+    if (this.orderForm.get('facilityId')?.invalid) missing.push('Facility');
+    if (this.orderForm.get('customerPartyId')?.invalid) missing.push('Customer');
+    if (this.orderForm.get('vendorPartyId')?.invalid) missing.push('Vendor');
+    if (this.items.invalid) missing.push('Items');
+    return missing.length ? `Missing: ${missing.join(', ')}` : '';
   }
 }

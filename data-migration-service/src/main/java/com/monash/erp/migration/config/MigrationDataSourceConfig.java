@@ -39,6 +39,12 @@ public class MigrationDataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 
+    @Bean(name = "mfgTargetDataSource")
+    @ConfigurationProperties("migration.datasource.mfg-target")
+    public DataSource mfgTargetDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
     @Bean(name = "dataSource")
     public DataSource dataSource(@Qualifier("targetDataSource") DataSource targetDataSource) {
         return targetDataSource;

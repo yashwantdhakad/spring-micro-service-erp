@@ -37,6 +37,11 @@ migration:
       driver-class-name: com.mysql.cj.jdbc.Driver
       username: ${DB_USER:root}
       password: ${DB_PASSWORD:123456}
+    mfg-target:
+      jdbc-url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME_MFG_TARGET:mfgdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: ${DB_USER:root}
+      password: ${DB_PASSWORD:123456}
   product:
     chunk-size: 1000
     fetch-size: 1000

@@ -79,6 +79,41 @@
         <mat-datepicker #deliveryPicker></mat-datepicker>
       </mat-form-field>
 
+      <!-- Shipping Instructions -->
+      <mat-form-field appearance="outline" fxFlex="100%">
+        <mat-label>{{ 'PO.SHIPPING_INST' | translate }}</mat-label>
+        <textarea
+          matInput
+          rows="3"
+          [placeholder]="'PO.SHIPPING_INST' | translate"
+          formControlName="shippingInstructions"
+        ></textarea>
+      </mat-form-field>
+
+      <!-- Shipping Amount -->
+      <mat-form-field appearance="outline" fxFlex="48%">
+        <mat-label>{{ 'PO.SHIPPING_AMOUNT' | translate }}</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="shippingAmount"
+        />
+      </mat-form-field>
+
+      <!-- Discount Amount -->
+      <mat-form-field appearance="outline" fxFlex="48%">
+        <mat-label>{{ 'PO.DISCOUNT_AMOUNT' | translate }}</mat-label>
+        <input
+          matInput
+          type="number"
+          min="0"
+          step="0.01"
+          formControlName="discountAmount"
+        />
+      </mat-form-field>
+
     </form>
   </mat-card-content>
 </mat-card>

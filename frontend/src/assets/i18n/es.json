@@ -455,6 +455,7 @@
     "NOTES": "Notas",
     "NOTE_DATE": "Fecha de nota",
     "ORDER_DATE": "Fecha de Orden",
+    "ORDER_TYPE": "Order Type",
     "OVERVIEW": "Resumen",
     "PARTS": "Partes",
     "PART_DETAILS": "Detalles de la Parte",
@@ -483,7 +484,15 @@
     "TITLE": "Órdenes de compra",
     "TITLE_COL": "Título",
     "TOTAL": "Total",
-    "TOTAL_AMOUNT": "Monto Total"
+    "TOTAL_AMOUNT": "Monto Total",
+    "PAYMENT_TERMS_PREFERENCES": "Payment Terms and Preferences",
+    "PAYMENT_TERMS": "Terms",
+    "PAYMENT_PREFERENCES": "Preferences",
+    "RATE": "Rate",
+    "DAYS": "Days",
+    "AMOUNT": "Amount",
+    "PAYMENT_TERM": "Payment Term",
+    "PAYMENT_METHOD": "Payment Method"
   },
   "PRODUCT": {
     "ASSOCIATED_FROM_TITLE": "Asociado Desde",
@@ -589,7 +598,11 @@
     "TITLE_COL": "Título",
     "TOTAL": "Total",
     "TOTAL_AMOUNT": "Monto Total",
-    "VENDOR_REQUIRED": "Se requiere vendedor."
+    "VENDOR_REQUIRED": "Se requiere vendedor.",
+    "AMOUNT_SUMMARY": "Amount Summary",
+    "SUBTOTAL": "Subtotal",
+    "SHIPPING_AMOUNT": "Shipping",
+    "DISCOUNT_AMOUNT": "Discount"
   },
   "SUBMIT_LOGIN": "Iniciar sesión",
   "SUPPLIER": {
@@ -662,5 +675,5 @@
     "JAPANESE": "Japonés",
     "CHINESE": "Chino",
     "GERMAN": "Alemán"
-}
+  }
 }

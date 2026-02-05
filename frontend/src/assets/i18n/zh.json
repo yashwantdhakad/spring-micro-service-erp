@@ -455,6 +455,7 @@
     "NOTES": "备注列表",
     "NOTE_DATE": "备注日期",
     "ORDER_DATE": "订单日期",
+    "ORDER_TYPE": "Order Type",
     "OVERVIEW": "概览",
     "PARTS": "零件",
     "PART_DETAILS": "零件详情",
@@ -483,7 +484,15 @@
     "TITLE": "订单",
     "TITLE_COL": "标题",
     "TOTAL": "合计",
-    "TOTAL_AMOUNT": "总金额"
+    "TOTAL_AMOUNT": "总金额",
+    "PAYMENT_TERMS_PREFERENCES": "Payment Terms and Preferences",
+    "PAYMENT_TERMS": "Terms",
+    "PAYMENT_PREFERENCES": "Preferences",
+    "RATE": "Rate",
+    "DAYS": "Days",
+    "AMOUNT": "Amount",
+    "PAYMENT_TERM": "Payment Term",
+    "PAYMENT_METHOD": "Payment Method"
   },
   "PRODUCT": {
     "ASSOCIATED_FROM_TITLE": "关联自",
@@ -591,7 +600,11 @@
     "TITLE_COL": "标题",
     "TOTAL": "合计",
     "TOTAL_AMOUNT": "总金额",
-    "VENDOR_REQUIRED": "供应商组织是必填项。"
+    "VENDOR_REQUIRED": "供应商组织是必填项。",
+    "AMOUNT_SUMMARY": "Amount Summary",
+    "SUBTOTAL": "Subtotal",
+    "SHIPPING_AMOUNT": "Shipping",
+    "DISCOUNT_AMOUNT": "Discount"
   },
   "SUBMIT_LOGIN": "登录",
   "SUPPLIER": {
@@ -668,5 +681,5 @@
     "JAPANESE": "日语",
     "CHINESE": "中文",
     "GERMAN": "德语"
-}
+  }
 }

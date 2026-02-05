@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, of } from 'rxjs';
@@ -12,12 +14,14 @@ import { AddEditAddressComponent } from 'src/app/components/party/add-edit-addre
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
+import { ShippingInstructionDialogComponent } from '../../order/shipping-instruction-dialog/shipping-instruction-dialog.component';
 
 @Component({
   standalone: false,
   selector: 'app-so-detail',
   templateUrl: './so-detail.component.html',
   styleUrls: ['./so-detail.component.css'],
+  providers: [DatePipe]
 })
 export class SODetailComponent implements OnInit {
   orderId: string | undefined;
@@ -36,6 +40,10 @@ export class SODetailComponent implements OnInit {
   isLoading: boolean = false;
   showTable: boolean = false;
   isSavingQuantity = false;
+  itemSubtotal = 0;
+  shippingTotal = 0;
+  discountTotal = 0;
+  orderTotal = 0;
   editingItemKey: string | null = null;
   editingQuantity: number | null = null;
 
@@ -70,6 +78,7 @@ export class SODetailComponent implements OnInit {
   shipmentTypeMap = new Map<string, string>();
   orderItemTypeMap = new Map<string, string>();
   productNameMap = new Map<string, string>();
+  overviewFields: { label: string, value: any }[] = [];
 
   invoiceItems: any[] = [];
   invoiceColumns: string[] = ['invoiceId', 'productId', 'quantity', 'amount'];
@@ -78,6 +87,10 @@ export class SODetailComponent implements OnInit {
   picklistColumns: string[] = ['picklistId', 'statusId', 'shipmentId', 'createdDate', 'action'];
 
   productItemData: any;
+  orderTerms: any[] = [];
+  orderPaymentPreferences: any[] = [];
+  termColumns: string[] = ['termTypeId', 'termValue', 'termDays'];
+  preferenceColumns: string[] = ['paymentMethodTypeId', 'statusId', 'maxAmount'];
 
   constructor(
     private route: ActivatedRoute,
@@ -87,7 +100,9 @@ export class SODetailComponent implements OnInit {
     private facilityService: FacilityService,
     private partyService: PartyService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private datePipe: DatePipe,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -126,7 +141,13 @@ export class SODetailComponent implements OnInit {
         this.orderHeader = displayInfo.orderHeader;
         this.statusItem = displayInfo.statusItem;
         this.orderNotes = displayInfo.orderNoteList;
-        this.firstPartInfo = displayInfo.firstPartInfo;
+        setTimeout(() => {
+          this.firstPartInfo = displayInfo.firstPartInfo;
+          this.cdr.markForCheck();
+        }, 0);
+        this.orderTerms = displayInfo.orderTermList || [];
+        this.orderPaymentPreferences = displayInfo.orderPaymentPreferenceList || [];
+        this.calculateSummary(displayInfo.orderAdjustmentList || []);
         this.canEditItems = this.statusItem?.statusId === 'ORDER_CREATED'
           || this.statusItem?.statusId === 'ORDER_APPROVED';
         this.shipToAddresses = (displayInfo?.orderContactMechList || [])
@@ -155,21 +176,62 @@ export class SODetailComponent implements OnInit {
 
         const customerPartyId = displayInfo?.firstPart?.customerPartyId;
         if (customerPartyId) {
-          this.customerPartyId = customerPartyId;
+          setTimeout(() => {
+            this.customerPartyId = customerPartyId;
+            this.cdr.markForCheck();
+          }, 0);
         }
 
         const facilityId = displayInfo?.firstPart?.facilityId || this.orderHeader?.originFacilityId;
         if (facilityId) {
           this.loadFacilityAddress(facilityId);
         } else {
-          this.facilityAddress = null;
+          setTimeout(() => {
+            this.facilityAddress = null;
+            this.cdr.markForCheck();
+          }, 0);
         }
+
+        this.overviewFields = [
+          { label: 'COMMON.ID', value: this.orderHeader?.orderId },
+          { label: 'SO.PO_NUMBER', value: this.orderHeader?.orderName },
+          { label: 'SO.ORDER_TYPE', value: this.orderHeader?.orderTypeId },
+          { label: 'SO.ORDER_DATE', value: this.datePipe.transform(this.orderHeader?.entryDate, 'MMMM d, y') },
+          { label: 'COMMON.STATUS', value: this.statusItem?.description },
+        ].filter(field => field.value);
       }),
       finalize(() => {
         this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => this.cdr.markForCheck(), 0);
       })
     );
+  }
+
+  private calculateSummary(adjustments: any[]): void {
+    const shipping = adjustments
+      .filter((adj: any) => adj?.orderAdjustmentTypeId === 'SHIPPING_CHARGES')
+      .reduce((sum: number, adj: any) => sum + Number(adj?.amount ?? 0), 0);
+
+    const discount = adjustments
+      .filter((adj: any) => adj?.orderAdjustmentTypeId === 'DISCOUNT_ADJUSTMENT')
+      .reduce((sum: number, adj: any) => sum + Number(adj?.amount ?? 0), 0);
+
+    const itemSubtotal = (this.parts || [])
+      .reduce((sum: number, part: any) => sum + Number(part?.partTotal ?? 0), 0);
+
+    this.shippingTotal = shipping;
+    this.discountTotal = discount;
+    this.itemSubtotal = itemSubtotal;
+    this.orderTotal = itemSubtotal + shipping + discount;
+  }
+
+  getShipByLabel(part: any): string {
+    const carrier = part?.carrierPartyId;
+    const service = part?.carrierService;
+    if (carrier && service) {
+      return `${carrier} @ ${service}`;
+    }
+    return service || carrier || '';
   }
 
   startEditQuantity(item: any): void {
@@ -197,7 +259,7 @@ export class SODetailComponent implements OnInit {
     this.orderService.updateOrderItemQuantity(this.orderId, item.orderItemSeqId, quantity)
       .pipe(finalize(() => {
         this.isSavingQuantity = false;
-        this.cdr.detectChanges();
+        setTimeout(() => this.cdr.markForCheck(), 0);
       }))
       .subscribe({
         next: (updated) => {
@@ -245,20 +307,32 @@ export class SODetailComponent implements OnInit {
           contactMechId = mechList[0].contactMechId;
         }
         if (!contactMechId) {
-          this.facilityAddress = null;
+          setTimeout(() => {
+            this.facilityAddress = null;
+            this.cdr.markForCheck();
+          }, 0);
           return;
         }
         this.partyService.getPostalAddressByContactMechId(contactMechId).subscribe({
           next: (address) => {
-            this.facilityAddress = address;
+            setTimeout(() => {
+              this.facilityAddress = address;
+              this.cdr.markForCheck();
+            }, 0);
           },
           error: () => {
-            this.facilityAddress = null;
+            setTimeout(() => {
+              this.facilityAddress = null;
+              this.cdr.markForCheck();
+            }, 0);
           },
         });
       },
       error: () => {
-        this.facilityAddress = null;
+        setTimeout(() => {
+          this.facilityAddress = null;
+          this.cdr.markForCheck();
+        }, 0);
       },
     });
   }
@@ -401,6 +475,26 @@ export class SODetailComponent implements OnInit {
       data: { contentData: this.contentData },
     }).afterClosed().subscribe(() => {
       if (this.orderId) this.getOrder(this.orderId);
+    });
+  }
+
+  editShippingInstructions(part: any): void {
+    if (!this.orderId || !part?.orderPartSeqId) {
+      return;
+    }
+    this.dialog.open(ShippingInstructionDialogComponent, {
+      data: {
+        titleKey: 'SO.SHIPPING_INST',
+        shippingInstructions: part?.shippingInstructions || '',
+      },
+    }).afterClosed().subscribe((value) => {
+      if (value === null || value === undefined) {
+        return;
+      }
+      this.orderService.updateShippingInstructions(this.orderId as string, part.orderPartSeqId, value)
+        .subscribe(() => {
+          this.getOrder(this.orderId as string);
+        });
     });
   }
 

@@ -1,3 +1,52 @@
 .mat-grid-tile-content {
   justify-content: left!important;
 }
+
+.po-overview-card,
+.po-summary-card {
+  min-height: 220px;
+}
+
+.po-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.po-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.po-summary-label {
+  text-align: right;
+  min-width: 120px;
+}
+
+.po-summary-value {
+  text-align: right;
+  min-width: 120px;
+}
+
+.po-overview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.po-overview-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.po-overview-label {
+  font-weight: 600;
+  min-width: 120px;
+}
+
+.po-overview-value {
+  text-align: left;
+}

@@ -13,6 +13,7 @@ import com.monash.erp.oms.order.dto.OrderItemRequest;
 import com.monash.erp.oms.order.dto.OrderListResponse;
 import com.monash.erp.oms.order.dto.OrderNoteDto;
 import com.monash.erp.oms.order.dto.OrderNoteRequest;
+import com.monash.erp.oms.order.dto.OrderShippingInstructionRequest;
 import com.monash.erp.oms.order.dto.OrderStatusChangeRequest;
 import com.monash.erp.oms.order.dto.PurchaseOrderReceiveRequest;
 import com.monash.erp.oms.order.dto.PurchaseOrderReceiveResponse;
@@ -129,6 +130,16 @@ public class OrderCompositeController {
             @RequestBody OrderItemQuantityUpdateRequest request
     ) {
         return orderCompositeService.updateOrderItemQuantity(orderId, orderItemSeqId, request);
+    }
+
+    @PutMapping("/{orderId}/ship-groups/{shipGroupSeqId}/shipping-instructions")
+    public ResponseEntity<Void> updateShippingInstructions(
+            @PathVariable String orderId,
+            @PathVariable String shipGroupSeqId,
+            @RequestBody OrderShippingInstructionRequest request
+    ) {
+        orderCompositeService.updateShippingInstructions(orderId, shipGroupSeqId, request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{orderId}/receive")

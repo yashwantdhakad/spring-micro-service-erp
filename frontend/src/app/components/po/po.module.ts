@@ -12,6 +12,7 @@ import { POComponent } from './po/po.component';
 import { CreatePOComponent } from './create-po/create-po.component';
 import { PODetailComponent } from './po-detail/po-detail.component';
 import { POReceiveComponent } from './po-receive/po-receive.component';
+import { SharedModule } from '../common/shared/shared-module';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -30,6 +31,7 @@ import { MaterialModule } from '../../components/common/material/material.module
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    SharedModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

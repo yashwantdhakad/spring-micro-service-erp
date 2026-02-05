@@ -20,4 +20,6 @@ public class OrderDisplayInfoResponse {
     private List<OrderContactMechDto> orderContactMechList;
     private List<OrderAdjustmentDto> orderAdjustmentList;
     private List<OrderStatusDto> orderStatusList;
+    private List<OrderTermDto> orderTermList;
+    private List<OrderPaymentPreferenceDto> orderPaymentPreferenceList;
 }

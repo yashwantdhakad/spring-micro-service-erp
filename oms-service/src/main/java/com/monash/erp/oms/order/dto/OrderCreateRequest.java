@@ -3,6 +3,7 @@ package com.monash.erp.oms.order.dto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -17,6 +18,14 @@ public class OrderCreateRequest {
     private String customerPartyId;
     private LocalDateTime shipBeforeDate;
     private LocalDateTime estimatedDeliveryDate;
+    private String poNumber;
+    private String shippingInstructions;
+    private BigDecimal shippingAmount;
+    private BigDecimal discountAmount;
+    private String shipByMethod;
+    private String paymentTerm;
+    private String paymentMethod;
+    private String paymentInstructions;
     private OrderAddressRequest shippingAddress;
     private OrderAddressRequest billingAddress;
 }

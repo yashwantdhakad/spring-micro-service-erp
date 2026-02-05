@@ -342,4 +342,26 @@ export class PartyService {
       })
     );
   }
+
+  getPartyTelecomContactMechByPurpose(
+    partyId: string,
+    contactMechPurposeId: string,
+    partyType: 'customer' | 'supplier' = 'customer'
+  ): Observable<any[]> {
+    const basePath = partyType === 'supplier' ? '/party/api/suppliers' : '/party/api/customers';
+    const url = `${basePath}/${encodeURIComponent(partyId)}`;
+    return this.apiService.get(url).pipe(
+      map((response: any) => {
+        const detail =
+          partyType === 'supplier' ? response?.supplierDetail : response?.customerDetail;
+        const list = Array.isArray(detail?.telecomNumberList) ? detail.telecomNumberList : [];
+        if (!contactMechPurposeId) {
+          return list;
+        }
+        return list.filter(
+          (telecom: any) => telecom?.contactMechPurposeId === contactMechPurposeId
+        );
+      })
+    );
+  }
 }

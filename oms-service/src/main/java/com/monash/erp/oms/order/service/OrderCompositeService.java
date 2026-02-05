@@ -30,9 +30,12 @@ import com.monash.erp.oms.order.dto.OrderListResponseMap;
 import com.monash.erp.oms.order.dto.OrderNoteDto;
 import com.monash.erp.oms.order.dto.OrderNoteRequest;
 import com.monash.erp.oms.order.dto.OrderPartDto;
+import com.monash.erp.oms.order.dto.OrderPaymentPreferenceDto;
 import com.monash.erp.oms.order.dto.OrderRoleDto;
+import com.monash.erp.oms.order.dto.OrderShippingInstructionRequest;
 import com.monash.erp.oms.order.dto.OrderStatusChangeRequest;
 import com.monash.erp.oms.order.dto.OrderStatusDto;
+import com.monash.erp.oms.order.dto.OrderTermDto;
 import com.monash.erp.oms.order.dto.OrganizationDto;
 import com.monash.erp.oms.order.dto.PostalAddressDto;
 import com.monash.erp.oms.order.dto.ProductDto;
@@ -79,6 +82,10 @@ import com.monash.erp.oms.order.repository.OrderRoleRepository;
 import com.monash.erp.oms.order.repository.OrderStatusRepository;
 import com.monash.erp.oms.order.repository.PostalAddressRepository;
 import com.monash.erp.oms.order.repository.OrderItemBillingRepository;
+import com.monash.erp.oms.repository.OrderPaymentPreferenceRepository;
+import com.monash.erp.oms.repository.OrderTermRepository;
+import com.monash.erp.oms.entity.OrderPaymentPreference;
+import com.monash.erp.oms.entity.OrderTerm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -130,6 +137,8 @@ public class OrderCompositeService {
     private static final String ITEM_APPROVED = "ITEM_APPROVED";
     private static final String ITEM_COMPLETED = "ITEM_COMPLETED";
     private static final String RESERVE_ORDER_ENUM = "INVRO_FIFO_REC";
+    private static final String ADJ_TYPE_SHIPPING = "SHIPPING_CHARGES";
+    private static final String ADJ_TYPE_DISCOUNT = "DISCOUNT_ADJUSTMENT";
     private static final String INVOICE_TYPE_PURCHASE = "PURCHASE_INVOICE";
     private static final String INVOICE_STATUS_READY = "INVOICE_READY";
     private static final String ACCTG_TRANS_TYPE_PURCHASE = "PURCHASE_INVOICE";
@@ -162,6 +171,8 @@ public class OrderCompositeService {
     private final InvoiceItemRepository invoiceItemRepository;
     private final AcctgTransRepository acctgTransRepository;
     private final AcctgTransEntryRepository acctgTransEntryRepository;
+    private final OrderPaymentPreferenceRepository orderPaymentPreferenceRepository;
+    private final OrderTermRepository orderTermRepository;
     private final RestTemplate restTemplate;
     private final String wmsBaseUrl;
 
@@ -186,6 +197,8 @@ public class OrderCompositeService {
             InvoiceItemRepository invoiceItemRepository,
             AcctgTransRepository acctgTransRepository,
             AcctgTransEntryRepository acctgTransEntryRepository,
+            OrderPaymentPreferenceRepository orderPaymentPreferenceRepository,
+            OrderTermRepository orderTermRepository,
             RestTemplate restTemplate,
             @Value("${wms.base-url}") String wmsBaseUrl
     ) {
@@ -209,6 +222,8 @@ public class OrderCompositeService {
         this.invoiceItemRepository = invoiceItemRepository;
         this.acctgTransRepository = acctgTransRepository;
         this.acctgTransEntryRepository = acctgTransEntryRepository;
+        this.orderPaymentPreferenceRepository = orderPaymentPreferenceRepository;
+        this.orderTermRepository = orderTermRepository;
         this.restTemplate = restTemplate;
         this.wmsBaseUrl = wmsBaseUrl;
     }
@@ -294,6 +309,12 @@ public class OrderCompositeService {
         List<OrderStatusDto> statuses = orderStatusRepository.findByOrderIdOrderByStatusDatetimeAsc(orderId).stream()
                 .map(this::toStatusDto)
                 .collect(Collectors.toList());
+        List<OrderTermDto> terms = orderTermRepository.findByOrderId(orderId).stream()
+                .map(this::toOrderTermDto)
+                .collect(Collectors.toList());
+        List<OrderPaymentPreferenceDto> paymentPreferences = orderPaymentPreferenceRepository.findByOrderId(orderId).stream()
+                .map(this::toOrderPaymentPreferenceDto)
+                .collect(Collectors.toList());
 
         FirstPartDto firstPart = buildFirstPart(orderId);
         FirstPartInfoDto firstPartInfo = new FirstPartInfoDto();
@@ -309,6 +330,8 @@ public class OrderCompositeService {
         response.setOrderContactMechList(contactMechs);
         response.setOrderAdjustmentList(adjustments);
         response.setOrderStatusList(statuses);
+        response.setOrderTermList(terms);
+        response.setOrderPaymentPreferenceList(paymentPreferences);
         return response;
     }
 
@@ -319,6 +342,9 @@ public class OrderCompositeService {
         header.setStatusId(DEFAULT_STATUS);
         header.setProductStoreId(request.getProductStoreId());
         header.setOriginFacilityId(request.getFacilityId());
+        if (!isBlank(request.getPoNumber())) {
+            header.setOrderName(request.getPoNumber());
+        }
         header.setCurrencyUom(DEFAULT_CURRENCY);
         header.setGrandTotal(BigDecimal.ZERO);
         header = orderHeaderRepository.save(header);
@@ -346,7 +372,15 @@ public class OrderCompositeService {
         shipGroup.setFacilityId(request.getFacilityId());
         shipGroup.setShipByDate(request.getShipBeforeDate());
         shipGroup.setEstimatedDeliveryDate(request.getEstimatedDeliveryDate());
+        if (!isBlank(request.getShippingInstructions())) {
+            shipGroup.setShippingInstructions(request.getShippingInstructions());
+        }
+        applyShipByMethod(shipGroup, request.getShipByMethod());
         orderItemShipGroupRepository.save(shipGroup);
+
+        applyOrderAdjustments(header, request);
+        createOrderTerm(header.getOrderId(), request);
+        createOrderPaymentPreference(header.getOrderId(), request);
 
         if (request.getShippingAddress() != null) {
             attachOrderAddress(header.getOrderId(), request.getShippingAddress(), PURPOSE_SHIPPING, true);
@@ -504,6 +538,17 @@ public class OrderCompositeService {
         BigDecimal remainingQuantity = Optional.ofNullable(item.getQuantity()).orElse(BigDecimal.ZERO)
                 .subtract(receivedQuantity);
         return toItemDto(item, receivedQuantity, remainingQuantity);
+    }
+
+    public void updateShippingInstructions(String orderId, String shipGroupSeqId, OrderShippingInstructionRequest request) {
+        if (request == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Shipping instructions are required");
+        }
+        OrderItemShipGroup shipGroup = orderItemShipGroupRepository
+                .findByOrderIdAndShipGroupSeqId(orderId, shipGroupSeqId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ship group not found"));
+        shipGroup.setShippingInstructions(request.getShippingInstructions());
+        orderItemShipGroupRepository.save(shipGroup);
     }
 
     public OrderHeaderDto approvePurchaseOrder(String orderId) {
@@ -1141,6 +1186,8 @@ public class OrderCompositeService {
         dto.setCurrencyUomId(orderHeader.getCurrencyUom());
         dto.setProductStoreId(orderHeader.getProductStoreId());
         dto.setGrandTotal(orderHeader.getGrandTotal());
+        dto.setOrderTypeId(orderHeader.getOrderTypeId());
+        dto.setOrderName(orderHeader.getOrderName());
         return dto;
     }
 
@@ -1167,6 +1214,9 @@ public class OrderCompositeService {
             OrderPartDto part = new OrderPartDto();
             part.setOrderPartSeqId(shipGroup.getShipGroupSeqId());
             part.setShipBeforeDate(shipGroup.getShipByDate());
+            part.setShippingInstructions(shipGroup.getShippingInstructions());
+            part.setCarrierPartyId(shipGroup.getCarrierPartyId());
+            part.setCarrierService(shipGroup.getCarrierService());
             part.setStatus(resolveStatus(header.getStatusId()));
             part.setFacility(new FacilityDto(shipGroup.getFacilityId(), shipGroup.getFacilityId()));
             part.setCustomer(buildCustomer(orderId));
@@ -1182,6 +1232,111 @@ public class OrderCompositeService {
         }
 
         return parts;
+    }
+
+    private void applyOrderAdjustments(OrderHeader header, OrderCreateRequest request) {
+        BigDecimal shippingAmount = safeAmount(request.getShippingAmount());
+        if (shippingAmount.compareTo(BigDecimal.ZERO) > 0) {
+            createOrderAdjustment(header.getOrderId(), ADJ_TYPE_SHIPPING, shippingAmount);
+        }
+
+        BigDecimal discountAmount = safeAmount(request.getDiscountAmount());
+        if (discountAmount.compareTo(BigDecimal.ZERO) > 0) {
+            createOrderAdjustment(header.getOrderId(), ADJ_TYPE_DISCOUNT, discountAmount.negate());
+        }
+
+        if (header.getGrandTotal() == null) {
+            header.setGrandTotal(BigDecimal.ZERO);
+        }
+
+        if (shippingAmount.signum() != 0 || discountAmount.signum() != 0) {
+            header.setGrandTotal(header.getGrandTotal().add(shippingAmount).subtract(discountAmount));
+        }
+
+        orderHeaderRepository.save(header);
+    }
+
+    private void applyShipByMethod(OrderItemShipGroup shipGroup, String shipByMethod) {
+        if (isBlank(shipByMethod)) {
+            return;
+        }
+        String[] parts = shipByMethod.split("@", 2);
+        if (parts.length == 2) {
+            shipGroup.setCarrierPartyId(parts[0]);
+            shipGroup.setCarrierService(parts[1]);
+        } else {
+            shipGroup.setCarrierService(shipByMethod);
+        }
+    }
+
+    private void createOrderTerm(String orderId, OrderCreateRequest request) {
+        if (isBlank(request.getPaymentTerm())) {
+            return;
+        }
+        OrderTerm term = new OrderTerm();
+        term.setOrderId(orderId);
+        term.setTermTypeId(request.getPaymentTerm());
+        term.setDescription(request.getPaymentTerm());
+        term.setTermDays(parseTermDays(request.getPaymentTerm()));
+        orderTermRepository.save(term);
+    }
+
+    private void createOrderPaymentPreference(String orderId, OrderCreateRequest request) {
+        if (isBlank(request.getPaymentMethod())) {
+            return;
+        }
+        OrderPaymentPreference preference = new OrderPaymentPreference();
+        preference.setOrderId(orderId);
+        preference.setPaymentMethodTypeId(request.getPaymentMethod());
+        orderPaymentPreferenceRepository.save(preference);
+    }
+
+    private OrderTermDto toOrderTermDto(OrderTerm term) {
+        OrderTermDto dto = new OrderTermDto();
+        dto.setTermTypeId(term.getTermTypeId());
+        dto.setTermValue(term.getTermValue());
+        dto.setTermDays(term.getTermDays());
+        dto.setTextValue(term.getTextValue());
+        dto.setDescription(term.getDescription());
+        return dto;
+    }
+
+    private OrderPaymentPreferenceDto toOrderPaymentPreferenceDto(OrderPaymentPreference preference) {
+        OrderPaymentPreferenceDto dto = new OrderPaymentPreferenceDto();
+        dto.setPaymentMethodTypeId(preference.getPaymentMethodTypeId());
+        dto.setPaymentMethodId(preference.getPaymentMethodId());
+        dto.setStatusId(preference.getStatusId());
+        dto.setMaxAmount(preference.getMaxAmount());
+        return dto;
+    }
+
+    private BigDecimal parseTermDays(String termTypeId) {
+        if (isBlank(termTypeId)) {
+            return null;
+        }
+        String digits = termTypeId.replaceAll("\\D+", "");
+        if (digits.isBlank()) {
+            return null;
+        }
+        try {
+            return new BigDecimal(digits);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private void createOrderAdjustment(String orderId, String adjustmentTypeId, BigDecimal amount) {
+        OrderAdjustment adjustment = new OrderAdjustment();
+        adjustment.setOrderAdjustmentTypeId(adjustmentTypeId);
+        adjustment.setOrderId(orderId);
+        adjustment.setOrderItemSeqId("_NA_");
+        adjustment.setShipGroupSeqId("00001");
+        adjustment.setAmount(amount);
+        orderAdjustmentRepository.save(adjustment);
+    }
+
+    private BigDecimal safeAmount(BigDecimal value) {
+        return value == null ? BigDecimal.ZERO : value;
     }
 
     private List<OrderItem> resolvePartItems(

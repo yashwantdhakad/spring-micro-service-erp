@@ -61,6 +61,9 @@ export class CreatePOComponent implements OnInit {
       facilityId: ['', validators],
       shipBeforeDate: ['', validators],
       estimatedDeliveryDate: [''],
+      shippingInstructions: [''],
+      shippingAmount: [0],
+      discountAmount: [0],
       vendorPartyId: ['', validators], // This is the control we’ll use for autocomplete!
       items: this.formBuilder.array([this.buildItemGroup()]),
     });

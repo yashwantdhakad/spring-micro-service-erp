@@ -17,6 +17,9 @@ public class OrderPartDto {
     private StatusItem status;
     private TelecomDto telecom;
     private LocalDateTime shipBeforeDate;
+    private String shippingInstructions;
+    private String carrierPartyId;
+    private String carrierService;
     private BigDecimal partTotal;
     private FacilityDto facility;
     private CustomerPartyDto customer;

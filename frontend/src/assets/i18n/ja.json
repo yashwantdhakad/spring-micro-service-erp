@@ -455,6 +455,7 @@
     "NOTES": "ノート一覧",
     "NOTE_DATE": "ノート日付",
     "ORDER_DATE": "注文日",
+    "ORDER_TYPE": "Order Type",
     "OVERVIEW": "概要",
     "PARTS": "パーツ",
     "PART_DETAILS": "パーツ詳細",
@@ -483,7 +484,15 @@
     "TITLE": "発注",
     "TITLE_COL": "タイトル",
     "TOTAL": "合計",
-    "TOTAL_AMOUNT": "合計金額"
+    "TOTAL_AMOUNT": "合計金額",
+    "PAYMENT_TERMS_PREFERENCES": "Payment Terms and Preferences",
+    "PAYMENT_TERMS": "Terms",
+    "PAYMENT_PREFERENCES": "Preferences",
+    "RATE": "Rate",
+    "DAYS": "Days",
+    "AMOUNT": "Amount",
+    "PAYMENT_TERM": "Payment Term",
+    "PAYMENT_METHOD": "Payment Method"
   },
   "PRODUCT": {
     "ASSOCIATED_FROM_TITLE": "関連元",
@@ -591,7 +600,11 @@
     "TITLE_COL": "タイトル",
     "TOTAL": "合計",
     "TOTAL_AMOUNT": "合計金額",
-    "VENDOR_REQUIRED": "ベンダー組織は必須です。"
+    "VENDOR_REQUIRED": "ベンダー組織は必須です。",
+    "AMOUNT_SUMMARY": "Amount Summary",
+    "SUBTOTAL": "Subtotal",
+    "SHIPPING_AMOUNT": "Shipping",
+    "DISCOUNT_AMOUNT": "Discount"
   },
   "SUBMIT_LOGIN": "ログイン",
   "SUPPLIER": {
@@ -668,5 +681,5 @@
     "JAPANESE": "日本語",
     "CHINESE": "中国語",
     "GERMAN": "ドイツ語"
-}
+  }
 }

@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { SOComponent } from './so/so.component';
 import { CreateSOComponent } from './create-so/create-so.component';
 import { SODetailComponent } from './so-detail/so-detail.component';
+import { SharedModule } from '../common/shared/shared-module';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -28,6 +29,7 @@ import { MaterialModule } from '../../components/common/material/material.module
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
+    SharedModule,
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,

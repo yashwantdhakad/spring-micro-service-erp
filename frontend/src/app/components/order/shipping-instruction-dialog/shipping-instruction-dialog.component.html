@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{ data.titleKey | translate }}</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ data.titleKey | translate }}</mat-label>
+    <textarea
+      matInput
+      rows="4"
+      [formControl]="form.controls.shippingInstructions"
+    ></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button type="button" (click)="cancel()">
+    {{ 'COMMON.CANCEL' | translate }}
+  </button>
+  <button mat-flat-button color="primary" type="button" (click)="save()">
+    {{ 'COMMON.SAVE' | translate }}
+  </button>
+</mat-dialog-actions>
