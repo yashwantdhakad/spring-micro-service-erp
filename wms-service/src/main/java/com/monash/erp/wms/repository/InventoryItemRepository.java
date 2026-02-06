@@ -9,13 +9,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InventoryItemRepository extends JpaRepository<InventoryItem, Long> {
-    Optional<InventoryItem> findByInventoryItemId(String inventoryItemId);
+    Optional<InventoryItem> findFirstByInventoryItemIdOrderByIdAsc(String inventoryItemId);
 
     Page<InventoryItem> findByInventoryItemIdContainingIgnoreCaseOrProductIdContainingIgnoreCase(
             String inventoryItemId,
             String productId,
             Pageable pageable
     );
+
+    default Optional<InventoryItem> findByInventoryItemId(String inventoryItemId) {
+        return findFirstByInventoryItemIdOrderByIdAsc(inventoryItemId);
+    }
 
     List<InventoryItem> findByProductIdAndFacilityId(String productId, String facilityId);
 

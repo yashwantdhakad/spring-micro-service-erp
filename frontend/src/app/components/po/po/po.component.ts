@@ -23,7 +23,8 @@ export class POComponent implements OnInit {
   currentSort?: Sort;
 
   displayedColumns: { key: string; value: string }[] = [
-    { key: 'orderId', value: 'COMMON.ID' },
+    { key: 'id', value: 'COMMON.ID' },
+    { key: 'orderId', value: 'ORDER_ID' },
     { key: 'organizationName', value: 'PO.BILL_TO' },
     { key: 'vendorOrganizationName', value: 'PO.SHIP_TO' },
     { key: 'entryDate', value: 'PO.ORDER_DATE' },

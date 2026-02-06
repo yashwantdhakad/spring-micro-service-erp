@@ -10,7 +10,7 @@ import { PartyService } from 'src/app/services/party/party.service';
   styleUrls: ['./picklist-assign-picker-dialog.component.css'],
 })
 export class PicklistAssignPickerDialogComponent implements OnInit, OnDestroy {
-  isLoading = false;
+  isLoading = true;
   pickers: { partyId: string; name: string }[] = [];
   selectedPartyId: string | null = null;
 
@@ -27,12 +27,11 @@ export class PicklistAssignPickerDialogComponent implements OnInit, OnDestroy {
   }
 
   loadPickers(): void {
-    this.isLoading = true;
     this.partyService
       .getPartyRoleSummaries('PICKER')
       .pipe(
         takeUntil(this.destroy$),
-        finalize(() => (this.isLoading = false))
+        finalize(() => setTimeout(() => (this.isLoading = false), 0))
       )
       .subscribe({
         next: (response: any) => {

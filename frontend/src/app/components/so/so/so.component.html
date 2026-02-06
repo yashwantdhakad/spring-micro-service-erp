@@ -24,12 +24,20 @@
     </mat-card-actions>
     <mat-card-content>
       <table mat-table [dataSource]="items" matSort [matSortDisableClear]="true" (matSortChange)="onSortChange($event)">
-        <ng-container matColumnDef="orderId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="orderId">
+        <ng-container matColumnDef="id">
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="id">
             {{ 'COMMON.ID' | translate }}
           </th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            <a [routerLink]="['/orders', item.orderId]">{{ item.orderId }}</a>
+            <a [routerLink]="['/orders', item.id]">{{ item.id }}</a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="orderId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef mat-sort-header="orderId">
+            {{ 'ORDER_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.orderId }}
           </td>
         </ng-container>
         <ng-container matColumnDef="customerName">

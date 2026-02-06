@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class OrderListItem {
 
+    private Long id;
     private String orderId;
     private String customerName;
     private String organizationName;

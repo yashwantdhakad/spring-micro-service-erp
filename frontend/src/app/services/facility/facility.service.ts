@@ -38,6 +38,27 @@ export class FacilityService {
     return this.apiService.put(url, payload);
   }
 
+  getFacilityLocations(
+    facilityId: string,
+    page: number,
+    size: number,
+    locationSeqId?: string,
+    locationName?: string
+  ): Observable<any> {
+    const query = new URLSearchParams({
+      page: String(page),
+      size: String(size),
+    });
+    if (locationSeqId) {
+      query.set('locationSeqId', locationSeqId);
+    }
+    if (locationName) {
+      query.set('locationName', locationName);
+    }
+    const url = `/wms/api/facility-locations/by-facility/${encodeURIComponent(facilityId)}?${query.toString()}`;
+    return this.apiService.get(url);
+  }
+
   getFacilityContactMechs(facilityId: string): Observable<any> {
     const url = `/wms/api/facility-contact-mechs/by-facility/${encodeURIComponent(facilityId)}`;
     return this.apiService.get(url);

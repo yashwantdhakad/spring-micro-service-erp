@@ -29,11 +29,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./components/product/product.module').then((m) => m.ProductModule),
   },
-  // {
-  //   path: 'features',
-  //   loadChildren: () =>
-  //     import('./components/feature/feature.module').then((m) => m.FeatureModule),
-  // },
+  {
+    path: 'features',
+    loadChildren: () =>
+      import('./components/feature/feature.module').then((m) => m.FeatureModule),
+  },
   // {
   //   path: 'featuregroups',
   //   loadChildren: () =>

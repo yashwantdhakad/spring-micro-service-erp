@@ -2,6 +2,7 @@ package com.monash.erp.wms.controller;
 
 import com.monash.erp.wms.entity.FacilityLocation;
 import com.monash.erp.wms.service.FacilityLocationService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,6 +30,17 @@ public class FacilityLocationController {
     @GetMapping
     public List<FacilityLocation> list() {
         return service.list();
+    }
+
+    @GetMapping("/by-facility/{facilityId}")
+    public Page<FacilityLocation> listByFacility(
+            @PathVariable String facilityId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String locationSeqId,
+            @RequestParam(required = false) String locationName
+    ) {
+        return service.listByFacility(facilityId, page, size, locationSeqId, locationName);
     }
 
     @GetMapping("/{id}")

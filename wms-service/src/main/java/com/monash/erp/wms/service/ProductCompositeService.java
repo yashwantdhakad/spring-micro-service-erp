@@ -487,7 +487,7 @@ public class ProductCompositeService {
         if (isBlank(assocTypeId)) {
             return null;
         }
-        return productAssocTypeRepository.findByProductAssocTypeId(assocTypeId)
+        return productAssocTypeRepository.findFirstByProductAssocTypeIdOrderByIdAsc(assocTypeId)
                 .map(type -> new ProductAssocTypeDto(type.getProductAssocTypeId(), type.getDescription()))
                 .orElse(new ProductAssocTypeDto(assocTypeId, assocTypeId));
     }

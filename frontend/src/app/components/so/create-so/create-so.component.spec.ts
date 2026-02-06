@@ -21,7 +21,7 @@ describe('CreateSOComponent', () => {
         { productStoreId: 'STORE1', payToPartyId: 'VENDOR1' }
       ])),
       getFacilities: jasmine.createSpy().and.returnValue(of([])),
-      createOrder: jasmine.createSpy().and.returnValue(of({ orderId: 'ORDER123' }))
+      createOrder: jasmine.createSpy().and.returnValue(of({ orderId: 'ORDER123', id: 55 }))
     };
 
     mockPartyService = {
@@ -76,7 +76,7 @@ describe('CreateSOComponent', () => {
     component.createOrder();
 
     expect(mockOrderService.createOrder).toHaveBeenCalled();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/orders/ORDER123']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/orders/55']);
   });
 
   it('should handle createOrder error gracefully', () => {

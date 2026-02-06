@@ -10,7 +10,7 @@ const routes: Routes = [
     children: [
       { path: '', component: SOComponent, data: { title: 'SO List' } },
       { path: 'create', component: CreateSOComponent, data: { title: 'Create SO' } },
-      { path: ':orderId', component: SODetailComponent, data: { title: 'SO Details' } },
+      { path: ':id', component: SODetailComponent, data: { title: 'SO Details' } },
     ],
   },
 ];

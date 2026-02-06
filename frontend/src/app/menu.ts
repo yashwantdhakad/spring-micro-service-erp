@@ -138,38 +138,38 @@ export const menuItems = [
         },
       ],
     },
-    // {
-    //   name: 'Features',
-    //   nav: ['side'],
-    //   meta: {
-    //     title: 'Features',
-    //     icon: 'store-outline',
-    //     requiredAuth: true,
-    //     permissions: ['ADMIN']
-    //   },
-    //   children: [
-    //     {
-    //       path: '/features',
-    //       name: 'Features',
-    //       nav: ['side'],
-    //       meta: {
-    //         title: 'Features',
-    //         requiredAuth: true,
-    //         permissions: ['ADMIN']
-    //       }
-    //     },
-    //     {
-    //       path: '/features/create',
-    //       name: 'Create Feature',
-    //       nav: ['side'],
-    //       meta: {
-    //         title: 'Create Feature',
-    //         requiredAuth: true,
-    //         permissions: ['ADMIN']
-    //       }
-    //     },
-    //   ],
-    // },
+    {
+      name: 'Features',
+      nav: ['side'],
+      meta: {
+        title: 'Features',
+        icon: 'store-outline',
+        requiredAuth: true,
+        permissions: ['ADMIN']
+      },
+      children: [
+        {
+          path: '/features',
+          name: 'Features',
+          nav: ['side'],
+          meta: {
+            title: 'Features',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
+        {
+          path: '/features/create',
+          name: 'Create Feature',
+          nav: ['side'],
+          meta: {
+            title: 'Create Feature',
+            requiredAuth: true,
+            permissions: ['ADMIN']
+          }
+        },
+      ],
+    },
     // {
     //   name: 'Feature Group',
     //   nav: ['side'],

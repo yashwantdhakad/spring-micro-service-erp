@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -43,7 +43,8 @@ export class CreateJobComponent implements OnInit {
     private commonService: CommonService,
     private productService: ProductService,
     private manufacturingService: ManufacturingService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) {
     this.createJobForm = this.fb.group({
       purposeEnumId: ['WepProductionRun'],
@@ -90,7 +91,10 @@ export class CreateJobComponent implements OnInit {
   private loadFacilities(): void {
     this.commonService.getFacilities().subscribe({
       next: (data) => {
-        this.facilities = Array.isArray(data) ? data : [data];
+        setTimeout(() => {
+          this.facilities = Array.isArray(data) ? data : [data];
+          this.cdr.markForCheck();
+        });
       },
       error: (error) => {
         this.snackbarService.showError('Error fetching facilities');
@@ -119,7 +123,10 @@ export class CreateJobComponent implements OnInit {
       })
     ).subscribe((items) => {
       const list = Array.isArray(items) ? items : [];
-      this.resetConsumeItems(list);
+      setTimeout(() => {
+        this.resetConsumeItems(list);
+        this.cdr.markForCheck();
+      });
     });
   }
 
@@ -145,6 +152,7 @@ export class CreateJobComponent implements OnInit {
       })
     );
     this.initConsumeAutocomplete(this.consumeItemsArray.length - 1);
+    setTimeout(() => this.cdr.markForCheck());
   }
 
   removeConsumeItemRow(index: number): void {
@@ -156,17 +164,20 @@ export class CreateJobComponent implements OnInit {
   }
 
   private resetConsumeItems(items: any[]): void {
-    this.consumeItemsArray.clear();
-    this.filteredConsumeProducts = [];
-    if (items.length) {
-      items.forEach((item) => {
-        const baseQuantity = item?.estimatedQuantity ?? '';
-        this.addConsumeItemRow(item?.productId ?? '', baseQuantity, baseQuantity);
-      });
-      this.updateConsumeQuantities(this.createJobForm.get('produceEstimatedQuantity')?.value);
-    } else {
-      this.addConsumeItemRow();
-    }
+    setTimeout(() => {
+      this.consumeItemsArray.clear();
+      this.filteredConsumeProducts = [];
+      if (items.length) {
+        items.forEach((item) => {
+          const baseQuantity = item?.estimatedQuantity ?? '';
+          this.addConsumeItemRow(item?.productId ?? '', baseQuantity, baseQuantity);
+        });
+        this.updateConsumeQuantities(this.createJobForm.get('produceEstimatedQuantity')?.value);
+      } else {
+        this.addConsumeItemRow();
+      }
+      this.cdr.markForCheck();
+    });
   }
 
   private updateConsumeQuantities(produceQty: any): void {
@@ -235,13 +246,16 @@ export class CreateJobComponent implements OnInit {
             return;
           }
 
-          this.createJobForm.reset();
-          this.createJobForm.get('purposeEnumId')?.setValue('WepProductionRun');
-          this.consumeItemsArray.clear();
-          this.filteredConsumeProducts = [];
-          this.addConsumeItemRow();
-          this.router.navigate([`/jobs/${response.workEffortId}`]);
-          this.snackbarService.showSuccess('Production run created successfully');
+          setTimeout(() => {
+            this.createJobForm.reset();
+            this.createJobForm.get('purposeEnumId')?.setValue('WepProductionRun');
+            this.consumeItemsArray.clear();
+            this.filteredConsumeProducts = [];
+            this.addConsumeItemRow();
+            this.cdr.markForCheck();
+            this.router.navigate([`/jobs/${response.workEffortId}`]);
+            this.snackbarService.showSuccess('Production run created successfully');
+          });
         },
         error: () => {
           this.snackbarService.showError('Error creating production run');

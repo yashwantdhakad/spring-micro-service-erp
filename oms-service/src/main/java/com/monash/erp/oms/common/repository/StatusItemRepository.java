@@ -6,5 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface StatusItemRepository extends JpaRepository<StatusItem, Long> {
-    Optional<StatusItem> findByStatusId(String statusId);
+    Optional<StatusItem> findFirstByStatusIdOrderByIdAsc(String statusId);
+
+    default Optional<StatusItem> findByStatusId(String statusId) {
+        return findFirstByStatusIdOrderByIdAsc(statusId);
+    }
 }

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -23,7 +23,8 @@ export class AddRoleComponent {
     private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AddRoleComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { roleData: any },
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef
   ) {
     this.roleForm = this.fb.group({
       partyId: [data?.roleData?.partyId || null],
@@ -34,11 +35,24 @@ export class AddRoleComponent {
   }
 
   getRoleTypes(): void {
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    }, 0);
     this.commonService.getLookupResults({}, 'roletypes').subscribe({
       next: (response) => {
-        this.roleTypes = Array.isArray(response) ? response : [response];
+        const roles = Array.isArray(response) ? response : [response];
+        setTimeout(() => {
+          this.roleTypes = roles;
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: (error) => {
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       }
     });
   }
@@ -47,10 +61,16 @@ export class AddRoleComponent {
     if (!this.roleForm.valid) return;
 
     const values = this.roleForm.value;
-    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    }, 0);
 
     this.partyService.addRole(values).pipe(
-      finalize(() => this.isLoading = false)
+      finalize(() => setTimeout(() => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }, 0))
     ).subscribe({
       next: () => {
         this.snackBar.open('Role added successfully', 'Close', { duration: 3000 });

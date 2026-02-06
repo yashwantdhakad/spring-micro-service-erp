@@ -3,6 +3,10 @@
   overflow: auto;
 }
 
+.location-filters {
+  margin-bottom: 12px;
+}
+
 .spacer {
   flex: 1 1 auto;
 }

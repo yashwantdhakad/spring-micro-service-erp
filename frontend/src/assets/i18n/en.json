@@ -79,6 +79,8 @@
     "CLEAR": "Clear",
     "CONTACT_NUMBER_LENGTH": "Contact Number should be 10 numbers.",
     "CREATED": "Created",
+    "CONFIRM": "Confirm",
+    "CONFIRM_DELETE": "Are you sure you want to delete this?",
     "DESCRIPTION": "Description",
     "EMAIL_INVALID": "Email is not valid.",
     "FACILITY": "Facility",

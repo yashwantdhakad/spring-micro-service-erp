@@ -31,9 +31,11 @@ public class FacilityService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility %d not found".formatted(id)));
     }
 
-    public FacilityDetailResponse getDetail(String facilityId) {
+    public FacilityDetailResponse getDetail(String facilityId, boolean includeLocations) {
         Facility facility = findFacility(facilityId);
-        List<FacilityLocation> locations = locationRepository.findByFacilityId(facility.getFacilityId());
+        List<FacilityLocation> locations = includeLocations
+                ? locationRepository.findByFacilityId(facility.getFacilityId())
+                : List.of();
         return new FacilityDetailResponse(facility, locations);
     }
 

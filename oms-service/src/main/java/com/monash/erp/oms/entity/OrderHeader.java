@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,6 +17,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "order_header",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_order_header_order_id", columnNames = "order_id")
+        },
         indexes = {
                 @Index(name = "idx_order_header_order_id", columnList = "order_id"),
                 @Index(name = "idx_order_header_order_type", columnList = "order_type_id"),

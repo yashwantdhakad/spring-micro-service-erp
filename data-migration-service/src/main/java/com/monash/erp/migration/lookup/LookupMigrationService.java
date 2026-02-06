@@ -143,6 +143,14 @@ public class LookupMigrationService {
         if (rows.isEmpty()) {
             return 0;
         }
+        String statusIdColumn = null;
+        Set<String> existingStatusIds = new LinkedHashSet<>();
+        if (isStatusItemTable(tableName)) {
+            statusIdColumn = findStatusIdColumn(columns);
+            if (statusIdColumn != null) {
+                existingStatusIds.addAll(fetchExistingIds(targetJdbc, tableName, statusIdColumn));
+            }
+        }
         String sql = buildInsertSql(tableName, columns);
         Map<String, Integer> maxLengths = fetchColumnMaxLengths(targetJdbc, tableName, columns);
         Map<String, String> dataTypes = fetchColumnDataTypes(targetJdbc, tableName, columns);
@@ -150,6 +158,16 @@ public class LookupMigrationService {
         int total = 0;
         int batchSize = 500;
         for (Map<String, Object> row : rows) {
+            if (statusIdColumn != null) {
+                Object statusValue = row.get(statusIdColumn);
+                String statusId = statusValue != null ? statusValue.toString() : null;
+                if (statusId != null) {
+                    if (existingStatusIds.contains(statusId)) {
+                        continue;
+                    }
+                    existingStatusIds.add(statusId);
+                }
+            }
             batch.add(row);
             if (batch.size() >= batchSize) {
                 total += batchInsert(targetJdbc, sql, columns, maxLengths, dataTypes, batch);
@@ -288,6 +306,25 @@ public class LookupMigrationService {
                 .map(col -> col + "=VALUES(" + col + ")")
                 .collect(Collectors.joining(", "));
         return "INSERT INTO " + tableName + " (" + columnList + ") VALUES (" + placeholders + ") ON DUPLICATE KEY UPDATE " + updateClause;
+    }
+
+    private boolean isStatusItemTable(String tableName) {
+        return tableName != null && tableName.equalsIgnoreCase("status_item");
+    }
+
+    private String findStatusIdColumn(List<String> columns) {
+        for (String column : columns) {
+            if ("STATUS_ID".equalsIgnoreCase(column)) {
+                return column;
+            }
+        }
+        return null;
+    }
+
+    private Set<String> fetchExistingIds(JdbcTemplate targetJdbc, String tableName, String idColumn) {
+        String sql = "SELECT " + idColumn + " FROM " + tableName;
+        List<String> ids = targetJdbc.queryForList(sql, String.class);
+        return new LinkedHashSet<>(ids);
     }
 
     public static class LookupMigrationSummary {

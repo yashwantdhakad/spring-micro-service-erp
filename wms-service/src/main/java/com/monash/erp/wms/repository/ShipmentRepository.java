@@ -9,7 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
-    Optional<Shipment> findByShipmentId(String shipmentId);
+    Optional<Shipment> findFirstByShipmentIdOrderByIdAsc(String shipmentId);
+
+    default Optional<Shipment> findByShipmentId(String shipmentId) {
+        return findFirstByShipmentIdOrderByIdAsc(shipmentId);
+    }
 
     Page<Shipment> findByShipmentIdContainingIgnoreCaseOrPrimaryOrderIdContainingIgnoreCase(
             String shipmentId,

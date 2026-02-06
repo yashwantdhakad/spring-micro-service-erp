@@ -14,6 +14,7 @@ import { forkJoin } from 'rxjs';
 })
 export class POReceiveComponent implements OnInit {
   orderId: string | undefined;
+  orderPrimaryId: string | undefined;
   isLoading = false;
   itemsForm: FormGroup;
   orderHeader: any;
@@ -37,9 +38,9 @@ export class POReceiveComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      this.orderId = params['orderId'];
-      if (this.orderId) {
-        this.loadOrder(this.orderId);
+      this.orderPrimaryId = params['id'];
+      if (this.orderPrimaryId) {
+        this.loadOrderById(this.orderPrimaryId);
       }
     });
   }
@@ -48,15 +49,16 @@ export class POReceiveComponent implements OnInit {
     return this.itemsForm.get('items') as FormArray;
   }
 
-  loadOrder(orderId: string): void {
+  loadOrderById(id: string): void {
     this.isLoading = true;
     forkJoin({
-      orderResponse: this.orderService.getOrder(orderId),
-      displayInfo: this.orderService.getPODisplayInfo(orderId),
+      orderResponse: this.orderService.getOrderById(id),
+      displayInfo: this.orderService.getOrderDisplayInfoById(id),
       facilityLocations: this.commonService.getFacilityLocations(),
     }).subscribe({
       next: ({ orderResponse, displayInfo, facilityLocations }) => {
         this.orderHeader = displayInfo.orderHeader;
+        this.orderId = this.orderHeader?.orderId;
         this.vendorPartyId = displayInfo?.firstPart?.vendorPartyId;
         this.facilityId = displayInfo?.firstPart?.facilityId;
         this.shipGroupSeqId = displayInfo?.firstPart?.orderPartSeqId || '00001';
@@ -122,7 +124,9 @@ export class POReceiveComponent implements OnInit {
     this.orderService.receivePurchaseOrder(this.orderId, payload).subscribe({
       next: () => {
         this.snackbarService.showSuccess('Receipt processed');
-        this.router.navigate([`/pos/${this.orderId}`]);
+        if (this.orderPrimaryId) {
+          this.router.navigate([`/pos/${this.orderPrimaryId}`]);
+        }
       },
       error: () => {
         this.snackbarService.showError('Failed to receive items');

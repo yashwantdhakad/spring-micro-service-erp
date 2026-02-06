@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common/common.service';
@@ -24,7 +24,8 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private categoryService: CategoryService,
     private router: Router,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
   ) {
     this.categoryForm = this.fb.group({
       categoryName: ['', Validators.required],
@@ -43,14 +44,27 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
   }
 
   getCategoryTypes(): void {
-  this.isLoading = true;
+  setTimeout(() => {
+    this.isLoading = true;
+    this.cdr.markForCheck();
+  }, 0);
 
   this.commonService
     .getLookupResults({}, 'product_category_type')
-    .pipe(finalize(() => (this.isLoading = false)), takeUntil(this.destroy$))
+    .pipe(
+      finalize(() => setTimeout(() => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }, 0)),
+      takeUntil(this.destroy$)
+    )
     .subscribe({
       next: (data) => {
-        this.categoryTypes = Array.isArray(data) ? data : [data];
+        const types = Array.isArray(data) ? data : [data];
+        setTimeout(() => {
+          this.categoryTypes = types;
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: () => {
         this.snackbarService.showError('Error fetching category types.');
@@ -64,12 +78,18 @@ export class CreateCategoryComponent implements OnInit, OnDestroy {
     return;
   }
 
-  this.isLoading = true;
+  setTimeout(() => {
+    this.isLoading = true;
+    this.cdr.markForCheck();
+  }, 0);
   const values = this.categoryForm.value;
 
   this.categoryService
     .createCategory(values)
-    .pipe(finalize(() => (this.isLoading = false)))
+    .pipe(finalize(() => setTimeout(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    }, 0)))
     .subscribe({
       next: (data) => {
         if (data?.productCategoryId) {

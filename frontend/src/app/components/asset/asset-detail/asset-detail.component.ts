@@ -84,33 +84,47 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
   }
 
   getAsset(assetId: string): void {
-    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    }, 0);
 
     this.assetService
       .getAsset(assetId)
       .pipe(
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
+        finalize(() => {
+          setTimeout(() => {
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          }, 0);
+        })
       )
       .subscribe({
         next: (response) => {
-          this.assetDetail = response?.asset || response;
-          this.details = response?.details || [];
-          this.receipts = response?.receipts || [];
-          this.orderReservations = [];
-          this.workEffortReservations = [];
-          this.facilityName = null;
-          if (this.assetDetail?.facilityId) {
-            this.loadFacilityName(this.assetDetail.facilityId);
-          }
-          const inventoryItemId = this.assetDetail?.inventoryItemId || assetId;
-          this.loadReservations(inventoryItemId);
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          const asset = response?.asset || response;
+          const details = response?.details || [];
+          const receipts = response?.receipts || [];
+          setTimeout(() => {
+            this.assetDetail = asset;
+            this.details = details;
+            this.receipts = receipts;
+            this.orderReservations = [];
+            this.workEffortReservations = [];
+            this.facilityName = null;
+            if (this.assetDetail?.facilityId) {
+              this.loadFacilityName(this.assetDetail.facilityId);
+            }
+            const inventoryItemId = this.assetDetail?.inventoryItemId || assetId;
+            this.loadReservations(inventoryItemId);
+            this.cdr.markForCheck();
+          }, 0);
         },
         error: (error) => {
           this.snackbarService.showError('Error fetching asset details.');
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.cdr.markForCheck();
+          }, 0);
         },
       });
   }
@@ -172,10 +186,16 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           const facility = response?.facility || response;
-          this.facilityName = facility?.facilityName || facilityId;
+          setTimeout(() => {
+            this.facilityName = facility?.facilityName || facilityId;
+            this.cdr.markForCheck();
+          }, 0);
         },
         error: () => {
-          this.facilityName = facilityId;
+          setTimeout(() => {
+            this.facilityName = facilityId;
+            this.cdr.markForCheck();
+          }, 0);
         },
       });
   }
@@ -192,10 +212,16 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          this.orderReservations = Array.isArray(response) ? response : [];
+          setTimeout(() => {
+            this.orderReservations = Array.isArray(response) ? response : [];
+            this.cdr.markForCheck();
+          }, 0);
         },
         error: () => {
-          this.orderReservations = [];
+          setTimeout(() => {
+            this.orderReservations = [];
+            this.cdr.markForCheck();
+          }, 0);
         },
       });
 
@@ -204,10 +230,16 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          this.workEffortReservations = Array.isArray(response) ? response : [];
+          setTimeout(() => {
+            this.workEffortReservations = Array.isArray(response) ? response : [];
+            this.cdr.markForCheck();
+          }, 0);
         },
         error: () => {
-          this.workEffortReservations = [];
+          setTimeout(() => {
+            this.workEffortReservations = [];
+            this.cdr.markForCheck();
+          }, 0);
         },
       });
   }

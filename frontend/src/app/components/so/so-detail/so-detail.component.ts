@@ -15,6 +15,7 @@ import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
 import { ShippingInstructionDialogComponent } from '../../order/shipping-instruction-dialog/shipping-instruction-dialog.component';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   standalone: false,
@@ -25,6 +26,7 @@ import { ShippingInstructionDialogComponent } from '../../order/shipping-instruc
 })
 export class SODetailComponent implements OnInit {
   orderId: string | undefined;
+  orderPrimaryId: string | undefined;
   orderHeader: any;
   statusItem: any;
   canApprove = false;
@@ -78,6 +80,7 @@ export class SODetailComponent implements OnInit {
   shipmentTypeMap = new Map<string, string>();
   orderItemTypeMap = new Map<string, string>();
   productNameMap = new Map<string, string>();
+  reservationStatus: any;
   overviewFields: { label: string, value: any }[] = [];
 
   invoiceItems: any[] = [];
@@ -109,29 +112,28 @@ export class SODetailComponent implements OnInit {
     this.loadLookupData();
     this.route.paramMap
       .pipe(
-        map((params) => params.get('orderId') || ''),
-        filter((orderId) => orderId.length > 0),
+        map((params) => params.get('id') || ''),
+        filter((id) => id.length > 0),
         distinctUntilChanged(),
-        switchMap((orderId) => {
-          this.orderId = orderId;
-          return this.getOrder(orderId);
+        switchMap((id) => {
+          this.orderPrimaryId = id;
+          return this.getOrderById(id);
         })
       )
       .subscribe();
   }
 
-  getOrder(orderId: string) {
-    this.isLoading = true;
+  getOrderById(id: string) {
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    }, 0);
 
     return forkJoin({
-      orderResponse: this.orderService.getOrder(orderId).pipe(catchError(() => of(null))),
-      displayInfo: this.orderService.getPODisplayInfo(orderId).pipe(catchError(() => of(null))),
-      shipments: this.orderService.getOrderShipments(orderId).pipe(catchError(() => of([]))),
-      invoices: this.orderService.getOrderInvoices(orderId).pipe(catchError(() => of([]))),
-      reservationStatus: this.orderService.getReservationStatus(orderId).pipe(catchError(() => of(null))),
-      picklists: this.orderService.getOrderPicklists(orderId).pipe(catchError(() => of([]))),
+      orderResponse: this.orderService.getOrderById(id).pipe(catchError(() => of(null))),
+      displayInfo: this.orderService.getOrderDisplayInfoById(id).pipe(catchError(() => of(null))),
     }).pipe(
-      tap(({ orderResponse, displayInfo, shipments, invoices, reservationStatus, picklists }) => {
+      tap(({ orderResponse, displayInfo }) => {
         if (!orderResponse || !displayInfo) {
           return;
         }
@@ -139,6 +141,7 @@ export class SODetailComponent implements OnInit {
         this.primeProductNames(this.parts || []);
         this.contents = orderResponse?.contents;
         this.orderHeader = displayInfo.orderHeader;
+        this.orderId = this.orderHeader?.orderId;
         this.statusItem = displayInfo.statusItem;
         this.orderNotes = displayInfo.orderNoteList;
         setTimeout(() => {
@@ -152,27 +155,43 @@ export class SODetailComponent implements OnInit {
           || this.statusItem?.statusId === 'ORDER_APPROVED';
         this.shipToAddresses = (displayInfo?.orderContactMechList || [])
           .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
-        this.shipments = Array.isArray(shipments) ? shipments : [];
-        this.shipmentStatusById = new Map(
-          this.shipments
-            .filter((shipment: any) => shipment?.shipmentId)
-            .map((shipment: any) => [shipment.shipmentId, shipment.statusId])
-        );
-        const invoiceList = Array.isArray(invoices) ? invoices : [];
-        this.invoiceItems = invoiceList.flatMap((invoice: any) =>
-          (invoice.items || []).map((item: any) => ({
-            invoiceId: invoice.invoiceId,
-            currencyUomId: invoice.currencyUomId,
-            productId: item.productId,
-            quantity: item.quantity,
-            amount: item.amount
-          }))
-        );
-        this.picklists = Array.isArray(picklists) ? picklists : [];
+        if (this.orderId) {
+          this.orderService.getOrderShipments(this.orderId).pipe(catchError(() => of([]))).subscribe((shipments) => {
+            this.shipments = Array.isArray(shipments) ? shipments : [];
+            this.shipmentStatusById = new Map(
+              this.shipments
+                .filter((shipment: any) => shipment?.shipmentId)
+                .map((shipment: any) => [shipment.shipmentId, shipment.statusId])
+            );
+          });
+          this.orderService.getOrderInvoices(this.orderId).pipe(catchError(() => of([]))).subscribe((invoices) => {
+            const invoiceList = Array.isArray(invoices) ? invoices : [];
+            this.invoiceItems = invoiceList.flatMap((invoice: any) =>
+              (invoice.items || []).map((item: any) => ({
+                invoiceId: invoice.invoiceId,
+                currencyUomId: invoice.currencyUomId,
+                productId: item.productId,
+                quantity: item.quantity,
+                amount: item.amount
+              }))
+            );
+          });
+          this.orderService.getReservationStatus(this.orderId).pipe(catchError(() => of(null))).subscribe((reservationStatus) => {
+            this.reservationStatus = reservationStatus;
+            this.canPicklist = reservationStatus?.fullyReserved === true
+              && this.hasRemainingPickQuantity()
+              && this.picklists.length === 0;
+            this.cdr.markForCheck();
+          });
+          this.orderService.getOrderPicklists(this.orderId).pipe(catchError(() => of([]))).subscribe((picklists) => {
+            this.picklists = Array.isArray(picklists) ? picklists : [];
+            this.canPicklist = this.reservationStatus?.fullyReserved === true
+              && this.hasRemainingPickQuantity()
+              && this.picklists.length === 0;
+            this.cdr.markForCheck();
+          });
+        }
         this.canApprove = this.statusItem?.statusId === 'ORDER_CREATED' && this.hasAnyItems();
-        this.canPicklist = reservationStatus?.fullyReserved === true
-          && this.hasRemainingPickQuantity()
-          && this.picklists.length === 0;
 
         const customerPartyId = displayInfo?.firstPart?.customerPartyId;
         if (customerPartyId) {
@@ -201,8 +220,10 @@ export class SODetailComponent implements OnInit {
         ].filter(field => field.value);
       }),
       finalize(() => {
-        this.isLoading = false;
-        setTimeout(() => this.cdr.markForCheck(), 0);
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       })
     );
   }
@@ -448,7 +469,9 @@ export class SODetailComponent implements OnInit {
     this.dialog.open(ProductItemComponent, {
       data: { productItemData: this.productItemData },
     }).afterClosed().subscribe(() => {
-      if (this.orderId) this.getOrder(this.orderId);
+      if (this.orderPrimaryId) {
+        this.getOrderById(this.orderPrimaryId);
+      }
     });
   }
 
@@ -461,7 +484,33 @@ export class SODetailComponent implements OnInit {
     this.dialog.open(NoteComponent, {
       data: { noteData: this.noteData },
     }).afterClosed().subscribe(() => {
-      if (this.orderId) this.getOrder(this.orderId);
+      if (this.orderPrimaryId) {
+        this.getOrderById(this.orderPrimaryId);
+      }
+    });
+  }
+
+  deleteNote(note: any): void {
+    if (!this.orderId || !note?.id) {
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRM'),
+        message: this.translate.instant('COMMON.CONFIRM_DELETE'),
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+      this.orderService.deleteOrderNote({ orderId: this.orderId, noteId: note.id }).subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
+        },
+      });
     });
   }
 
@@ -474,7 +523,9 @@ export class SODetailComponent implements OnInit {
     this.dialog.open(ContentComponent, {
       data: { contentData: this.contentData },
     }).afterClosed().subscribe(() => {
-      if (this.orderId) this.getOrder(this.orderId);
+      if (this.orderPrimaryId) {
+        this.getOrderById(this.orderPrimaryId);
+      }
     });
   }
 
@@ -493,7 +544,9 @@ export class SODetailComponent implements OnInit {
       }
       this.orderService.updateShippingInstructions(this.orderId as string, part.orderPartSeqId, value)
         .subscribe(() => {
-          this.getOrder(this.orderId as string);
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
         });
     });
   }
@@ -521,7 +574,9 @@ export class SODetailComponent implements OnInit {
       data: { addressData },
     }).afterClosed().subscribe(() => {
       if (this.orderId) {
-        this.getOrder(this.orderId);
+        if (this.orderPrimaryId) {
+          this.getOrderById(this.orderPrimaryId);
+        }
       }
     });
   }
@@ -532,7 +587,9 @@ export class SODetailComponent implements OnInit {
     }
     this.orderService.approveSalesOrder(this.orderId).subscribe({
       next: () => {
-        this.getOrder(this.orderId as string);
+        if (this.orderPrimaryId) {
+          this.getOrderById(this.orderPrimaryId);
+        }
       },
     });
   }
@@ -543,7 +600,9 @@ export class SODetailComponent implements OnInit {
     }
     this.orderService.createPicklist(this.orderId).subscribe({
       next: () => {
-        this.getOrder(this.orderId as string);
+        if (this.orderPrimaryId) {
+          this.getOrderById(this.orderPrimaryId);
+        }
       },
     });
   }
@@ -583,7 +642,9 @@ export class SODetailComponent implements OnInit {
     this.orderService.markPicklistPicked(picklistId).subscribe({
       next: () => {
         if (this.orderId) {
-          this.getOrder(this.orderId);
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
         }
       },
     });
@@ -596,7 +657,9 @@ export class SODetailComponent implements OnInit {
     this.orderService.shipShipment(shipmentId).subscribe({
       next: () => {
         if (this.orderId) {
-          this.getOrder(this.orderId);
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
         }
       },
     });

@@ -20,6 +20,7 @@ export class SOComponent implements OnInit {
   pages: number = 0;
   currentSort?: Sort;
   displayedColumns: string[] = [
+    'id',
     'orderId',
     'customerName',
     'organizationName',

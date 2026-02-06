@@ -11,8 +11,8 @@ const routes: Routes = [
     children: [
       { path: '', component: POComponent, data: { title: 'PO List' } },
       { path: 'create', component: CreatePOComponent, data: { title: 'Create PO' } },
-      { path: ':orderId/receive', component: POReceiveComponent, data: { title: 'Receive PO' } },
-      { path: ':orderId', component: PODetailComponent, data: { title: 'PO Details' } },
+      { path: ':id/receive', component: POReceiveComponent, data: { title: 'Receive PO' } },
+      { path: ':id', component: PODetailComponent, data: { title: 'PO Details' } },
     ],
   },
 ];

@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -41,7 +41,8 @@ export class ProductAssocComponent implements OnInit {
     public dialogRef: MatDialogRef<ProductAssocComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { assocData: any },
     private fb: FormBuilder,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {
     const {
       productId,
@@ -78,11 +79,24 @@ export class ProductAssocComponent implements OnInit {
   }
 
   getEnumTypes(): void {
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    }, 0);
     this.productService.getProductAssocTypes().subscribe({
       next: (data) => {
-        this.enumTypes = Array.isArray(data) ? data : [data];
+        const types = Array.isArray(data) ? data : [data];
+        setTimeout(() => {
+          this.enumTypes = types;
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       },
         error: (error) => {
+          setTimeout(() => {
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          }, 0);
           this.snackbarService.showError(
             this.translate.instant('PRODUCT.FETCH_TYPES_ERROR')
           );
@@ -97,7 +111,10 @@ export class ProductAssocComponent implements OnInit {
 
       this.productService
         .createProductAssoc(values)
-        .pipe(finalize(() => (this.isLoading = false)))
+        .pipe(finalize(() => setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0)))
         .subscribe({
           next: () => {
             this.snackbarService.showSuccess(

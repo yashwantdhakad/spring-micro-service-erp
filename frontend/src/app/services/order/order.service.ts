@@ -57,8 +57,18 @@ export class OrderService {
     return this.apiService.get(url);
   }
 
+  getOrderById(id: number | string): Observable<any> {
+    const url = `/oms/api/orders/by-id/${encodeURIComponent(String(id))}`;
+    return this.apiService.get(url);
+  }
+
   getPODisplayInfo(orderId: string): Observable<any> {
     const url = `/oms/api/orders/${encodeURIComponent(orderId)}/display-info`;
+    return this.apiService.get(url);
+  }
+
+  getOrderDisplayInfoById(id: number | string): Observable<any> {
+    const url = `/oms/api/orders/by-id/${encodeURIComponent(String(id))}/display-info`;
     return this.apiService.get(url);
   }
 

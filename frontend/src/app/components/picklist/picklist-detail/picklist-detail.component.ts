@@ -57,11 +57,20 @@ export class PicklistDetailComponent implements OnInit, OnDestroy {
   }
 
   loadPicklist(picklistId: string): void {
-    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    }, 0);
     this.picklistService
       .getPicklist(picklistId)
       .pipe(
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
+        finalize(() => {
+          setTimeout(() => {
+            this.isLoading = false;
+            this.cdr.markForCheck();
+          }, 0);
+        })
       )
       .subscribe({
         next: (response) => {
@@ -69,14 +78,10 @@ export class PicklistDetailComponent implements OnInit, OnDestroy {
           this.bins = Array.isArray(this.picklistDetail?.bins)
             ? this.picklistDetail.bins
             : [];
-          this.isLoading = false;
-          this.cdr.detectChanges();
         },
         error: () => {
           this.picklistDetail = null;
           this.bins = [];
-          this.isLoading = false;
-          this.cdr.detectChanges();
         },
       });
   }
@@ -199,12 +204,18 @@ export class PicklistDetailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (roles) => {
           const list = Array.isArray(roles) ? roles : [];
-          this.pickerNameMap = new Map(
-            list.map((role: any) => [role.partyId, role.name || role.partyId])
-          );
+          setTimeout(() => {
+            this.pickerNameMap = new Map(
+              list.map((role: any) => [role.partyId, role.name || role.partyId])
+            );
+            this.cdr.markForCheck();
+          }, 0);
         },
         error: () => {
-          this.pickerNameMap = new Map();
+          setTimeout(() => {
+            this.pickerNameMap = new Map();
+            this.cdr.markForCheck();
+          }, 0);
         },
       });
   }

@@ -142,12 +142,12 @@ export class CreatePOComponent implements OnInit {
       .createOrder(values)
       .subscribe({
         next: (data) => {
-          if (!data || !data.orderId) {
+          if (!data || !data.orderId || !data.id) {
             this.isLoading = false;
             this.snackbarService.showError('Failed to create a purchase order.');
             return;
           }
-          this.addOrderItems(data.orderId);
+          this.addOrderItems(data.orderId, data.id);
         },
         error: () => {
           this.isLoading = false;
@@ -227,7 +227,7 @@ export class CreatePOComponent implements OnInit {
     });
   }
 
-  private addOrderItems(orderId: string): void {
+  private addOrderItems(orderId: string, orderPrimaryId: number): void {
     this.items.length
       ? from(this.items.controls)
           .pipe(
@@ -253,14 +253,14 @@ export class CreatePOComponent implements OnInit {
               this.items.push(this.buildItemGroup());
               this.filteredProducts = [];
               this.initProductAutocomplete(0);
-              this.router.navigate([`/pos/${orderId}`]);
+              this.router.navigate([`/pos/${orderPrimaryId}`]);
               this.snackbarService.showSuccess('Purchase order created successfully.');
             },
             error: () => {
               this.snackbarService.showError('Purchase order created, but items failed.');
-              this.router.navigate([`/pos/${orderId}`]);
+              this.router.navigate([`/pos/${orderPrimaryId}`]);
             },
           })
-      : this.router.navigate([`/pos/${orderId}`]);
+      : this.router.navigate([`/pos/${orderPrimaryId}`]);
   }
 }

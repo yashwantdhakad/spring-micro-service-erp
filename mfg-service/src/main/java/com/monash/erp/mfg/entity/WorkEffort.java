@@ -9,11 +9,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(
         name = "work_effort",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_work_effort_work_effort_id", columnNames = "work_effort_id")
+        },
         indexes = {
                 @Index(name = "idx_work_effort_work_effort_id", columnList = "work_effort_id"),
                 @Index(name = "idx_work_effort_parent_id", columnList = "work_effort_parent_id"),

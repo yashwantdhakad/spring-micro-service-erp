@@ -99,7 +99,10 @@ export class CustomerDetailComponent implements OnDestroy {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.partyId = params['partyId'];
       if (this.partyId) {
-        this.isLoading = true;
+        setTimeout(() => {
+          this.isLoading = true;
+          this.cdr.markForCheck();
+        }, 0);
         this.getCustomer(this.partyId);
       }
     });
@@ -108,11 +111,16 @@ export class CustomerDetailComponent implements OnDestroy {
     this.store
       .pipe(select(selectGeoList), takeUntil(this.destroy$))
       .subscribe((geoListObject: any) => {
-      if (geoListObject) {
-        this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
-        this.states = filterGeoRecords(geoListObject, 'STATE');
-      }
-    });
+        if (geoListObject) {
+          const countries = filterGeoRecords(geoListObject, 'COUNTRY');
+          const states = filterGeoRecords(geoListObject, 'STATE');
+          setTimeout(() => {
+            this.countries = countries;
+            this.states = states;
+            this.cdr.markForCheck();
+          }, 0);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -121,7 +129,10 @@ export class CustomerDetailComponent implements OnDestroy {
   }
 
   getCustomer(partyId: string): void {
-    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    }, 0);
     this.partyService.getCustomer(partyId).subscribe({
       next: (response) => {
         const { customerDetail } = response;
@@ -138,24 +149,27 @@ export class CustomerDetailComponent implements OnDestroy {
           contentList,
         } = customerDetail;
 
-        this.roles = partyRoleList;
-        this.customerDetail = party;
-        this.partyRoleList = partyRoleList;
-        this.partyClassifications = pcaaList;
-        this.partyIdentificationList = partyIdentificationList;
-        this.emailAddressList = emailAddressList;
-        this.telecomNumberList = telecomNumberList;
-        this.postalAddressList = postalAddressList;
-        this.payments = payments;
-        this.partyNotes = partyNoteList;
-        this.contents = contentList;
-        console.log(this.partyRoleList);
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.roles = partyRoleList;
+          this.customerDetail = party;
+          this.partyRoleList = partyRoleList;
+          this.partyClassifications = pcaaList;
+          this.partyIdentificationList = partyIdentificationList;
+          this.emailAddressList = emailAddressList;
+          this.telecomNumberList = telecomNumberList;
+          this.postalAddressList = postalAddressList;
+          this.payments = payments;
+          this.partyNotes = partyNoteList;
+          this.contents = contentList;
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       },
       error: () => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        }, 0);
       },
     });
   }

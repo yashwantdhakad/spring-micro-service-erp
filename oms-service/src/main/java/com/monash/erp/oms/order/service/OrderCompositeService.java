@@ -289,6 +289,11 @@ public class OrderCompositeService {
         return response;
     }
 
+    public OrderDetailResponse getOrderById(Long id) {
+        OrderHeader header = getOrderHeaderById(id);
+        return getOrder(header.getOrderId());
+    }
+
     public OrderDisplayInfoResponse getDisplayInfo(String orderId) {
         OrderHeader header = getOrderHeader(orderId);
         OrderHeaderDto headerDto = toHeaderDto(header);
@@ -333,6 +338,11 @@ public class OrderCompositeService {
         response.setOrderTermList(terms);
         response.setOrderPaymentPreferenceList(paymentPreferences);
         return response;
+    }
+
+    public OrderDisplayInfoResponse getDisplayInfoById(Long id) {
+        OrderHeader header = getOrderHeaderById(id);
+        return getDisplayInfo(header.getOrderId());
     }
 
     public OrderHeaderDto createOrder(OrderCreateRequest request) {
@@ -1094,6 +1104,11 @@ public class OrderCompositeService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order %s not found".formatted(orderId)));
     }
 
+    private OrderHeader getOrderHeaderById(Long id) {
+        return orderHeaderRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order %d not found".formatted(id)));
+    }
+
     private Page<OrderHeader> loadOrders(String queryString, String orderTypeId, PageRequest pageable) {
         if (isBlank(orderTypeId)) {
             return orderHeaderRepository.findAll(pageable);
@@ -1112,6 +1127,7 @@ public class OrderCompositeService {
             Map<String, OrderRole> billToRoles
     ) {
         OrderListItem item = new OrderListItem();
+        item.setId(order.getId());
         item.setOrderId(order.getOrderId());
         item.setEntryDate(order.getEntryDate());
         BigDecimal grandTotal = order.getGrandTotal();
@@ -1161,6 +1177,7 @@ public class OrderCompositeService {
     private List<OrderListItem> sortOrderListItems(List<OrderListItem> items, String sortBy, Sort.Direction direction) {
         String sortField = isBlank(sortBy) ? "orderId" : sortBy;
         Comparator<OrderListItem> comparator = switch (sortField) {
+            case "id" -> Comparator.comparing(OrderListItem::getId, Comparator.nullsLast(Comparator.naturalOrder()));
             case "orderId" -> Comparator.comparing(OrderListItem::getOrderId, Comparator.nullsLast(String::compareToIgnoreCase));
             case "customerName" -> Comparator.comparing(OrderListItem::getCustomerName, Comparator.nullsLast(String::compareToIgnoreCase));
             case "organizationName" -> Comparator.comparing(OrderListItem::getOrganizationName, Comparator.nullsLast(String::compareToIgnoreCase));
@@ -1181,6 +1198,7 @@ public class OrderCompositeService {
 
     private OrderHeaderDto toHeaderDto(OrderHeader orderHeader) {
         OrderHeaderDto dto = new OrderHeaderDto();
+        dto.setId(orderHeader.getId());
         dto.setOrderId(orderHeader.getOrderId());
         dto.setEntryDate(orderHeader.getEntryDate());
         dto.setCurrencyUomId(orderHeader.getCurrencyUom());
@@ -1462,7 +1480,7 @@ public class OrderCompositeService {
         if (isBlank(statusId)) {
             return null;
         }
-        return statusItemRepository.findByStatusId(statusId).orElse(null);
+        return statusItemRepository.findFirstByStatusIdOrderByIdAsc(statusId).orElse(null);
     }
 
     private String resolveStatusDescription(String statusId) {

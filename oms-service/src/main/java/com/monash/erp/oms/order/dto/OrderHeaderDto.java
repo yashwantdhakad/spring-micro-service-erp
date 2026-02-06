@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class OrderHeaderDto {
 
+    private Long id;
     private String orderId;
     private LocalDateTime entryDate;
     private String currencyUomId;

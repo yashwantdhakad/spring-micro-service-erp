@@ -72,9 +72,19 @@ public class OrderCompositeController {
         return orderCompositeService.getOrder(orderId);
     }
 
+    @GetMapping("/by-id/{id}")
+    public OrderDetailResponse getOrderById(@PathVariable Long id) {
+        return orderCompositeService.getOrderById(id);
+    }
+
     @GetMapping("/{orderId}/display-info")
     public OrderDisplayInfoResponse getDisplayInfo(@PathVariable String orderId) {
         return orderCompositeService.getDisplayInfo(orderId);
+    }
+
+    @GetMapping("/by-id/{id}/display-info")
+    public OrderDisplayInfoResponse getDisplayInfoById(@PathVariable Long id) {
+        return orderCompositeService.getDisplayInfoById(id);
     }
 
     @GetMapping(value = "/{orderId}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)

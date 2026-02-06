@@ -13,6 +13,7 @@ import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';
 import { ProductItemComponent } from '../../order/product-item/product-item.component';
 import { ShippingInstructionDialogComponent } from '../../order/shipping-instruction-dialog/shipping-instruction-dialog.component';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 import { forkJoin, of } from 'rxjs';
 import { catchError, distinctUntilChanged, filter, finalize, map, switchMap, tap } from 'rxjs/operators';
 
@@ -25,6 +26,7 @@ import { catchError, distinctUntilChanged, filter, finalize, map, switchMap, tap
 })
 export class PODetailComponent implements OnInit {
   orderId: string | undefined;
+  orderPrimaryId: string | undefined;
   orderHeader: any;
   statusItem: any;
   vendorAddresses: any[] = [];
@@ -133,27 +135,25 @@ export class PODetailComponent implements OnInit {
     this.loadLookupData();
     this.route.paramMap
       .pipe(
-        map((params) => params.get('orderId') || ''),
-        filter((orderId) => orderId.length > 0),
+        map((params) => params.get('id') || ''),
+        filter((id) => id.length > 0),
         distinctUntilChanged(),
-        switchMap((orderId) => {
-          this.orderId = orderId;
-          return this.getOrder(orderId);
+        switchMap((id) => {
+          this.orderPrimaryId = id;
+          return this.getOrderById(id);
         })
       )
       .subscribe();
   }
 
-  getOrder(orderId: string) {
+  getOrderById(id: string) {
     this.isLoading = true;
 
     return forkJoin({
-      orderResponse: this.orderService.getOrder(orderId).pipe(catchError(() => of(null))),
-      displayInfo: this.orderService.getPODisplayInfo(orderId).pipe(catchError(() => of(null))),
-      shipments: this.orderService.getOrderShipments(orderId).pipe(catchError(() => of([]))),
-      invoices: this.orderService.getOrderInvoices(orderId).pipe(catchError(() => of([]))),
+      orderResponse: this.orderService.getOrderById(id).pipe(catchError(() => of(null))),
+      displayInfo: this.orderService.getOrderDisplayInfoById(id).pipe(catchError(() => of(null))),
     }).pipe(
-      tap(({ orderResponse, displayInfo, shipments, invoices }) => {
+      tap(({ orderResponse, displayInfo }) => {
         if (!orderResponse) {
           return;
         }
@@ -164,6 +164,7 @@ export class PODetailComponent implements OnInit {
 
         if (displayInfo) {
           this.orderHeader = displayInfo.orderHeader;
+          this.orderId = this.orderHeader?.orderId;
           this.statusItem = displayInfo.statusItem;
           this.orderNotes = displayInfo.orderNoteList || [];
           this.orderTerms = displayInfo.orderTermList || [];
@@ -194,19 +195,31 @@ export class PODetailComponent implements OnInit {
             .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
           this.orderShipToAddress = shippingContacts.length ? shippingContacts[0]?.postalAddress : null;
         }
-
-        this.shipments = Array.isArray(shipments) ? shipments : [];
-
-        const invoiceList = Array.isArray(invoices) ? invoices : [];
-        this.invoiceItems = invoiceList.flatMap((invoice: any) =>
-          (invoice.items || []).map((item: any) => ({
-            invoiceId: invoice.invoiceId,
-            currencyUomId: invoice.currencyUomId,
-            productId: item.productId,
-            quantity: item.quantity,
-            amount: item.amount
-          }))
-        );
+        if (this.orderId) {
+          this.orderService.getOrderShipments(this.orderId).pipe(catchError(() => of([]))).subscribe((shipments) => {
+            const list = Array.isArray(shipments) ? shipments : [];
+            setTimeout(() => {
+              this.shipments = list;
+              this.cdr.markForCheck();
+            }, 0);
+          });
+          this.orderService.getOrderInvoices(this.orderId).pipe(catchError(() => of([]))).subscribe((invoices) => {
+            const invoiceList = Array.isArray(invoices) ? invoices : [];
+            const items = invoiceList.flatMap((invoice: any) =>
+              (invoice.items || []).map((item: any) => ({
+                invoiceId: invoice.invoiceId,
+                currencyUomId: invoice.currencyUomId,
+                productId: item.productId,
+                quantity: item.quantity,
+                amount: item.amount
+              }))
+            );
+            setTimeout(() => {
+              this.invoiceItems = items;
+              this.cdr.markForCheck();
+            }, 0);
+          });
+        }
       }),
       finalize(() => {
         this.isLoading = false;
@@ -392,7 +405,9 @@ export class PODetailComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (this.orderId) {
-          this.getOrder(this.orderId);
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
         }
       });
   }
@@ -408,9 +423,35 @@ export class PODetailComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (this.orderId) {
-          this.getOrder(this.orderId);
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
         }
       });
+  }
+
+  deleteNote(note: any): void {
+    if (!this.orderId || !note?.id) {
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRM'),
+        message: this.translate.instant('COMMON.CONFIRM_DELETE'),
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+      this.orderService.deleteOrderNote({ orderId: this.orderId, noteId: note.id }).subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
+        },
+      });
+    });
   }
 
   addUpdateContentDialog(params: any = null) {
@@ -424,7 +465,9 @@ export class PODetailComponent implements OnInit {
       .afterClosed()
       .subscribe((result) => {
         if (this.orderId) {
-          this.getOrder(this.orderId);
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
         }
       });
   }
@@ -444,7 +487,9 @@ export class PODetailComponent implements OnInit {
       }
       this.orderService.updateShippingInstructions(this.orderId as string, part.orderPartSeqId, value)
         .subscribe(() => {
-          this.getOrder(this.orderId as string);
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId);
+          }
         });
     });
   }
@@ -575,7 +620,9 @@ export class PODetailComponent implements OnInit {
       data: { addressData },
     }).afterClosed().subscribe(() => {
       if (this.orderId) {
-        this.getOrder(this.orderId);
+        if (this.orderPrimaryId) {
+          this.getOrderById(this.orderPrimaryId);
+        }
       }
     });
   }
@@ -612,16 +659,18 @@ export class PODetailComponent implements OnInit {
     }
     this.orderService.approvePurchaseOrder(this.orderId).subscribe({
       next: () => {
-        this.getOrder(this.orderId as string);
+        if (this.orderPrimaryId) {
+          this.getOrderById(this.orderPrimaryId);
+        }
       },
     });
   }
 
   goToReceive(): void {
-    if (!this.orderId) {
+    if (!this.orderPrimaryId) {
       return;
     }
-    this.router.navigate([`/pos/${this.orderId}/receive`]);
+    this.router.navigate([`/pos/${this.orderPrimaryId}/receive`]);
   }
 
   openPdf(): void {

@@ -73,12 +73,12 @@ describe('CreatePOComponent', () => {
       shipBeforeDate: '2025-08-01',
     });
 
-    mockOrderService.createOrder.and.returnValue(of({ orderId }));
+    mockOrderService.createOrder.and.returnValue(of({ orderId, id: 101 }));
 
     component.createPO();
 
     expect(mockOrderService.createOrder).toHaveBeenCalled();
-    expect(mockRouter.navigate).toHaveBeenCalledWith([`/pos/${orderId}`]);
+    expect(mockRouter.navigate).toHaveBeenCalledWith([`/pos/${101}`]);
     expect(mockSnackbarService.showSuccess).toHaveBeenCalled();
   });
 

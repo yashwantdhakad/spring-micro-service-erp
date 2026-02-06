@@ -222,8 +222,8 @@ export class CreateSOComponent implements OnInit, OnDestroy {
       .createOrder(payload)
       .subscribe({
         next: (data) => {
-          if (data?.orderId) {
-            this.addOrderItems(data.orderId);
+          if (data?.orderId && data?.id) {
+            this.addOrderItems(data.orderId, data.id);
           } else {
             this.isLoading = false;
             this.snackbarService.showError('Failed to create sales order.');
@@ -419,7 +419,7 @@ export class CreateSOComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addOrderItems(orderId: string): void {
+  private addOrderItems(orderId: string, orderPrimaryId: number): void {
     from(this.items.controls)
       .pipe(
         concatMap((control) => {
@@ -445,11 +445,11 @@ export class CreateSOComponent implements OnInit, OnDestroy {
           this.items.push(this.buildItemGroup());
           this.filteredProducts = [];
           this.initProductAutocomplete(0);
-          this.router.navigate([`/orders/${orderId}`]);
+          this.router.navigate([`/orders/${orderPrimaryId}`]);
         },
         error: () => {
           this.snackbarService.showError('Sales order created, but items failed.');
-          this.router.navigate([`/orders/${orderId}`]);
+          this.router.navigate([`/orders/${orderPrimaryId}`]);
         },
       });
   }
