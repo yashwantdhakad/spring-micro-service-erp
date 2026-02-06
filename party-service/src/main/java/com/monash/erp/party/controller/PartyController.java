@@ -1,6 +1,6 @@
 package com.monash.erp.party.controller;
 
-import com.monash.erp.party.entity.Party;
+import com.monash.erp.party.dto.PartyDto;
 import com.monash.erp.party.service.PartyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,24 +26,24 @@ public class PartyController {
     }
 
     @GetMapping
-    public List<Party> list() {
+    public List<PartyDto> list() {
         return service.list();
     }
 
     @GetMapping("/{id}")
-    public Party get(@PathVariable Long id) {
+    public PartyDto get(@PathVariable Long id) {
         return service.get(id);
     }
 
     @PostMapping
-    public ResponseEntity<Party> create(@RequestBody Party entity) {
-        Party created = service.create(entity);
+    public ResponseEntity<PartyDto> create(@RequestBody PartyDto dto) {
+        PartyDto created = service.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public Party update(@PathVariable Long id, @RequestBody Party entity) {
-        return service.update(id, entity);
+    public PartyDto update(@PathVariable Long id, @RequestBody PartyDto dto) {
+        return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

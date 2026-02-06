@@ -1,7 +1,7 @@
 package com.monash.erp.wms.controller;
 
 import com.monash.erp.wms.dto.FacilityDetailResponse;
-import com.monash.erp.wms.entity.Facility;
+import com.monash.erp.wms.dto.FacilityDto;
 import com.monash.erp.wms.service.FacilityService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,30 +28,29 @@ public class FacilityController {
     }
 
     @GetMapping
-    public List<Facility> list() {
+    public List<FacilityDto> list() {
         return service.list();
     }
 
     @GetMapping("/{facilityId}")
     public FacilityDetailResponse get(
             @PathVariable String facilityId,
-            @RequestParam(defaultValue = "false") boolean includeLocations
-    ) {
+            @RequestParam(defaultValue = "false") boolean includeLocations) {
         return service.getDetail(facilityId, includeLocations);
     }
 
     @PostMapping
-    public ResponseEntity<Facility> create(@RequestBody Facility entity) {
-        Facility created = service.create(entity);
+    public ResponseEntity<FacilityDto> create(@RequestBody FacilityDto dto) {
+        FacilityDto created = service.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{facilityId}")
-    public Facility update(@PathVariable String facilityId, @RequestBody Facility entity) {
-        if (entity.getId() == null && facilityId != null && facilityId.chars().allMatch(Character::isDigit)) {
-            entity.setId(Long.parseLong(facilityId));
+    public FacilityDto update(@PathVariable String facilityId, @RequestBody FacilityDto dto) {
+        if (dto.getId() == null && facilityId != null && facilityId.chars().allMatch(Character::isDigit)) {
+            dto.setId(Long.parseLong(facilityId));
         }
-        return service.update(entity.getId(), entity);
+        return service.update(dto.getId(), dto);
     }
 
     @DeleteMapping("/{id}")

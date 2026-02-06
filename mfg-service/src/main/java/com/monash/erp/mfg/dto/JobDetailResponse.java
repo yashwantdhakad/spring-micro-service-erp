@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class JobDetailResponse {
 
-    private WorkEffort workEffort;
+    private JobDto job;
     private List<JobGoodStandardDto> produceList;
     private List<JobGoodStandardDto> consumeList;
     private List<WorkEffort> tasks;

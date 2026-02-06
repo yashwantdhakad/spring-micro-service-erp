@@ -1,6 +1,6 @@
 package com.monash.erp.oms.order.controller;
 
-import com.monash.erp.oms.entity.OrderHeader;
+import com.monash.erp.oms.order.dto.OrderHeaderDto;
 import com.monash.erp.oms.order.service.OrderHeaderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,24 +26,24 @@ public class OrderHeaderController {
     }
 
     @GetMapping
-    public List<OrderHeader> list() {
+    public List<OrderHeaderDto> list() {
         return orderHeaderService.list();
     }
 
     @GetMapping("/{id}")
-    public OrderHeader get(@PathVariable Long id) {
+    public OrderHeaderDto get(@PathVariable Long id) {
         return orderHeaderService.get(id);
     }
 
     @PostMapping
-    public ResponseEntity<OrderHeader> create(@RequestBody OrderHeader entity) {
-        OrderHeader created = orderHeaderService.create(entity);
+    public ResponseEntity<OrderHeaderDto> create(@RequestBody OrderHeaderDto dto) {
+        OrderHeaderDto created = orderHeaderService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public OrderHeader update(@PathVariable Long id, @RequestBody OrderHeader entity) {
-        return orderHeaderService.update(id, entity);
+    public OrderHeaderDto update(@PathVariable Long id, @RequestBody OrderHeaderDto dto) {
+        return orderHeaderService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

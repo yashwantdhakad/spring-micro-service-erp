@@ -1,34 +1,45 @@
 package com.monash.erp.wms.service;
 
 import com.monash.erp.wms.dto.FacilityDetailResponse;
+import com.monash.erp.wms.dto.FacilityDto;
 import com.monash.erp.wms.entity.Facility;
 import com.monash.erp.wms.entity.FacilityLocation;
+import com.monash.erp.wms.mapper.FacilityMapper;
 import com.monash.erp.wms.repository.FacilityLocationRepository;
 import com.monash.erp.wms.repository.FacilityRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FacilityService {
 
     private final FacilityRepository repository;
     private final FacilityLocationRepository locationRepository;
+    private final FacilityMapper mapper;
 
-    public FacilityService(FacilityRepository repository, FacilityLocationRepository locationRepository) {
+    public FacilityService(FacilityRepository repository, FacilityLocationRepository locationRepository,
+            FacilityMapper mapper) {
         this.repository = repository;
         this.locationRepository = locationRepository;
+        this.mapper = mapper;
     }
 
-    public List<Facility> list() {
-        return repository.findAll();
+    public List<FacilityDto> list() {
+        return repository.findAll().stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Facility get(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility %d not found".formatted(id)));
+    public FacilityDto get(Long id) {
+        Facility entity = repository.findById(id)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility %d not found".formatted(id)));
+        return mapper.toDTO(entity);
     }
 
     public FacilityDetailResponse getDetail(String facilityId, boolean includeLocations) {
@@ -39,25 +50,33 @@ public class FacilityService {
         return new FacilityDetailResponse(facility, locations);
     }
 
-    public Facility create(Facility entity) {
+    @Transactional
+    public FacilityDto create(FacilityDto dto) {
+        Facility entity = mapper.toEntity(dto);
         entity.setId(null);
         Facility saved = repository.save(entity);
-        if (isBlank(saved.getFacilityId())) {
+        if (saved.getFacilityId() == null || saved.getFacilityId().isBlank()) {
             saved.setFacilityId(String.valueOf(saved.getId()));
             saved = repository.save(saved);
         }
-        return saved;
+        return mapper.toDTO(saved);
     }
 
-    public Facility update(Long id, Facility entity) {
+    @Transactional
+    public FacilityDto update(Long id, FacilityDto dto) {
         if (!repository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility %d not found".formatted(id));
         }
+        Facility entity = mapper.toEntity(dto);
         entity.setId(id);
-        return repository.save(entity);
+        return mapper.toDTO(repository.save(entity));
     }
 
+    @Transactional
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility %d not found".formatted(id));
+        }
         repository.deleteById(id);
     }
 
@@ -67,9 +86,11 @@ public class FacilityService {
                     if (isNumeric(facilityId)) {
                         long id = Long.parseLong(facilityId);
                         return repository.findById(id)
-                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility %s not found".formatted(facilityId)));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                        "Facility %s not found".formatted(facilityId)));
                     }
-                    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Facility %s not found".formatted(facilityId));
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Facility %s not found".formatted(facilityId));
                 });
     }
 
@@ -83,9 +104,5 @@ public class FacilityService {
             }
         }
         return true;
-    }
-
-    private boolean isBlank(String value) {
-        return value == null || value.isBlank();
     }
 }

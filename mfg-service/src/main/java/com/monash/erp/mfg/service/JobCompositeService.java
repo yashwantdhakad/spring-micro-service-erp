@@ -21,6 +21,8 @@ import com.monash.erp.mfg.dto.WmsInventoryItemSearchDto;
 import com.monash.erp.mfg.dto.WmsItemIssuanceRequest;
 import com.monash.erp.mfg.dto.WmsProductAssocDto;
 import com.monash.erp.mfg.dto.WmsProductDetailResponse;
+import com.monash.erp.mfg.dto.JobDto;
+import com.monash.erp.mfg.mapper.JobMapper;
 import com.monash.erp.mfg.entity.WorkEffort;
 import com.monash.erp.mfg.entity.WorkEffortGoodStandard;
 import com.monash.erp.mfg.entity.WorkEffortInventoryProduced;
@@ -76,6 +78,7 @@ public class JobCompositeService {
     private final WorkEffortInvReservationRepository workEffortInvReservationRepository;
     private final WorkEffortInventoryProducedRepository workEffortInventoryProducedRepository;
     private final RestTemplate restTemplate;
+    private final JobMapper jobMapper;
     private final String wmsBaseUrl;
     private final String wmsServiceToken;
 
@@ -84,15 +87,17 @@ public class JobCompositeService {
             WorkEffortGoodStandardRepository workEffortGoodStandardRepository,
             WorkEffortInvReservationRepository workEffortInvReservationRepository,
             WorkEffortInventoryProducedRepository workEffortInventoryProducedRepository,
+
             RestTemplate restTemplate,
+            JobMapper jobMapper,
             @Value("${wms.base-url:http://localhost:8080/wms}") String wmsBaseUrl,
-            @Value("${wms.service-token:}") String wmsServiceToken
-    ) {
+            @Value("${wms.service-token:}") String wmsServiceToken) {
         this.workEffortRepository = workEffortRepository;
         this.workEffortGoodStandardRepository = workEffortGoodStandardRepository;
         this.workEffortInvReservationRepository = workEffortInvReservationRepository;
         this.workEffortInventoryProducedRepository = workEffortInventoryProducedRepository;
         this.restTemplate = restTemplate;
+        this.jobMapper = jobMapper;
         this.wmsBaseUrl = wmsBaseUrl;
         this.wmsServiceToken = wmsServiceToken;
     }
@@ -104,15 +109,14 @@ public class JobCompositeService {
             jobs = workEffortRepository.findByWorkEffortPurposeTypeIdAndWorkEffortTypeId(
                     PURPOSE_PRODUCTION_RUN,
                     TYPE_PRODUCTION_HEADER,
-                    pageable
-            );
+                    pageable);
         } else {
-            jobs = workEffortRepository.findByWorkEffortPurposeTypeIdAndWorkEffortTypeIdAndWorkEffortNameContainingIgnoreCase(
-                    PURPOSE_PRODUCTION_RUN,
-                    TYPE_PRODUCTION_HEADER,
-                    queryString,
-                    pageable
-            );
+            jobs = workEffortRepository
+                    .findByWorkEffortPurposeTypeIdAndWorkEffortTypeIdAndWorkEffortNameContainingIgnoreCase(
+                            PURPOSE_PRODUCTION_RUN,
+                            TYPE_PRODUCTION_HEADER,
+                            queryString,
+                            pageable);
         }
 
         List<JobListItem> items = jobs.getContent().stream()
@@ -131,7 +135,8 @@ public class JobCompositeService {
                 : workEffort;
         IssuedQuantityContext issuedContext = buildIssuedQuantityContext(header.getWorkEffortId());
 
-        List<JobGoodStandardDto> produceList = workEffortGoodStandardRepository.findByWorkEffortId(workEffort.getWorkEffortId())
+        List<JobGoodStandardDto> produceList = workEffortGoodStandardRepository
+                .findByWorkEffortId(workEffort.getWorkEffortId())
                 .stream()
                 .filter(item -> isProduceType(item.getWorkEffortGoodStdTypeId()))
                 .map(this::toGoodStandardDto)
@@ -140,7 +145,8 @@ public class JobCompositeService {
 
         List<JobGoodStandardDto> consumeList = new ArrayList<>();
         for (WorkEffort task : tasks) {
-            List<JobGoodStandardDto> taskConsumes = workEffortGoodStandardRepository.findByWorkEffortId(task.getWorkEffortId())
+            List<JobGoodStandardDto> taskConsumes = workEffortGoodStandardRepository
+                    .findByWorkEffortId(task.getWorkEffortId())
                     .stream()
                     .filter(item -> isConsumeType(item.getWorkEffortGoodStdTypeId()))
                     .map(wegs -> toGoodStandardDtoWithQuantities(wegs, header.getWorkEffortId(), issuedContext))
@@ -148,10 +154,10 @@ public class JobCompositeService {
             consumeList.addAll(taskConsumes);
         }
 
-        return new JobDetailResponse(workEffort, produceList, consumeList, tasks);
+        return new JobDetailResponse(jobMapper.toDTO(workEffort), produceList, consumeList, tasks);
     }
 
-    public WorkEffort createJob(JobCreateRequest request) {
+    public JobDto createJob(JobCreateRequest request) {
         if (request == null || isBlank(request.getWorkEffortName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "workEffortName is required");
         }
@@ -230,44 +236,44 @@ public class JobCompositeService {
             ensureWegsReferenceNumber(savedConsume);
         }
 
-        return savedHeader;
+        return jobMapper.toDTO(savedHeader);
     }
 
-    public WorkEffort approveJob(String workEffortId) {
+    public JobDto approveJob(String workEffortId) {
         WorkEffort header = findWorkEffort(workEffortId);
         header.setCurrentStatusId(STATUS_APPROVED);
         header.setLastStatusUpdate(LocalDateTime.now());
-        return workEffortRepository.save(header);
+        return jobMapper.toDTO(workEffortRepository.save(header));
     }
 
-    public WorkEffort startJob(String workEffortId) {
+    public JobDto startJob(String workEffortId) {
         WorkEffort header = findWorkEffort(workEffortId);
         header.setCurrentStatusId(STATUS_RUNNING);
         header.setLastStatusUpdate(LocalDateTime.now());
         if (header.getActualStartDate() == null) {
             header.setActualStartDate(LocalDateTime.now());
         }
-        return workEffortRepository.save(header);
+        return jobMapper.toDTO(workEffortRepository.save(header));
     }
 
-    public WorkEffort completeJob(String workEffortId) {
+    public JobDto completeJob(String workEffortId) {
         WorkEffort header = findWorkEffort(workEffortId);
         if (!STATUS_RUNNING.equalsIgnoreCase(header.getCurrentStatusId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Job must be running to complete");
         }
         header.setCurrentStatusId(STATUS_COMPLETED);
         header.setLastStatusUpdate(LocalDateTime.now());
-        return workEffortRepository.save(header);
+        return jobMapper.toDTO(workEffortRepository.save(header));
     }
 
-    public WorkEffort closeJob(String workEffortId) {
+    public JobDto closeJob(String workEffortId) {
         WorkEffort header = findWorkEffort(workEffortId);
         if (!STATUS_COMPLETED.equalsIgnoreCase(header.getCurrentStatusId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Job must be completed to close");
         }
         header.setCurrentStatusId(STATUS_CLOSED);
         header.setLastStatusUpdate(LocalDateTime.now());
-        return workEffortRepository.save(header);
+        return jobMapper.toDTO(workEffortRepository.save(header));
     }
 
     public JobProduceResponse produceItem(String workEffortId, JobProduceRequest request) {
@@ -335,8 +341,7 @@ public class JobCompositeService {
     public WorkEffortInventoryActionResponse reserveConsumable(
             String workEffortId,
             Long wegsId,
-            WorkEffortInventoryActionRequest request
-    ) {
+            WorkEffortInventoryActionRequest request) {
         WorkEffortGoodStandard wegs = getConsumable(wegsId);
         ensureWegsReferenceNumber(wegs);
         ensureNotCancelled(wegs);
@@ -376,8 +381,7 @@ public class JobCompositeService {
     public WorkEffortInventoryActionResponse releaseConsumable(
             String workEffortId,
             Long wegsId,
-            WorkEffortInventoryActionRequest request
-    ) {
+            WorkEffortInventoryActionRequest request) {
         WorkEffortGoodStandard wegs = getConsumable(wegsId);
         ensureWegsReferenceNumber(wegs);
         ensureNotCancelled(wegs);
@@ -400,8 +404,7 @@ public class JobCompositeService {
     public WorkEffortInventoryActionResponse issueConsumable(
             String workEffortId,
             Long wegsId,
-            WorkEffortInventoryActionRequest request
-    ) {
+            WorkEffortInventoryActionRequest request) {
         WorkEffortGoodStandard wegs = getConsumable(wegsId);
         ensureWegsReferenceNumber(wegs);
         ensureNotCancelled(wegs);
@@ -446,8 +449,7 @@ public class JobCompositeService {
                     url,
                     HttpMethod.GET,
                     requestEntity,
-                    WmsProductDetailResponse.class
-            );
+                    WmsProductDetailResponse.class);
             response = responseEntity.getBody();
         } catch (org.springframework.web.client.HttpClientErrorException.NotFound ex) {
             return Collections.emptyList();
@@ -506,8 +508,7 @@ public class JobCompositeService {
     private JobGoodStandardDto toGoodStandardDtoWithQuantities(
             WorkEffortGoodStandard wegs,
             String headerWorkEffortId,
-            IssuedQuantityContext issuedContext
-    ) {
+            IssuedQuantityContext issuedContext) {
         JobGoodStandardDto dto = toGoodStandardDto(wegs);
         BigDecimal reserved = sumReservedQuantity(headerWorkEffortId, wegs.getId());
         BigDecimal issued = issuedContext.sumIssuedForProduct(wegs.getProductId());
@@ -565,7 +566,8 @@ public class JobCompositeService {
         if (!isBlank(productId)) {
             return productId;
         }
-        List<WorkEffortGoodStandard> produces = workEffortGoodStandardRepository.findByWorkEffortId(header.getWorkEffortId())
+        List<WorkEffortGoodStandard> produces = workEffortGoodStandardRepository
+                .findByWorkEffortId(header.getWorkEffortId())
                 .stream()
                 .filter(item -> isProduceType(item.getWorkEffortGoodStdTypeId()))
                 .collect(Collectors.toList());
@@ -577,9 +579,11 @@ public class JobCompositeService {
 
     private WorkEffortGoodStandard getConsumable(Long wegsId) {
         WorkEffortGoodStandard wegs = workEffortGoodStandardRepository.findById(wegsId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkEffortGoodStandard %d not found".formatted(wegsId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "WorkEffortGoodStandard %d not found".formatted(wegsId)));
         if (!isConsumeType(wegs.getWorkEffortGoodStdTypeId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "WorkEffortGoodStandard is not a consumable item");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "WorkEffortGoodStandard is not a consumable item");
         }
         return wegs;
     }
@@ -618,8 +622,7 @@ public class JobCompositeService {
                 url,
                 HttpMethod.GET,
                 requestEntity,
-                WmsInventoryItemDto.class
-        );
+                WmsInventoryItemDto.class);
         if (response.getBody() == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory item not found");
         }
@@ -633,8 +636,7 @@ public class JobCompositeService {
             String qohDiff,
             String atpDiff,
             String accountingDiff,
-            String description
-    ) {
+            String description) {
         WmsInventoryItemDetailRequest detail = new WmsInventoryItemDetailRequest();
         detail.setInventoryItemId(inventoryItemId);
         detail.setEffectiveDate(LocalDateTime.now());
@@ -667,23 +669,20 @@ public class JobCompositeService {
                 url,
                 HttpMethod.POST,
                 requestEntity,
-                WmsAssetReceiveResponse.class
-        );
+                WmsAssetReceiveResponse.class);
         return response.getBody();
     }
 
     private WorkEffortInventoryActionResponse reserveConsumableByProduct(
             WorkEffort header,
             WorkEffortGoodStandard wegs,
-            BigDecimal requested
-    ) {
+            BigDecimal requested) {
         if (isBlank(wegs.getProductId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "productId is required to reserve");
         }
         List<WmsInventoryItemSearchDto> inventoryItems = fetchInventoryItemsByProduct(
                 wegs.getProductId(),
-                header.getFacilityId()
-        );
+                header.getFacilityId());
         if (inventoryItems.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No inventory items found for product");
         }
@@ -731,8 +730,7 @@ public class JobCompositeService {
     private WorkEffortInventoryActionResponse releaseConsumableFromReservations(
             WorkEffort header,
             WorkEffortGoodStandard wegs,
-            BigDecimal requested
-    ) {
+            BigDecimal requested) {
         List<WorkEffortInvReservation> reservations = workEffortInvReservationRepository
                 .findByWorkEffortIdAndWegsReferenceNumber(header.getWorkEffortId(), wegs.getWegsReferenceNumber());
         if (reservations.isEmpty()) {
@@ -745,14 +743,12 @@ public class JobCompositeService {
             WorkEffort header,
             WorkEffortGoodStandard wegs,
             String inventoryItemId,
-            BigDecimal requested
-    ) {
+            BigDecimal requested) {
         List<WorkEffortInvReservation> reservations = workEffortInvReservationRepository
                 .findByWorkEffortIdAndInventoryItemIdAndWegsReferenceNumber(
                         header.getWorkEffortId(),
                         inventoryItemId,
-                        wegs.getWegsReferenceNumber()
-                );
+                        wegs.getWegsReferenceNumber());
         if (reservations.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found");
         }
@@ -763,8 +759,7 @@ public class JobCompositeService {
             WorkEffort header,
             WorkEffortGoodStandard wegs,
             List<WorkEffortInvReservation> reservations,
-            BigDecimal requested
-    ) {
+            BigDecimal requested) {
         reservations.sort(java.util.Comparator.comparing(WorkEffortInvReservation::getId));
         BigDecimal reservedTotal = reservations.stream()
                 .map(WorkEffortInvReservation::getQuantity)
@@ -817,8 +812,7 @@ public class JobCompositeService {
     private WorkEffortInventoryActionResponse issueConsumableFromReservations(
             WorkEffort header,
             WorkEffortGoodStandard wegs,
-            BigDecimal requested
-    ) {
+            BigDecimal requested) {
         List<WorkEffortInvReservation> reservations = workEffortInvReservationRepository
                 .findByWorkEffortIdAndWegsReferenceNumber(header.getWorkEffortId(), wegs.getWegsReferenceNumber());
         if (reservations.isEmpty()) {
@@ -831,14 +825,12 @@ public class JobCompositeService {
             WorkEffort header,
             WorkEffortGoodStandard wegs,
             String inventoryItemId,
-            BigDecimal requested
-    ) {
+            BigDecimal requested) {
         List<WorkEffortInvReservation> reservations = workEffortInvReservationRepository
                 .findByWorkEffortIdAndInventoryItemIdAndWegsReferenceNumber(
                         header.getWorkEffortId(),
                         inventoryItemId,
-                        wegs.getWegsReferenceNumber()
-                );
+                        wegs.getWegsReferenceNumber());
         if (reservations.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found");
         }
@@ -849,8 +841,7 @@ public class JobCompositeService {
             WorkEffort header,
             WorkEffortGoodStandard wegs,
             List<WorkEffortInvReservation> reservations,
-            BigDecimal requested
-    ) {
+            BigDecimal requested) {
         reservations.sort(java.util.Comparator.comparing(WorkEffortInvReservation::getId));
         BigDecimal remaining = requested;
         BigDecimal issuedTotal = BigDecimal.ZERO;
@@ -909,8 +900,8 @@ public class JobCompositeService {
                 url,
                 HttpMethod.GET,
                 requestEntity,
-                new ParameterizedTypeReference<List<WmsInventoryItemSearchDto>>() {}
-        );
+                new ParameterizedTypeReference<List<WmsInventoryItemSearchDto>>() {
+                });
         List<WmsInventoryItemSearchDto> items = response.getBody();
         return items == null ? List.of() : items;
     }
@@ -918,7 +909,8 @@ public class JobCompositeService {
     private BigDecimal resolveRemainingQuantity(WorkEffort header, WorkEffortGoodStandard wegs) {
         BigDecimal estimated = parseQuantity(wegs.getEstimatedQuantity());
         BigDecimal reserved = sumReservedQuantity(header.getWorkEffortId(), wegs.getId());
-        BigDecimal issued = buildIssuedQuantityContext(header.getWorkEffortId()).sumIssuedForProduct(wegs.getProductId());
+        BigDecimal issued = buildIssuedQuantityContext(header.getWorkEffortId())
+                .sumIssuedForProduct(wegs.getProductId());
         BigDecimal remaining = estimated.subtract(reserved).subtract(issued);
         return remaining.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : remaining;
     }
@@ -953,11 +945,12 @@ public class JobCompositeService {
                     url,
                     HttpMethod.GET,
                     requestEntity,
-                    new ParameterizedTypeReference<List<WmsInventoryItemDetailDto>>() {}
-            );
+                    new ParameterizedTypeReference<List<WmsInventoryItemDetailDto>>() {
+                    });
             List<WmsInventoryItemDetailDto> items = response.getBody();
             return items == null ? List.of() : items;
-        } catch (org.springframework.web.client.HttpServerErrorException | org.springframework.web.client.ResourceAccessException ex) {
+        } catch (org.springframework.web.client.HttpServerErrorException
+                | org.springframework.web.client.ResourceAccessException ex) {
             return List.of();
         }
     }
@@ -971,8 +964,7 @@ public class JobCompositeService {
         IssuedQuantityContext(
                 List<WmsInventoryItemDetailDto> details,
                 java.util.function.Function<String, WmsInventoryItemDto> inventoryFetcher,
-                java.util.function.Function<String, BigDecimal> quantityParser
-        ) {
+                java.util.function.Function<String, BigDecimal> quantityParser) {
             this.details = details == null ? List.of() : details;
             this.inventoryFetcher = inventoryFetcher;
             this.quantityParser = quantityParser;
@@ -1012,8 +1004,7 @@ public class JobCompositeService {
             String inventoryItemId,
             String workEffortId,
             String wegsReferenceNumber,
-            BigDecimal quantity
-    ) {
+            BigDecimal quantity) {
         WmsItemIssuanceRequest issuance = new WmsItemIssuanceRequest();
         issuance.setInventoryItemId(inventoryItemId);
         issuance.setWorkEffortId(workEffortId);
@@ -1033,8 +1024,7 @@ public class JobCompositeService {
                 url,
                 HttpMethod.POST,
                 requestEntity,
-                java.util.Map.class
-        );
+                java.util.Map.class);
         if (response.getBody() != null && response.getBody().get("itemIssuanceId") != null) {
             return String.valueOf(response.getBody().get("itemIssuanceId"));
         }
@@ -1093,7 +1083,8 @@ public class JobCompositeService {
         if (isNumeric(workEffortId)) {
             long id = Long.parseLong(workEffortId);
             return workEffortRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkEffort %s not found".formatted(workEffortId)));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "WorkEffort %s not found".formatted(workEffortId)));
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "WorkEffort %s not found".formatted(workEffortId));
     }

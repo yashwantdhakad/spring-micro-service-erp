@@ -200,8 +200,7 @@ public class OrderCompositeService {
             OrderPaymentPreferenceRepository orderPaymentPreferenceRepository,
             OrderTermRepository orderTermRepository,
             RestTemplate restTemplate,
-            @Value("${wms.base-url}") String wmsBaseUrl
-    ) {
+            @Value("${wms.base-url}") String wmsBaseUrl) {
         this.orderHeaderRepository = orderHeaderRepository;
         this.orderItemRepository = orderItemRepository;
         this.orderItemShipGroupRepository = orderItemShipGroupRepository;
@@ -228,7 +227,8 @@ public class OrderCompositeService {
         this.wmsBaseUrl = wmsBaseUrl;
     }
 
-    public OrderListResponse listOrders(int page, int size, String queryString, String orderTypeId, String sortBy, String sortDirection) {
+    public OrderListResponse listOrders(int page, int size, String queryString, String orderTypeId, String sortBy,
+            String sortDirection) {
         PageRequest pageable = PageRequest.of(Math.max(page, 0), size, buildOrderSort(sortBy, sortDirection));
         Page<OrderHeader> orders = loadOrders(queryString, orderTypeId, pageable);
 
@@ -252,8 +252,7 @@ public class OrderCompositeService {
                 .collect(Collectors.toMap(
                         OrderItemShipGroup::getOrderId,
                         group -> group,
-                        (left, right) -> left
-                ));
+                        (left, right) -> left));
 
         Map<String, OrderRole> billToRoles = orderRoleRepository
                 .findByOrderIdInAndRoleTypeId(orderIds, ROLE_BILL_TO_CUSTOMER)
@@ -317,7 +316,8 @@ public class OrderCompositeService {
         List<OrderTermDto> terms = orderTermRepository.findByOrderId(orderId).stream()
                 .map(this::toOrderTermDto)
                 .collect(Collectors.toList());
-        List<OrderPaymentPreferenceDto> paymentPreferences = orderPaymentPreferenceRepository.findByOrderId(orderId).stream()
+        List<OrderPaymentPreferenceDto> paymentPreferences = orderPaymentPreferenceRepository.findByOrderId(orderId)
+                .stream()
                 .map(this::toOrderPaymentPreferenceDto)
                 .collect(Collectors.toList());
 
@@ -527,8 +527,7 @@ public class OrderCompositeService {
     public OrderItemDto updateOrderItemQuantity(
             String orderId,
             String orderItemSeqId,
-            OrderItemQuantityUpdateRequest request
-    ) {
+            OrderItemQuantityUpdateRequest request) {
         if (request == null || request.getQuantity() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity is required");
         }
@@ -550,7 +549,8 @@ public class OrderCompositeService {
         return toItemDto(item, receivedQuantity, remainingQuantity);
     }
 
-    public void updateShippingInstructions(String orderId, String shipGroupSeqId, OrderShippingInstructionRequest request) {
+    public void updateShippingInstructions(String orderId, String shipGroupSeqId,
+            OrderShippingInstructionRequest request) {
         if (request == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Shipping instructions are required");
         }
@@ -786,7 +786,8 @@ public class OrderCompositeService {
         List<WmsPicklistItem> items = reservations.stream()
                 .filter(res -> !isBlank(res.getInventoryItemId()))
                 .map(res -> {
-                    OrderItem item = orderItemRepository.findByOrderIdAndOrderItemSeqId(orderId, res.getOrderItemSeqId())
+                    OrderItem item = orderItemRepository
+                            .findByOrderIdAndOrderItemSeqId(orderId, res.getOrderItemSeqId())
                             .orElse(null);
                     if (item == null) {
                         return null;
@@ -856,7 +857,8 @@ public class OrderCompositeService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No order items found");
         }
 
-        String invoiceId = "INV" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
+        String invoiceId = "INV"
+                + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
         Invoice invoice = new Invoice();
         invoice.setInvoiceId(invoiceId);
         invoice.setInvoiceTypeId(INVOICE_TYPE_SALES);
@@ -893,7 +895,8 @@ public class OrderCompositeService {
         }
 
         AcctgTrans trans = new AcctgTrans();
-        trans.setAcctgTransId("AT" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT));
+        trans.setAcctgTransId(
+                "AT" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT));
         trans.setAcctgTransTypeId(ACCTG_TRANS_TYPE_SALES);
         trans.setTransactionDate(LocalDateTime.now());
         trans.setIsPosted(Boolean.TRUE);
@@ -922,7 +925,8 @@ public class OrderCompositeService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "items are required");
         }
         if (!STATUS_APPROVED.equals(header.getStatusId()) && !STATUS_COMPLETED.equals(header.getStatusId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Purchase order must be approved before receiving");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Purchase order must be approved before receiving");
         }
 
         String shipGroupSeqId = firstNonBlank(request.getShipGroupSeqId(), "00001");
@@ -941,7 +945,8 @@ public class OrderCompositeService {
         for (PurchaseOrderReceiveItemRequest itemRequest : request.getItems()) {
             OrderItem orderItem = itemMap.get(itemRequest.getOrderItemSeqId());
             if (orderItem == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid orderItemSeqId: " + itemRequest.getOrderItemSeqId());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Invalid orderItemSeqId: " + itemRequest.getOrderItemSeqId());
             }
             BigDecimal orderedQty = defaultIfNull(orderItem.getQuantity(), BigDecimal.ZERO);
             BigDecimal receivedQty = receivedTotals.getOrDefault(orderItem.getOrderItemSeqId(), BigDecimal.ZERO);
@@ -950,7 +955,8 @@ public class OrderCompositeService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "quantity must be greater than zero");
             }
             if (itemRequest.getQuantity().compareTo(remaining) > 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "receive quantity exceeds remaining for item " + orderItem.getOrderItemSeqId());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "receive quantity exceeds remaining for item " + orderItem.getOrderItemSeqId());
             }
             WmsReceiveItem wmsItem = new WmsReceiveItem();
             wmsItem.setOrderItemSeqId(orderItem.getOrderItemSeqId());
@@ -1006,8 +1012,7 @@ public class OrderCompositeService {
                         receipt.getOrderItemSeqId(),
                         receipt.getReceiptId(),
                         receipt.getInventoryItemId(),
-                        toBigDecimal(receipt.getQuantityAccepted())
-                ));
+                        toBigDecimal(receipt.getQuantityAccepted())));
             }
         }
 
@@ -1047,8 +1052,7 @@ public class OrderCompositeService {
                     .map(item -> new InvoiceItemSummaryDto(
                             item.getProductId(),
                             defaultIfNull(item.getQuantity(), BigDecimal.ZERO),
-                            defaultIfNull(item.getAmount(), BigDecimal.ZERO)
-                    ))
+                            defaultIfNull(item.getAmount(), BigDecimal.ZERO)))
                     .collect(Collectors.toList());
             summary.setItems(items);
         }
@@ -1101,12 +1105,14 @@ public class OrderCompositeService {
 
     private OrderHeader getOrderHeader(String orderId) {
         return orderHeaderRepository.findByOrderId(orderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order %s not found".formatted(orderId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Order %s not found".formatted(orderId)));
     }
 
     private OrderHeader getOrderHeaderById(Long id) {
         return orderHeaderRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order %d not found".formatted(id)));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order %d not found".formatted(id)));
     }
 
     private Page<OrderHeader> loadOrders(String queryString, String orderTypeId, PageRequest pageable) {
@@ -1116,16 +1122,16 @@ public class OrderCompositeService {
         if (isBlank(queryString)) {
             return orderHeaderRepository.findByOrderTypeId(orderTypeId, pageable);
         }
-        return orderHeaderRepository.findByOrderTypeIdAndOrderIdContainingIgnoreCaseOrOrderTypeIdAndOrderNameContainingIgnoreCase(
-                orderTypeId, queryString, orderTypeId, queryString, pageable);
+        return orderHeaderRepository
+                .findByOrderTypeIdAndOrderIdContainingIgnoreCaseOrOrderTypeIdAndOrderNameContainingIgnoreCase(
+                        orderTypeId, queryString, orderTypeId, queryString, pageable);
     }
 
     private OrderListItem toListItem(
             OrderHeader order,
             Map<String, OrderItemRepository.OrderItemAggregate> aggregates,
             Map<String, OrderItemShipGroup> shipGroupMap,
-            Map<String, OrderRole> billToRoles
-    ) {
+            Map<String, OrderRole> billToRoles) {
         OrderListItem item = new OrderListItem();
         item.setId(order.getId());
         item.setOrderId(order.getOrderId());
@@ -1178,17 +1184,28 @@ public class OrderCompositeService {
         String sortField = isBlank(sortBy) ? "orderId" : sortBy;
         Comparator<OrderListItem> comparator = switch (sortField) {
             case "id" -> Comparator.comparing(OrderListItem::getId, Comparator.nullsLast(Comparator.naturalOrder()));
-            case "orderId" -> Comparator.comparing(OrderListItem::getOrderId, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "customerName" -> Comparator.comparing(OrderListItem::getCustomerName, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "organizationName" -> Comparator.comparing(OrderListItem::getOrganizationName, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "vendorOrganizationName" -> Comparator.comparing(OrderListItem::getVendorOrganizationName, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "entryDate" -> Comparator.comparing(OrderListItem::getEntryDate, Comparator.nullsLast(Comparator.naturalOrder()));
-            case "statusDescription" -> Comparator.comparing(OrderListItem::getStatusDescription, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "storeName" -> Comparator.comparing(OrderListItem::getStoreName, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "facilityName" -> Comparator.comparing(OrderListItem::getFacilityName, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "quantityTotal" -> Comparator.comparing(OrderListItem::getQuantityTotal, Comparator.nullsLast(Comparator.naturalOrder()));
-            case "grandTotal" -> Comparator.comparing(OrderListItem::getGrandTotal, Comparator.nullsLast(Comparator.naturalOrder()));
-            default -> Comparator.comparing(OrderListItem::getOrderId, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "orderId" ->
+                Comparator.comparing(OrderListItem::getOrderId, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "customerName" ->
+                Comparator.comparing(OrderListItem::getCustomerName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "organizationName" -> Comparator.comparing(OrderListItem::getOrganizationName,
+                    Comparator.nullsLast(String::compareToIgnoreCase));
+            case "vendorOrganizationName" -> Comparator.comparing(OrderListItem::getVendorOrganizationName,
+                    Comparator.nullsLast(String::compareToIgnoreCase));
+            case "entryDate" ->
+                Comparator.comparing(OrderListItem::getEntryDate, Comparator.nullsLast(Comparator.naturalOrder()));
+            case "statusDescription" -> Comparator.comparing(OrderListItem::getStatusDescription,
+                    Comparator.nullsLast(String::compareToIgnoreCase));
+            case "storeName" ->
+                Comparator.comparing(OrderListItem::getStoreName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "facilityName" ->
+                Comparator.comparing(OrderListItem::getFacilityName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "quantityTotal" ->
+                Comparator.comparing(OrderListItem::getQuantityTotal, Comparator.nullsLast(Comparator.naturalOrder()));
+            case "grandTotal" ->
+                Comparator.comparing(OrderListItem::getGrandTotal, Comparator.nullsLast(Comparator.naturalOrder()));
+            default ->
+                Comparator.comparing(OrderListItem::getOrderId, Comparator.nullsLast(String::compareToIgnoreCase));
         };
         if (direction == Sort.Direction.DESC) {
             comparator = comparator.reversed();
@@ -1201,7 +1218,7 @@ public class OrderCompositeService {
         dto.setId(orderHeader.getId());
         dto.setOrderId(orderHeader.getOrderId());
         dto.setEntryDate(orderHeader.getEntryDate());
-        dto.setCurrencyUomId(orderHeader.getCurrencyUom());
+        dto.setCurrencyUom(orderHeader.getCurrencyUom());
         dto.setProductStoreId(orderHeader.getProductStoreId());
         dto.setGrandTotal(orderHeader.getGrandTotal());
         dto.setOrderTypeId(orderHeader.getOrderTypeId());
@@ -1213,8 +1230,7 @@ public class OrderCompositeService {
             String orderId,
             OrderHeader header,
             Map<String, BigDecimal> receivedQuantities,
-            Map<String, BigDecimal> pickedQuantities
-    ) {
+            Map<String, BigDecimal> pickedQuantities) {
         List<OrderItemShipGroup> shipGroups = orderItemShipGroupRepository.findByOrderId(orderId);
         if (shipGroups.isEmpty()) {
             OrderItemShipGroup fallback = new OrderItemShipGroup();
@@ -1242,8 +1258,7 @@ public class OrderCompositeService {
                     .map(item -> toItemDto(
                             item,
                             receivedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO),
-                            pickedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO)
-                    ))
+                            pickedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO)))
                     .collect(Collectors.toList()));
             part.setPartTotal(calculatePartTotal(partItems));
             parts.add(part);
@@ -1360,8 +1375,7 @@ public class OrderCompositeService {
     private List<OrderItem> resolvePartItems(
             OrderItemShipGroup shipGroup,
             List<OrderItem> items,
-            List<OrderItemShipGroupAssoc> assocs
-    ) {
+            List<OrderItemShipGroupAssoc> assocs) {
         List<OrderItemShipGroupAssoc> matchingAssocs = assocs.stream()
                 .filter(assoc -> shipGroup.getShipGroupSeqId().equals(assoc.getShipGroupSeqId()))
                 .collect(Collectors.toList());
@@ -1561,8 +1575,7 @@ public class OrderCompositeService {
     private OrderContactMechDto toContactMechDto(
             OrderContactMech contactMech,
             Map<String, PostalAddress> addressMap,
-            Map<String, GeoDto> geoMap
-    ) {
+            Map<String, GeoDto> geoMap) {
         OrderContactMechDto dto = new OrderContactMechDto();
         dto.setContactMechPurposeTypeId(contactMech.getContactMechPurposeTypeId());
         dto.setContactMechId(contactMech.getContactMechId());
@@ -1603,14 +1616,14 @@ public class OrderCompositeService {
             String orderId,
             OrderAddressRequest request,
             String defaultPurpose,
-            boolean assignShipGroup
-    ) {
+            boolean assignShipGroup) {
         if (request == null || !hasAddressData(request)) {
             return null;
         }
 
         String purpose = firstNonBlank(request.getContactMechPurposeTypeId(), defaultPurpose);
-        String contactMechId = firstNonBlank(request.getContactMechId(), "OCM" + UUID.randomUUID().toString().replace("-", "").toUpperCase(Locale.ROOT));
+        String contactMechId = firstNonBlank(request.getContactMechId(),
+                "OCM" + UUID.randomUUID().toString().replace("-", "").toUpperCase(Locale.ROOT));
         PostalAddress address = postalAddressRepository.findByContactMechId(contactMechId)
                 .orElseGet(PostalAddress::new);
         address.setContactMechId(contactMechId);
@@ -1809,7 +1822,8 @@ public class OrderCompositeService {
         List<OrderItemShipGrpInvRes> existingReservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
         for (OrderItemShipGrpInvRes res : existingReservations) {
             if (!isBlank(res.getInventoryItemId())) {
-                reservedByItem.merge(res.getOrderItemSeqId(), defaultIfNull(res.getQuantity(), BigDecimal.ZERO), BigDecimal::add);
+                reservedByItem.merge(res.getOrderItemSeqId(), defaultIfNull(res.getQuantity(), BigDecimal.ZERO),
+                        BigDecimal::add);
             }
             if (res.getQuantityNotAvailable() != null && res.getQuantityNotAvailable().compareTo(BigDecimal.ZERO) > 0) {
                 backorderByItem.merge(res.getOrderItemSeqId(), res.getQuantityNotAvailable(), BigDecimal::add);
@@ -1905,7 +1919,8 @@ public class OrderCompositeService {
         Map<String, BigDecimal> backorderByItem = new HashMap<>();
         for (OrderItemShipGrpInvRes res : reservations) {
             if (!isBlank(res.getInventoryItemId())) {
-                reservedByItem.merge(res.getOrderItemSeqId(), defaultIfNull(res.getQuantity(), BigDecimal.ZERO), BigDecimal::add);
+                reservedByItem.merge(res.getOrderItemSeqId(), defaultIfNull(res.getQuantity(), BigDecimal.ZERO),
+                        BigDecimal::add);
             }
             if (res.getQuantityNotAvailable() != null && res.getQuantityNotAvailable().compareTo(BigDecimal.ZERO) > 0) {
                 backorderByItem.merge(res.getOrderItemSeqId(), res.getQuantityNotAvailable(), BigDecimal::add);
@@ -1941,7 +1956,8 @@ public class OrderCompositeService {
             return;
         }
 
-        String invoiceId = "INV" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
+        String invoiceId = "INV"
+                + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT);
         Invoice invoice = new Invoice();
         invoice.setInvoiceId(invoiceId);
         invoice.setInvoiceTypeId(INVOICE_TYPE_PURCHASE);
@@ -1984,7 +2000,8 @@ public class OrderCompositeService {
         }
 
         AcctgTrans trans = new AcctgTrans();
-        trans.setAcctgTransId("AT" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT));
+        trans.setAcctgTransId(
+                "AT" + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase(Locale.ROOT));
         trans.setAcctgTransTypeId(ACCTG_TRANS_TYPE_PURCHASE);
         trans.setTransactionDate(LocalDateTime.now());
         trans.setIsPosted(Boolean.TRUE);
@@ -2005,7 +2022,8 @@ public class OrderCompositeService {
         createAcctgEntry(trans.getAcctgTransId(), "00002", GL_ACCOUNT_AP, totalAmount, Boolean.FALSE);
     }
 
-    private void createAcctgEntry(String acctgTransId, String seqId, String glAccountId, BigDecimal amount, boolean debit) {
+    private void createAcctgEntry(String acctgTransId, String seqId, String glAccountId, BigDecimal amount,
+            boolean debit) {
         AcctgTransEntry entry = new AcctgTransEntry();
         entry.setAcctgTransId(acctgTransId);
         entry.setAcctgTransEntrySeqId(seqId);
