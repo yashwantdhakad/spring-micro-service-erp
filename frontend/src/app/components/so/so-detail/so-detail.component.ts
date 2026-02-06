@@ -496,8 +496,8 @@ export class SODetailComponent implements OnInit {
     }
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: this.translate.instant('COMMON.CONFIRM'),
-        message: this.translate.instant('COMMON.CONFIRM_DELETE'),
+        title: this.translate.instant('COMMON.CONFIRMATION'),
+        message: this.translate.instant('COMMON.DELETE_CONFIRMATION'),
       },
     });
     dialogRef.afterClosed().subscribe((confirmed) => {
@@ -535,7 +535,7 @@ export class SODetailComponent implements OnInit {
     }
     this.dialog.open(ShippingInstructionDialogComponent, {
       data: {
-        titleKey: 'SO.SHIPPING_INST',
+        titleKey: 'COMMON.SHIPPING_INSTRUCTIONS',
         shippingInstructions: part?.shippingInstructions || '',
       },
     }).afterClosed().subscribe((value) => {

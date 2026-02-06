@@ -7,6 +7,7 @@ import com.monash.erp.wms.entity.InventoryItem;
 import com.monash.erp.wms.entity.InventoryItemDetail;
 import com.monash.erp.wms.entity.ItemIssuance;
 import com.monash.erp.wms.entity.ShipmentReceipt;
+import com.monash.erp.wms.entity.InventoryItemVariance;
 
 import java.util.List;
 
@@ -19,4 +20,5 @@ public class AssetDetailResponse {
     private List<InventoryItemDetail> details;
     private List<ShipmentReceipt> receipts;
     private List<ItemIssuance> issuances;
+    private List<InventoryItemVariance> variances;
 }

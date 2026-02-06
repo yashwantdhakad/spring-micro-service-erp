@@ -36,5 +36,5 @@ management:
         include: health,info
 
 wms:
-  base-url: http://localhost:8080/wms
+  base-url: http://localhost:8082
   service-token: ${WMS_SERVICE_TOKEN:}

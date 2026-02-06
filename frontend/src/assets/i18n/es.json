@@ -48,7 +48,18 @@
     "SERIAL_NUMBER": "Número de Serie",
     "SHIP_GROUP_SEQ_ID": "Secuencia de Grupo de Envío",
     "STATUS_ID": "ID de Estado",
-    "WORK_EFFORT_ID": "ID de Trabajo"
+    "WORK_EFFORT_ID": "ID de Trabajo",
+    "INVENTORY_ITEM": "Inventory Item",
+    "VARIANCE": {
+      "TITLE": "Inventory Variances",
+      "ADD_TITLE": "Add Inventory Variance",
+      "QOH_VAR": "Quantity On Hand Variance",
+      "ATP_VAR": "Available To Promise Variance",
+      "SUCCESS": "Variance created successfully",
+      "ERROR": "Failed to create variance",
+      "REASON_REQUIRED": "Reason is required",
+      "ADD_VARIANCE": "Add Variance"
+    }
   },
   "CATEGORY": {
     "CLOSE": "Cerrar",
@@ -63,7 +74,9 @@
     "PRODUCT_REQUIRED": "Se requiere producto.",
     "SEQUENCE_NO": "Número de secuencia",
     "TITLE": "Categorías",
-    "TYPE": "Tipo de categoría"
+    "TYPE": "Tipo de categoría",
+    "CATEGORY_NAME": "Category Name",
+    "CATEGORY_REQUIRED": "Category is required."
   },
   "COMMON": {
     "ACTION": "Acción",
@@ -133,7 +146,39 @@
     "PRODUCTS_TITLE": "Productos",
     "FACILITY_ID": "ID de Instalación",
     "STATUS_ID": "ID de Estado",
-    "FACILITY_LOCATION": "Ubicación de la Instalación"
+    "FACILITY_LOCATION": "Ubicación de la Instalación",
+    "ADDRESS": "Address",
+    "CLOSE": "Close",
+    "COMMENTS": "Comments",
+    "CONFIRM": "Confirm",
+    "CONFIRM_DELETE": "Are you sure you want to delete this?",
+    "CREATE_ORDER": "Create Order",
+    "DESCRIPTION_PLACEHOLDER": "Enter Description",
+    "DESCRIPTION_REQUIRED": "Description is required.",
+    "DETAILS": "Details",
+    "DATE": "Date",
+    "CREATED_BY": "Created By",
+    "EMAIL": "Email",
+    "FACILITIES": "Facilities",
+    "LOCATIONS": "Locations",
+    "NAME_REQUIRED": "Name is required.",
+    "ORDER_ID": "Order ID",
+    "NOTE": "Note",
+    "NOTES": "Notes",
+    "NEXT": "Next",
+    "OVERVIEW": "Overview",
+    "PHONE": "Phone",
+    "PRICE_UOM": "Price UOM",
+    "PRICE_UOM_REQUIRED": "Price UOM is required.",
+    "QUANTITY": "Quantity",
+    "REASON_REQUIRED": "Reason is required",
+    "REASON": "Reason",
+    "REQUIRED_BY_DATE": "Required By Date",
+    "BACK": "Back",
+    "SHIPPING_INSTRUCTIONS": "Shipping Instructions",
+    "TYPE_ID": "Type ID",
+    "TYPE_REQUIRED": "Type is required.",
+    "TOTAL_AMOUNT": "Total Amount"
   },
   "CUSTOMER": {
     "ADDRESS1": "Dirección 1",
@@ -218,7 +263,8 @@
     "SEQUENCE_NUM": "Número de Secuencia",
     "TITLE": "Características",
     "TYPE_ID": "ID de Tipo",
-    "TYPE_REQUIRED": "Se requiere tipo."
+    "TYPE_REQUIRED": "Se requiere tipo.",
+    "PRODUCT": "Product"
   },
   "FEATUREGROUP": {
     "CATEGORIES_TITLE": "Categorías",
@@ -319,7 +365,9 @@
     "SHIPMENTS": "Envíos",
     "SUPPLIER": "Proveedor",
     "SUPPLIERS": "Proveedores",
-    "USERS": "Usuarios"
+    "USERS": "Usuarios",
+    "CREATE_BOM": "Create BOM",
+    "BOMS": "BOMs"
   },
   "ORDER": {
     "ASSET_CLASS": "Clase de Activo",
@@ -492,7 +540,16 @@
     "DAYS": "Days",
     "AMOUNT": "Amount",
     "PAYMENT_TERM": "Payment Term",
-    "PAYMENT_METHOD": "Payment Method"
+    "PAYMENT_METHOD": "Payment Method",
+    "AMOUNT_SUMMARY": "Amount Summary",
+    "BILL_FROM": "Bill From",
+    "CONTENTS": "Attachments",
+    "RECEIVED_QTY": "Received Qty",
+    "REMAINING_QTY": "Remaining Qty",
+    "SHIPPING_INST": "Shipping Inst",
+    "SHIPPING_AMOUNT": "Shipping",
+    "DISCOUNT_AMOUNT": "Discount",
+    "SUBTOTAL": "Subtotal"
   },
   "PRODUCT": {
     "ASSOCIATED_FROM_TITLE": "Asociado Desde",
@@ -530,7 +587,18 @@
     "SEQUENCE_NO": "Número de secuencia",
     "TITLE": "Productos",
     "TITLE_COL": "Título",
-    "TYPE_REQUIRED": "Se requiere tipo."
+    "TYPE_REQUIRED": "Se requiere tipo.",
+    "CONFIGURATIONS_TITLE": "Configurations",
+    "CONFIG_TAXABLE": "Taxable",
+    "CONFIG_RETURNABLE": "Returnable",
+    "CONFIG_APPLY_PROMOTIONS": "Apply Promotions",
+    "CONFIG_SERIALIZED": "Serialized",
+    "CONFIG_REQUIRE_INSPECTION": "Require inspection",
+    "CONFIG_UPDATE_SUCCESS": "Configurations updated.",
+    "CONFIG_UPDATE_ERROR": "Failed to update configurations.",
+    "FEATURES_TITLE": "Features",
+    "PRICE_INVALID": "Enter a valid amount (up to 2 decimals)",
+    "PRICE_MIN": "Price must be at least {{value}}"
   },
   "SHIPMENT": {
     "ADD_ROUTE_SEGMENT": "Agregar segmento de ruta",
@@ -602,7 +670,24 @@
     "AMOUNT_SUMMARY": "Amount Summary",
     "SUBTOTAL": "Subtotal",
     "SHIPPING_AMOUNT": "Shipping",
-    "DISCOUNT_AMOUNT": "Discount"
+    "DISCOUNT_AMOUNT": "Discount",
+    "ORDER_TYPE": "Order Type",
+    "PO_NUMBER": "PO No.",
+    "SHIPPING_INST": "Shipping Inst",
+    "CUSTOMER_PHONE": "Customer Phone",
+    "STEP_CART": "Cart",
+    "STEP_PAYMENTS": "Payments and Shipping",
+    "PAYMENT_AND_SHIPPING": "Shipping and Payment Information",
+    "PAYMENT_TERMS_PREFERENCES": "Payment Terms and Preferences",
+    "PAYMENT_TERMS": "Terms",
+    "PAYMENT_PREFERENCES": "Preferences",
+    "RATE": "Rate",
+    "DAYS": "Days",
+    "AMOUNT": "Amount",
+    "SHIP_BY": "Ship By",
+    "PAYMENT_TERM": "Payment Term",
+    "PAYMENT_METHOD": "Payment Method",
+    "PAYMENT_INSTRUCTIONS": "Payment Instructions"
   },
   "SUBMIT_LOGIN": "Iniciar sesión",
   "SUPPLIER": {
@@ -636,7 +721,11 @@
     "SUPPLIER_PRODUCT_NAME": "Nombre del producto del proveedor",
     "SUPPLIER_REQUIRED": "Se requiere nombre de la organización.",
     "TITLE": "Proveedores",
-    "UPDATED_SUCCESS": "Proveedor actualizado exitosamente"
+    "UPDATED_SUCCESS": "Proveedor actualizado exitosamente",
+    "CONTENTS": "Contents",
+    "CONTENT_COL": "Content Date",
+    "MIME_TYPE": "File",
+    "TITLE_COL": "Title"
   },
   "USER": {
     "CREATE_BUTTON": "Crear Usuario",
@@ -675,5 +764,32 @@
     "JAPANESE": "Japonés",
     "CHINESE": "Chino",
     "GERMAN": "Alemán"
+  },
+  "BOM": {
+    "ADD_ITEM": "Add Item",
+    "ADD_COMPONENT": "Add Component",
+    "COMPONENT": "Component",
+    "COMPONENTS": "Components",
+    "CREATE_TITLE": "Create BOM",
+    "FROM_DATE": "From",
+    "ID": "Id",
+    "ITEM": "Item",
+    "ITEMS": "Items",
+    "INST": "Inst",
+    "LEVEL": "Product Level",
+    "NAME": "Name",
+    "OPERATION": "Operation",
+    "OVERVIEW": "Overview",
+    "PRODUCT": "Product",
+    "PRODUCT_ID": "Product ID",
+    "PRODUCT_NAME": "Product Name",
+    "QTY": "Qty",
+    "SCHEDULE_JOB": "Schedule Job",
+    "SEQ_NUM": "Sequence Num",
+    "SCRAP": "Scrap Factor %",
+    "SIMULATION": "BOM Simulation",
+    "THRU_DATE": "Thru Date",
+    "TITLE": "BOMs",
+    "TYPE": "Bom Type"
   }
 }

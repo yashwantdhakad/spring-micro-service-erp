@@ -1,9 +1,5 @@
 <ng-container *ngIf="isLoading; else content">
-  <mat-progress-spinner
-    [diameter]="100"
-    mode="indeterminate"
-    color="primary"
-  ></mat-progress-spinner>
+  <mat-progress-spinner [diameter]="100" mode="indeterminate" color="primary"></mat-progress-spinner>
 </ng-container>
 <ng-template #content>
   <mat-list>
@@ -15,7 +11,7 @@
   <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="16px">
     <mat-card class="mat-elevation-z10 so-overview-card" fxFlex.gt-xs="48%">
       <mat-card-header fxLayout="row" fxLayoutAlign="space-between center">
-        <mat-card-title>{{ 'SO.OVERVIEW' | translate }}</mat-card-title>
+        <mat-card-title>{{ 'COMMON.OVERVIEW' | translate }}</mat-card-title>
         <div fxLayout="row" fxLayoutGap="12px">
           <button mat-icon-button color="primary" (click)="openPdf()" aria-label="Open PDF">
             <mat-icon>picture_as_pdf</mat-icon>
@@ -141,27 +137,21 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title
-        >{{ 'SO.NOTES' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addUpdateNoteDialog()"
-          >add</mat-icon
-        >
+      <mat-card-title>{{ 'COMMON.NOTES' | translate }}
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addUpdateNoteDialog()">add</mat-icon>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="orderNotes">
         <ng-container matColumnDef="noteText">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.NOTE' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.NOTE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             <span *ngIf="item.noteText">{{ item?.noteText }}</span>
           </td>
         </ng-container>
         <ng-container matColumnDef="noteDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SO.NOTE_DATE' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.DATE' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.noteDate | date : "MMMM d, y" }}
           </td>
@@ -177,20 +167,10 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="primary"
-              (click)="addUpdateNoteDialog(item)"
-              >edit</mat-icon
-            >
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="warn"
-              (click)="deleteNote(item)"
-              >delete</mat-icon
-            >
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+              (click)="addUpdateNoteDialog(item)">edit</mat-icon>
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn"
+              (click)="deleteNote(item)">delete</mat-icon>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="noteColumns"></tr>
@@ -232,14 +212,10 @@
                 {{ getShipByLabel(part) || '-' }}
               </li>
               <li class="custom-list-item">
-                <strong>{{ 'SO.SHIPPING_INST' | translate }}:</strong>
-                {{ part?.shippingInstructions || '-' }}
-                <mat-icon
-                  matListIcon
-                  class="custom-mat-icon custom-icon-align"
-                  color="primary"
-                  (click)="editShippingInstructions(part)"
-                >edit</mat-icon>
+                <strong>{{ 'COMMON.SHIPPING_INSTRUCTIONS' | translate }}:</strong>
+                {{ part.shippingInstructions }}
+                <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+                  (click)="editShippingInstructions(part)">edit</mat-icon>
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'SO.PART_TOTAL' | translate }}:</strong>
@@ -258,36 +234,36 @@
                 <strong>{{ 'COMMON.FACILITY' | translate }}:</strong> {{ part.facility.facilityName }}
               </li>
               <li class="custom-list-item">
-                <strong>{{ 'SO.ADDRESS' | translate }}:</strong>
+                <strong>{{ 'COMMON.ADDRESS' | translate }}:</strong>
                 <span *ngIf="facilityAddress || firstPartInfo?.facilityContactInfo">
                   <div>
                     {{
-                      facilityAddress?.toName || firstPartInfo?.facilityContactInfo?.postalAddress?.toName
+                    facilityAddress?.toName || firstPartInfo?.facilityContactInfo?.postalAddress?.toName
                     }}
                   </div>
                   <div>
                     {{
-                      facilityAddress?.address1 || firstPartInfo?.facilityContactInfo?.postalAddress?.address1
+                    facilityAddress?.address1 || firstPartInfo?.facilityContactInfo?.postalAddress?.address1
                     }}
                   </div>
                   <div>
                     {{
-                      facilityAddress?.address2 || firstPartInfo?.facilityContactInfo?.postalAddress?.address2
+                    facilityAddress?.address2 || firstPartInfo?.facilityContactInfo?.postalAddress?.address2
                     }}
                   </div>
                   <div>
                     {{
-                      facilityAddress?.city || firstPartInfo?.facilityContactInfo?.postalAddress?.city
+                    facilityAddress?.city || firstPartInfo?.facilityContactInfo?.postalAddress?.city
                     }},
                     {{
-                      facilityAddress?.stateProvinceGeo?.geoName
-                        || firstPartInfo?.facilityContactInfo?.postalAddress?.stateProvinceGeo?.geoName
+                    facilityAddress?.stateProvinceGeo?.geoName
+                    || firstPartInfo?.facilityContactInfo?.postalAddress?.stateProvinceGeo?.geoName
                     }}
                     {{
-                      facilityAddress?.postalCode || firstPartInfo?.facilityContactInfo?.postalAddress?.postalCode
+                    facilityAddress?.postalCode || firstPartInfo?.facilityContactInfo?.postalAddress?.postalCode
                     }}
                     {{
-                      facilityAddress?.countryGeoId || firstPartInfo?.facilityContactInfo?.postalAddress?.countryGeoId
+                    facilityAddress?.countryGeoId || firstPartInfo?.facilityContactInfo?.postalAddress?.countryGeoId
                     }}
                   </div>
                 </span>
@@ -316,12 +292,8 @@
             <ul class="custom-list" *ngIf="shipToAddresses.length; else noVendorAddress">
               <li class="custom-list-item" *ngFor="let shipToAddress of shipToAddresses">
                 <strong>Address:</strong>
-                <mat-icon
-                  matListIcon
-                  class="custom-mat-icon custom-icon-align"
-                  color="primary"
-                  (click)="editShipToAddress(shipToAddress)"
-                >edit</mat-icon>
+                <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+                  (click)="editShipToAddress(shipToAddress)">edit</mat-icon>
                 <div>{{ shipToAddress?.postalAddress?.toName }}</div>
                 <div>{{ shipToAddress?.postalAddress?.address1 }}</div>
                 <div>{{ shipToAddress?.postalAddress?.address2 }}</div>
@@ -336,12 +308,8 @@
             <ng-template #noVendorAddress>
               <div class="custom-list-item">
                 <strong>Address:</strong>
-                <mat-icon
-                  matListIcon
-                  class="custom-mat-icon custom-icon-align"
-                  color="primary"
-                  (click)="editShipToAddress()"
-                >add</mat-icon>
+                <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+                  (click)="editShipToAddress()">add</mat-icon>
               </div>
             </ng-template>
           </mat-card-content>
@@ -352,15 +320,9 @@
     <mat-card-content>
       <mat-card class="mat-elevation-z10">
         <mat-card-header>
-            <mat-card-title
-            >{{ 'COMMON.ITEMS' | translate }}
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="primary"
-              (click)="addItemDialog({ orderPartSeqId: part.orderPartSeqId })"
-              >add</mat-icon
-            >
+          <mat-card-title>{{ 'COMMON.ITEMS' | translate }}
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+              (click)="addItemDialog({ orderPartSeqId: part.orderPartSeqId })">add</mat-icon>
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -393,75 +355,56 @@
               <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.TYPE' | translate }}</th>
               <td mat-cell class="text-left" *matCellDef="let item">
                 {{
-                  getOrderItemTypeDescription(
-                    item.itemType?.description ||
-                      item.orderItemTypeId ||
-                      item.itemTypeEnumId
-                  )
+                getOrderItemTypeDescription(
+                item.itemType?.description ||
+                item.orderItemTypeId ||
+                item.itemTypeEnumId
+                )
                 }}
               </td>
             </ng-container>
             <ng-container matColumnDef="requiredByDate">
-              <th mat-header-cell class="text-left" *matHeaderCellDef>
-                {{ 'SO.REQUIRED_BY_DATE' | translate }}
-              </th>
+              <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.REQUIRED_BY_DATE' | translate }}</th>
               <td mat-cell class="text-left" *matCellDef="let item">
                 {{ item.requiredByDate | date : "MMMM d, y" }}
               </td>
             </ng-container>
             <ng-container matColumnDef="unitAmount">
-              <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRICE' | translate }}</th>
+              <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.UNIT_PRICE' | translate }}</th>
               <td mat-cell class="text-right" *matCellDef="let item">
-                {{ item.unitAmount | currency : orderHeader?.currencyUomId }}
+                {{ item.unitAmount | currency : orderHeader.currencyUomId }}
               </td>
             </ng-container>
             <ng-container matColumnDef="quantity">
-              <th mat-header-cell class="text-left" *matHeaderCellDef>
-                {{ 'SO.QUANTITY' | translate }}
-              </th>
+              <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.QUANTITY' | translate }}</th>
               <td mat-cell class="text-right" *matCellDef="let item">
-                <ng-container *ngIf="canEditItems; else readonlyQty">
-                  <ng-container *ngIf="isEditingItem(item); else qtyDisplay">
-                    <mat-form-field appearance="outline" class="inline-edit-field">
-                      <input matInput type="number" [(ngModel)]="editingQuantity" />
-                    </mat-form-field>
-                    <button mat-icon-button color="primary" (click)="saveQuantity(item)" [disabled]="isSavingQuantity">
-                      <mat-icon>check</mat-icon>
-                    </button>
-                    <button mat-icon-button color="warn" (click)="cancelEditQuantity()" [disabled]="isSavingQuantity">
-                      <mat-icon>close</mat-icon>
-                    </button>
-                  </ng-container>
-                  <ng-template #qtyDisplay>
-                    {{ item.quantity }}
-                    <button mat-icon-button color="primary" (click)="startEditQuantity(item)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                  </ng-template>
-                </ng-container>
-                <ng-template #readonlyQty>{{ item.quantity }}</ng-template>
+                <span class="quantity-clickable" (click)="startEditQuantity(item)" *ngIf="!isEditingItem(item)">
+                  {{ item.quantity }}
+                </span>
+                <div *ngIf="isEditingItem(item)" class="quantity-edit-container">
+                  <input type="number" [(ngModel)]="editingQuantity" class="quantity-input"
+                    (keyup.enter)="saveQuantity(item)" (keyup.escape)="cancelEditQuantity()" autofocus />
+                  <button mat-icon-button color="primary" (click)="saveQuantity(item)">
+                    <mat-icon>check</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="cancelEditQuantity()">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
               </td>
             </ng-container>
             <ng-container matColumnDef="pickedQuantity">
-              <th mat-header-cell class="text-left" *matHeaderCellDef>
-                {{ 'COMMON.PICKED_QTY' | translate }}
-              </th>
+              <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.PICKED_QTY' | translate }}</th>
               <td mat-cell class="text-right" *matCellDef="let item">
-                {{ item.pickedQuantity || 0 }}
+                {{ item.pickedQuantity }}
               </td>
             </ng-container>
             <ng-container matColumnDef="totalAmount">
-              <th mat-header-cell class="text-left" *matHeaderCellDef>
-                {{ 'SO.TOTAL_AMOUNT' | translate }}
-              </th>
-              <td
-                mat-cell
-                class="text-right"
-                *matCellDef="let item; let i = index"
-              >
+              <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.TOTAL_AMOUNT' | translate }}</th>
+              <td mat-cell class="text-right" *matCellDef="let item">
                 {{
-                  item.quantity * item.unitAmount
-                    | currency : orderHeader?.currencyUomId
+                item.partTotal
+                | currency : orderHeader.currencyUomId
                 }}
               </td>
             </ng-container>
@@ -477,14 +420,8 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'SO.CONTENTS' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addUpdateContentDialog()"
-          >add</mat-icon
-        ></mat-card-title
-      >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addUpdateContentDialog()">add</mat-icon></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="contents">
@@ -616,20 +553,13 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            <button
-              mat-button
-              color="primary"
-              *ngIf="item.statusId !== 'PICKLIST_PICKED'"
-              (click)="markPicklistPicked(item.picklistId)"
-            >
+            <button mat-button color="primary" *ngIf="item.statusId !== 'PICKLIST_PICKED'"
+              (click)="markPicklistPicked(item.picklistId)">
               {{ 'COMMON.MARK_PICKED' | translate }}
             </button>
-            <button
-              mat-button
-              color="accent"
+            <button mat-button color="accent"
               *ngIf="item.shipmentId && getShipmentStatus(item.shipmentId) !== 'SHIPMENT_SHIPPED'"
-              (click)="shipShipment(item.shipmentId)"
-            >
+              (click)="shipShipment(item.shipmentId)">
               {{ 'COMMON.SHIP' | translate }}
             </button>
           </td>

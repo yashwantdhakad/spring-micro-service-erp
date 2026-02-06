@@ -55,9 +55,9 @@ export class PODetailComponent implements OnInit {
   noteData: any;
   orderNotes: any[] = [];
   noteColumns = [
-    { key: 'noteText', label: this.translate.instant('PO.NOTE') },
-    { key: 'noteDate', label: this.translate.instant('PO.NOTE_DATE') },
-    { key: 'userId', label: this.translate.instant('PO.CREATED_BY') },
+    { key: 'noteText', label: this.translate.instant('COMMON.NOTE') },
+    { key: 'noteDate', label: this.translate.instant('COMMON.DATE') },
+    { key: 'userId', label: this.translate.instant('COMMON.CREATED_BY') },
     { key: 'action', label: this.translate.instant('COMMON.ACTION') }
   ];
   noteColumnKeys: string[] = this.noteColumns.map(c => c.key);
@@ -65,16 +65,16 @@ export class PODetailComponent implements OnInit {
   itemData: any;
   parts: any[] = [];
   partColumns = [
-    { key: 'productId', label: this.translate.instant('PO.PRODUCT_ID') },
-    { key: 'productName', label: this.translate.instant('PO.PRODUCT_NAME') },
+    { key: 'productId', label: this.translate.instant('COMMON.PRODUCT_ID') },
+    { key: 'productName', label: this.translate.instant('COMMON.PRODUCT_NAME') },
     { key: 'itemDescription', label: this.translate.instant('PO.ITEM_DESCRIPTION') },
     { key: 'description', label: this.translate.instant('COMMON.TYPE') },
-    { key: 'requiredByDate', label: this.translate.instant('PO.REQUIRED_BY_DATE') },
+    { key: 'requiredByDate', label: this.translate.instant('COMMON.REQUIRED_BY_DATE') },
     { key: 'unitAmount', label: this.translate.instant('COMMON.PRICE') },
-    { key: 'quantity', label: this.translate.instant('PO.QUANTITY') },
+    { key: 'quantity', label: this.translate.instant('COMMON.QUANTITY') },
     { key: 'receivedQuantity', label: this.translate.instant('PO.RECEIVED_QTY') },
     { key: 'remainingQuantity', label: this.translate.instant('PO.REMAINING_QTY') },
-    { key: 'totalAmount', label: this.translate.instant('PO.TOTAL_AMOUNT') },
+    { key: 'totalAmount', label: this.translate.instant('COMMON.TOTAL_AMOUNT') },
   ];
   partColumnKeys: string[] = this.partColumns.map(c => c.key);
 
@@ -147,7 +147,12 @@ export class PODetailComponent implements OnInit {
   }
 
   getOrderById(id: string) {
-    this.isLoading = true;
+    // Use setTimeout to avoid NG0100: ExpressionChangedAfterItHasBeenCheckedError
+    // as isLoading flips from false to true synchronously when triggered by route params
+    setTimeout(() => {
+      this.isLoading = true;
+      this.cdr.markForCheck();
+    });
 
     return forkJoin({
       orderResponse: this.orderService.getOrderById(id).pipe(catchError(() => of(null))),
@@ -478,7 +483,7 @@ export class PODetailComponent implements OnInit {
     }
     this.dialog.open(ShippingInstructionDialogComponent, {
       data: {
-        titleKey: 'PO.SHIPPING_INST',
+        titleKey: 'COMMON.SHIPPING_INSTRUCTIONS',
         shippingInstructions: part?.shippingInstructions || '',
       },
     }).afterClosed().subscribe((value) => {

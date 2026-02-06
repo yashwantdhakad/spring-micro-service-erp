@@ -4,17 +4,17 @@
 <ng-template #content>
   <mat-list>
     <mat-list-item>
-      <a [routerLink]="['/facilities']">{{ 'FACILITY.TITLE' | translate }}</a> / {{ facilityDetail?.facilityId }}
+      <a [routerLink]="['/facilities']">{{ 'COMMON.FACILITY' | translate }}</a> / {{ facilityDetail?.facilityId }}
     </mat-list-item>
   </mat-list>
   <mat-card class="mat-card mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>{{ 'FACILITY.OVERVIEW' | translate }}</mat-card-title>
+      <mat-card-title>{{ 'COMMON.OVERVIEW' | translate }}</mat-card-title>
     </mat-card-header>
     <div fxLayout="row wrap" fxLayout.xs="column">
       <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
         <mat-card-header>
-          <mat-card-title>{{ 'FACILITY.DETAILS' | translate }}</mat-card-title>
+          <mat-card-title>{{ 'COMMON.DETAILS' | translate }}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <ul class="custom-list">
@@ -22,14 +22,15 @@
               <strong>{{ 'COMMON.NAME' | translate }}:</strong> {{ facilityDetail?.facilityName }}
             </li>
             <li class="custom-list-item">
-              <strong>{{ 'COMMON.TYPE' | translate }}:</strong> {{ facilityTypeLabel || facilityDetail?.facilityTypeId }}
+              <strong>{{ 'COMMON.TYPE' | translate }}:</strong> {{ facilityTypeLabel || facilityDetail?.facilityTypeId
+              }}
             </li>
           </ul>
         </mat-card-content>
       </mat-card>
       <mat-card fxFlex.gt-xs="32%" class="card-margin mat-elevation-z10">
         <mat-card-header>
-          <mat-card-title>{{ 'FACILITY.ADDRESS' | translate }}</mat-card-title>
+          <mat-card-title>{{ 'COMMON.ADDRESS' | translate }}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <ul class="custom-list" *ngIf="facilityAddress; else noFacilityAddress">
@@ -52,7 +53,7 @@
       </mat-card>
     </div>
   </mat-card>
-  <br/>
+  <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
       <mat-card-title>{{ 'FACILITY.LOCATIONS' | translate }}</mat-card-title>
@@ -108,13 +109,8 @@
           <tr mat-row *matRowDef="let row; columns: locationColumns"></tr>
         </table>
       </div>
-      <mat-paginator
-        [length]="locationTotal"
-        [pageSize]="locationPageSize"
-        [pageIndex]="locationPageIndex"
-        [pageSizeOptions]="[5, 10, 25, 50]"
-        (page)="onLocationPage($event)"
-      ></mat-paginator>
+      <mat-paginator [length]="locationTotal" [pageSize]="locationPageSize" [pageIndex]="locationPageIndex"
+        [pageSizeOptions]="[5, 10, 25, 50]" (page)="onLocationPage($event)"></mat-paginator>
     </mat-card-content>
   </mat-card>
 </ng-template>

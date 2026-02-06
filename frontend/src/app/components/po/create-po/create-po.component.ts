@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -51,7 +51,8 @@ export class CreatePOComponent implements OnInit {
     private partyService: PartyService,
     private snackbarService: SnackbarService,
     private productService: ProductService,
-    private supplierProductService: SupplierProductService
+    private supplierProductService: SupplierProductService,
+    private cdr: ChangeDetectorRef
   ) {
     const validators = Validators.required;
 
@@ -64,7 +65,7 @@ export class CreatePOComponent implements OnInit {
       shippingInstructions: [''],
       shippingAmount: [0],
       discountAmount: [0],
-      vendorPartyId: ['', validators], // This is the control we’ll use for autocomplete!
+      vendorPartyId: ['', validators],
       items: this.formBuilder.array([this.buildItemGroup()]),
     });
   }
@@ -82,9 +83,9 @@ export class CreatePOComponent implements OnInit {
       switchMap((value) =>
         typeof value === 'string'
           ? this.partyService.getSuppliers(0, value).pipe(
-              map((response: any) => response.resultList || []),
-              catchError(() => of([]))
-            )
+            map((response: any) => response.resultList || []),
+            catchError(() => of([]))
+          )
           : of([])
       )
     );
@@ -159,7 +160,12 @@ export class CreatePOComponent implements OnInit {
   getFacilities(): void {
     this.orderService.getFacilities().subscribe({
       next: (data) => {
-        this.facilities = Array.isArray(data) ? data : [data];
+        // Use setTimeout to avoid NG0100: ExpressionChangedAfterItHasBeenCheckedError
+        // as this updates the facilities binding during view generation
+        setTimeout(() => {
+          this.facilities = Array.isArray(data) ? data : [data];
+          this.cdr.detectChanges();
+        });
       },
       error: (error) => {
       },
@@ -169,11 +175,14 @@ export class CreatePOComponent implements OnInit {
   getCustomerParties(): void {
     this.orderService.getCustomerParties().subscribe({
       next: (data) => {
-        this.customerParties = Array.isArray(data) ? data : [data];
-        if (this.customerParties.length && !this.poForm.get('customerPartyId')?.value) {
-          const first = this.customerParties[0];
-          this.poForm.get('customerPartyId')?.setValue(first.value ?? first.partyId ?? first);
-        }
+        setTimeout(() => {
+          this.customerParties = Array.isArray(data) ? data : [data];
+          if (this.customerParties.length && !this.poForm.get('customerPartyId')?.value) {
+            const first = this.customerParties[0];
+            this.poForm.get('customerPartyId')?.setValue(first.value ?? first.partyId ?? first);
+          }
+          this.cdr.detectChanges();
+        });
       },
       error: (error) => {
       },
@@ -199,7 +208,7 @@ export class CreatePOComponent implements OnInit {
       debounceTime(300),
       distinctUntilChanged(),
       switchMap((value) =>
-        this.productService.getProducts(0, typeof value === 'string' ? value : value?.productId ?? '').pipe(
+        this.productService.getProducts(0, typeof value === 'string' ? value : (value as any)?.productId ?? '').pipe(
           map((response: any) => response?.documentList || []),
           catchError(() => of([]))
         )
@@ -230,37 +239,37 @@ export class CreatePOComponent implements OnInit {
   private addOrderItems(orderId: string, orderPrimaryId: number): void {
     this.items.length
       ? from(this.items.controls)
-          .pipe(
-            concatMap((control) => {
-              const value = control.value;
-              const productId = value?.productId?.productId ?? value.productId;
-              return this.orderService.addItem({
-                orderId,
-                orderPartSeqId: '00001',
-                productId,
-                quantity: value.quantity,
-                unitAmount: value.unitAmount,
-                itemTypeEnumId: value.itemTypeEnumId,
-              });
-            }),
-            toArray(),
-            finalize(() => (this.isLoading = false))
-          )
-          .subscribe({
-            next: () => {
-              this.poForm.reset();
-              this.items.clear();
-              this.items.push(this.buildItemGroup());
-              this.filteredProducts = [];
-              this.initProductAutocomplete(0);
-              this.router.navigate([`/pos/${orderPrimaryId}`]);
-              this.snackbarService.showSuccess('Purchase order created successfully.');
-            },
-            error: () => {
-              this.snackbarService.showError('Purchase order created, but items failed.');
-              this.router.navigate([`/pos/${orderPrimaryId}`]);
-            },
-          })
+        .pipe(
+          concatMap((control) => {
+            const value = control.value;
+            const productId = value?.productId?.productId ?? value.productId;
+            return this.orderService.addItem({
+              orderId,
+              orderPartSeqId: '00001',
+              productId,
+              quantity: value.quantity,
+              unitAmount: value.unitAmount,
+              itemTypeEnumId: value.itemTypeEnumId,
+            });
+          }),
+          toArray(),
+          finalize(() => (this.isLoading = false))
+        )
+        .subscribe({
+          next: () => {
+            this.poForm.reset();
+            this.items.clear();
+            this.items.push(this.buildItemGroup());
+            this.filteredProducts = [];
+            this.initProductAutocomplete(0);
+            this.router.navigate([`/pos/${orderPrimaryId}`]);
+            this.snackbarService.showSuccess('Purchase order created successfully.');
+          },
+          error: () => {
+            this.snackbarService.showError('Purchase order created, but items failed.');
+            this.router.navigate([`/pos/${orderPrimaryId}`]);
+          },
+        })
       : this.router.navigate([`/pos/${orderPrimaryId}`]);
   }
 }

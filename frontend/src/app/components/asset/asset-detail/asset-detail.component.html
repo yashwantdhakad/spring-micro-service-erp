@@ -1,9 +1,5 @@
 <ng-container *ngIf="isLoading; else content">
-  <mat-progress-spinner
-    [diameter]="100"
-    mode="indeterminate"
-    color="primary"
-  ></mat-progress-spinner>
+  <mat-progress-spinner [diameter]="100" mode="indeterminate" color="primary"></mat-progress-spinner>
 </ng-container>
 <ng-template #content>
   <mat-list>
@@ -14,7 +10,7 @@
   </mat-list>
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>{{ 'ASSET.OVERVIEW' | translate }}</mat-card-title>
+      <mat-card-title>{{ 'COMMON.OVERVIEW' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row wrap" fxLayout.xs="column">
@@ -43,7 +39,8 @@
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'COMMON.TYPE' | translate }}</strong>
-                {{ getInventoryItemTypeLabel(assetDetail?.inventoryItemTypeId || assetDetail?.inventoryItemTypeEnumId) }}
+                {{ getInventoryItemTypeLabel(assetDetail?.inventoryItemTypeId || assetDetail?.inventoryItemTypeEnumId)
+                }}
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'COMMON.STATUS' | translate }}</strong>
@@ -76,7 +73,7 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>{{ 'ASSET.DETAILS' | translate }}</mat-card-title>
+      <mat-card-title>{{ 'COMMON.DETAILS' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="details">
@@ -315,6 +312,43 @@
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="receiptColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: receiptColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
+        <div class="card-title-row">
+          <span>{{ 'ASSET.VARIANCE.TITLE' | translate }}</span>
+          <span class="spacer"></span>
+          <button mat-button color="primary" (click)="openVarianceDialog()">
+            <mat-icon>add</mat-icon>
+            {{ 'ASSET.VARIANCE.ADD_VARIANCE' | translate }}
+          </button>
+        </div>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="variances">
+        <ng-container matColumnDef="varianceReasonId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.REASON' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.varianceReasonId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantityOnHandVar">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'ASSET.VARIANCE.QOH_VAR' | translate }}</th>
+          <td mat-cell class="text-right" *matCellDef="let item">{{ item.quantityOnHandVar }}</td>
+        </ng-container>
+        <ng-container matColumnDef="availableToPromiseVar">
+          <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'ASSET.VARIANCE.ATP_VAR' | translate }}</th>
+          <td mat-cell class="text-right" *matCellDef="let item">{{ item.availableToPromiseVar }}</td>
+        </ng-container>
+        <ng-container matColumnDef="comments">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.COMMENTS' | translate }}</th>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ item.comments }}</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="varianceColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: varianceColumns"></tr>
       </table>
     </mat-card-content>
   </mat-card>

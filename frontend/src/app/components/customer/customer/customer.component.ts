@@ -30,15 +30,15 @@ export class CustomerComponent implements OnInit, OnDestroy {
     { key: 'partyId', header: 'COMMON.ID' },
     { key: 'firstName', header: 'CUSTOMER.FIRST_NAME' },
     { key: 'lastName', header: 'CUSTOMER.LAST_NAME' },
-    { key: 'contactNumber', header: 'CUSTOMER.PHONE' },
-    { key: 'emailAddress', header: 'CUSTOMER.EMAIL' },
+    { key: 'contactNumber', header: 'COMMON.PHONE' },
+    { key: 'emailAddress', header: 'COMMON.EMAIL' },
   ];
 
   constructor(
     private partyService: PartyService,
     private snackbarService: SnackbarService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   private destroy$ = new Subject<void>();
 

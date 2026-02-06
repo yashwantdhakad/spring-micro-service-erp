@@ -5,6 +5,8 @@ import { AssetService } from 'src/app/services/asset/asset.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { FacilityService } from 'src/app/services/facility/facility.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
+import { MatDialog } from '@angular/material/dialog';
+import { VarianceDialogComponent } from '../variance-dialog/variance-dialog.component';
 
 @Component({
   standalone: false,
@@ -60,6 +62,16 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
     'datetimeReceived',
   ];
 
+  variances: any[] = [];
+  varianceColumns: string[] = [
+    'varianceReasonId',
+    'quantityOnHandVar',
+    'availableToPromiseVar',
+    'comments'
+  ];
+
+  isAddingVariance: boolean = false;
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -68,8 +80,9 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
     private facilityService: FacilityService,
     private route: ActivatedRoute,
     private snackbarService: SnackbarService,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
+  ) { }
 
   ngOnInit(): void {
     this.loadLookups();
@@ -108,7 +121,10 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
           setTimeout(() => {
             this.assetDetail = asset;
             this.details = details;
+            this.assetDetail = asset;
+            this.details = details;
             this.receipts = receipts;
+            this.variances = response?.variances || [];
             this.orderReservations = [];
             this.workEffortReservations = [];
             this.facilityName = null;
@@ -241,6 +257,26 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
             this.cdr.markForCheck();
           }, 0);
         },
+      });
+  }
+
+  toggleVarianceForm() {
+    this.openVarianceDialog();
+  }
+
+  openVarianceDialog() {
+    if (!this.assetId) return;
+    const dialogRef = this.dialog.open(VarianceDialogComponent, {
+      width: '600px',
+      data: { assetId: this.assetId }
+    });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(result => {
+        if (result) {
+          this.getAsset(this.assetId!);
+        }
       });
   }
 

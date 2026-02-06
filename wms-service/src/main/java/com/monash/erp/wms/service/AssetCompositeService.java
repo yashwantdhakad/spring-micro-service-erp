@@ -11,8 +11,11 @@ import com.monash.erp.wms.entity.ItemIssuance;
 import com.monash.erp.wms.entity.ShipmentReceipt;
 import com.monash.erp.wms.repository.InventoryItemDetailRepository;
 import com.monash.erp.wms.repository.InventoryItemRepository;
+import com.monash.erp.wms.repository.InventoryItemVarianceRepository;
+import com.monash.erp.wms.entity.InventoryItemVariance;
 import com.monash.erp.wms.repository.ItemIssuanceRepository;
 import com.monash.erp.wms.repository.ShipmentReceiptRepository;
+import com.monash.erp.wms.dto.PhysicalInventoryVarianceRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -34,17 +37,22 @@ public class AssetCompositeService {
     private final InventoryItemDetailRepository inventoryItemDetailRepository;
     private final ShipmentReceiptRepository shipmentReceiptRepository;
     private final ItemIssuanceRepository itemIssuanceRepository;
+    private final InventoryItemVarianceRepository inventoryItemVarianceRepository;
+    private final InventoryItemService inventoryItemService;
 
     public AssetCompositeService(
             InventoryItemRepository inventoryItemRepository,
             InventoryItemDetailRepository inventoryItemDetailRepository,
             ShipmentReceiptRepository shipmentReceiptRepository,
-            ItemIssuanceRepository itemIssuanceRepository
-    ) {
+            ItemIssuanceRepository itemIssuanceRepository,
+            InventoryItemVarianceRepository inventoryItemVarianceRepository,
+            InventoryItemService inventoryItemService) {
         this.inventoryItemRepository = inventoryItemRepository;
         this.inventoryItemDetailRepository = inventoryItemDetailRepository;
         this.shipmentReceiptRepository = shipmentReceiptRepository;
         this.itemIssuanceRepository = itemIssuanceRepository;
+        this.inventoryItemVarianceRepository = inventoryItemVarianceRepository;
+        this.inventoryItemService = inventoryItemService;
     }
 
     public AssetListResponse listAssets(int page, int size, String queryString) {
@@ -54,7 +62,8 @@ public class AssetCompositeService {
             items = inventoryItemRepository.findAll(pageable);
         } else {
             items = inventoryItemRepository
-                    .findByInventoryItemIdContainingIgnoreCaseOrProductIdContainingIgnoreCase(queryString, queryString, pageable);
+                    .findByInventoryItemIdContainingIgnoreCaseOrProductIdContainingIgnoreCase(queryString, queryString,
+                            pageable);
         }
 
         AssetListResponseMap responseMap = new AssetListResponseMap(items.getContent(), items.getTotalElements());
@@ -68,8 +77,9 @@ public class AssetCompositeService {
         List<InventoryItemDetail> details = inventoryItemDetailRepository.findByInventoryItemId(inventoryItemId);
         List<ShipmentReceipt> receipts = shipmentReceiptRepository.findByInventoryItemId(inventoryItemId);
         List<ItemIssuance> issuances = itemIssuanceRepository.findByInventoryItemId(inventoryItemId);
+        List<InventoryItemVariance> variances = inventoryItemVarianceRepository.findByInventoryItemId(inventoryItemId);
 
-        return new AssetDetailResponse(asset, details, receipts, issuances);
+        return new AssetDetailResponse(asset, details, receipts, issuances, variances);
     }
 
     public AssetReceiveResponse receiveAsset(AssetReceiveRequest request) {
@@ -180,6 +190,13 @@ public class AssetCompositeService {
         return new AssetReceiveResponse(savedItem.getInventoryItemId());
     }
 
+    public AssetDetailResponse createPhysicalInventoryVariance(String assetId,
+            PhysicalInventoryVarianceRequest request) {
+        InventoryItem asset = findInventoryItem(assetId);
+        inventoryItemService.createPhysicalInventoryVariance(asset.getId(), request);
+        return getAsset(assetId);
+    }
+
     private InventoryItem findInventoryItem(String assetId) {
         Optional<InventoryItem> byInventoryItemId = inventoryItemRepository.findByInventoryItemId(assetId);
         if (byInventoryItemId.isPresent()) {
@@ -189,7 +206,8 @@ public class AssetCompositeService {
         if (isNumeric(assetId)) {
             long id = Long.parseLong(assetId);
             return inventoryItemRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Asset %s not found".formatted(assetId)));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Asset %s not found".formatted(assetId)));
         }
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Asset %s not found".formatted(assetId));

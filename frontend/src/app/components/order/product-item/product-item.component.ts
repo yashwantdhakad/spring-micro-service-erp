@@ -102,7 +102,10 @@ export class ProductItemComponent implements OnInit {
   private loadEnumTypes(): void {
     this.commonService.getParentEnumTypes('AsClsInventory').subscribe({
       next: (data) => {
-        this.enumTypes = Array.isArray(data) ? data : [data];
+        // Use setTimeout to avoid NG0100: ExpressionChangedAfterItHasBeenCheckedError
+        setTimeout(() => {
+          this.enumTypes = Array.isArray(data) ? data : [data];
+        });
       },
       error: (err) => {
       },

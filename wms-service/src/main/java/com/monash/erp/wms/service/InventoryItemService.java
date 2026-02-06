@@ -7,6 +7,12 @@ import com.monash.erp.wms.entity.InventoryItemDetail;
 import com.monash.erp.wms.repository.FacilityRepository;
 import com.monash.erp.wms.repository.InventoryItemDetailRepository;
 import com.monash.erp.wms.repository.InventoryItemRepository;
+import com.monash.erp.wms.repository.PhysicalInventoryRepository;
+import com.monash.erp.wms.repository.InventoryItemVarianceRepository;
+import com.monash.erp.wms.entity.PhysicalInventory;
+import com.monash.erp.wms.entity.InventoryItemVariance;
+import com.monash.erp.wms.dto.PhysicalInventoryVarianceRequest;
+import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,15 +29,20 @@ public class InventoryItemService {
     private final InventoryItemRepository repository;
     private final FacilityRepository facilityRepository;
     private final InventoryItemDetailRepository inventoryItemDetailRepository;
+    private final PhysicalInventoryRepository physicalInventoryRepository;
+    private final InventoryItemVarianceRepository inventoryItemVarianceRepository;
 
     public InventoryItemService(
             InventoryItemRepository repository,
             FacilityRepository facilityRepository,
-            InventoryItemDetailRepository inventoryItemDetailRepository
-    ) {
+            InventoryItemDetailRepository inventoryItemDetailRepository,
+            PhysicalInventoryRepository physicalInventoryRepository,
+            InventoryItemVarianceRepository inventoryItemVarianceRepository) {
         this.repository = repository;
         this.facilityRepository = facilityRepository;
         this.inventoryItemDetailRepository = inventoryItemDetailRepository;
+        this.physicalInventoryRepository = physicalInventoryRepository;
+        this.inventoryItemVarianceRepository = inventoryItemVarianceRepository;
     }
 
     public List<InventoryItem> list() {
@@ -62,12 +73,14 @@ public class InventoryItemService {
 
     public InventoryItem get(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "InventoryItem %d not found".formatted(id)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "InventoryItem %d not found".formatted(id)));
     }
 
     public InventoryItem getByInventoryItemId(String inventoryItemId) {
         return repository.findByInventoryItemId(inventoryItemId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "InventoryItem %s not found".formatted(inventoryItemId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "InventoryItem %s not found".formatted(inventoryItemId)));
     }
 
     public InventoryItem create(InventoryItem entity) {
@@ -114,7 +127,8 @@ public class InventoryItemService {
         repository.deleteById(id);
     }
 
-    private BigDecimal sumDetails(List<InventoryItemDetail> details, java.util.function.Function<InventoryItemDetail, String> mapper) {
+    private BigDecimal sumDetails(List<InventoryItemDetail> details,
+            java.util.function.Function<InventoryItemDetail, String> mapper) {
         return details.stream()
                 .map(mapper)
                 .map(value -> {
@@ -127,11 +141,57 @@ public class InventoryItemService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    @org.springframework.transaction.annotation.Transactional
+    public InventoryItemVariance createPhysicalInventoryVariance(Long inventoryItemId,
+            PhysicalInventoryVarianceRequest request) {
+        InventoryItem item = get(inventoryItemId);
+
+        // 1. Create PhysicalInventory
+        PhysicalInventory pi = new PhysicalInventory();
+        pi.setPhysicalInventoryDate(LocalDateTime.now());
+        pi.setGeneralComments(request.getComments());
+        // Temporarily save to get ID if needed, or if ID is auto-generated
+        PhysicalInventory savedPi = physicalInventoryRepository.save(pi);
+        if (isBlank(savedPi.getPhysicalInventoryId())) {
+            savedPi.setPhysicalInventoryId(String.valueOf(savedPi.getId()));
+            savedPi = physicalInventoryRepository.save(savedPi);
+        }
+
+        // 2. Create InventoryItemVariance
+        InventoryItemVariance iiv = new InventoryItemVariance();
+        iiv.setInventoryItemId(item.getInventoryItemId());
+        iiv.setPhysicalInventoryId(savedPi.getPhysicalInventoryId());
+        iiv.setVarianceReasonId(request.getVarianceReasonId());
+        iiv.setAvailableToPromiseVar(request.getAvailableToPromiseVar());
+        iiv.setQuantityOnHandVar(request.getQuantityOnHandVar());
+        iiv.setComments(request.getComments());
+        InventoryItemVariance savedIiv = inventoryItemVarianceRepository.save(iiv);
+
+        // 3. Create InventoryItemDetail
+        InventoryItemDetail iid = new InventoryItemDetail();
+        iid.setInventoryItemId(item.getInventoryItemId());
+        iid.setPhysicalInventoryId(savedPi.getPhysicalInventoryId());
+        iid.setEffectiveDate(LocalDateTime.now());
+        iid.setQuantityOnHandDiff(request.getQuantityOnHandVar());
+        iid.setAvailableToPromiseDiff(request.getAvailableToPromiseVar());
+        iid.setReasonEnumId(request.getVarianceReasonId());
+        iid.setDescription(request.getComments());
+        // Note: You might want to set other fields like unitCost if available, or
+        // accountingQuantityDiff
+        inventoryItemDetailRepository.save(iid);
+
+        // 4. Update Inventory Item Totals
+        recalculateTotals(item.getInventoryItemId());
+
+        return savedIiv;
+    }
+
     private boolean isBlank(String value) {
         return value == null || value.isBlank();
     }
 
-    private BigDecimal sumDecimal(List<InventoryItem> items, java.util.function.Function<InventoryItem, String> mapper) {
+    private BigDecimal sumDecimal(List<InventoryItem> items,
+            java.util.function.Function<InventoryItem, String> mapper) {
         return items.stream()
                 .map(mapper)
                 .map(value -> {

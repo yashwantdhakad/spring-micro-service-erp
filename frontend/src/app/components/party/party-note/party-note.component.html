@@ -1,36 +1,18 @@
 <mat-card class="mat-elevation-z10">
   <mat-card-title mat-dialog-title>
-    {{ 'PARTY.NOTE_TITLE' | translate }}
+    {{ 'COMMON.NOTE' | translate }}
   </mat-card-title>
   <mat-card-content mat-dialog-content>
-    <form
-      (ngSubmit)="addUpdateNote()"
-      [formGroup]="addUpdateNoteForm"
-      fxLayout="row wrap"
-      fxLayoutAlign="start"
-    >
+    <form (ngSubmit)="addUpdateNote()" [formGroup]="addUpdateNoteForm" fxLayout="row wrap" fxLayoutAlign="start">
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'PARTY.NOTE' | translate }}</mat-label>
-        <textarea
-          matInput
-          [placeholder]="'PARTY.NOTE' | translate"
-          cols="5"
-          formControlName="noteText"
-        ></textarea>
-        <mat-error
-          *ngIf="addUpdateNoteForm.get('noteText')?.hasError('required')"
-          >{{ 'PARTY.NOTE_REQUIRED' | translate }}</mat-error
-        >
+        <mat-label>{{ 'COMMON.NOTE' | translate }}</mat-label>
+        <textarea matInput [placeholder]="'COMMON.NOTE' | translate" cols="5" formControlName="noteText"></textarea>
+        <mat-error *ngIf="addUpdateNoteForm.get('noteText')?.hasError('required')">{{ 'PARTY.NOTE_REQUIRED' | translate
+          }}</mat-error>
       </mat-form-field>
 
       <div fxFlex="100%" fxLayoutAlign="start">
-        <button
-          mat-raised-button
-          type="submit"
-          color="primary"
-          class="me-4"
-          [disabled]="isLoading"
-        >
+        <button mat-raised-button type="submit" color="primary" class="me-4" [disabled]="isLoading">
           <span *ngIf="!isLoading">{{ 'COMMON.SAVE' | translate }}</span>
           <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
         </button>

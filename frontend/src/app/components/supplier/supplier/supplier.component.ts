@@ -28,15 +28,15 @@ export class SupplierComponent implements OnInit, OnDestroy {
   supplierColumns = [
     { key: 'partyId', header: 'COMMON.ID' },
     { key: 'groupName', header: 'COMMON.NAME' },
-    { key: 'contactNumber', header: 'SUPPLIER.PHONE' },
-    { key: 'emailAddress', header: 'SUPPLIER.EMAIL' },
+    { key: 'contactNumber', header: 'COMMON.PHONE' },
+    { key: 'emailAddress', header: 'COMMON.EMAIL' },
   ];
 
   constructor(
     private partyService: PartyService,
     private snackbarService: SnackbarService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   private destroy$ = new Subject<void>();
 

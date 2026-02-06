@@ -3,36 +3,20 @@
     {{ 'PARTY.ADD_EMAIL_TITLE' | translate }}
   </mat-card-title>
   <mat-card-content mat-dialog-content>
-    <form
-      (ngSubmit)="addEditEmail()"
-      [formGroup]="addEditEmailForm"
-      fxLayout="row wrap"
-      fxLayoutAlign="start"
-    >
+    <form (ngSubmit)="addEditEmail()" [formGroup]="addEditEmailForm" fxLayout="row wrap" fxLayoutAlign="start">
       <mat-form-field appearance="outline" fxFlex="100%">
-        <mat-label>{{ 'PARTY.EMAIL' | translate }}</mat-label>
-        <input matInput [placeholder]="'PARTY.EMAIL' | translate" formControlName="emailAddress" />
-        <mat-error
-          *ngIf="addEditEmailForm.get('emailAddress')?.hasError('required')"
-          >{{ 'PARTY.EMAIL_REQUIRED' | translate }}</mat-error
-        >
-        <mat-error
-          *ngIf="
+        <mat-label>{{ 'COMMON.EMAIL' | translate }}</mat-label>
+        <input matInput [placeholder]="'COMMON.EMAIL' | translate" formControlName="emailAddress" />
+        <mat-error *ngIf="addEditEmailForm.get('emailAddress')?.hasError('required')">{{ 'PARTY.EMAIL_REQUIRED' |
+          translate }}</mat-error>
+        <mat-error *ngIf="
             addEditEmailForm.get('emailAddress')?.hasError('email') &&
             addEditEmailForm.get('emailAddress')?.touched
-          "
-          >{{ 'PARTY.EMAIL_INVALID' | translate }}</mat-error
-        >
+          ">{{ 'PARTY.EMAIL_INVALID' | translate }}</mat-error>
       </mat-form-field>
 
       <div fxFlex="100%" fxLayoutAlign="start">
-        <button
-          mat-raised-button
-          type="submit"
-          color="primary"
-          class="me-4"
-          [disabled]="isLoading"
-        >
+        <button mat-raised-button type="submit" color="primary" class="me-4" [disabled]="isLoading">
           <span *ngIf="!isLoading">{{ 'COMMON.SAVE' | translate }}</span>
           <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
         </button>

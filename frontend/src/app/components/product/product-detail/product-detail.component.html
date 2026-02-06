@@ -1,21 +1,17 @@
 <ng-container *ngIf="isLoading; else content">
-  <mat-progress-spinner
-    [diameter]="100"
-    mode="indeterminate"
-    color="primary"
-  ></mat-progress-spinner>
+  <mat-progress-spinner [diameter]="100" mode="indeterminate" color="primary"></mat-progress-spinner>
 </ng-container>
 <ng-template #content>
   <mat-list>
     <mat-list-item>
-      <a [routerLink]="['/products']">{{ 'PRODUCT.TITLE' | translate }}</a>
+      <a [routerLink]="['/products']">{{ 'COMMON.PRODUCTS_TITLE' | translate }}</a>
       / {{ productDetail?.productId }}
     </mat-list-item>
   </mat-list>
   <div fxLayout="row wrap" fxLayout.xs="column">
     <mat-card fxFlex.gt-xs="50%" class="card-margin mat-elevation-z10">
       <mat-card-header>
-        <mat-card-title> {{ 'PRODUCT.OVERVIEW_TITLE' | translate }} </mat-card-title>
+        <mat-card-title> {{ 'COMMON.OVERVIEW' | translate }} </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <ul class="custom-list">
@@ -26,13 +22,8 @@
           <li class="custom-list-item">
             <strong>{{ 'COMMON.NAME' | translate }}:</strong>
             {{ productDetail?.productName }}
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="primary"
-              (click)="editProductDialog()"
-              >edit</mat-icon
-            >
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+              (click)="editProductDialog()">edit</mat-icon>
           </li>
           <li class="custom-list-item">
             <strong>{{ 'PRODUCT.INTERNAL_NAME' | translate }}:</strong>
@@ -58,43 +49,30 @@
         <ul class="custom-list">
           <li class="custom-list-item config-row">
             <strong>{{ 'PRODUCT.CONFIG_TAXABLE' | translate }}:</strong>
-            <mat-checkbox
-              [checked]="isFlagEnabled(productDetail?.taxable)"
-              (change)="updateConfiguration('taxable', $event.checked)"
-              [disabled]="isConfigSaving"
-            ></mat-checkbox>
+            <mat-checkbox [checked]="isFlagEnabled(productDetail?.taxable)"
+              (change)="updateConfiguration('taxable', $event.checked)" [disabled]="isConfigSaving"></mat-checkbox>
           </li>
           <li class="custom-list-item config-row">
             <strong>{{ 'PRODUCT.CONFIG_RETURNABLE' | translate }}:</strong>
-            <mat-checkbox
-              [checked]="isFlagEnabled(productDetail?.returnable)"
-              (change)="updateConfiguration('returnable', $event.checked)"
-              [disabled]="isConfigSaving"
-            ></mat-checkbox>
+            <mat-checkbox [checked]="isFlagEnabled(productDetail?.returnable)"
+              (change)="updateConfiguration('returnable', $event.checked)" [disabled]="isConfigSaving"></mat-checkbox>
           </li>
           <li class="custom-list-item config-row">
             <strong>{{ 'PRODUCT.CONFIG_APPLY_PROMOTIONS' | translate }}:</strong>
-            <mat-checkbox
-              [checked]="isFlagEnabled(productDetail?.includeInPromotions)"
+            <mat-checkbox [checked]="isFlagEnabled(productDetail?.includeInPromotions)"
               (change)="updateConfiguration('includeInPromotions', $event.checked)"
-              [disabled]="isConfigSaving"
-            ></mat-checkbox>
+              [disabled]="isConfigSaving"></mat-checkbox>
           </li>
           <li class="custom-list-item config-row">
             <strong>{{ 'PRODUCT.CONFIG_SERIALIZED' | translate }}:</strong>
-            <mat-checkbox
-              [checked]="isFlagEnabled(productDetail?.serialized)"
-              (change)="updateConfiguration('serialized', $event.checked)"
-              [disabled]="isConfigSaving"
-            ></mat-checkbox>
+            <mat-checkbox [checked]="isFlagEnabled(productDetail?.serialized)"
+              (change)="updateConfiguration('serialized', $event.checked)" [disabled]="isConfigSaving"></mat-checkbox>
           </li>
           <li class="custom-list-item config-row">
             <strong>{{ 'PRODUCT.CONFIG_REQUIRE_INSPECTION' | translate }}:</strong>
-            <mat-checkbox
-              [checked]="isFlagEnabled(productDetail?.requireInspection)"
+            <mat-checkbox [checked]="isFlagEnabled(productDetail?.requireInspection)"
               (change)="updateConfiguration('requireInspection', $event.checked)"
-              [disabled]="isConfigSaving"
-            ></mat-checkbox>
+              [disabled]="isConfigSaving"></mat-checkbox>
           </li>
         </ul>
       </mat-card-content>
@@ -135,13 +113,8 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'PRODUCT.FEATURES_TITLE' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addProductFeatureDialog({ isNew: true })"
-          >add</mat-icon
-        >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addProductFeatureDialog({ isNew: true })">add</mat-icon>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -180,13 +153,8 @@
           <ng-container matColumnDef="action">
             <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
             <td mat-cell class="text-left" *matCellDef="let item">
-              <mat-icon
-                matListIcon
-                class="custom-mat-icon custom-icon-align"
-                color="primary"
-                (click)="addProductFeatureDialog(item)"
-                >edit</mat-icon
-              >
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+                (click)="addProductFeatureDialog(item)">edit</mat-icon>
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="productFeatureColumns"></tr>
@@ -200,13 +168,8 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'SUPPLIER.SUPPLIER_PRODUCTS' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addSupplierProductDialog()"
-          >add</mat-icon
-        >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addSupplierProductDialog()">add</mat-icon>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -218,7 +181,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="supplierProductName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.SUPPLIER_PRODUCT_NAME' | translate }}</th>
+          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'SUPPLIER.SUPPLIER_PRODUCT_NAME' | translate }}
+          </th>
           <td mat-cell class="text-left" *matCellDef="let item">
             {{ item.supplierProductName }}
           </td>
@@ -232,13 +196,8 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="warn"
-              (click)="deleteSupplierProduct(item)"
-              >delete</mat-icon
-            >
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn"
+              (click)="deleteSupplierProduct(item)">delete</mat-icon>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="supplierProductColumns"></tr>
@@ -251,67 +210,51 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'COMMON.PRICE_TITLE' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addUpdateProductPriceDialog()"
-          >add</mat-icon
-        >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addUpdateProductPriceDialog()">add</mat-icon>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="table-scroll">
         <table mat-table [dataSource]="prices">
-        <ng-container matColumnDef="typeDescription">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'COMMON.PRICE_TYPE' | translate }}
-          </th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ getPriceTypeDescription(item?.productPriceTypeId) }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'COMMON.PRICE_PURPOSE' | translate }}
-          </th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ getPricePurposeDescription(item?.productPricePurposeId) }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="price">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRICE' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.price }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="action">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="primary"
-              (click)="addUpdateProductPriceDialog(item)"
-              >edit</mat-icon
-            >
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="warn"
-              (click)="
+          <ng-container matColumnDef="typeDescription">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>
+              {{ 'COMMON.PRICE_TYPE' | translate }}
+            </th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ getPriceTypeDescription(item?.productPriceTypeId) }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>
+              {{ 'COMMON.PRICE_PURPOSE' | translate }}
+            </th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ getPricePurposeDescription(item?.productPricePurposeId) }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="price">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRICE' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.price }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+                (click)="addUpdateProductPriceDialog(item)">edit</mat-icon>
+              <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn" (click)="
                 deleteProductPriceDialog({
                   productId: productId,
                   productPriceId: item.productPriceId
                 })
-              "
-              >delete</mat-icon
-            >
-          </td>
-        </ng-container>
+              ">delete</mat-icon>
+            </td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         </table>
       </div>
     </mat-card-content>
@@ -321,42 +264,37 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'PRODUCT.CATEGORY_TITLE' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addProductCategoryDialog()"
-          >add</mat-icon
-        >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addProductCategoryDialog()">add</mat-icon>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="table-scroll">
         <table mat-table [dataSource]="categories">
-        <ng-container matColumnDef="categoryName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'CATEGORY.NAME' | translate }}
-          </th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item?.categoryName }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="productCategoryTypeId">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'CATEGORY.TYPE' | translate }}
-          </th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ getCategoryTypeDescription(item?.productCategoryTypeId) }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="fromDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'CATEGORY.FROM_DATE' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.fromDate | date : "MMMM d, y" }}
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="categoryColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: categoryColumns"></tr>
+          <ng-container matColumnDef="categoryName">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>
+              {{ 'CATEGORY.NAME' | translate }}
+            </th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item?.categoryName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="productCategoryTypeId">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>
+              {{ 'CATEGORY.TYPE' | translate }}
+            </th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ getCategoryTypeDescription(item?.productCategoryTypeId) }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="fromDate">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'CATEGORY.FROM_DATE' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.fromDate | date : "MMMM d, y" }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="categoryColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: categoryColumns"></tr>
         </table>
       </div>
     </mat-card-content>
@@ -366,14 +304,8 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'PRODUCT.CONTENT_TITLE' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addUpdateProductContentDialog()"
-          >add</mat-icon
-        ></mat-card-title
-      >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addUpdateProductContentDialog()">add</mat-icon></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="contents">
@@ -402,47 +334,41 @@
   <br />
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title
-        >{{ 'PRODUCT.ASSOC_TITLE' | translate }}<mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addUpdateProductAssocDialog()"
-          >add</mat-icon
-        ></mat-card-title
-      >
+      <mat-card-title>{{ 'PRODUCT.ASSOC_TITLE' | translate }}<mat-icon matListIcon
+          class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addUpdateProductAssocDialog()">add</mat-icon></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="table-scroll">
         <table mat-table [dataSource]="assocs">
-        <ng-container matColumnDef="productName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.toProduct.productName }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'COMMON.TYPE' | translate }}
-          </th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.type.description }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="fromDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.FROM_DATE' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.fromDate | date : "MMMM d, y" }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="quantity">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.SEQUENCE_NO' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.quantity }}
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="assocColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: assocColumns"></tr>
+          <ng-container matColumnDef="productName">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.toProduct.productName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>
+              {{ 'COMMON.TYPE' | translate }}
+            </th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.type.description }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="fromDate">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.FROM_DATE' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.fromDate | date : "MMMM d, y" }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.SEQUENCE_NO' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.quantity }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="assocColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: assocColumns"></tr>
         </table>
       </div>
     </mat-card-content>
@@ -455,34 +381,34 @@
     <mat-card-content>
       <div class="table-scroll">
         <table mat-table [dataSource]="toAssocs">
-        <ng-container matColumnDef="productName">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.product.productName }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="description">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>
-            {{ 'COMMON.TYPE' | translate }}
-          </th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.type.description }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="fromDate">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.FROM_DATE' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.fromDate | date : "MMMM d, y" }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="quantity">
-          <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.SEQUENCE_NO' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">
-            {{ item.quantity }}
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="toAssocColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: toAssocColumns"></tr>
+          <ng-container matColumnDef="productName">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.PRODUCT' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.product.productName }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="description">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>
+              {{ 'COMMON.TYPE' | translate }}
+            </th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.type.description }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="fromDate">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.FROM_DATE' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.fromDate | date : "MMMM d, y" }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'PRODUCT.SEQUENCE_NO' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.quantity }}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="toAssocColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: toAssocColumns"></tr>
         </table>
       </div>
     </mat-card-content>

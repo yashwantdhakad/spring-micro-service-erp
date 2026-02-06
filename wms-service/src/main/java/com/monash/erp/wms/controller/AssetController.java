@@ -4,6 +4,7 @@ import com.monash.erp.wms.dto.AssetDetailResponse;
 import com.monash.erp.wms.dto.AssetListResponse;
 import com.monash.erp.wms.dto.AssetReceiveRequest;
 import com.monash.erp.wms.dto.AssetReceiveResponse;
+import com.monash.erp.wms.dto.PhysicalInventoryVarianceRequest;
 import com.monash.erp.wms.service.AssetCompositeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,7 @@ public class AssetController {
     public AssetListResponse list(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size,
-            @RequestParam(name = "queryString", defaultValue = "") String queryString
-    ) {
+            @RequestParam(name = "queryString", defaultValue = "") String queryString) {
         return service.listAssets(page, size, queryString);
     }
 
@@ -43,5 +43,11 @@ public class AssetController {
     public ResponseEntity<AssetReceiveResponse> receive(@RequestBody AssetReceiveRequest request) {
         AssetReceiveResponse response = service.receiveAsset(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/{assetId}/variances")
+    public AssetDetailResponse createVariance(@PathVariable String assetId,
+            @RequestBody PhysicalInventoryVarianceRequest request) {
+        return service.createPhysicalInventoryVariance(assetId, request);
     }
 }

@@ -50,13 +50,17 @@ export class JobDetailComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.workEffortId = params['workEffortId'];
       if (this.workEffortId) {
-        this.fetchJobDetail(this.workEffortId);
+        // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
+        // as isLoading flips from false to true synchronously if params are immediate
+        setTimeout(() => {
+          this.fetchJobDetail(this.workEffortId!);
+        });
       }
     });
   }

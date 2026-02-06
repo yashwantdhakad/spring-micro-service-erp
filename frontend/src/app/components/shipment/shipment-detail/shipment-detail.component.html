@@ -1,9 +1,5 @@
 <ng-container *ngIf="isLoading; else content">
-  <mat-progress-spinner
-    [diameter]="100"
-    mode="indeterminate"
-    color="primary"
-  ></mat-progress-spinner>
+  <mat-progress-spinner [diameter]="100" mode="indeterminate" color="primary"></mat-progress-spinner>
 </ng-container>
 <ng-template #content>
   <mat-list>
@@ -14,7 +10,7 @@
   </mat-list>
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
-      <mat-card-title>{{ 'SHIPMENT.OVERVIEW' | translate }}</mat-card-title>
+      <mat-card-title>{{ 'COMMON.OVERVIEW' | translate }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div fxLayout="row wrap" fxLayout.xs="column">
@@ -102,8 +98,11 @@
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.DESCRIPTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">{{ item.shipmentContentDescription }}</td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="['shipmentItemSeqId', 'productId', 'quantity', 'shipmentContentDescription']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['shipmentItemSeqId', 'productId', 'quantity', 'shipmentContentDescription']"></tr>
+        <tr mat-header-row
+          *matHeaderRowDef="['shipmentItemSeqId', 'productId', 'quantity', 'shipmentContentDescription']"></tr>
+        <tr mat-row
+          *matRowDef="let row; columns: ['shipmentItemSeqId', 'productId', 'quantity', 'shipmentContentDescription']">
+        </tr>
       </table>
     </mat-card-content>
   </mat-card>
@@ -144,8 +143,12 @@
             {{ getStatusDescription(item.carrierServiceStatusId) }}
           </td>
         </ng-container>
-        <tr mat-header-row *matHeaderRowDef="['shipmentRouteSegmentId', 'originFacilityId', 'destFacilityId', 'shipmentMethodTypeId', 'carrierPartyId', 'carrierServiceStatusId']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['shipmentRouteSegmentId', 'originFacilityId', 'destFacilityId', 'shipmentMethodTypeId', 'carrierPartyId', 'carrierServiceStatusId']"></tr>
+        <tr mat-header-row
+          *matHeaderRowDef="['shipmentRouteSegmentId', 'originFacilityId', 'destFacilityId', 'shipmentMethodTypeId', 'carrierPartyId', 'carrierServiceStatusId']">
+        </tr>
+        <tr mat-row
+          *matRowDef="let row; columns: ['shipmentRouteSegmentId', 'originFacilityId', 'destFacilityId', 'shipmentMethodTypeId', 'carrierPartyId', 'carrierServiceStatusId']">
+        </tr>
       </table>
     </mat-card-content>
   </mat-card>

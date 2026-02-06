@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AssetService {
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   getAssets(pageIndex: number, keyword: string): Observable<any> {
     const params = new URLSearchParams();
@@ -43,5 +43,9 @@ export class AssetService {
   receiveAsset(params: any): Observable<any> {
     const url = '/wms/api/assets/receive';
     return this.apiService.post(url, params);
+  }
+  createPhysicalInventoryVariance(assetId: string, variance: any): Observable<any> {
+    const url = `/wms/api/assets/${encodeURIComponent(assetId)}/variances`;
+    return this.apiService.post(url, variance);
   }
 }
