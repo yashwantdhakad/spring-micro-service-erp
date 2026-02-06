@@ -12,6 +12,10 @@ import { SOComponent } from './so/so.component';
 import { CreateSOComponent } from './create-so/create-so.component';
 import { SODetailComponent } from './so-detail/so-detail.component';
 import { SharedModule } from '../common/shared/shared-module';
+import { ItemComponent } from '../order/item/item.component';
+import { NoteComponent } from '../order/note/note.component';
+import { ContentComponent } from '../order/content/content.component';
+import { ProductItemComponent } from '../order/product-item/product-item.component';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -21,6 +25,10 @@ import { MaterialModule } from '../../components/common/material/material.module
     SOComponent,
     CreateSOComponent,
     SODetailComponent,
+    ItemComponent,
+    NoteComponent,
+    ContentComponent,
+    ProductItemComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +47,7 @@ import { MaterialModule } from '../../components/common/material/material.module
     }),
   ],
 })
-export class SOModule {}
+export class SOModule { }
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

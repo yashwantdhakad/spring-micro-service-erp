@@ -12,6 +12,9 @@ import { HttpClient } from '@angular/common/http';
 import { FeaturesComponent } from './features/features.component';
 import { CreateFeatureComponent } from './create-feature/create-feature.component';
 import { FeatureDetailComponent } from './feature-detail/feature-detail.component';
+import { AddToFeatureGroupComponent } from './add-to-feature-group/add-to-feature-group.component';
+import { AddToProductComponent } from './add-to-product/add-to-product.component';
+import { EditFeatureComponent } from './edit-feature/edit-feature.component';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -21,6 +24,9 @@ import { MaterialModule } from '../../components/common/material/material.module
     FeaturesComponent,
     CreateFeatureComponent,
     FeatureDetailComponent,
+    AddToFeatureGroupComponent,
+    AddToProductComponent,
+    EditFeatureComponent,
   ],
   imports: [
     CommonModule,

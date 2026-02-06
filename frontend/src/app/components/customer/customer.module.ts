@@ -12,6 +12,8 @@ import { CustomerComponent } from './customer/customer.component';
 import { CreateCustomerComponent } from './create-customer/create-customer.component';
 import { CustomerDetailComponent } from './customer-detail/customer-detail.component';
 import { SharedModule } from '../common/shared/shared-module';
+import { EditCustomerComponent } from './edit-customer/edit-customer.component';
+import { CustomerAutoCompleteComponent } from './customer-auto-complete/customer-auto-complete.component';
 
 
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -22,6 +24,8 @@ import { MaterialModule } from '../../components/common/material/material.module
         CustomerComponent,
         CreateCustomerComponent,
         CustomerDetailComponent,
+        EditCustomerComponent,
+        CustomerAutoCompleteComponent,
     ],
     imports: [
         CommonModule,
@@ -29,7 +33,7 @@ import { MaterialModule } from '../../components/common/material/material.module
         CustomerRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-        
+
         // Material Modules
         MaterialModule,
         // Shared Module
@@ -46,5 +50,5 @@ import { MaterialModule } from '../../components/common/material/material.module
 export class CustomerModule { }
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }

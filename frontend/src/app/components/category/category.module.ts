@@ -11,6 +11,8 @@ import { HttpClient } from '@angular/common/http';
 import { CategoryComponent } from './category/category.component';
 import { CreateCategoryComponent } from './create-category/create-category.component';
 import { CategoryDetailComponent } from './category-detail/category-detail.component';
+import { AddEditProductComponent } from './add-edit-product/add-edit-product.component';
+import { EditCategoryComponent } from './edit-category/edit-category.component';
 
 // Shared Angular Material Module
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -20,6 +22,8 @@ import { MaterialModule } from '../../components/common/material/material.module
     CategoryComponent,
     CreateCategoryComponent,
     CategoryDetailComponent,
+    AddEditProductComponent,
+    EditCategoryComponent,
   ],
   imports: [
     CommonModule,

@@ -19,11 +19,13 @@ import { SharedModule } from '../common/shared/shared-module';
 import { MaterialModule } from '../../components/common/material/material.module';
 
 @NgModule({
-    SupplierComponent,
-    CreateSupplierComponent,
-    SupplierDetailComponent,
-    SupplierProductDialogComponent,
-    EditSupplierComponent,
+    declarations: [
+        SupplierComponent,
+        CreateSupplierComponent,
+        SupplierDetailComponent,
+        SupplierProductDialogComponent,
+        EditSupplierComponent,
+    ],
     imports: [
         CommonModule,
         SupplierRoutingModule,

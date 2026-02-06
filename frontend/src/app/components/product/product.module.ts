@@ -11,6 +11,11 @@ import { HttpClient } from '@angular/common/http';
 import { ProductComponent } from './product/product.component';
 import { CreateProductComponent } from './create-product/create-product.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { ProductEditComponent } from './product-edit/product-edit.component';
+import { AddEditProductPriceComponent } from './add-edit-product-price/add-edit-product-price.component';
+import { ProductContentComponent } from './product-content/product-content.component';
+import { ProductAssocComponent } from './product-assoc/product-assoc.component';
+import { AddEditProductCategoryComponent } from './add-edit-product-category/add-edit-product-category.component';
 
 // Shared Angular Material Modules
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -21,6 +26,11 @@ import { SupplierModule } from '../supplier/supplier.module';
     ProductComponent,
     CreateProductComponent,
     ProductDetailComponent,
+    ProductEditComponent,
+    AddEditProductPriceComponent,
+    ProductContentComponent,
+    ProductAssocComponent,
+    AddEditProductCategoryComponent,
   ],
   imports: [
     CommonModule,
@@ -41,7 +51,7 @@ import { SupplierModule } from '../supplier/supplier.module';
     }),
   ],
 })
-export class ProductModule {}
+export class ProductModule { }
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
