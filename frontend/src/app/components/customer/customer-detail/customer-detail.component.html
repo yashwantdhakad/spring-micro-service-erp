@@ -134,9 +134,9 @@
       <mat-card-content>
         <ul class="custom-list">
           <li class="custom-list-item" *ngFor="let role of partyRoleList">
-            {{ role.roleTypeDescription || role.description || role.roleType }}
-            <mat-icon *ngIf="(role?.roleType || '') !== 'CUSTOMER'"
-              class="custom-mat-icon custom-icon-align" color="warn" (click)="deleteRoleDialog(role)">
+            {{ role.roleTypeDescription || role.description || role.roleTypeId }}
+            <mat-icon *ngIf="(role?.roleTypeId || '') !== 'CUSTOMER'" class="custom-mat-icon custom-icon-align"
+              color="warn" (click)="deleteRoleDialog(role)">
               delete
             </mat-icon>
 

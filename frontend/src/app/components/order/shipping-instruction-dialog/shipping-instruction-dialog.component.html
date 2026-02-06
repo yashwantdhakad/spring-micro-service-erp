@@ -1,21 +1,17 @@
-<h2 mat-dialog-title>{{ data.titleKey | translate }}</h2>
-
-<mat-dialog-content>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>{{ data.titleKey | translate }}</mat-label>
-    <textarea
-      matInput
-      rows="4"
-      [formControl]="form.controls.shippingInstructions"
-    ></textarea>
-  </mat-form-field>
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button mat-stroked-button type="button" (click)="cancel()">
-    {{ 'COMMON.CANCEL' | translate }}
-  </button>
-  <button mat-flat-button color="primary" type="button" (click)="save()">
-    {{ 'COMMON.SAVE' | translate }}
-  </button>
-</mat-dialog-actions>
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>{{ data.titleKey | translate }}</mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ data.titleKey | translate }}</mat-label>
+      <textarea matInput rows="4" [formControl]="form.controls.shippingInstructions"></textarea>
+    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="start">
+      <button mat-flat-button color="primary" type="button" (click)="save()" class="me-4">
+        {{ 'COMMON.SAVE' | translate }}
+      </button>
+      <button mat-stroked-button type="button" (click)="cancel()">
+        {{ 'COMMON.CANCEL' | translate }}
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

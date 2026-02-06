@@ -1,29 +1,31 @@
-<h1 mat-dialog-title>
-  {{ data?.id ? ('FACILITY.UPDATE_LOCATION' | translate) : ('FACILITY.ADD_LOCATION' | translate) }}
-</h1>
-<div mat-dialog-content>
-  <form [formGroup]="form" fxLayout="row wrap">
-    <mat-form-field appearance="outline" fxFlex="100%">
-      <mat-label>{{ 'FACILITY.LOCATION_SEQ_ID' | translate }}</mat-label>
-      <input matInput formControlName="locationSeqId" />
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100%">
-      <mat-label>{{ 'FACILITY.LOCATION_TYPE' | translate }}</mat-label>
-      <mat-select formControlName="locationTypeEnumId">
-        <mat-option *ngFor="let item of locationTypes" [value]="item.enumId">
-          {{ item.description }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" fxFlex="100%">
-      <mat-label>{{ 'FACILITY.AREA_ID' | translate }}</mat-label>
-      <input matInput formControlName="areaId" />
-    </mat-form-field>
-  </form>
-</div>
-<div mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
-  <button mat-button color="primary" (click)="save()" [disabled]="form.invalid">
-    {{ 'COMMON.SAVE' | translate }}
-  </button>
-</div>
+<mat-card class="mat-elevation-z10">
+  <mat-card-title mat-dialog-title>
+    {{ data?.id ? ('FACILITY.UPDATE_LOCATION' | translate) : ('FACILITY.ADD_LOCATION' | translate) }}
+  </mat-card-title>
+  <mat-card-content mat-dialog-content>
+    <form [formGroup]="form" fxLayout="row wrap">
+      <mat-form-field appearance="outline" fxFlex="100%">
+        <mat-label>{{ 'FACILITY.LOCATION_SEQ_ID' | translate }}</mat-label>
+        <input matInput formControlName="locationSeqId" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100%">
+        <mat-label>{{ 'FACILITY.LOCATION_TYPE' | translate }}</mat-label>
+        <mat-select formControlName="locationTypeEnumId">
+          <mat-option *ngFor="let item of locationTypes" [value]="item.enumId">
+            {{ item.description }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" fxFlex="100%">
+        <mat-label>{{ 'FACILITY.AREA_ID' | translate }}</mat-label>
+        <input matInput formControlName="areaId" />
+      </mat-form-field>
+    </form>
+    <div fxLayout="row" fxLayoutAlign="start" class="mt-2">
+      <button mat-button color="primary" (click)="save()" [disabled]="form.invalid">
+        {{ 'COMMON.SAVE' | translate }}
+      </button>
+      <button mat-button (click)="cancel()">{{ 'COMMON.CANCEL' | translate }}</button>
+    </div>
+  </mat-card-content>
+</mat-card>

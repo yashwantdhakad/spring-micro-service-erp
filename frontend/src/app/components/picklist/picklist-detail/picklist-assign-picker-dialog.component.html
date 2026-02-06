@@ -17,11 +17,11 @@
     </div>
   </ng-template>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-stroked-button (click)="cancel()">
-    {{ 'COMMON.CANCEL' | translate }}
-  </button>
+<mat-dialog-actions align="start">
   <button mat-raised-button color="primary" (click)="assign()" [disabled]="!selectedPartyId">
     {{ 'PICKLIST.ASSIGN_ACTION' | translate }}
+  </button>
+  <button mat-stroked-button (click)="cancel()">
+    {{ 'COMMON.CANCEL' | translate }}
   </button>
 </mat-dialog-actions>

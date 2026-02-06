@@ -1,5 +1,5 @@
 // party-address-list.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditAddressComponent } from '../add-edit-address/add-edit-address.component';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
@@ -9,7 +9,8 @@ import { PartyService } from 'src/app/services/party/party.service';
   standalone: false,
   selector: 'app-party-address-list',
   templateUrl: './party-address-list.component.html',
-  styleUrls: ['./party-address-list.component.css']
+  styleUrls: ['./party-address-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PartyAddressListComponent {
   @Input() addressList: any[] = [];

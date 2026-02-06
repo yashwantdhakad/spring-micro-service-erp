@@ -30,7 +30,7 @@
       </form>
     </mat-card-content>
 
-    <mat-card-actions align="end">
+    <mat-card-actions align="start">
       <button mat-button (click)="dialogRef.close()">{{ 'COMMON.CANCEL' | translate }}</button>
       <button mat-raised-button color="primary" (click)="produce()" [disabled]="isLoading">
         {{ 'MANUFACTURING.PRODUCE' | translate }}

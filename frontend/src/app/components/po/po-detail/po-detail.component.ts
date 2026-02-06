@@ -191,7 +191,7 @@ export class PODetailComponent implements OnInit {
             this.loadFacilityAddress(this.facilityId);
           }
 
-        const shippingContacts = (displayInfo?.orderContactMechList || [])
+          const shippingContacts = (displayInfo?.orderContactMechList || [])
             .filter((contact: any) => (contact?.contactMechPurposeTypeId || '').toUpperCase() === 'SHIPPING_LOCATION');
           this.orderShipToAddress = shippingContacts.length ? shippingContacts[0]?.postalAddress : null;
         }
@@ -406,7 +406,7 @@ export class PODetailComponent implements OnInit {
       .subscribe((result) => {
         if (this.orderId) {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         }
       });
@@ -424,7 +424,7 @@ export class PODetailComponent implements OnInit {
       .subscribe((result) => {
         if (this.orderId) {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         }
       });
@@ -447,7 +447,7 @@ export class PODetailComponent implements OnInit {
       this.orderService.deleteOrderNote({ orderId: this.orderId, noteId: note.id }).subscribe({
         next: () => {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         },
       });
@@ -466,7 +466,7 @@ export class PODetailComponent implements OnInit {
       .subscribe((result) => {
         if (this.orderId) {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         }
       });
@@ -488,7 +488,7 @@ export class PODetailComponent implements OnInit {
       this.orderService.updateShippingInstructions(this.orderId as string, part.orderPartSeqId, value)
         .subscribe(() => {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         });
     });
@@ -621,7 +621,7 @@ export class PODetailComponent implements OnInit {
     }).afterClosed().subscribe(() => {
       if (this.orderId) {
         if (this.orderPrimaryId) {
-          this.getOrderById(this.orderPrimaryId);
+          this.getOrderById(this.orderPrimaryId).subscribe();
         }
       }
     });
@@ -660,7 +660,7 @@ export class PODetailComponent implements OnInit {
     this.orderService.approvePurchaseOrder(this.orderId).subscribe({
       next: () => {
         if (this.orderPrimaryId) {
-          this.getOrderById(this.orderPrimaryId);
+          this.getOrderById(this.orderPrimaryId).subscribe();
         }
       },
     });

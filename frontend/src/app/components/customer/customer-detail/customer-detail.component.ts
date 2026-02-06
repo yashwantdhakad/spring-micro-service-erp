@@ -22,6 +22,17 @@ import { PartyNoteComponent } from '../../party/party-note/party-note.component'
 import { PartyContentComponent } from '../../party/party-content/party-content.component';
 import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
+import {
+  Party,
+  PartyRole,
+  PartyClassification,
+  PartyIdentification,
+  PostalAddress,
+  EmailAddress,
+  TelecomNumber,
+  PartyNote,
+  PartyContent
+} from 'src/app/models/party.model';
 
 @Component({
   standalone: false,
@@ -30,32 +41,32 @@ import { finalize, takeUntil } from 'rxjs/operators';
   styleUrls: ['./customer-detail.component.css'],
 })
 export class CustomerDetailComponent implements OnDestroy {
-  roles: any;
-  partyClassifications: any;
-  partyIdentificationList: any;
-  postalAddressList: any;
-  emailAddressList: any;
-  telecomNumberList: any;
-  payments: any;
+  roles: PartyRole[] = [];
+  partyClassifications: PartyClassification[] = [];
+  partyIdentificationList: PartyIdentification[] = [];
+  postalAddressList: PostalAddress[] = [];
+  emailAddressList: EmailAddress[] = [];
+  telecomNumberList: TelecomNumber[] = [];
+  payments: any[] = [];
   emailData: any = {}; // Assuming you have declared the emailData variable
   isLoading: boolean = false;
   emailForm: FormGroup; // Define the form group
   partyId: string | undefined;
 
-  customerDetail: any;
-  partyRoleList: any;
-  primaryAddressList: any;
-  primaryPhoneList: any;
-  billingPhoneList: any;
-  shippingPhoneList: any;
-  shippingAddressList: any;
-  billingAddress: any;
+  customerDetail: Party | undefined;
+  partyRoleList: PartyRole[] = [];
+  primaryAddressList: PostalAddress[] = [];
+  primaryPhoneList: TelecomNumber[] = [];
+  billingPhoneList: TelecomNumber[] = [];
+  shippingPhoneList: TelecomNumber[] = [];
+  shippingAddressList: PostalAddress[] = [];
+  billingAddress: PostalAddress | undefined;
   addEditAddress: any;
-  shippingEmailAddressList: any;
-  billingEmailAddressList: any;
+  shippingEmailAddressList: EmailAddress[] = [];
+  billingEmailAddressList: EmailAddress[] = [];
   addEditEmailAddress: any;
-  primaryEmailAddressList: any;
-  primaryEmailAddress: any;
+  primaryEmailAddressList: EmailAddress[] = [];
+  primaryEmailAddress: EmailAddress | undefined;
   identificationData: any;
   classificationData: any;
   roleData: any;
@@ -73,7 +84,7 @@ export class CustomerDetailComponent implements OnDestroy {
   contentColumns: string[] = ['description', 'contentDate', 'contentLocation'];
   contentData: any;
 
-  partyNotes: any;
+  partyNotes: PartyNote[] = [];
   noteColumns: string[] = ['noteText', 'noteDate', 'userId', 'action'];
   noteData: any;
 
@@ -174,20 +185,20 @@ export class CustomerDetailComponent implements OnDestroy {
     });
   }
 
-  filterEmailAddressList(emailAddressList: any, purpose: string) {
+  filterEmailAddressList(emailAddressList: EmailAddress[], purpose: string): EmailAddress[] {
     return (
       emailAddressList?.filter(
-        (email: any) => email.contactMechPurposeId === purpose
-      ) || ''
+        (email: EmailAddress) => email.contactMechPurposeId === purpose
+      ) || []
     );
   }
 
-  filterTelecomNumberList(telecomNumberList: any, purpose: string) {
+  filterTelecomNumberList(telecomNumberList: TelecomNumber[], purpose: string): TelecomNumber[] {
     return (
       telecomNumberList?.filter(
-        (telecomNumber: any) =>
+        (telecomNumber: TelecomNumber) =>
           telecomNumber.contactMechPurposeId === purpose
-      ) || ''
+      ) || []
     );
   }
 

@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from 'src/app/services/order/order.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { finalize, switchMap, tap } from 'rxjs/operators';
+import { FacilityService } from 'src/app/services/facility/facility.service';
 
 @Component({
   standalone: false,
@@ -29,7 +31,9 @@ export class POReceiveComponent implements OnInit {
     private orderService: OrderService,
     private fb: FormBuilder,
     private commonService: CommonService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef,
+    private facilityService: FacilityService
   ) {
     this.itemsForm = this.fb.group({
       items: this.fb.array([]),
@@ -51,18 +55,33 @@ export class POReceiveComponent implements OnInit {
 
   loadOrderById(id: string): void {
     this.isLoading = true;
-    forkJoin({
-      orderResponse: this.orderService.getOrderById(id),
-      displayInfo: this.orderService.getOrderDisplayInfoById(id),
-      facilityLocations: this.commonService.getFacilityLocations(),
-    }).subscribe({
-      next: ({ orderResponse, displayInfo, facilityLocations }) => {
+    this.cdr.markForCheck();
+
+    this.orderService.getOrderDisplayInfoById(id).pipe(
+      switchMap((displayInfo) => {
         this.orderHeader = displayInfo.orderHeader;
         this.orderId = this.orderHeader?.orderId;
         this.vendorPartyId = displayInfo?.firstPart?.vendorPartyId;
         this.facilityId = displayInfo?.firstPart?.facilityId;
         this.shipGroupSeqId = displayInfo?.firstPart?.orderPartSeqId || '00001';
-        this.allFacilityLocations = facilityLocations || [];
+
+        const orderRequest = this.orderService.getOrderById(id);
+        const locationsRequest = this.facilityId
+          ? this.facilityService.getFacilityLocations(this.facilityId, 0, 1000) // Fetch up to 1000 locations for this facility
+          : of({ content: [] });
+
+        return forkJoin({
+          orderResponse: orderRequest,
+          locationsResponse: locationsRequest
+        });
+      }),
+      finalize(() => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      })
+    ).subscribe({
+      next: ({ orderResponse, locationsResponse }) => {
+        this.allFacilityLocations = locationsResponse?.content || [];
 
         const items = (orderResponse?.parts || [])
           .flatMap((part: any) => (part.items || []).map((item: any) => ({
@@ -83,12 +102,10 @@ export class POReceiveComponent implements OnInit {
             facilityId: [item.facilityId],
           }));
         });
+        this.cdr.markForCheck();
       },
       error: () => {
         this.snackbarService.showError('Failed to load purchase order');
-      },
-      complete: () => {
-        this.isLoading = false;
       },
     });
   }

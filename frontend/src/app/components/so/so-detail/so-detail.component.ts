@@ -106,7 +106,7 @@ export class SODetailComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private datePipe: DatePipe,
     private translate: TranslateService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadLookupData();
@@ -470,7 +470,7 @@ export class SODetailComponent implements OnInit {
       data: { productItemData: this.productItemData },
     }).afterClosed().subscribe(() => {
       if (this.orderPrimaryId) {
-        this.getOrderById(this.orderPrimaryId);
+        this.getOrderById(this.orderPrimaryId).subscribe();
       }
     });
   }
@@ -485,7 +485,7 @@ export class SODetailComponent implements OnInit {
       data: { noteData: this.noteData },
     }).afterClosed().subscribe(() => {
       if (this.orderPrimaryId) {
-        this.getOrderById(this.orderPrimaryId);
+        this.getOrderById(this.orderPrimaryId).subscribe();
       }
     });
   }
@@ -507,7 +507,7 @@ export class SODetailComponent implements OnInit {
       this.orderService.deleteOrderNote({ orderId: this.orderId, noteId: note.id }).subscribe({
         next: () => {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         },
       });
@@ -524,7 +524,7 @@ export class SODetailComponent implements OnInit {
       data: { contentData: this.contentData },
     }).afterClosed().subscribe(() => {
       if (this.orderPrimaryId) {
-        this.getOrderById(this.orderPrimaryId);
+        this.getOrderById(this.orderPrimaryId).subscribe();
       }
     });
   }
@@ -545,7 +545,7 @@ export class SODetailComponent implements OnInit {
       this.orderService.updateShippingInstructions(this.orderId as string, part.orderPartSeqId, value)
         .subscribe(() => {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         });
     });
@@ -575,7 +575,7 @@ export class SODetailComponent implements OnInit {
     }).afterClosed().subscribe(() => {
       if (this.orderId) {
         if (this.orderPrimaryId) {
-          this.getOrderById(this.orderPrimaryId);
+          this.getOrderById(this.orderPrimaryId).subscribe();
         }
       }
     });
@@ -588,7 +588,7 @@ export class SODetailComponent implements OnInit {
     this.orderService.approveSalesOrder(this.orderId).subscribe({
       next: () => {
         if (this.orderPrimaryId) {
-          this.getOrderById(this.orderPrimaryId);
+          this.getOrderById(this.orderPrimaryId).subscribe();
         }
       },
     });
@@ -601,7 +601,7 @@ export class SODetailComponent implements OnInit {
     this.orderService.createPicklist(this.orderId).subscribe({
       next: () => {
         if (this.orderPrimaryId) {
-          this.getOrderById(this.orderPrimaryId);
+          this.getOrderById(this.orderPrimaryId).subscribe();
         }
       },
     });
@@ -643,7 +643,7 @@ export class SODetailComponent implements OnInit {
       next: () => {
         if (this.orderId) {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         }
       },
@@ -658,7 +658,7 @@ export class SODetailComponent implements OnInit {
       next: () => {
         if (this.orderId) {
           if (this.orderPrimaryId) {
-            this.getOrderById(this.orderPrimaryId);
+            this.getOrderById(this.orderPrimaryId).subscribe();
           }
         }
       },
