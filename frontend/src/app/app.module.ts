@@ -17,7 +17,7 @@ import { MaterialModule } from './components/common/material/material.module';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 
-import { ConfirmationDialogComponent } from './components/common/confirmation-dialog/confirmation-dialog.component';
+
 import { LanguageSelectorComponent } from './components/common/language-selector/language-selector.component';
 
 
@@ -55,7 +55,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 
 
 
-    ConfirmationDialogComponent,
+
     LanguageSelectorComponent,
 
 
