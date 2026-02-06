@@ -37,6 +37,7 @@ export class AddCategoryFeatureGroupApplComponent implements OnInit {
     private snackbarService: SnackbarService
   ) {
     const {
+      id,
       productFeatureGroupId,
       productCategoryId,
       applTypeEnumId,
@@ -44,6 +45,7 @@ export class AddCategoryFeatureGroupApplComponent implements OnInit {
     } = this.data?.featureGroupCategoryData ?? {};
 
     this.categoryFeatureGroupApplForm = this.fb.group({
+      id: [id],
       productFeatureGroupId: [productFeatureGroupId],
       applTypeEnumId: [applTypeEnumId || 'PfatStandard', Validators.required],
       productCategoryId: [productCategoryId, Validators.required],
@@ -85,7 +87,7 @@ export class AddCategoryFeatureGroupApplComponent implements OnInit {
       this.isLoading = true;
       const values = this.categoryFeatureGroupApplForm.value;
 
-      const request$ = values.fromDate
+      const request$ = values.id
         ? this.featureGroupService.updateProductCategoryFeatGrpAppl(values)
         : this.featureGroupService.createProductCategoryFeatGrpAppl(values);
 
@@ -94,7 +96,7 @@ export class AddCategoryFeatureGroupApplComponent implements OnInit {
         .subscribe({
           next: () => {
             this.snackbarService.showSuccess(
-              values.fromDate
+              values.id
                 ? 'Category feature group application updated successfully'
                 : 'Category feature group application created successfully'
             );

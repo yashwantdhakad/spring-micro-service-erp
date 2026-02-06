@@ -18,6 +18,8 @@ import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { SupplierProductService } from 'src/app/services/supplier-product/supplier-product.service';
 import { SupplierProductDialogComponent } from 'src/app/components/supplier/supplier-product-dialog/supplier-product-dialog.component';
+import { AddToProductComponent } from 'src/app/components/feature/add-to-product/add-to-product.component';
+import { FeatureService } from 'src/app/services/features/feature.service';
 
 @Component({
   standalone: false,
@@ -71,6 +73,15 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   inventorySummaryColumns: string[] = ['facility', 'atpTotal', 'qohTotal'];
   supplierProducts: any[] = [];
   supplierProductColumns: string[] = ['partyId', 'supplierProductName', 'lastPrice', 'action'];
+  productFeatures: any[] = [];
+  productFeatureColumns: string[] = [
+    'productFeatureId',
+    'featureDescription',
+    'productFeatureApplTypeId',
+    'sequenceNum',
+    'fromDate',
+    'action',
+  ];
   isConfigSaving = false;
 
   productPriceData: any;
@@ -89,6 +100,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private snackbarService: SnackbarService,
     private commonService: CommonService,
     private supplierProductService: SupplierProductService,
+    private featureService: FeatureService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -174,6 +186,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.toAssocs = toAssocs;
         this.loadInventorySummary(productId);
         this.loadSupplierProducts(productId);
+        this.loadProductFeatures(productId);
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -199,6 +212,46 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         }, 0);
       },
     });
+  }
+
+  loadProductFeatures(productId: string): void {
+    this.featureService.getProductFeatureAppls(productId).subscribe({
+      next: (items) => {
+        setTimeout(() => {
+          this.productFeatures = Array.isArray(items) ? items : [];
+          this.cdr.markForCheck();
+        }, 0);
+      },
+      error: () => {
+        setTimeout(() => {
+          this.productFeatures = [];
+          this.cdr.markForCheck();
+        }, 0);
+      },
+    });
+  }
+
+  addProductFeatureDialog(params: any = null): void {
+    if (!this.productId) {
+      return;
+    }
+
+    const featureProductData = {
+      ...params,
+      productId: this.productId,
+      isNew: false,
+    };
+
+    this.dialog
+      .open(AddToProductComponent, {
+        data: { featureProductData },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (this.productId) {
+          this.loadProductFeatures(this.productId);
+        }
+      });
   }
 
   loadSupplierProducts(productId: string): void {

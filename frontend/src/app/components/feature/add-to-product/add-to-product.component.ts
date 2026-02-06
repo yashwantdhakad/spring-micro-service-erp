@@ -18,8 +18,10 @@ export class AddToProductComponent implements OnInit {
   createProductFeatureApplForm: FormGroup;
   isLoading = false;
   filteredProducts$!: Observable<any[]>;
+  filteredFeatures$!: Observable<any[]>;
   enumTypes: any[] = [];
   isNew: boolean;
+  showFeatureSelector: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<AddToProductComponent>,
@@ -31,6 +33,7 @@ export class AddToProductComponent implements OnInit {
     private snackbarService: SnackbarService
   ) {
     const {
+      id,
       isNew,
       productFeatureId,
       productId,
@@ -41,9 +44,11 @@ export class AddToProductComponent implements OnInit {
     } = this.data?.featureProductData ?? {};
 
     this.isNew = isNew;
+    this.showFeatureSelector = !productFeatureId;
 
     this.createProductFeatureApplForm = this.fb.group({
-      productFeatureId: [productFeatureId],
+      id: [id],
+      productFeatureId: [productFeatureId, this.showFeatureSelector ? Validators.required : []],
       applTypeEnumId: [applTypeEnumId || 'PfatStandard', Validators.required],
       productId: [productId, Validators.required],
       sequenceNum: [sequenceNum],
@@ -55,6 +60,7 @@ export class AddToProductComponent implements OnInit {
   ngOnInit(): void {
     this.loadEnumTypes();
     this.initProductAutocomplete();
+    this.initFeatureAutocomplete();
   }
 
   private initProductAutocomplete(): void {
@@ -78,6 +84,32 @@ export class AddToProductComponent implements OnInit {
     );
   }
 
+  private initFeatureAutocomplete(): void {
+    const control = this.createProductFeatureApplForm.get('productFeatureId');
+    if (!control || !this.showFeatureSelector) {
+      return;
+    }
+
+    this.filteredFeatures$ = control.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(value => this.getFeatures(value))
+    );
+  }
+
+  private getFeatures(query: string): Observable<any[]> {
+    if (!query) return of([]);
+
+    return this.featureService.getFeatures(0, query).pipe(
+      map(res => res?.body ?? []),
+      catchError(() => {
+        this.snackbarService.showError('Error fetching features');
+        return of([]);
+      })
+    );
+  }
+
   private loadEnumTypes(): void {
     this.commonService.getEnumTypes('ProductFeatureApplType').subscribe({
       next: (data) => {
@@ -94,13 +126,13 @@ export class AddToProductComponent implements OnInit {
 
     this.isLoading = true;
     const values = this.createProductFeatureApplForm.value;
-    const action$ = values.fromDate
+    const action$ = values.id
       ? this.featureService.updateProductFeatureAppl(values)
       : this.featureService.createProductFeatureAppl(values);
 
     action$.pipe(finalize(() => this.isLoading = false)).subscribe({
       next: () => {
-        const message = values.fromDate
+        const message = values.id
           ? 'Product feature application updated successfully'
           : 'Product feature application created successfully';
         this.snackbarService.showSuccess(message);

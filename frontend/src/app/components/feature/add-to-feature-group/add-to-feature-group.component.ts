@@ -28,6 +28,7 @@ export class AddToFeatureGroupComponent implements OnInit {
     private snackbarService: SnackbarService
   ) {
     const {
+      id,
       productFeatureId,
       productFeatureGroupId,
       isNew,
@@ -38,6 +39,7 @@ export class AddToFeatureGroupComponent implements OnInit {
     this.isNew = isNew;
 
     this.createProductFeatureGroupApplForm = this.fb.group({
+      id: [id],
       productFeatureId: [productFeatureId],
       productFeatureGroupId: [productFeatureGroupId, Validators.required],
       sequenceNum: [sequenceNum],
@@ -63,7 +65,7 @@ export class AddToFeatureGroupComponent implements OnInit {
       this.isLoading = true;
       const values = this.createProductFeatureGroupApplForm.value;
 
-      const operation$ = values.fromDate
+      const operation$ = values.id
         ? this.featureService.updateProductFeatureGroupAppl(values)
         : this.featureService.createProductFeatureGroupAppl(values);
 
@@ -71,7 +73,7 @@ export class AddToFeatureGroupComponent implements OnInit {
         .pipe(finalize(() => this.isLoading = false))
         .subscribe({
           next: () => {
-            const message = values.fromDate
+            const message = values.id
               ? 'Product feature group application updated successfully'
               : 'Product feature group application created successfully';
 

@@ -134,6 +134,71 @@
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
       <mat-card-title>
+        {{ 'PRODUCT.FEATURES_TITLE' | translate }}
+        <mat-icon
+          matListIcon
+          class="custom-mat-icon custom-icon-align"
+          color="primary"
+          (click)="addProductFeatureDialog({ isNew: true })"
+          >add</mat-icon
+        >
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="table-scroll">
+        <table mat-table [dataSource]="productFeatures">
+          <ng-container matColumnDef="productFeatureId">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.ID' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.productFeatureId }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="featureDescription">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.DESCRIPTION' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.featureDescription || item.featureAbbrev || item.productFeatureId }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="productFeatureApplTypeId">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.APPL_TYPE' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.productFeatureApplTypeId }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="sequenceNum">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.SEQUENCE_NUM' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.sequenceNum }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="fromDate">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'FEATURE.FROM_DATE' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              {{ item.fromDate | date : "MMMM d, y" }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="action">
+            <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
+            <td mat-cell class="text-left" *matCellDef="let item">
+              <mat-icon
+                matListIcon
+                class="custom-mat-icon custom-icon-align"
+                color="primary"
+                (click)="addProductFeatureDialog(item)"
+                >edit</mat-icon
+              >
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="productFeatureColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: productFeatureColumns"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
         {{ 'SUPPLIER.SUPPLIER_PRODUCTS' | translate }}
         <mat-icon
           matListIcon

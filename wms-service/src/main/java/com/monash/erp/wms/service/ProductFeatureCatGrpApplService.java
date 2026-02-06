@@ -21,6 +21,10 @@ public class ProductFeatureCatGrpApplService {
         return repository.findAll();
     }
 
+    public List<ProductFeatureCatGrpAppl> listByProductFeatureGroupId(String productFeatureGroupId) {
+        return repository.findByProductFeatureGroupId(productFeatureGroupId);
+    }
+
     public ProductFeatureCatGrpAppl get(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ProductFeatureCatGrpAppl %d not found".formatted(id)));

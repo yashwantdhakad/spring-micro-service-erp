@@ -1,5 +1,6 @@
 package com.monash.erp.wms.controller;
 
+import com.monash.erp.wms.dto.ProductFeatureApplDto;
 import com.monash.erp.wms.entity.ProductFeatureAppl;
 import com.monash.erp.wms.service.ProductFeatureApplService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -26,8 +28,16 @@ public class ProductFeatureApplController {
     }
 
     @GetMapping
-    public List<ProductFeatureAppl> list() {
+    public List<ProductFeatureAppl> list(@RequestParam(name = "productId", required = false) String productId) {
+        if (productId != null && !productId.isBlank()) {
+            return service.listByProductId(productId);
+        }
         return service.list();
+    }
+
+    @GetMapping("/product/{productId}")
+    public List<ProductFeatureApplDto> listByProductId(@PathVariable String productId) {
+        return service.listByProductIdWithFeature(productId);
     }
 
     @GetMapping("/{id}")

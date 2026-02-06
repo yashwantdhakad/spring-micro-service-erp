@@ -9,7 +9,7 @@ import {
   finalize,
   map,
 } from 'rxjs/operators';
-import { Observable, from, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FeatureGroupService } from 'src/app/services/featuregroup/feature-group.service';
 import { FeatureService } from 'src/app/services/features/feature.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
@@ -33,10 +33,11 @@ export class AddProductFeatureGroupApplComponent implements OnInit {
     private featureGroupService: FeatureGroupService,
     private snackbarService: SnackbarService
   ) {
-    const { productFeatureGroupId, productFeatureId, fromDate } =
+    const { id, productFeatureGroupId, productFeatureId, fromDate } =
       this.data?.featureGroupProductData ?? {};
 
     this.productFeatureGroupApplForm = this.fb.group({
+      id: [id],
       productFeatureGroupId: [productFeatureGroupId],
       productFeatureId: [productFeatureId, Validators.required],
       fromDate: [fromDate],
@@ -58,7 +59,7 @@ export class AddProductFeatureGroupApplComponent implements OnInit {
     if (!value || value.length < 1) {
       return of([]);
     }
-    return from(this.featureService.getFeatures(0, value)).pipe(
+    return this.featureService.getFeatures(0, value).pipe(
       map((response: any) => response.body ?? [])
     );
   }
@@ -68,7 +69,7 @@ export class AddProductFeatureGroupApplComponent implements OnInit {
       this.isLoading = true;
       const values = this.productFeatureGroupApplForm.value;
 
-      const request$ = values.fromDate
+      const request$ = values.id
         ? this.featureGroupService.updateProductFeatureGroupAppl(values)
         : this.featureGroupService.createProductFeatureGroupAppl(values);
 
@@ -76,7 +77,7 @@ export class AddProductFeatureGroupApplComponent implements OnInit {
         finalize(() => (this.isLoading = false))
       ).subscribe({
         next: () => {
-          const message = values.fromDate
+          const message = values.id
             ? 'Feature group application updated successfully'
             : 'Feature group application created successfully';
           this.snackbarService.showSuccess(message);

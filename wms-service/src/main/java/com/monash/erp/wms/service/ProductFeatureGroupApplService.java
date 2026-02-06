@@ -21,6 +21,14 @@ public class ProductFeatureGroupApplService {
         return repository.findAll();
     }
 
+    public List<ProductFeatureGroupAppl> listByProductFeatureId(String productFeatureId) {
+        return repository.findByProductFeatureId(productFeatureId);
+    }
+
+    public List<ProductFeatureGroupAppl> listByProductFeatureGroupId(String productFeatureGroupId) {
+        return repository.findByProductFeatureGroupId(productFeatureGroupId);
+    }
+
     public ProductFeatureGroupAppl get(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ProductFeatureGroupAppl %d not found".formatted(id)));

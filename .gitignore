@@ -5,3 +5,7 @@
 *.iml
 *.log
 .DS_Store
+wms-service/data/
+oms-service/data/
+party-service/data/
+mfg-service/data/

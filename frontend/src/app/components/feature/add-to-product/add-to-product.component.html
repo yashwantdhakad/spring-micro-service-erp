@@ -31,6 +31,28 @@
         >
       </mat-form-field>
 
+      <mat-form-field appearance="outline" fxFlex="100%" *ngIf="showFeatureSelector">
+        <mat-label>{{ 'FEATURE.ID' | translate }}</mat-label>
+        <input
+          matInput
+          [placeholder]="'FEATURE.ID' | translate"
+          [matAutocomplete]="featureAuto"
+          formControlName="productFeatureId"
+        />
+        <mat-autocomplete #featureAuto="matAutocomplete">
+          <mat-option
+            *ngFor="let feature of filteredFeatures$ | async"
+            [value]="feature.productFeatureId"
+          >
+            {{ feature.productFeatureId }} - {{ feature.description || feature.abbrev }}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error
+          *ngIf="createProductFeatureApplForm.get('productFeatureId')?.hasError('required')"
+          >{{ 'FEATURE.FEATURE_REQUIRED' | translate }}</mat-error
+        >
+      </mat-form-field>
+
       <mat-form-field appearance="outline" fxFlex="100%">
         <mat-label>{{ 'FEATURE.APPL_TYPE' | translate }}</mat-label>
         <mat-select formControlName="applTypeEnumId" name="applTypeEnumId">
