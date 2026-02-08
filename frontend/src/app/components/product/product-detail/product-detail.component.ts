@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product/product.service';
 // In your product list component
@@ -113,8 +113,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private supplierProductService: SupplierProductService,
     private featureService: FeatureService,
     private productFacilityService: ProductFacilityService,
-    private facilityService: FacilityService,
-    private cdr: ChangeDetectorRef
+    private facilityService: FacilityService
   ) { }
 
   private destroy$ = new Subject<void>();
@@ -123,7 +122,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.productId = params['productId'];
       if (this.productId) {
-        this.isLoading = true;
+        this.setLoading(true);
         this.getProduct(this.productId);
       }
     });
@@ -183,7 +182,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   }
 
   getProduct(productId: string): void {
-    this.isLoading = true;
+    this.setLoading(true);
 
     this.productService.getProduct(productId).subscribe({
       next: (response) => {
@@ -201,12 +200,10 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.loadSupplierProducts(productId);
         this.loadProductFeatures(productId);
         this.loadFacilities(); // Load facilities and then product facilities
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.setLoading(false);
       },
       error: () => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.setLoading(false);
       },
     });
   }
@@ -216,13 +213,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       next: (summary) => {
         setTimeout(() => {
           this.inventorySummary = Array.isArray(summary) ? summary : [];
-          this.cdr.markForCheck();
         }, 0);
       },
       error: () => {
         setTimeout(() => {
           this.inventorySummary = [];
-          this.cdr.markForCheck();
         }, 0);
       },
     });
@@ -233,13 +228,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       next: (items) => {
         setTimeout(() => {
           this.productFeatures = Array.isArray(items) ? items : [];
-          this.cdr.markForCheck();
         }, 0);
       },
       error: () => {
         setTimeout(() => {
           this.productFeatures = [];
-          this.cdr.markForCheck();
         }, 0);
       },
     });
@@ -273,13 +266,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       next: (items) => {
         setTimeout(() => {
           this.supplierProducts = Array.isArray(items) ? items : [];
-          this.cdr.markForCheck();
         }, 0);
       },
       error: () => {
         setTimeout(() => {
           this.supplierProducts = [];
-          this.cdr.markForCheck();
         }, 0);
       },
     });
@@ -344,7 +335,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     this.productService.updateProduct(payload).pipe(
       finalize(() => {
         this.isConfigSaving = false;
-        this.cdr.markForCheck();
       })
     ).subscribe({
       next: () => {
@@ -563,7 +553,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.productFacilities.forEach(pf => {
           pf.locations = this.productFacilityLocations.filter(pfl => pfl.facilityId === pf.facilityId);
         });
-        this.cdr.markForCheck();
       }
     });
   }
@@ -623,5 +612,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         });
       }
     });
+  }
+
+  private setLoading(isLoading: boolean): void {
+    setTimeout(() => {
+      this.isLoading = isLoading;
+    }, 0);
   }
 }

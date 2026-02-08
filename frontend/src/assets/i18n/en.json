@@ -9,6 +9,7 @@
     "ASSET_TYPE_ENUM_ID": "Asset Type Enum ID",
     "DETAIL_ID": "Asset Detail ID",
     "EFFECTIVE_DATE": "Effective Date",
+    "ENTER_COMMENT": "Enter Comment",
     "INVENTORY_ITEM": "Inventory Item",
     "ATP": "Available to Promise (ATP)",
     "AVAILABLE_TO_PROMISE_TOTAL": "Available to Promise Total",

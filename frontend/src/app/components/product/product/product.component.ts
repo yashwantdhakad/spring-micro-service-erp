@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
 import { Subject } from 'rxjs';
@@ -37,8 +37,7 @@ export class ProductComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private commonService: CommonService,
-    private cdr: ChangeDetectorRef
+    private commonService: CommonService
   ) { }
 
   ngOnInit(): void {
@@ -52,6 +51,7 @@ export class ProductComponent implements OnInit, OnDestroy {
         tap((value) => {
           this.queryString = value;
           this.pagination.page = 1;
+          this.setLoading(true);
         }),
         switchMap((value) =>
           this.productService.getProducts(
@@ -66,16 +66,12 @@ export class ProductComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           const list = Array.isArray(data?.documentList) ? data.documentList : [];
-          this.items = list;
-          this.pages = data?.documentListCount ?? 0;
+          this.applyListUpdate(list, data?.documentListCount ?? 0);
         },
         error: () => {
-          this.items = [];
-          this.pages = 0;
+          this.applyListUpdate([], 0);
         }
       });
-
-    this.getProducts(1, '');
   }
 
   ngOnDestroy(): void {
@@ -90,22 +86,16 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
 
   private getProducts(page: number, queryString: string): void {
-    this.isLoading = true;
+    this.setLoading(true);
     this.productService
       .getProducts(page - 1, queryString, this.currentSort?.active, this.currentSort?.direction)
       .subscribe({
         next: (data: any) => {
           const list = Array.isArray(data?.documentList) ? data.documentList : [];
-          this.items = list;
-          this.pages = data?.documentListCount ?? 0;
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          this.applyListUpdate(list, data?.documentListCount ?? 0);
         },
         error: (err) => {
-          this.items = [];
-          this.pages = 0;
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          this.applyListUpdate([], 0);
         }
       });
   }
@@ -154,6 +144,20 @@ export class ProductComponent implements OnInit, OnDestroy {
         );
       },
     });
+  }
+
+  private applyListUpdate(items: any[], total: number): void {
+    setTimeout(() => {
+      this.items = items;
+      this.pages = total;
+      this.isLoading = false;
+    }, 0);
+  }
+
+  private setLoading(isLoading: boolean): void {
+    setTimeout(() => {
+      this.isLoading = isLoading;
+    }, 0);
   }
 
   private destroy$ = new Subject<void>();

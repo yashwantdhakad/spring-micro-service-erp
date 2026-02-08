@@ -1,7 +1,0 @@
-wms:
-  base-url: http://wms-service:8082
-  service-token: ${WMS_SERVICE_TOKEN:}
-
-eureka:
-  client:
-    enabled: false
