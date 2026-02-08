@@ -10,7 +10,7 @@ import { ApiService } from './api.service';
   providedIn: 'root',
 })
 export class CommonService {
-  constructor(private apiService: ApiService, private store: Store) {}
+  constructor(private apiService: ApiService, private store: Store) { }
 
   private enumTypeCache = new Map<string, Observable<any[]>>();
   private statusItemCache = new Map<string, Observable<any[]>>();
@@ -206,79 +206,85 @@ export class CommonService {
     );
   }
 
- getLookupResults(
-  params: { field?: string; value?: string | number | string[] } = {},
-  table: string
-): Observable<any> {
-  const tableKey = table?.toLowerCase() || '';
-  const filterParams = (items: any[]) => {
-    if (!params.field) {
-      return items;
-    }
-    const rawField = params.field;
-    const camelField = rawField.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
-    const field = rawField in (items[0] || {}) ? rawField : camelField;
-    const rawValue = params.value;
-    const values = Array.isArray(rawValue)
-      ? rawValue.map(String)
-      : rawValue !== undefined && rawValue !== null
-        ? String(rawValue).split(',').map((val) => val.trim()).filter(Boolean)
-        : [];
-
-    return items.filter((item) => {
-      const itemValue = item?.[field];
-      if (values.length === 0) {
-        return true;
+  getLookupResults(
+    params: { field?: string; value?: string | number | string[] } = {},
+    table: string
+  ): Observable<any> {
+    const tableKey = table?.toLowerCase() || '';
+    const filterParams = (items: any[]) => {
+      if (!params.field) {
+        return items;
       }
-      return values.includes(String(itemValue));
-    });
-  };
+      const rawField = params.field;
+      const camelField = rawField.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
+      const field = rawField in (items[0] || {}) ? rawField : camelField;
+      const rawValue = params.value;
+      const values = Array.isArray(rawValue)
+        ? rawValue.map(String)
+        : rawValue !== undefined && rawValue !== null
+          ? String(rawValue).split(',').map((val) => val.trim()).filter(Boolean)
+          : [];
 
-  if (tableKey === 'geo') {
-    return this.fetchGeosWithAssocs().pipe(
-      map((items) => filterParams(items)),
-      catchError(this.handleError)
-    );
+      return items.filter((item) => {
+        const itemValue = item?.[field];
+        if (values.length === 0) {
+          return true;
+        }
+        return values.includes(String(itemValue));
+      });
+    };
+
+    if (tableKey === 'geo') {
+      return this.fetchGeosWithAssocs().pipe(
+        map((items) => filterParams(items)),
+        catchError(this.handleError)
+      );
+    }
+    if (tableKey === 'product_type' || tableKey === 'producttype') {
+      return this.apiService.get<any[]>('/wms/api/product-types').pipe(
+        map((items) => filterParams(items || [])),
+        catchError(this.handleError)
+      );
+    }
+    if (tableKey === 'product_category_type' || tableKey === 'productcategorytype') {
+      return this.apiService.get<any[]>('/wms/api/product-category-types').pipe(
+        map((items) => filterParams(items || [])),
+        catchError(this.handleError)
+      );
+    }
+    if (tableKey === 'productpricetype') {
+      return this.apiService.get<any[]>('/wms/api/product-price-types').pipe(
+        map((items) => filterParams(items || [])),
+        catchError(this.handleError)
+      );
+    }
+    if (tableKey === 'productpricepurpose') {
+      const purposes = [
+        { productPricePurposeId: 'DEPOSIT', description: 'Deposit price' },
+        { productPricePurposeId: 'PURCHASE', description: 'Purchase/Initial' },
+        { productPricePurposeId: 'RECURRING_CHARGE', description: 'Recurring Charge' },
+        { productPricePurposeId: 'USAGE_CHARGE', description: 'Usage Charge' },
+        { productPricePurposeId: 'COMPONENT_PRICE', description: 'Component Price' },
+      ];
+      return of(filterParams(purposes));
+    }
+    if (tableKey === 'roletypes') {
+      return this.apiService.get<any[]>('/party/api/role-types').pipe(
+        map((items) => filterParams(items || [])),
+        catchError(this.handleError)
+      );
+    }
+
+    return of([]);
   }
-  if (tableKey === 'product_type' || tableKey === 'producttype') {
-    return this.apiService.get<any[]>('/wms/api/product-types').pipe(
-      map((items) => filterParams(items || [])),
-      catchError(this.handleError)
-    );
-  }
-  if (tableKey === 'product_category_type' || tableKey === 'productcategorytype') {
-    return this.apiService.get<any[]>('/wms/api/product-category-types').pipe(
-      map((items) => filterParams(items || [])),
-      catchError(this.handleError)
-    );
-  }
-  if (tableKey === 'productpricetype') {
-    return this.apiService.get<any[]>('/wms/api/product-price-types').pipe(
-      map((items) => filterParams(items || [])),
-      catchError(this.handleError)
-    );
-  }
-  if (tableKey === 'productpricepurpose') {
-    const purposes = [
-      { productPricePurposeId: 'DEPOSIT', description: 'Deposit price' },
-      { productPricePurposeId: 'PURCHASE', description: 'Purchase/Initial' },
-      { productPricePurposeId: 'RECURRING_CHARGE', description: 'Recurring Charge' },
-      { productPricePurposeId: 'USAGE_CHARGE', description: 'Usage Charge' },
-      { productPricePurposeId: 'COMPONENT_PRICE', description: 'Component Price' },
-    ];
-    return of(filterParams(purposes));
-  }
-  if (tableKey === 'roletypes') {
-    return this.apiService.get<any[]>('/party/api/role-types').pipe(
-      map((items) => filterParams(items || [])),
+
+  getValidStatusChanges(statusId: string): Observable<any[]> {
+    return this.apiService.get<any[]>(`/oms/api/common/status-valid-changes/by-status/${statusId}`).pipe(
       catchError(this.handleError)
     );
   }
 
-  return of([]);
-}
-
-// this.getLookupResults({ field: 'geo_type_id', value: 'COUNTRY' }, 'geo');
+  // this.getLookupResults({ field: 'geo_type_id', value: 'COUNTRY' }, 'geo');
 
   private fetchGeosWithAssocs(): Observable<any[]> {
     if (!this.geosCache$) {

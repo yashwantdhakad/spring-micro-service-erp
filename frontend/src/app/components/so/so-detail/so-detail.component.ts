@@ -65,8 +65,9 @@ export class SODetailComponent implements OnInit {
     'requiredByDate',
     'unitAmount',
     'quantity',
-    'pickedQuantity',
+    'statusId',
     'totalAmount',
+    'action',
   ];
 
   contents: any[] = [];
@@ -176,6 +177,7 @@ export class SODetailComponent implements OnInit {
               }))
             );
           });
+          this.loadValidStatusChanges();
           this.orderService.getReservationStatus(this.orderId).pipe(catchError(() => of(null))).subscribe((reservationStatus) => {
             this.reservationStatus = reservationStatus;
             this.canPicklist = reservationStatus?.fullyReserved === true
@@ -468,8 +470,8 @@ export class SODetailComponent implements OnInit {
 
     this.dialog.open(ProductItemComponent, {
       data: { productItemData: this.productItemData },
-    }).afterClosed().subscribe(() => {
-      if (this.orderPrimaryId) {
+    }).afterClosed().subscribe((result) => {
+      if (result && this.orderPrimaryId) {
         this.getOrderById(this.orderPrimaryId).subscribe();
       }
     });
@@ -483,8 +485,8 @@ export class SODetailComponent implements OnInit {
 
     this.dialog.open(NoteComponent, {
       data: { noteData: this.noteData },
-    }).afterClosed().subscribe(() => {
-      if (this.orderPrimaryId) {
+    }).afterClosed().subscribe((result) => {
+      if (result && this.orderPrimaryId) {
         this.getOrderById(this.orderPrimaryId).subscribe();
       }
     });
@@ -522,8 +524,8 @@ export class SODetailComponent implements OnInit {
 
     this.dialog.open(ContentComponent, {
       data: { contentData: this.contentData },
-    }).afterClosed().subscribe(() => {
-      if (this.orderPrimaryId) {
+    }).afterClosed().subscribe((result) => {
+      if (result && this.orderPrimaryId) {
         this.getOrderById(this.orderPrimaryId).subscribe();
       }
     });
@@ -572,8 +574,8 @@ export class SODetailComponent implements OnInit {
 
     this.dialog.open(AddEditAddressComponent, {
       data: { addressData },
-    }).afterClosed().subscribe(() => {
-      if (this.orderId) {
+    }).afterClosed().subscribe((result) => {
+      if (result && this.orderId) {
         if (this.orderPrimaryId) {
           this.getOrderById(this.orderPrimaryId).subscribe();
         }
@@ -684,5 +686,128 @@ export class SODetailComponent implements OnInit {
       return undefined;
     }
     return this.shipmentStatusById.get(shipmentId);
+  }
+
+  cancelItem(item: any): void {
+    if (!this.orderId || !item?.orderItemSeqId) {
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRMATION'),
+        message: 'Are you sure you want to cancel this item?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+      this.orderService.cancelOrderItem(this.orderId!, item.orderItemSeqId).subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId).subscribe();
+          }
+        },
+      });
+    });
+  }
+
+  editItem(item: any): void {
+    this.addItemDialog({
+      ...item,
+      updateExisting: true
+    });
+  }
+
+  getRowClass(item: any): string {
+    if (item.statusId === 'ITEM_CANCELLED') {
+      return 'status-cancelled';
+    }
+    if (item.statusId === 'ITEM_COMPLETED') {
+      return 'status-completed';
+    }
+    const reserved = Number(item.reservedQuantity || 0);
+    const quantity = Number(item.quantity || 0);
+    const picked = Number(item.pickedQuantity || 0);
+    if (reserved + picked < quantity && item.statusId === 'ITEM_APPROVED') {
+      return 'status-backorder';
+    }
+    return '';
+  }
+
+  validStatusChanges: any[] = [];
+
+  loadValidStatusChanges(): void {
+    if (!this.statusItem?.statusId) {
+      this.validStatusChanges = [];
+      return;
+    }
+    this.commonService.getValidStatusChanges(this.statusItem.statusId).subscribe({
+      next: (changes) => {
+        this.validStatusChanges = Array.isArray(changes) ? changes : [];
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.validStatusChanges = [];
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  changeOrderStatus(statusIdTo: string): void {
+    if (!this.orderId) return;
+
+    if (statusIdTo === 'ORDER_CANCELLED') {
+      this.cancelOrder();
+      return;
+    }
+
+    // Generic confirmation for other statuses
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRMATION'),
+        message: this.translate.instant('COMMON.STATUS_CHANGE_CONFIRMATION', { status: statusIdTo }),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.orderService.updateOrderStatus(this.orderId!, statusIdTo).subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId).subscribe();
+          }
+        },
+        error: (err) => {
+          console.error('Failed to update status', err);
+          // Optionally show error snackbar
+        }
+      });
+    });
+  }
+
+  cancelOrder(): void {
+    if (!this.orderId) return;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRMATION'),
+        message: 'Are you sure you want to cancel this order?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.orderService.updateOrderStatus(this.orderId!, 'ORDER_CANCELLED').subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId).subscribe();
+          }
+        },
+        error: (err) => {
+          console.error('Failed to cancel order', err);
+        }
+      });
+    });
   }
 }

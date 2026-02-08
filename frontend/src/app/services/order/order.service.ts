@@ -6,7 +6,7 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root',
 })
 export class OrderService {
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   getOrders(pageIndex: number, keyword: string, sortBy?: string, sortDirection?: string): Observable<any> {
     const params = new URLSearchParams();
@@ -159,9 +159,18 @@ export class OrderService {
     return this.apiService.post(url, { statusId });
   }
 
-  updateOrderItemQuantity(orderId: string, orderItemSeqId: string, quantity: number): Observable<any> {
+  updateOrderItemQuantity(orderId: string, orderItemSeqId: string, quantity: number, unitAmount?: number): Observable<any> {
     const url = `/oms/api/orders/${encodeURIComponent(orderId)}/items/${encodeURIComponent(orderItemSeqId)}/quantity`;
-    return this.apiService.put(url, { quantity });
+    const payload: any = { quantity };
+    if (unitAmount !== undefined) {
+      payload.unitAmount = unitAmount;
+    }
+    return this.apiService.put(url, payload);
+  }
+
+  cancelOrderItem(orderId: string, orderItemSeqId: string): Observable<any> {
+    const url = `/oms/api/orders/${encodeURIComponent(orderId)}/items/${encodeURIComponent(orderItemSeqId)}/cancel`;
+    return this.apiService.post(url, {});
   }
 
   updateShippingInstructions(orderId: string, shipGroupSeqId: string, shippingInstructions: string): Observable<any> {

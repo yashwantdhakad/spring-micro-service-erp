@@ -16,6 +16,8 @@ import { AddEditProductPriceComponent } from './add-edit-product-price/add-edit-
 import { ProductContentComponent } from './product-content/product-content.component';
 import { ProductAssocComponent } from './product-assoc/product-assoc.component';
 import { AddEditProductCategoryComponent } from './add-edit-product-category/add-edit-product-category.component';
+import { AddProductFacilityDialogComponent } from './add-product-facility-dialog/add-product-facility-dialog.component';
+import { AddProductFacilityLocationDialogComponent } from './add-product-facility-location-dialog/add-product-facility-location-dialog.component';
 
 // Shared Angular Material Modules
 import { MaterialModule } from '../../components/common/material/material.module';
@@ -31,6 +33,8 @@ import { SupplierModule } from '../supplier/supplier.module';
     ProductContentComponent,
     ProductAssocComponent,
     AddEditProductCategoryComponent,
+    AddProductFacilityDialogComponent,
+    AddProductFacilityLocationDialogComponent
   ],
   imports: [
     CommonModule,

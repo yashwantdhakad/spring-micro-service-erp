@@ -51,9 +51,9 @@ export class ProductItemComponent implements OnInit {
     const {
       orderId,
       orderPartSeqId,
+      orderItemSeqId,
       updateExisting,
       requireInventory,
-      assetClassEnumId,
       productId,
       quantity,
       unitAmount,
@@ -66,9 +66,9 @@ export class ProductItemComponent implements OnInit {
     this.addUpdateProductItemForm = this.fb.group({
       orderId: [orderId],
       orderPartSeqId: [orderPartSeqId],
+      orderItemSeqId: [orderItemSeqId],
       updateExisting: [updateExisting || false],
       requireInventory: [requireInventory || false],
-      assetClassEnumId: [assetClassEnumId],
       productId: [productId, Validators.required],
       quantity: [quantity, Validators.required],
       calcAmount: [calcAmount],
@@ -79,10 +79,6 @@ export class ProductItemComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.setupAutocomplete();
-    this.loadEnumTypes();
-  }
 
   private setupAutocomplete(): void {
     this.filteredProducts$ = this.addUpdateProductItemForm.get('productId')!.valueChanges.pipe(
@@ -99,18 +95,17 @@ export class ProductItemComponent implements OnInit {
     );
   }
 
-  private loadEnumTypes(): void {
-    this.commonService.getParentEnumTypes('AsClsInventory').subscribe({
-      next: (data) => {
-        // Use setTimeout to avoid NG0100: ExpressionChangedAfterItHasBeenCheckedError
-        setTimeout(() => {
-          this.enumTypes = Array.isArray(data) ? data : [data];
-        });
-      },
-      error: (err) => {
-      },
-    });
+  ngOnInit(): void {
+    this.setupAutocomplete();
+
+    // Check if we are in update mode
+    const updateExisting = this.addUpdateProductItemForm.get('updateExisting')?.value;
+    if (updateExisting) {
+      this.addUpdateProductItemForm.get('productId')?.disable();
+      this.addUpdateProductItemForm.get('itemTypeEnumId')?.disable();
+    }
   }
+
 
   addUpdateProductItem(): void {
     if (!this.addUpdateProductItemForm.valid) return;
@@ -119,15 +114,17 @@ export class ProductItemComponent implements OnInit {
     const values = this.addUpdateProductItemForm.value;
 
     const action$ = values.updateExisting
-      ? this.orderService.updateOrderNote(values) // Adjust this method if incorrect
+      ? this.orderService.updateOrderItemQuantity(values.orderId, values.orderItemSeqId, values.quantity, values.unitAmount)
       : this.orderService.addItem(values);
 
     action$.subscribe({
       next: () => {
+        this.isLoading = false;
         this.dialogRef.close(values);
         this.addUpdateProductItemForm.reset();
       },
       error: (err) => {
+        this.isLoading = false;
       },
       complete: () => {
         this.isLoading = false;

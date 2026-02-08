@@ -39,3 +39,44 @@
   height: 24px;
   align-items: center;
 }
+
+/* Facility Section Styles */
+.facility-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 16px;
+  background-color: #fafafa;
+}
+
+.facility-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.facility-details {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.locations-section {
+  margin-top: 16px;
+}
+
+.locations-section h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-mat-icon {
+  cursor: pointer;
+}
+
+.facility-scroll-container {
+  max-height: 500px;
+  overflow-y: auto;
+}

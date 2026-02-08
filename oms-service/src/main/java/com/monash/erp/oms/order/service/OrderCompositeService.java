@@ -90,6 +90,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -276,7 +277,9 @@ public class OrderCompositeService {
 
         Map<String, BigDecimal> receivedQuantities = fetchReceivedQuantities(orderId);
         Map<String, BigDecimal> pickedQuantities = fetchPickedQuantities(orderId);
-        List<OrderPartDto> parts = buildParts(orderId, header, receivedQuantities, pickedQuantities);
+        Map<String, BigDecimal> reservedQuantities = fetchReservedQuantities(orderId);
+        List<OrderPartDto> parts = buildParts(orderId, header, receivedQuantities, pickedQuantities,
+                reservedQuantities);
         List<OrderAdjustmentDto> adjustments = orderAdjustmentRepository.findByOrderId(orderId).stream()
                 .map(this::toAdjustmentDto)
                 .collect(Collectors.toList());
@@ -441,7 +444,12 @@ public class OrderCompositeService {
         item.setItemDescription(request.getItemDescription());
         item.setOrderItemTypeId(request.getItemTypeEnumId());
         item.setShipBeforeDate(request.getShipBeforeDate());
-        item.setEstimatedDeliveryDate(request.getEstimatedDeliveryDate());
+        String itemStatusId = DEFAULT_ITEM_STATUS;
+        if (STATUS_APPROVED.equals(header.getStatusId())) {
+            itemStatusId = ITEM_APPROVED;
+        }
+
+        item.setStatusId(itemStatusId);
         orderItemRepository.save(item);
 
         String shipGroupSeqId = isBlank(request.getOrderPartSeqId()) ? "00001" : request.getOrderPartSeqId();
@@ -455,7 +463,7 @@ public class OrderCompositeService {
         OrderStatus itemStatus = new OrderStatus();
         itemStatus.setOrderId(orderId);
         itemStatus.setOrderItemSeqId(nextSeqId);
-        itemStatus.setStatusId(DEFAULT_ITEM_STATUS);
+        itemStatus.setStatusId(itemStatusId);
         itemStatus.setStatusDatetime(LocalDateTime.now());
         itemStatus.setStatusUserLogin("system");
         orderStatusRepository.save(itemStatus);
@@ -466,7 +474,11 @@ public class OrderCompositeService {
         header.setGrandTotal(header.getGrandTotal().add(item.getUnitPrice().multiply(item.getQuantity())));
         orderHeaderRepository.save(header);
 
-        return toItemDto(item, BigDecimal.ZERO, BigDecimal.ZERO);
+        if (STATUS_APPROVED.equals(header.getStatusId())) {
+            reserveInventoryForOrder(orderId);
+        }
+
+        return toItemDto(item, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     public OrderNoteDto addNote(String orderId, OrderNoteRequest request) {
@@ -528,8 +540,8 @@ public class OrderCompositeService {
             String orderId,
             String orderItemSeqId,
             OrderItemQuantityUpdateRequest request) {
-        if (request == null || request.getQuantity() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity is required");
+        if (request == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request body is required");
         }
         OrderHeader header = getOrderHeader(orderId);
         String statusId = header.getStatusId();
@@ -539,14 +551,21 @@ public class OrderCompositeService {
 
         OrderItem item = orderItemRepository.findByOrderIdAndOrderItemSeqId(orderId, orderItemSeqId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order item not found"));
-        item.setQuantity(request.getQuantity());
+        if (request.getQuantity() != null) {
+            item.setQuantity(request.getQuantity());
+        }
+        if (request.getUnitAmount() != null) {
+            item.setUnitPrice(request.getUnitAmount());
+        }
         orderItemRepository.save(item);
 
         BigDecimal receivedQuantity = fetchReceivedQuantities(orderId)
                 .getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
-        BigDecimal remainingQuantity = Optional.ofNullable(item.getQuantity()).orElse(BigDecimal.ZERO)
-                .subtract(receivedQuantity);
-        return toItemDto(item, receivedQuantity, remainingQuantity);
+        BigDecimal pickedQuantity = fetchPickedQuantities(orderId)
+                .getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
+        BigDecimal reservedQuantity = fetchReservedQuantities(orderId)
+                .getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO);
+        return toItemDto(item, receivedQuantity, pickedQuantity, reservedQuantity);
     }
 
     public void updateShippingInstructions(String orderId, String shipGroupSeqId,
@@ -623,9 +642,12 @@ public class OrderCompositeService {
             return List.of();
         }
 
+        List<String> ordersInPicklists = fetchOrdersInPicklists();
+
         List<String> orderIds = approvedOrders.stream()
                 .map(OrderHeader::getOrderId)
                 .filter(value -> !isBlank(value))
+                .filter(orderId -> !ordersInPicklists.contains(orderId))
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -1230,7 +1252,8 @@ public class OrderCompositeService {
             String orderId,
             OrderHeader header,
             Map<String, BigDecimal> receivedQuantities,
-            Map<String, BigDecimal> pickedQuantities) {
+            Map<String, BigDecimal> pickedQuantities,
+            Map<String, BigDecimal> reservedQuantities) {
         List<OrderItemShipGroup> shipGroups = orderItemShipGroupRepository.findByOrderId(orderId);
         if (shipGroups.isEmpty()) {
             OrderItemShipGroup fallback = new OrderItemShipGroup();
@@ -1258,7 +1281,8 @@ public class OrderCompositeService {
                     .map(item -> toItemDto(
                             item,
                             receivedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO),
-                            pickedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO)))
+                            pickedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO),
+                            reservedQuantities.getOrDefault(item.getOrderItemSeqId(), BigDecimal.ZERO)))
                     .collect(Collectors.toList()));
             part.setPartTotal(calculatePartTotal(partItems));
             parts.add(part);
@@ -1397,7 +1421,8 @@ public class OrderCompositeService {
                 .findFirst();
     }
 
-    private OrderItemDto toItemDto(OrderItem item, BigDecimal receivedQuantity, BigDecimal pickedQuantity) {
+    private OrderItemDto toItemDto(OrderItem item, BigDecimal receivedQuantity, BigDecimal pickedQuantity,
+            BigDecimal reservedQuantity) {
         OrderItemDto dto = new OrderItemDto();
         dto.setOrderItemSeqId(item.getOrderItemSeqId());
         dto.setProductId(item.getProductId());
@@ -1412,6 +1437,9 @@ public class OrderCompositeService {
         dto.setReceivedQuantity(received);
         dto.setRemainingQuantity(quantity.subtract(received).max(BigDecimal.ZERO));
         dto.setPickedQuantity(defaultIfNull(pickedQuantity, BigDecimal.ZERO));
+        dto.setReservedQuantity(defaultIfNull(reservedQuantity, BigDecimal.ZERO));
+        dto.setStatusId(item.getStatusId());
+        dto.setStatusDescription(resolveStatusDescription(item.getStatusId()));
         return dto;
     }
 
@@ -1804,6 +1832,70 @@ public class OrderCompositeService {
             return totals;
         }
         return totals;
+    }
+
+    private Map<String, BigDecimal> fetchReservedQuantities(String orderId) {
+        Map<String, BigDecimal> totals = new HashMap<>();
+        List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+        for (OrderItemShipGrpInvRes res : reservations) {
+            if (isBlank(res.getInventoryItemId())) {
+                continue;
+            }
+            String key = res.getOrderItemSeqId();
+            BigDecimal qty = defaultIfNull(res.getQuantity(), BigDecimal.ZERO);
+            totals.put(key, totals.getOrDefault(key, BigDecimal.ZERO).add(qty));
+        }
+        return totals;
+    }
+
+    public void cancelOrderItem(String orderId, String orderItemSeqId) {
+        OrderHeader header = getOrderHeader(orderId);
+        OrderItem item = orderItemRepository.findByOrderIdAndOrderItemSeqId(orderId, orderItemSeqId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item not found"));
+
+        if ("ITEM_CANCELLED".equals(item.getStatusId()) || "ITEM_COMPLETED".equals(item.getStatusId())) {
+            return;
+        }
+
+        BigDecimal completedQty = BigDecimal.ZERO;
+        if ("PURCHASE_ORDER".equals(header.getOrderTypeId())) {
+            Map<String, BigDecimal> received = fetchReceivedQuantities(orderId);
+            completedQty = received.getOrDefault(orderItemSeqId, BigDecimal.ZERO);
+        } else {
+            Map<String, BigDecimal> picked = fetchPickedQuantities(orderId);
+            completedQty = picked.getOrDefault(orderItemSeqId, BigDecimal.ZERO);
+        }
+
+        if (completedQty.compareTo(BigDecimal.ZERO) > 0) {
+            // Partially shipped/picked/received: Complete the item with current quantity,
+            // cancel remainder
+            item.setQuantity(completedQty);
+            item.setStatusId("ITEM_COMPLETED");
+            createItemStatus(orderId, orderItemSeqId, "ITEM_COMPLETED");
+            orderItemRepository.save(item);
+
+            // Release any reservations for this item
+            List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+            reservations.stream()
+                    .filter(res -> orderItemSeqId.equals(res.getOrderItemSeqId()))
+                    .forEach(res -> {
+                        orderItemShipGrpInvResRepository.delete(res);
+                    });
+
+        } else {
+            // Not picked/shipped: Full cancellation
+            item.setStatusId("ITEM_CANCELLED");
+            createItemStatus(orderId, orderItemSeqId, "ITEM_CANCELLED");
+            orderItemRepository.save(item);
+
+            List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+            reservations.stream()
+                    .filter(res -> orderItemSeqId.equals(res.getOrderItemSeqId()))
+                    .forEach(orderItemShipGrpInvResRepository::delete);
+        }
+
+        // Trigger generic reserve/sync logic if needed
+        // For now, simpler is better.
     }
 
     private void reserveInventoryForOrder(String orderId) {
@@ -2529,5 +2621,21 @@ public class OrderCompositeService {
 
     private BigDecimal defaultIfNull(BigDecimal value, BigDecimal fallback) {
         return value == null ? fallback : value;
+    }
+
+    private List<String> fetchOrdersInPicklists() {
+        try {
+            String url = wmsBaseUrl + "/api/picklists/orders/ids";
+            ResponseEntity<List<String>> response = restTemplate.exchange(
+                    url,
+                    org.springframework.http.HttpMethod.GET,
+                    null,
+                    new org.springframework.core.ParameterizedTypeReference<List<String>>() {
+                    });
+            return response.getBody() != null ? response.getBody() : List.of();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
     }
 }

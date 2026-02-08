@@ -38,10 +38,10 @@ describe('AddEditCreditCardComponent', () => {
 
   beforeEach(async () => {
     partyServiceSpy = jasmine.createSpyObj('PartyService', [
-      'createUpdatePaymentMethod',
-      'getPaymentGatewayConfig',
+      'createCreditCard',
+      'getPaymentMethodTypes',
     ]);
-    commonServiceSpy = jasmine.createSpyObj('CommonService', ['getEnumTypes']);
+    commonServiceSpy = jasmine.createSpyObj('CommonService', ['getLookupResults']);
     dialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
 
     await TestBed.configureTestingModule({
@@ -59,6 +59,8 @@ describe('AddEditCreditCardComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AddEditCreditCardComponent);
     component = fixture.componentInstance;
+    partyServiceSpy.getPaymentMethodTypes.and.returnValue(of([]));
+    commonServiceSpy.getLookupResults.and.returnValue(of([]));
     fixture.detectChanges();
   });
 
@@ -73,15 +75,15 @@ describe('AddEditCreditCardComponent', () => {
     expect(component.states.length).toBeGreaterThan(0);
   });
 
-  it('should call PartyService.createUpdatePaymentMethod on valid form submission', fakeAsync(() => {
+  it('should call PartyService.createCreditCard on valid form submission', fakeAsync(() => {
     const form = component.addEditCreditCardForm;
-    partyServiceSpy.createUpdatePaymentMethod.and.returnValue(of({}));
+    partyServiceSpy.createCreditCard.and.returnValue(of({}));
 
     form.markAllAsTouched();
     component.addEditCreditCard();
 
     tick();
-    expect(partyServiceSpy.createUpdatePaymentMethod).toHaveBeenCalled();
+    expect(partyServiceSpy.createCreditCard).toHaveBeenCalled();
     expect(dialogRefSpy.close).toHaveBeenCalled();
   }));
 
@@ -89,12 +91,12 @@ describe('AddEditCreditCardComponent', () => {
     component.addEditCreditCardForm.patchValue({ firstNameOnAccount: '' }); // Make form invalid
     component.addEditCreditCard();
 
-    expect(partyServiceSpy.createUpdatePaymentMethod).not.toHaveBeenCalled();
+    expect(partyServiceSpy.createCreditCard).not.toHaveBeenCalled();
   });
 
   it('should show error if service fails', fakeAsync(() => {
     const form = component.addEditCreditCardForm;
-    partyServiceSpy.createUpdatePaymentMethod.and.returnValue(
+    partyServiceSpy.createCreditCard.and.returnValue(
       throwError(() => new Error('error'))
     );
 
@@ -102,7 +104,7 @@ describe('AddEditCreditCardComponent', () => {
     component.addEditCreditCard();
 
     tick();
-    expect(partyServiceSpy.createUpdatePaymentMethod).toHaveBeenCalled();
+    expect(partyServiceSpy.createCreditCard).toHaveBeenCalled();
     expect(dialogRefSpy.close).not.toHaveBeenCalled();
   }));
 });

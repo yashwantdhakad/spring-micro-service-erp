@@ -450,6 +450,8 @@ export class SupplierDetailComponent implements OnDestroy {
       partyId: this.partyId,
       countries: this.countries,
       states: this.states,
+      postalAddressList: this.postalAddressList,
+      roleTypeId: 'SUPPLIER',
     };
 
     const dialogRef = this.dialog

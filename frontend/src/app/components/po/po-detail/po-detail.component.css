@@ -1,5 +1,5 @@
 .mat-grid-tile-content {
-  justify-content: left!important;
+  justify-content: left !important;
 }
 
 .po-overview-card,
@@ -49,4 +49,55 @@
 
 .po-overview-value {
   text-align: left;
+}
+
+.status-cancelled {
+  background-color: #ffcccc;
+}
+
+.status-completed {
+  background-color: #ccffcc;
+}
+
+.quantity-column-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.quantity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-label {
+  font-size: 0.8em;
+  color: #666;
+  white-space: nowrap;
+}
+
+.quantity-value {
+  font-weight: 500;
+  min-width: 40px;
+  text-align: right;
+}
+.split-btn-group {
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.split-btn-primary {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin-right: 1px !important;
+}
+
+.split-btn-dropdown {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    min-width: 36px !important;
+    padding: 0 !important;
+    margin-left: 0 !important;
 }

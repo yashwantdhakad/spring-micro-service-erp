@@ -62,8 +62,7 @@ public class OrderCompositeController {
             @RequestParam(required = false) String queryString,
             @RequestParam(required = false) String orderTypeId,
             @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false) String sortDirection
-    ) {
+            @RequestParam(required = false) String sortDirection) {
         return orderCompositeService.listOrders(page, size, queryString, orderTypeId, sortBy, sortDirection);
     }
 
@@ -103,8 +102,7 @@ public class OrderCompositeController {
     @PostMapping("/{orderId}/addresses")
     public ResponseEntity<OrderContactMechDto> addOrderAddress(
             @PathVariable String orderId,
-            @RequestBody OrderAddressRequest request
-    ) {
+            @RequestBody OrderAddressRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.addOrderAddress(orderId, request));
     }
 
@@ -112,24 +110,21 @@ public class OrderCompositeController {
     public OrderContactMechDto updateOrderAddress(
             @PathVariable String orderId,
             @PathVariable String contactMechId,
-            @RequestBody OrderAddressRequest request
-    ) {
+            @RequestBody OrderAddressRequest request) {
         return orderCompositeService.updateOrderAddress(orderId, contactMechId, request);
     }
 
     @PostMapping("/{orderId}/items")
     public ResponseEntity<OrderItemDto> addItem(
             @PathVariable String orderId,
-            @RequestBody OrderItemRequest request
-    ) {
+            @RequestBody OrderItemRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.addItem(orderId, request));
     }
 
     @PostMapping("/{orderId}/status")
     public OrderHeaderDto updateStatus(
             @PathVariable String orderId,
-            @RequestBody OrderStatusChangeRequest request
-    ) {
+            @RequestBody OrderStatusChangeRequest request) {
         return orderCompositeService.updateOrderStatus(orderId, request);
     }
 
@@ -137,17 +132,23 @@ public class OrderCompositeController {
     public OrderItemDto updateItemQuantity(
             @PathVariable String orderId,
             @PathVariable String orderItemSeqId,
-            @RequestBody OrderItemQuantityUpdateRequest request
-    ) {
+            @RequestBody OrderItemQuantityUpdateRequest request) {
         return orderCompositeService.updateOrderItemQuantity(orderId, orderItemSeqId, request);
+    }
+
+    @PostMapping("/{orderId}/items/{orderItemSeqId}/cancel")
+    public ResponseEntity<Void> cancelOrderItem(
+            @PathVariable String orderId,
+            @PathVariable String orderItemSeqId) {
+        orderCompositeService.cancelOrderItem(orderId, orderItemSeqId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{orderId}/ship-groups/{shipGroupSeqId}/shipping-instructions")
     public ResponseEntity<Void> updateShippingInstructions(
             @PathVariable String orderId,
             @PathVariable String shipGroupSeqId,
-            @RequestBody OrderShippingInstructionRequest request
-    ) {
+            @RequestBody OrderShippingInstructionRequest request) {
         orderCompositeService.updateShippingInstructions(orderId, shipGroupSeqId, request);
         return ResponseEntity.noContent().build();
     }
@@ -155,9 +156,9 @@ public class OrderCompositeController {
     @PostMapping("/{orderId}/receive")
     public ResponseEntity<PurchaseOrderReceiveResponse> receive(
             @PathVariable String orderId,
-            @RequestBody PurchaseOrderReceiveRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.receivePurchaseOrder(orderId, request));
+            @RequestBody PurchaseOrderReceiveRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(orderCompositeService.receivePurchaseOrder(orderId, request));
     }
 
     @GetMapping("/{orderId}/reservation-status")
@@ -209,8 +210,7 @@ public class OrderCompositeController {
     @PostMapping("/{orderId}/notes")
     public ResponseEntity<OrderNoteDto> addNote(
             @PathVariable String orderId,
-            @RequestBody OrderNoteRequest request
-    ) {
+            @RequestBody OrderNoteRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderCompositeService.addNote(orderId, request));
     }
 
@@ -218,8 +218,7 @@ public class OrderCompositeController {
     public OrderNoteDto updateNote(
             @PathVariable String orderId,
             @PathVariable Long noteId,
-            @RequestBody OrderNoteRequest request
-    ) {
+            @RequestBody OrderNoteRequest request) {
         return orderCompositeService.updateNote(orderId, noteId, request);
     }
 
@@ -227,8 +226,7 @@ public class OrderCompositeController {
     public ResponseEntity<OrderContentDto> addContent(
             @PathVariable String orderId,
             @RequestPart("description") String description,
-            @RequestPart("contentFile") MultipartFile contentFile
-    ) {
+            @RequestPart("contentFile") MultipartFile contentFile) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(orderCompositeService.addContent(orderId, description, contentFile));
     }
@@ -236,16 +234,17 @@ public class OrderCompositeController {
     @GetMapping("/{orderId}/contents/{contentId}")
     public ResponseEntity<Resource> getContent(
             @PathVariable String orderId,
-            @PathVariable String contentId
-    ) throws Exception {
-        OrderCompositeService.OrderContentDownload download = orderCompositeService.loadOrderContent(orderId, contentId);
+            @PathVariable String contentId) throws Exception {
+        OrderCompositeService.OrderContentDownload download = orderCompositeService.loadOrderContent(orderId,
+                contentId);
         Resource resource = new UrlResource(download.getFilePath().toUri());
         String fileName = download.getFileName();
         if (fileName == null || fileName.isBlank()) {
             fileName = contentId;
         }
         String contentType = URLConnection.guessContentTypeFromName(fileName);
-        MediaType mediaType = contentType != null ? MediaType.parseMediaType(contentType) : MediaType.APPLICATION_OCTET_STREAM;
+        MediaType mediaType = contentType != null ? MediaType.parseMediaType(contentType)
+                : MediaType.APPLICATION_OCTET_STREAM;
 
         return ResponseEntity.ok()
                 .contentType(mediaType)

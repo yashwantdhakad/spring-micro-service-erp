@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,7 +27,14 @@ public class ProductFacilityLocationController {
     }
 
     @GetMapping
-    public List<ProductFacilityLocation> list() {
+    public List<ProductFacilityLocation> list(@RequestParam(required = false) String productId,
+            @RequestParam(required = false) String facilityId) {
+        if (productId != null) {
+            return service.findByProductId(productId);
+        }
+        if (facilityId != null) {
+            return service.findByFacilityId(facilityId);
+        }
         return service.list();
     }
 

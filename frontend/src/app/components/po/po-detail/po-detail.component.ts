@@ -72,9 +72,8 @@ export class PODetailComponent implements OnInit {
     { key: 'requiredByDate', label: this.translate.instant('COMMON.REQUIRED_BY_DATE') },
     { key: 'unitAmount', label: this.translate.instant('COMMON.PRICE') },
     { key: 'quantity', label: this.translate.instant('COMMON.QUANTITY') },
-    { key: 'receivedQuantity', label: this.translate.instant('PO.RECEIVED_QTY') },
-    { key: 'remainingQuantity', label: this.translate.instant('PO.REMAINING_QTY') },
     { key: 'totalAmount', label: this.translate.instant('COMMON.TOTAL_AMOUNT') },
+    { key: 'action', label: this.translate.instant('COMMON.ACTION') }
   ];
   partColumnKeys: string[] = this.partColumns.map(c => c.key);
 
@@ -208,6 +207,7 @@ export class PODetailComponent implements OnInit {
               this.cdr.markForCheck();
             }, 0);
           });
+          this.loadValidStatusChanges();
           this.orderService.getOrderInvoices(this.orderId).pipe(catchError(() => of([]))).subscribe((invoices) => {
             const invoiceList = Array.isArray(invoices) ? invoices : [];
             const items = invoiceList.flatMap((invoice: any) =>
@@ -285,6 +285,45 @@ export class PODetailComponent implements OnInit {
           this.cancelEditQuantity();
         },
       });
+  }
+
+  editItem(item: any): void {
+    this.startEditQuantity(item);
+  }
+
+  cancelItem(item: any): void {
+    if (!this.orderId || !item?.orderItemSeqId) {
+      return;
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRM'),
+        message: this.translate.instant('COMMON.CONFIRM_CANCEL_ITEM'),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+      this.orderService.cancelOrderItem(this.orderId!, item.orderItemSeqId).subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId).subscribe();
+          }
+        },
+      });
+    });
+  }
+
+  getRowClass(row: any): string {
+    if (row?.statusId === 'ITEM_CANCELLED') {
+      return 'status-cancelled';
+    }
+    if (row?.statusId === 'ITEM_COMPLETED') {
+      return 'status-completed';
+    }
+    return '';
   }
 
   isEditingItem(item: any): boolean {
@@ -688,6 +727,81 @@ export class PODetailComponent implements OnInit {
         window.open(url, '_blank');
         setTimeout(() => URL.revokeObjectURL(url), 1000);
       },
+    });
+  }
+
+  validStatusChanges: any[] = [];
+
+  loadValidStatusChanges(): void {
+    if (!this.statusItem?.statusId) {
+      this.validStatusChanges = [];
+      return;
+    }
+    this.commonService.getValidStatusChanges(this.statusItem.statusId).subscribe({
+      next: (changes) => {
+        this.validStatusChanges = Array.isArray(changes) ? changes : [];
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.validStatusChanges = [];
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  changeOrderStatus(statusIdTo: string): void {
+    if (!this.orderId) return;
+
+    if (statusIdTo === 'ORDER_CANCELLED') {
+      this.cancelOrder();
+      return;
+    }
+
+    // Generic confirmation for other statuses
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRMATION'),
+        message: this.translate.instant('COMMON.STATUS_CHANGE_CONFIRMATION', { status: statusIdTo }),
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.orderService.updateOrderStatus(this.orderId!, statusIdTo).subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId).subscribe();
+          }
+        },
+        error: (err) => {
+          console.error('Failed to update status', err);
+        }
+      });
+    });
+  }
+
+  cancelOrder(): void {
+    if (!this.orderId) return;
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: this.translate.instant('COMMON.CONFIRMATION'),
+        message: 'Are you sure you want to cancel this order?',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.orderService.updateOrderStatus(this.orderId!, 'ORDER_CANCELLED').subscribe({
+        next: () => {
+          if (this.orderPrimaryId) {
+            this.getOrderById(this.orderPrimaryId).subscribe();
+          }
+        },
+        error: (err) => {
+          console.error('Failed to cancel order', err);
+        }
+      });
     });
   }
 }

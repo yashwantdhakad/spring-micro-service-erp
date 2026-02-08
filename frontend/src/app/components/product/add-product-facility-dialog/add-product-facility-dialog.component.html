@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>
+    {{ (data.productFacility ? 'Edit Facility' : 'Add Facility') }}
+</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="form" fxLayout="column">
+        <mat-form-field appearance="outline">
+            <mat-label>Facilities</mat-label>
+            <mat-select formControlName="facilityId">
+                <mat-option *ngFor="let facility of facilities" [value]="facility.facilityId">
+                    {{ facility.facilityName || facility.facilityId }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('facilityId')?.hasError('required')">
+                {{ 'COMMON.REQUIRED_FIELD' | translate }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Min Stock</mat-label>
+            <input matInput formControlName="minimumStock" />
+            <mat-error *ngIf="form.get('minimumStock')?.hasError('required')">
+                {{ 'COMMON.REQUIRED_FIELD' | translate }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Reorder Qty</mat-label>
+            <input matInput formControlName="reorderQuantity" />
+            <mat-error *ngIf="form.get('reorderQuantity')?.hasError('required')">
+                {{ 'COMMON.REQUIRED_FIELD' | translate }}
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="close()">{{ 'COMMON.CANCEL' | translate }}</button>
+    <button mat-raised-button color="primary" [disabled]="form.invalid || isLoading" (click)="save()">
+        {{ (data.productFacility ? 'Update' : 'Add') }}
+    </button>
+</mat-dialog-actions>

@@ -48,4 +48,9 @@ export class AssetService {
     const url = `/wms/api/assets/${encodeURIComponent(assetId)}/variances`;
     return this.apiService.post(url, variance);
   }
+
+  getVarianceReasons(): Observable<any> {
+    const url = '/wms/api/variance-reasons';
+    return this.apiService.get(url);
+  }
 }

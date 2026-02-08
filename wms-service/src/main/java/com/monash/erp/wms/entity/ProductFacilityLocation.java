@@ -23,23 +23,39 @@ public class ProductFacilityLocation {
     private String locationSeqId;
     private String minimumStock;
     private String moveQuantity;
-public void setId(Long id) {
+    private String reorderQuantity;
+    private String maximumStock;
+
+    public void setId(Long id) {
         this.id = id;
     }
-public void setProductId(String productId) {
+
+    public void setProductId(String productId) {
         this.productId = productId;
     }
-public void setFacilityId(String facilityId) {
+
+    public void setFacilityId(String facilityId) {
         this.facilityId = facilityId;
     }
-public void setLocationSeqId(String locationSeqId) {
+
+    public void setLocationSeqId(String locationSeqId) {
         this.locationSeqId = locationSeqId;
     }
-public void setMinimumStock(String minimumStock) {
+
+    public void setMinimumStock(String minimumStock) {
         this.minimumStock = minimumStock;
     }
-public void setMoveQuantity(String moveQuantity) {
+
+    public void setMoveQuantity(String moveQuantity) {
         this.moveQuantity = moveQuantity;
+    }
+
+    public void setReorderQuantity(String reorderQuantity) {
+        this.reorderQuantity = reorderQuantity;
+    }
+
+    public void setMaximumStock(String maximumStock) {
+        this.maximumStock = maximumStock;
     }
 
 }

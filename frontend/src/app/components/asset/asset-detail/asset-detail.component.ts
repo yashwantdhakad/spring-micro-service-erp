@@ -22,6 +22,7 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
   facilityName: string | null = null;
   inventoryItemTypeMap = new Map<string, string>();
   statusMap = new Map<string, string>();
+  varianceReasonMap = new Map<string, string>();
   details: any[] = [];
   detailColumns: string[] = [
     'inventoryItemDetailSeqId',
@@ -29,6 +30,8 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
     'orderId',
     'receiptId',
     'productId',
+    'physicalInventoryId',
+    'description',
     'quantityOnHandDiff',
     'availableToPromiseDiff',
     'effectiveDate',
@@ -179,6 +182,23 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
           this.statusMap = new Map();
         },
       });
+
+    this.assetService.getVarianceReasons()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (reasons) => {
+          const list = Array.isArray(reasons) ? reasons : [];
+          this.varianceReasonMap = new Map(
+            list.map((reason: any) => [
+              reason.varianceReasonId,
+              reason.description || reason.varianceReasonId
+            ])
+          );
+        },
+        error: () => {
+          this.varianceReasonMap = new Map();
+        }
+      });
   }
 
   getInventoryItemTypeLabel(typeId?: string): string {
@@ -194,6 +214,12 @@ export class AssetDetailComponent implements OnInit, OnDestroy {
     }
     return this.statusMap.get(statusId) || statusId;
   }
+
+  getVarianceReasonLabel(reasonId?: string): string {
+    if (!reasonId) return '';
+    return this.varianceReasonMap.get(reasonId) || reasonId;
+  }
+
 
   private loadFacilityName(facilityId: string): void {
     this.facilityService

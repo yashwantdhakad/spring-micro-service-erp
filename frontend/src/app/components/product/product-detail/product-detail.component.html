@@ -112,6 +112,103 @@
   <mat-card class="mat-elevation-z10">
     <mat-card-header>
       <mat-card-title>
+        {{ 'PRODUCT.FACILITIES_TITLE' | translate }}
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addProductFacilityDialog()">add</mat-icon>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="facility-scroll-container">
+        <div *ngFor="let pf of productFacilities; let last = last" class="facility-section"
+          style="margin-bottom: 20px;">
+          <div fxLayout="row" fxLayoutAlign="space-between center" class="facility-header">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" style="cursor: pointer;"
+              (click)="pf.expanded = !pf.expanded">
+              <mat-icon>{{ pf.expanded ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</mat-icon>
+              <h3 style="margin: 0;">{{ pf.facilityName }} ({{ pf.facilityId }})</h3>
+            </div>
+            <div>
+              <button mat-icon-button color="primary" (click)="addProductFacilityDialog(pf)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteProductFacility(pf)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutGap="20px" class="facility-details" *ngIf="pf.expanded"
+            style="margin-bottom: 10px; color: rgba(0,0,0,.54);">
+            <!-- <div><strong>{{ 'PRODUCT.MIN_STOCK' | translate }}:</strong> {{ pf.minimumStock }}</div> -->
+            <div><strong>Min Stock:</strong> {{ pf.minimumStock }}</div>
+            <!-- <div><strong>{{ 'PRODUCT.REORDER_QTY' | translate }}:</strong> {{ pf.reorderQuantity }}</div> -->
+            <div><strong>Reorder Qty:</strong> {{ pf.reorderQuantity }}</div>
+            <!-- <div><strong>{{ 'PRODUCT.DAYS_TO_SHIP' | translate }}:</strong> {{ pf.daysToShip }}</div> -->
+            <div><strong>Days to Ship:</strong> {{ pf.daysToShip }}</div>
+          </div>
+
+          <div class="locations-section" style="padding-left: 20px;" *ngIf="pf.expanded">
+            <h4 style="margin-bottom: 5px;">
+              {{ 'PRODUCT.LOCATIONS' | translate }}
+              <button mat-icon-button color="primary" (click)="addProductFacilityLocationDialog(pf)"
+                style="transform: scale(0.8);">
+                <mat-icon>add</mat-icon>
+              </button>
+            </h4>
+            <table mat-table [dataSource]="pf.locations" *ngIf="pf.locations?.length > 0" class="mat-elevation-z1"
+              style="width: 100%;">
+              <ng-container matColumnDef="locationSeqId">
+                <th mat-header-cell *matHeaderCellDef> {{ 'PRODUCT.LOCATION_ID' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.locationSeqId}} </td>
+              </ng-container>
+              <ng-container matColumnDef="locationName">
+                <th mat-header-cell *matHeaderCellDef> {{ 'PRODUCT.LOCATION_NAME' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.locationName}} </td>
+              </ng-container>
+              <ng-container matColumnDef="minimumStock">
+                <th mat-header-cell *matHeaderCellDef> {{ 'PRODUCT.MIN_STOCK' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.minimumStock}} </td>
+              </ng-container>
+              <ng-container matColumnDef="moveQuantity">
+                <th mat-header-cell *matHeaderCellDef> {{ 'PRODUCT.MOVE_QTY' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.moveQuantity}} </td>
+              </ng-container>
+              <ng-container matColumnDef="reorderQuantity">
+                <th mat-header-cell *matHeaderCellDef> {{ 'PRODUCT.REORDER_QTY' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.reorderQuantity}} </td>
+              </ng-container>
+              <ng-container matColumnDef="maximumStock">
+                <th mat-header-cell *matHeaderCellDef> {{ 'PRODUCT.MAX_STOCK' | translate }} </th>
+                <td mat-cell *matCellDef="let element"> {{element.maximumStock}} </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> {{ 'COMMON.ACTION' | translate }} </th>
+                <td mat-cell *matCellDef="let element">
+                  <mat-icon class="custom-mat-icon" color="primary"
+                    (click)="addProductFacilityLocationDialog(pf, element)"
+                    style="cursor: pointer; margin-right: 8px; font-size: 20px;">edit</mat-icon>
+                  <mat-icon class="custom-mat-icon" color="warn" (click)="deleteProductFacilityLocation(element)"
+                    style="cursor: pointer; font-size: 20px;">delete</mat-icon>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="productFacilityLocationColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: productFacilityLocationColumns;"></tr>
+            </table>
+            <div *ngIf="!pf.locations?.length" style="padding: 10px; color: rgba(0,0,0,.38);">{{ 'PRODUCT.NO_LOCATIONS'
+              |
+              translate }}</div>
+          </div>
+          <mat-divider style="margin-top: 20px;" *ngIf="!last"></mat-divider>
+        </div>
+      </div>
+      <div *ngIf="!productFacilities.length" style="padding: 20px; text-align: center;">
+        {{ 'PRODUCT.NO_FACILITIES' | translate }}
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <br />
+  <mat-card class="mat-elevation-z10">
+    <mat-card-header>
+      <mat-card-title>
         {{ 'PRODUCT.FEATURES_TITLE' | translate }}
         <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
           (click)="addProductFeatureDialog({ isNew: true })">add</mat-icon>

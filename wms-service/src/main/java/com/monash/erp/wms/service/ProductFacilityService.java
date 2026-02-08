@@ -21,9 +21,14 @@ public class ProductFacilityService {
         return repository.findAll();
     }
 
+    public List<ProductFacility> findByProductId(String productId) {
+        return repository.findByProductId(productId);
+    }
+
     public ProductFacility get(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ProductFacility %d not found".formatted(id)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "ProductFacility %d not found".formatted(id)));
     }
 
     public ProductFacility create(ProductFacility entity) {

@@ -32,13 +32,17 @@ public class PicklistOrderController {
     @GetMapping("/orders")
     public List<PicklistOrderGroupDto> listOrders(
             @RequestParam(required = false) String statusId,
-            @RequestParam(required = false) String facilityId
-    ) {
+            @RequestParam(required = false) String facilityId) {
         return service.listReservedOrders(statusId, facilityId);
     }
 
     @PostMapping("/{picklistId}/mark-picked")
     public ResponseEntity<PicklistOrderSummaryDto> markPicked(@PathVariable String picklistId) {
         return ResponseEntity.status(HttpStatus.OK).body(service.markPicked(picklistId));
+    }
+
+    @GetMapping("/orders/ids")
+    public List<String> getOrdersInPicklists() {
+        return service.getOrdersInPicklists();
     }
 }

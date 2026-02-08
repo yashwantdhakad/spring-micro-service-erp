@@ -22,4 +22,7 @@ public class OrderItemDto {
     private BigDecimal receivedQuantity;
     private BigDecimal remainingQuantity;
     private BigDecimal pickedQuantity;
+    private BigDecimal reservedQuantity;
+    private String statusId;
+    private String statusDescription;
 }

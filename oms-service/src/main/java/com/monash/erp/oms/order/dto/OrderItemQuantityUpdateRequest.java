@@ -11,4 +11,5 @@ import java.math.BigDecimal;
 @Data
 public class OrderItemQuantityUpdateRequest {
     private BigDecimal quantity;
+    private BigDecimal unitAmount;
 }

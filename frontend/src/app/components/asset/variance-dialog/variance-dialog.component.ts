@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,10 +10,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { AssetService } from 'src/app/services/asset/asset.service';
-import { CommonService } from 'src/app/services/common/common.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { finalize } from 'rxjs/operators';
-import { Observable } from 'rxjs';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -21,7 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
+        ReactiveFormsModule,
         MatDialogModule,
         MatButtonModule,
         MatFormFieldModule,
@@ -36,35 +34,45 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class VarianceDialogComponent implements OnInit {
     isLoading = false;
-    reasons$: Observable<any[]> | undefined;
-
-    variance = {
-        varianceReasonId: '',
-        quantityOnHandVar: 0,
-        availableToPromiseVar: 0,
-        comments: ''
-    };
+    reasons: any[] = [];
+    varianceForm: FormGroup;
 
     constructor(
         public dialogRef: MatDialogRef<VarianceDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: { assetId: string },
         private assetService: AssetService,
-        private commonService: CommonService,
-        private snackbarService: SnackbarService
-    ) { }
+        private snackbarService: SnackbarService,
+        private fb: FormBuilder
+    ) {
+        this.varianceForm = this.fb.group({
+            varianceReasonId: ['', Validators.required],
+            quantityOnHandVar: [0],
+            availableToPromiseVar: [0],
+            comments: ['']
+        });
+    }
 
     ngOnInit(): void {
-        this.reasons$ = this.commonService.getEnumTypes('IID_REASON');
+        this.assetService.getVarianceReasons().subscribe({
+            next: (data) => {
+                this.reasons = Array.isArray(data) ? data : data ? [data] : [];
+            },
+            error: () => {
+                this.reasons = [];
+            }
+        });
     }
 
     save(): void {
-        if (!this.variance.varianceReasonId) {
-            this.snackbarService.showError('Reason is required');
+        if (this.varianceForm.invalid) {
+            this.varianceForm.markAllAsTouched();
             return;
         }
 
         this.isLoading = true;
-        this.assetService.createPhysicalInventoryVariance(this.data.assetId, this.variance)
+        const varianceData = this.varianceForm.value;
+
+        this.assetService.createPhysicalInventoryVariance(this.data.assetId, varianceData)
             .pipe(finalize(() => this.isLoading = false))
             .subscribe({
                 next: () => {

@@ -120,6 +120,22 @@
             {{ item.productId }}
           </td>
         </ng-container>
+        <ng-container matColumnDef="physicalInventoryId">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'ASSET.PHYSICAL_ID' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.physicalInventoryId }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+          <th mat-header-cell class="text-left" *matHeaderCellDef>
+            {{ 'COMMON.DESCRIPTION' | translate }}
+          </th>
+          <td mat-cell class="text-left" *matCellDef="let item">
+            {{ item.description }}
+          </td>
+        </ng-container>
         <ng-container matColumnDef="quantityOnHandDiff">
           <th mat-header-cell class="text-right" *matHeaderCellDef>
             {{ 'ASSET.QOH_DIFF' | translate }}
@@ -333,7 +349,7 @@
       <table mat-table [dataSource]="variances">
         <ng-container matColumnDef="varianceReasonId">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.REASON' | translate }}</th>
-          <td mat-cell class="text-left" *matCellDef="let item">{{ item.varianceReasonId }}</td>
+          <td mat-cell class="text-left" *matCellDef="let item">{{ getVarianceReasonLabel(item.varianceReasonId) }}</td>
         </ng-container>
         <ng-container matColumnDef="quantityOnHandVar">
           <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'ASSET.VARIANCE.QOH_VAR' | translate }}</th>

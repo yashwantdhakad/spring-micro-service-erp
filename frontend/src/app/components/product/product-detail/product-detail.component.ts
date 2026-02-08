@@ -20,6 +20,10 @@ import { SupplierProductService } from 'src/app/services/supplier-product/suppli
 import { SupplierProductDialogComponent } from 'src/app/components/supplier/supplier-product-dialog/supplier-product-dialog.component';
 import { AddToProductComponent } from 'src/app/components/feature/add-to-product/add-to-product.component';
 import { FeatureService } from 'src/app/services/features/feature.service';
+import { ProductFacilityService } from 'src/app/services/product/product-facility.service';
+import { FacilityService } from 'src/app/services/facility/facility.service';
+import { AddProductFacilityDialogComponent } from '../add-product-facility-dialog/add-product-facility-dialog.component';
+import { AddProductFacilityLocationDialogComponent } from '../add-product-facility-location-dialog/add-product-facility-location-dialog.component';
 
 @Component({
   standalone: false,
@@ -82,6 +86,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     'fromDate',
     'action',
   ];
+
+  productFacilities: any[] = [];
+  productFacilityColumns: string[] = ['facilityId', 'facilityName', 'minimumStock', 'reorderQuantity', 'daysToShip', 'action'];
+  productFacilityLocations: any[] = [];
+  productFacilityLocationColumns: string[] = ['locationSeqId', 'locationName', 'minimumStock', 'moveQuantity', 'reorderQuantity', 'maximumStock', 'action'];
+  facilityNameMap = new Map<string, string>();
+
   isConfigSaving = false;
 
   productPriceData: any;
@@ -101,6 +112,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private supplierProductService: SupplierProductService,
     private featureService: FeatureService,
+    private productFacilityService: ProductFacilityService,
+    private facilityService: FacilityService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -130,21 +143,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       .getLookupResults({}, 'productpricetype')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (data: any) => {
-        this.priceTypeEnums = Array.isArray(data) ? data : [data];
-        this.priceTypeMap = new Map(
-          (this.priceTypeEnums || []).map((item: any) => [
-            item.productPriceTypeId,
-            item.description || item.productPriceTypeId,
-          ])
-        );
-      },
-      error: () => {
-        this.snackbarService.showError(
-          this.translate.instant('Error fetching product price types.')
-        );
-      },
-    });
+        next: (data: any) => {
+          this.priceTypeEnums = Array.isArray(data) ? data : [data];
+          this.priceTypeMap = new Map(
+            (this.priceTypeEnums || []).map((item: any) => [
+              item.productPriceTypeId,
+              item.description || item.productPriceTypeId,
+            ])
+          );
+        },
+        error: () => {
+          this.snackbarService.showError(
+            this.translate.instant('Error fetching product price types.')
+          );
+        },
+      });
   }
 
   fetchProductPricePurposeTypes(): void {
@@ -152,21 +165,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       .getLookupResults({}, 'productpricepurpose')
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-      next: (data: any) => {
-        this.pricePurposeEnums = Array.isArray(data) ? data : [data];
-        this.pricePurposeMap = new Map(
-          (this.pricePurposeEnums || []).map((item: any) => [
-            item.productPricePurposeId,
-            item.description || item.productPricePurposeId,
-          ])
-        );
-      },
-      error: () => {
-        this.snackbarService.showError(
-          this.translate.instant('Error fetching product price purpose types.')
-        );
-      },
-    });
+        next: (data: any) => {
+          this.pricePurposeEnums = Array.isArray(data) ? data : [data];
+          this.pricePurposeMap = new Map(
+            (this.pricePurposeEnums || []).map((item: any) => [
+              item.productPricePurposeId,
+              item.description || item.productPricePurposeId,
+            ])
+          );
+        },
+        error: () => {
+          this.snackbarService.showError(
+            this.translate.instant('Error fetching product price purpose types.')
+          );
+        },
+      });
   }
 
   getProduct(productId: string): void {
@@ -187,6 +200,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.loadInventorySummary(productId);
         this.loadSupplierProducts(productId);
         this.loadProductFeatures(productId);
+        this.loadFacilities(); // Load facilities and then product facilities
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -509,6 +523,103 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       if (result) {
         this.supplierProductService.delete(item.id).subscribe({
           next: () => this.loadSupplierProducts(this.productId || ''),
+        });
+      }
+    });
+  }
+
+  loadFacilities(): void {
+    this.facilityService.getFacilities().subscribe({
+      next: (facilities: any[]) => {
+        const list = Array.isArray(facilities) ? facilities : [];
+        this.facilityNameMap = new Map(list.map(f => [f.facilityId, f.facilityName || f.facilityId]));
+        this.loadProductFacilities(); // Reload to update names
+      }
+    });
+  }
+
+  loadProductFacilities(): void {
+    if (!this.productId) return;
+    this.productFacilityService.getProductFacilities(this.productId).subscribe({
+      next: (data) => {
+        const facilities = Array.isArray(data) ? data : [];
+        this.productFacilities = facilities.map(f => ({
+          ...f,
+          facilityName: this.facilityNameMap.get(f.facilityId) || f.facilityId,
+          locations: [], // Placeholder for locations
+          expanded: false // Default to collapsed
+        }));
+        this.loadProductFacilityLocations();
+      }
+    });
+  }
+
+  loadProductFacilityLocations(): void {
+    if (!this.productId) return;
+    this.productFacilityService.getProductFacilityLocations(this.productId).subscribe({
+      next: (data) => {
+        this.productFacilityLocations = Array.isArray(data) ? data : [];
+        // Distribute locations to facilities
+        this.productFacilities.forEach(pf => {
+          pf.locations = this.productFacilityLocations.filter(pfl => pfl.facilityId === pf.facilityId);
+        });
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  addProductFacilityDialog(productFacility?: any): void {
+    if (!this.productId) return;
+    this.dialog.open(AddProductFacilityDialogComponent, {
+      data: { productId: this.productId, productFacility }
+    }).afterClosed().subscribe(res => {
+      if (res) this.loadProductFacilities();
+    });
+  }
+
+  deleteProductFacility(item: any): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Product Facility',
+        message: 'Are you sure you want to delete this facility configuration?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.productFacilityService.deleteProductFacility(item.id).subscribe({
+          next: () => this.loadProductFacilities(),
+        });
+      }
+    });
+  }
+
+  addProductFacilityLocationDialog(facility: any, productFacilityLocation?: any): void {
+    if (!this.productId) return;
+    this.dialog.open(AddProductFacilityLocationDialogComponent, {
+      data: {
+        productId: this.productId,
+        facilityId: facility.facilityId,
+        facilityName: facility.facilityName,
+        productFacilityLocation
+      }
+    }).afterClosed().subscribe(res => {
+      if (res) this.loadProductFacilityLocations();
+    });
+  }
+
+  deleteProductFacilityLocation(item: any): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Product Facility Location',
+        message: 'Are you sure you want to delete this location configuration?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.productFacilityService.deleteProductFacilityLocation(item.id).subscribe({
+          next: () => this.loadProductFacilityLocations(),
         });
       }
     });

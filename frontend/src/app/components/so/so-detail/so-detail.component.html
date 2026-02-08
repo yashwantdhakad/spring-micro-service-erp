@@ -16,7 +16,32 @@
           <button mat-icon-button color="primary" (click)="openPdf()" aria-label="Open PDF">
             <mat-icon>picture_as_pdf</mat-icon>
           </button>
-          <button mat-raised-button color="primary" *ngIf="canApprove" (click)="approveOrder()">
+
+
+          <ng-container *ngIf="validStatusChanges?.length">
+            <div class="split-btn-group">
+              <button mat-raised-button color="primary" [class.split-btn-primary]="validStatusChanges.length > 1"
+                (click)="changeOrderStatus(validStatusChanges[0].statusIdTo)">
+                {{ validStatusChanges[0].transitionName || validStatusChanges[0].description ||
+                validStatusChanges[0].statusIdTo }}
+              </button>
+              <button mat-raised-button color="primary" class="split-btn-dropdown" [matMenuTriggerFor]="statusMenu"
+                *ngIf="validStatusChanges.length > 1">
+                <mat-icon>arrow_drop_down</mat-icon>
+              </button>
+            </div>
+
+            <mat-menu #statusMenu="matMenu">
+              <ng-container *ngFor="let change of validStatusChanges; let i = index">
+                <button mat-menu-item *ngIf="i > 0" (click)="changeOrderStatus(change.statusIdTo)">
+                  {{ change.transitionName || change.description || change.statusIdTo }}
+                </button>
+              </ng-container>
+            </mat-menu>
+          </ng-container>
+
+          <button mat-raised-button color="primary" *ngIf="canApprove && !validStatusChanges.length"
+            (click)="approveOrder()">
             {{ 'COMMON.APPROVE' | translate }}
           </button>
           <button mat-raised-button color="accent" *ngIf="canPicklist" (click)="createPicklist()">
@@ -377,26 +402,41 @@
             </ng-container>
             <ng-container matColumnDef="quantity">
               <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.QUANTITY' | translate }}</th>
-              <td mat-cell class="text-right" *matCellDef="let item">
-                <span class="quantity-clickable" (click)="startEditQuantity(item)" *ngIf="!isEditingItem(item)">
-                  {{ item.quantity }}
-                </span>
-                <div *ngIf="isEditingItem(item)" class="quantity-edit-container">
-                  <input type="number" [(ngModel)]="editingQuantity" class="quantity-input"
-                    (keyup.enter)="saveQuantity(item)" (keyup.escape)="cancelEditQuantity()" autofocus />
-                  <button mat-icon-button color="primary" (click)="saveQuantity(item)">
-                    <mat-icon>check</mat-icon>
-                  </button>
-                  <button mat-icon-button color="warn" (click)="cancelEditQuantity()">
-                    <mat-icon>close</mat-icon>
-                  </button>
+              <td mat-cell class="text-right" *matCellDef="let item" [style.padding-top.px]="8"
+                [style.padding-bottom.px]="8">
+                <div class="quantity-column-container">
+                  <div class="quantity-row">
+                    <span class="quantity-label">{{ 'COMMON.ORDER_QTY' | translate }}:</span>
+                    <span class="quantity-value quantity-clickable" (click)="startEditQuantity(item)"
+                      *ngIf="!isEditingItem(item)">
+                      {{ item.quantity }}
+                    </span>
+                    <div *ngIf="isEditingItem(item)" class="quantity-edit-container">
+                      <input type="number" [(ngModel)]="editingQuantity" class="quantity-input"
+                        (keyup.enter)="saveQuantity(item)" (keyup.escape)="cancelEditQuantity()" autofocus />
+                      <button mat-icon-button color="primary" (click)="saveQuantity(item)">
+                        <mat-icon>check</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" (click)="cancelEditQuantity()">
+                        <mat-icon>close</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="quantity-row">
+                    <span class="quantity-label">{{ 'COMMON.RESERVED_QTY' | translate }}:</span>
+                    <span class="quantity-value">{{ item.reservedQuantity || 0 }}</span>
+                  </div>
+                  <div class="quantity-row">
+                    <span class="quantity-label">{{ 'COMMON.SHIPPED_QTY' | translate }}:</span>
+                    <span class="quantity-value">{{ item.pickedQuantity || 0 }}</span>
+                  </div>
                 </div>
               </td>
             </ng-container>
-            <ng-container matColumnDef="pickedQuantity">
-              <th mat-header-cell class="text-right" *matHeaderCellDef>{{ 'COMMON.PICKED_QTY' | translate }}</th>
-              <td mat-cell class="text-right" *matCellDef="let item">
-                {{ item.pickedQuantity }}
+            <ng-container matColumnDef="statusId">
+              <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.STATUS' | translate }}</th>
+              <td mat-cell class="text-left" *matCellDef="let item">
+                {{ item.statusDescription || item.statusId }}
               </td>
             </ng-container>
             <ng-container matColumnDef="totalAmount">
@@ -408,8 +448,23 @@
                 }}
               </td>
             </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell class="text-center" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
+              <td mat-cell class="text-center" *matCellDef="let item">
+                <div fxLayout="row" fxLayoutAlign="center center">
+                  <button mat-icon-button color="primary" (click)="editItem(item)"
+                    *ngIf="canEditItems && item.statusId !== 'ITEM_CANCELLED' && item.statusId !== 'ITEM_COMPLETED'">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" (click)="cancelItem(item)"
+                    *ngIf="canEditItems && item.statusId !== 'ITEM_CANCELLED' && item.statusId !== 'ITEM_COMPLETED'">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
             <tr mat-header-row *matHeaderRowDef="partColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: partColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: partColumns" [ngClass]="getRowClass(row)"></tr>
           </table>
         </mat-card-content>
       </mat-card>

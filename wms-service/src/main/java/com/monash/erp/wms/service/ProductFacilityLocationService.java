@@ -21,9 +21,18 @@ public class ProductFacilityLocationService {
         return repository.findAll();
     }
 
+    public List<ProductFacilityLocation> findByProductId(String productId) {
+        return repository.findByProductId(productId);
+    }
+
+    public List<ProductFacilityLocation> findByFacilityId(String facilityId) {
+        return repository.findByFacilityId(facilityId);
+    }
+
     public ProductFacilityLocation get(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ProductFacilityLocation %d not found".formatted(id)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "ProductFacilityLocation %d not found".formatted(id)));
     }
 
     public ProductFacilityLocation create(ProductFacilityLocation entity) {
@@ -33,7 +42,8 @@ public class ProductFacilityLocationService {
 
     public ProductFacilityLocation update(Long id, ProductFacilityLocation entity) {
         if (!repository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "ProductFacilityLocation %d not found".formatted(id));
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "ProductFacilityLocation %d not found".formatted(id));
         }
         entity.setId(id);
         return repository.save(entity);

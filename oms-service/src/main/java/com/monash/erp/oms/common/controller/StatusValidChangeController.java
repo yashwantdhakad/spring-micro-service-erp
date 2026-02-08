@@ -30,6 +30,11 @@ public class StatusValidChangeController {
         return service.list();
     }
 
+    @GetMapping("/by-status/{statusId}")
+    public List<StatusValidChange> getValidChanges(@PathVariable String statusId) {
+        return service.getValidChanges(statusId);
+    }
+
     @GetMapping("/{id}")
     public StatusValidChange get(@PathVariable Long id) {
         return service.get(id);

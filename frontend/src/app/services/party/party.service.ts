@@ -138,7 +138,7 @@ export class PartyService {
     return this.apiService.post(url, payload);
   }
 
-  updatePostalAddress(partyId: string | number,contactMechId: string | number, payload: any) {
+  updatePostalAddress(partyId: string | number, contactMechId: string | number, payload: any) {
     // Adjust this path if your backend uses a different one
     const url = `/party/api/parties/${encodeURIComponent(partyId)}/postal-addresses/${encodeURIComponent(contactMechId)}`;
     return this.apiService.put(url, payload);
@@ -271,6 +271,11 @@ export class PartyService {
     return this.apiService.post('/api/rest/s1/commerce/paymentMethod', params);
   }
 
+  createCreditCard(partyId: string, payload: any): Observable<any> {
+    const url = `/party/api/parties/${encodeURIComponent(partyId)}/payment-methods/credit-cards`;
+    return this.apiService.post(url, payload);
+  }
+
   deletePaymentMethod(params: any): Observable<any> {
     return this.apiService.post('/api/rest/s1/commerce/deletePaymentMethod', params);
   }
@@ -363,5 +368,9 @@ export class PartyService {
         );
       })
     );
+  }
+
+  getPaymentMethodTypes(): Observable<any[]> {
+    return this.apiService.get('/oms/api/accounting/payment-method-types');
   }
 }

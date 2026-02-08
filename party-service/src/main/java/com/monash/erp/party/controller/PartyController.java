@@ -51,4 +51,12 @@ public class PartyController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/payment-methods/credit-cards")
+    public ResponseEntity<Void> createCreditCard(@PathVariable Long id,
+            @RequestBody com.monash.erp.party.dto.CreditCardDTO dto) {
+        PartyDto party = service.get(id);
+        service.createCreditCard(party.getPartyId(), dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }

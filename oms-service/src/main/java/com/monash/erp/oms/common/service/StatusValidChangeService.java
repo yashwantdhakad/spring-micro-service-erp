@@ -21,8 +21,13 @@ public class StatusValidChangeService {
         return repository.findAll();
     }
 
+    public List<StatusValidChange> getValidChanges(String statusId) {
+        return repository.findByStatusId(statusId);
+    }
+
     public StatusValidChange get(Long id) {
-        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "StatusValidChange %d not found".formatted(id)));
+        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "StatusValidChange %d not found".formatted(id)));
     }
 
     public StatusValidChange create(StatusValidChange entity) {
