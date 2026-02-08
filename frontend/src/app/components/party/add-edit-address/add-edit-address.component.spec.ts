@@ -3,7 +3,7 @@ import { AddEditAddressComponent } from './add-edit-address.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of, throwError } from 'rxjs';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { OrderService } from 'src/app/services/order/order.service';

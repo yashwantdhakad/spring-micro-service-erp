@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from 'src/app/services/order/order.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { FacilityService } from 'src/app/services/facility/facility.service';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';

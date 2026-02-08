@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddEditCreditCardComponent', () => {

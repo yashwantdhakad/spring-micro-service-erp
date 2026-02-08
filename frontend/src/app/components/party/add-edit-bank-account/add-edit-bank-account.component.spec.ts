@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { of, throwError } from 'rxjs';
 import { AddEditBankAccountComponent } from './add-edit-bank-account.component';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 
 describe('AddEditBankAccountComponent', () => {
   let component: AddEditBankAccountComponent;

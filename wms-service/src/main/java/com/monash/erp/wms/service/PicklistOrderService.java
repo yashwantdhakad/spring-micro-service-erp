@@ -52,8 +52,7 @@ public class PicklistOrderService {
             PicklistStatusRepository picklistStatusRepository,
             ShipmentRepository shipmentRepository,
             InventoryItemRepository inventoryItemRepository,
-            ProductRepository productRepository
-    ) {
+            ProductRepository productRepository) {
         this.picklistRepository = picklistRepository;
         this.picklistBinRepository = picklistBinRepository;
         this.picklistItemRepository = picklistItemRepository;
@@ -97,8 +96,7 @@ public class PicklistOrderService {
                 .distinct()
                 .collect(Collectors.collectingAndThen(
                         Collectors.toList(),
-                        inventoryItemRepository::findByInventoryItemIdIn
-                ))
+                        inventoryItemRepository::findByInventoryItemIdIn))
                 .stream()
                 .collect(Collectors.toMap(InventoryItem::getInventoryItemId, item -> item));
 
@@ -108,8 +106,7 @@ public class PicklistOrderService {
                 .distinct()
                 .collect(Collectors.collectingAndThen(
                         Collectors.toList(),
-                        productRepository::findByProductIdIn
-                ))
+                        productRepository::findByProductIdIn))
                 .stream()
                 .collect(Collectors.toMap(Product::getProductId, product -> product));
 
@@ -139,8 +136,7 @@ public class PicklistOrderService {
                                 productId,
                                 productName,
                                 location,
-                                lotId
-                        );
+                                lotId);
                     })
                     .collect(Collectors.toList()));
 
@@ -274,5 +270,13 @@ public class PicklistOrderService {
             return inventoryItem.getBinNumber();
         }
         return null;
+    }
+
+    public List<String> getOrdersInPicklists() {
+        return picklistBinRepository.findAll().stream()
+                .map(PicklistBin::getPrimaryOrderId)
+                .filter(id -> id != null && !id.isBlank())
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

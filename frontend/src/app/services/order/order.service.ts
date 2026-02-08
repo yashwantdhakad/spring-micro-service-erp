@@ -43,12 +43,12 @@ export class OrderService {
   }
 
   createCustomer(params: any): Observable<any> {
-    const url = '/party/api/customers';
+    const url = '/oms/api/customers';
     return this.apiService.post(url, params);
   }
 
   getCustomer(partyId: string): Observable<any> {
-    const url = `/party/api/customers/${encodeURIComponent(partyId)}`;
+    const url = `/oms/api/customers/${encodeURIComponent(partyId)}`;
     return this.apiService.get(url);
   }
 
@@ -97,6 +97,11 @@ export class OrderService {
   getOrderShipments(orderId: string): Observable<any> {
     const url = `/wms/api/shipments/by-order/${encodeURIComponent(orderId)}`;
     return this.apiService.get(url);
+  }
+
+  createBulkPicklist(orderIds: string[]): Observable<any> {
+    const url = '/oms/api/orders/picklist/bulk';
+    return this.apiService.post(url, orderIds);
   }
 
   getOrderPdf(orderId: string): Observable<Blob> {
@@ -188,7 +193,7 @@ export class OrderService {
     if (productStoreId) {
       params.append('query', productStoreId);
     }
-    const url = `/party/api/suppliers?${params.toString()}`;
+    const url = `/oms/api/suppliers?${params.toString()}`;
     return this.apiService.get(url).pipe(
       map((response: any) =>
         (response?.resultList || []).map((supplier: any) => ({
@@ -239,7 +244,7 @@ export class OrderService {
   }
 
   getCustomerParties(): Observable<any> {
-    const url = '/party/api/customers';
+    const url = '/oms/api/customers';
     return this.apiService.get(url).pipe(
       map((response: any) =>
         (response?.resultList || []).map((customer: any) => ({

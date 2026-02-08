@@ -16,24 +16,24 @@ export class ManufacturingService {
       params.append('queryString', keyword);
     }
 
-    const url = `/mfg/api/jobs?${params.toString()}`;
+    const url = `/wms/api/jobs?${params.toString()}`;
     return this.apiService.get(url);
   }
 
   getJob(workEffortId: string): Observable<any> {
-    const url = `/mfg/api/jobs/${encodeURIComponent(workEffortId)}`;
+    const url = `/wms/api/jobs/${encodeURIComponent(workEffortId)}`;
     return this.apiService.get(url);
   }
 
   createJob(params: any): Observable<any> {
-    return this.apiService.post('/mfg/api/jobs', params);
+    return this.apiService.post('/wms/api/jobs', params);
   }
 
   getJobBom(productId: string): Observable<any> {
     const params = new URLSearchParams({
       productId: productId,
     });
-    return this.apiService.get(`/mfg/api/jobs/bom?${params.toString()}`);
+    return this.apiService.get(`/wms/api/jobs/bom?${params.toString()}`);
   }
 
   getBoms(pageIndex: number, pageSize: number, queryString: string, bomTypeId?: string): Observable<any> {
@@ -70,54 +70,54 @@ export class ManufacturingService {
   }
 
   approveJob(workEffortId: string): Observable<any> {
-    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/approve`, {});
+    return this.apiService.post(`/wms/api/jobs/${encodeURIComponent(workEffortId)}/approve`, {});
   }
 
   startJob(workEffortId: string): Observable<any> {
-    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/start`, {});
+    return this.apiService.post(`/wms/api/jobs/${encodeURIComponent(workEffortId)}/start`, {});
   }
 
   completeJob(workEffortId: string): Observable<any> {
-    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/complete`, {});
+    return this.apiService.post(`/wms/api/jobs/${encodeURIComponent(workEffortId)}/complete`, {});
   }
 
   closeJob(workEffortId: string): Observable<any> {
-    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/close`, {});
+    return this.apiService.post(`/wms/api/jobs/${encodeURIComponent(workEffortId)}/close`, {});
   }
 
   addConsumable(workEffortId: string, payload: any): Observable<any> {
-    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables`, payload);
+    return this.apiService.post(`/wms/api/jobs/${encodeURIComponent(workEffortId)}/consumables`, payload);
   }
 
   reserveConsumable(workEffortId: string, wegsId: number, payload: any): Observable<any> {
     return this.apiService.post(
-      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/reserve`,
+      `/wms/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/reserve`,
       payload
     );
   }
 
   releaseConsumable(workEffortId: string, wegsId: number, payload: any): Observable<any> {
     return this.apiService.post(
-      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/release`,
+      `/wms/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/release`,
       payload
     );
   }
 
   issueConsumable(workEffortId: string, wegsId: number, payload: any): Observable<any> {
     return this.apiService.post(
-      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/issue`,
+      `/wms/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/issue`,
       payload
     );
   }
 
   cancelConsumable(workEffortId: string, wegsId: number): Observable<any> {
     return this.apiService.post(
-      `/mfg/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/cancel`,
+      `/wms/api/jobs/${encodeURIComponent(workEffortId)}/consumables/${wegsId}/cancel`,
       {}
     );
   }
 
   produceItem(workEffortId: string, payload: any): Observable<any> {
-    return this.apiService.post(`/mfg/api/jobs/${encodeURIComponent(workEffortId)}/produce`, payload);
+    return this.apiService.post(`/wms/api/jobs/${encodeURIComponent(workEffortId)}/produce`, payload);
   }
 }

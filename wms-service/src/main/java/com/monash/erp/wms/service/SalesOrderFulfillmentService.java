@@ -1,5 +1,6 @@
 package com.monash.erp.wms.service;
 
+import com.monash.erp.wms.dto.BulkSalesOrderPicklistRequest;
 import com.monash.erp.wms.dto.InventoryReservationAllocationDto;
 import com.monash.erp.wms.dto.InventoryReservationItemRequest;
 import com.monash.erp.wms.dto.InventoryReservationItemResponse;
@@ -71,8 +72,7 @@ public class SalesOrderFulfillmentService {
             ShipmentRepository shipmentRepository,
             ShipmentStatusRepository shipmentStatusRepository,
             ShipmentItemRepository shipmentItemRepository,
-            ShipmentRouteSegmentRepository shipmentRouteSegmentRepository
-    ) {
+            ShipmentRouteSegmentRepository shipmentRouteSegmentRepository) {
         this.inventoryItemRepository = inventoryItemRepository;
         this.inventoryItemDetailRepository = inventoryItemDetailRepository;
         this.picklistRepository = picklistRepository;
@@ -117,9 +117,24 @@ public class SalesOrderFulfillmentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "facilityId is required");
         }
 
+        // Reuse bulk logic for single request
+        BulkSalesOrderPicklistRequest bulkRequest = new BulkSalesOrderPicklistRequest();
+        bulkRequest.setFacilityId(request.getFacilityId());
+        bulkRequest.setOrders(List.of(request));
+
+        return createBulkPicklist(bulkRequest);
+    }
+
+    public SalesOrderPicklistResponse createBulkPicklist(BulkSalesOrderPicklistRequest request) {
+        if (request == null || request.getOrders() == null || request.getOrders().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "orders are required");
+        }
+        if (isBlank(request.getFacilityId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "facilityId is required");
+        }
+
         Picklist picklist = new Picklist();
         picklist.setFacilityId(request.getFacilityId());
-        picklist.setShipmentMethodTypeId(request.getShipmentMethodTypeId());
         picklist.setStatusId(PICKLIST_STATUS_INPUT);
         picklist.setPicklistDate(LocalDateTime.now());
         picklist.setCreatedDate(LocalDateTime.now());
@@ -137,72 +152,87 @@ public class SalesOrderFulfillmentService {
         status.setStatusDate(LocalDateTime.now());
         picklistStatusRepository.save(status);
 
-        PicklistBin bin = new PicklistBin();
-        bin.setPicklistId(picklistId);
-        bin.setPrimaryOrderId(request.getOrderId());
-        bin.setPrimaryShipGroupSeqId(defaultValue(request.getShipGroupSeqId(), DEFAULT_SHIP_GROUP));
-        bin.setBinLocationNumber("BIN-1");
-        PicklistBin savedBin = picklistBinRepository.save(bin);
-        if (isBlank(savedBin.getPicklistBinId())) {
-            savedBin.setPicklistBinId(String.valueOf(savedBin.getId()));
-            savedBin = picklistBinRepository.save(savedBin);
+        String firstBinId = null;
+        String firstShipmentId = null;
+
+        int binSequence = 1;
+        for (SalesOrderPicklistRequest orderRequest : request.getOrders()) {
+            if (isBlank(orderRequest.getOrderId())) {
+                continue;
+            }
+
+            PicklistBin bin = new PicklistBin();
+            bin.setPicklistId(picklistId);
+            bin.setPrimaryOrderId(orderRequest.getOrderId());
+            bin.setPrimaryShipGroupSeqId(defaultValue(orderRequest.getShipGroupSeqId(), DEFAULT_SHIP_GROUP));
+            bin.setBinLocationNumber("BIN-" + binSequence++);
+            PicklistBin savedBin = picklistBinRepository.save(bin);
+            if (isBlank(savedBin.getPicklistBinId())) {
+                savedBin.setPicklistBinId(String.valueOf(savedBin.getId()));
+                savedBin = picklistBinRepository.save(savedBin);
+            }
+            String picklistBinId = savedBin.getPicklistBinId();
+            if (firstBinId == null)
+                firstBinId = picklistBinId;
+
+            Shipment shipment = new Shipment();
+            shipment.setShipmentTypeId(SHIPMENT_TYPE_SALES);
+            shipment.setStatusId(SHIPMENT_STATUS_INPUT);
+            shipment.setPrimaryOrderId(orderRequest.getOrderId());
+            shipment.setPrimaryShipGroupSeqId(defaultValue(orderRequest.getShipGroupSeqId(), DEFAULT_SHIP_GROUP));
+            shipment.setPicklistBinId(picklistBinId);
+            shipment.setOriginFacilityId(request.getFacilityId());
+            shipment.setCreatedDate(LocalDateTime.now());
+            shipment.setLastModifiedDate(LocalDateTime.now());
+            Shipment savedShipment = shipmentRepository.save(shipment);
+            if (isBlank(savedShipment.getShipmentId())) {
+                savedShipment.setShipmentId(String.valueOf(savedShipment.getId()));
+                savedShipment = shipmentRepository.save(savedShipment);
+            }
+            String shipmentId = savedShipment.getShipmentId();
+            if (firstShipmentId == null)
+                firstShipmentId = shipmentId;
+
+            ShipmentStatus shipmentStatus = new ShipmentStatus();
+            shipmentStatus.setShipmentId(shipmentId);
+            shipmentStatus.setStatusId(SHIPMENT_STATUS_INPUT);
+            shipmentStatus.setStatusDate(LocalDateTime.now());
+            shipmentStatusRepository.save(shipmentStatus);
+
+            ShipmentRouteSegment segment = new ShipmentRouteSegment();
+            segment.setShipmentId(shipmentId);
+            segment.setShipmentRouteSegmentId("00001");
+            segment.setOriginFacilityId(request.getFacilityId());
+            segment.setShipmentMethodTypeId(orderRequest.getShipmentMethodTypeId());
+            segment.setEstimatedStartDate(LocalDateTime.now());
+            shipmentRouteSegmentRepository.save(segment);
+
+            int seq = 1;
+            for (SalesOrderPicklistItemRequest item : orderRequest.getItems()) {
+                PicklistItem picklistItem = new PicklistItem();
+                picklistItem.setPicklistBinId(picklistBinId);
+                picklistItem.setOrderId(orderRequest.getOrderId());
+                picklistItem.setOrderItemSeqId(item.getOrderItemSeqId());
+                picklistItem.setShipGroupSeqId(defaultValue(orderRequest.getShipGroupSeqId(), DEFAULT_SHIP_GROUP));
+                picklistItem.setInventoryItemId(item.getInventoryItemId());
+                picklistItem.setItemStatusId(PICKITEM_STATUS_PENDING);
+                picklistItem.setQuantity(toString(item.getQuantity()));
+                picklistItemRepository.save(picklistItem);
+
+                ShipmentItem shipmentItem = new ShipmentItem();
+                shipmentItem.setShipmentId(shipmentId);
+                shipmentItem.setShipmentItemSeqId(String.format("%05d", seq++));
+                shipmentItem.setProductId(item.getProductId());
+                shipmentItem.setQuantity(toString(item.getQuantity()));
+                shipmentItemRepository.save(shipmentItem);
+            }
         }
-        String picklistBinId = savedBin.getPicklistBinId();
 
-        Shipment shipment = new Shipment();
-        shipment.setShipmentTypeId(SHIPMENT_TYPE_SALES);
-        shipment.setStatusId(SHIPMENT_STATUS_INPUT);
-        shipment.setPrimaryOrderId(request.getOrderId());
-        shipment.setPrimaryShipGroupSeqId(defaultValue(request.getShipGroupSeqId(), DEFAULT_SHIP_GROUP));
-        shipment.setPicklistBinId(picklistBinId);
-        shipment.setOriginFacilityId(request.getFacilityId());
-        shipment.setCreatedDate(LocalDateTime.now());
-        shipment.setLastModifiedDate(LocalDateTime.now());
-        Shipment savedShipment = shipmentRepository.save(shipment);
-        if (isBlank(savedShipment.getShipmentId())) {
-            savedShipment.setShipmentId(String.valueOf(savedShipment.getId()));
-            savedShipment = shipmentRepository.save(savedShipment);
-        }
-        String shipmentId = savedShipment.getShipmentId();
-
-        ShipmentStatus shipmentStatus = new ShipmentStatus();
-        shipmentStatus.setShipmentId(shipmentId);
-        shipmentStatus.setStatusId(SHIPMENT_STATUS_INPUT);
-        shipmentStatus.setStatusDate(LocalDateTime.now());
-        shipmentStatusRepository.save(shipmentStatus);
-
-        int seq = 1;
-        for (SalesOrderPicklistItemRequest item : request.getItems()) {
-            PicklistItem picklistItem = new PicklistItem();
-            picklistItem.setPicklistBinId(picklistBinId);
-            picklistItem.setOrderId(request.getOrderId());
-            picklistItem.setOrderItemSeqId(item.getOrderItemSeqId());
-            picklistItem.setShipGroupSeqId(defaultValue(request.getShipGroupSeqId(), DEFAULT_SHIP_GROUP));
-            picklistItem.setInventoryItemId(item.getInventoryItemId());
-            picklistItem.setItemStatusId(PICKITEM_STATUS_PENDING);
-            picklistItem.setQuantity(toString(item.getQuantity()));
-            picklistItemRepository.save(picklistItem);
-
-            ShipmentItem shipmentItem = new ShipmentItem();
-            shipmentItem.setShipmentId(shipmentId);
-            shipmentItem.setShipmentItemSeqId(String.format("%05d", seq++));
-            shipmentItem.setProductId(item.getProductId());
-            shipmentItem.setQuantity(toString(item.getQuantity()));
-            shipmentItemRepository.save(shipmentItem);
-        }
-
-        ShipmentRouteSegment segment = new ShipmentRouteSegment();
-        segment.setShipmentId(shipmentId);
-        segment.setShipmentRouteSegmentId("00001");
-        segment.setOriginFacilityId(request.getFacilityId());
-        segment.setShipmentMethodTypeId(request.getShipmentMethodTypeId());
-        segment.setEstimatedStartDate(LocalDateTime.now());
-        shipmentRouteSegmentRepository.save(segment);
-
-        return new SalesOrderPicklistResponse(picklistId, picklistBinId, shipmentId);
+        return new SalesOrderPicklistResponse(picklistId, firstBinId, firstShipmentId);
     }
 
-    private InventoryReservationItemResponse reserveItem(InventoryReservationRequest reservation, InventoryReservationItemRequest request) {
+    private InventoryReservationItemResponse reserveItem(InventoryReservationRequest reservation,
+            InventoryReservationItemRequest request) {
         if (request == null || isBlank(request.getProductId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "productId is required");
         }
@@ -256,11 +286,11 @@ public class SalesOrderFulfillmentService {
             InventoryReservationRequest reservation,
             InventoryReservationItemRequest request,
             InventoryItem inventoryItem,
-            BigDecimal allocated
-    ) {
+            BigDecimal allocated) {
         InventoryItemDetail detail = new InventoryItemDetail();
         detail.setInventoryItemId(inventoryItem.getInventoryItemId());
-        detail.setInventoryItemDetailSeqId("RSV-" + UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase(Locale.ROOT));
+        detail.setInventoryItemDetailSeqId(
+                "RSV-" + UUID.randomUUID().toString().replace("-", "").substring(0, 6).toUpperCase(Locale.ROOT));
         detail.setEffectiveDate(LocalDateTime.now());
         detail.setQuantityOnHandDiff("0");
         detail.setAvailableToPromiseDiff(allocated.negate().toPlainString());

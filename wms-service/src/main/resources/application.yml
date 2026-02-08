@@ -16,10 +16,13 @@ spring:
       ddl-auto: update
     show-sql: false
     defer-datasource-initialization: true
+    packages-to-scan:
+      - com.monash.erp.wms.entity
+      - com.monash.erp.mfg.entity
   sql:
     init:
       mode: always
-      data-locations: classpath:seed/*.sql
+      data-locations: classpath:seed/*.sql,optional:classpath:demo/*.sql
 
 eureka:
   instance:
@@ -37,3 +40,7 @@ management:
 
 oms:
   base-url: ${OMS_BASE_URL:http://localhost:8081}
+
+wms:
+  base-url: ${WMS_BASE_URL:http://localhost:${server.port}}
+  service-token: ${WMS_SERVICE_TOKEN:}

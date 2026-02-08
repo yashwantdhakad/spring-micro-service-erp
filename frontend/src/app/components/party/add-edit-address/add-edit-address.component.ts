@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { forkJoin, of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { OrderService } from 'src/app/services/order/order.service';
 
@@ -123,11 +123,11 @@ export class AddEditAddressComponent implements OnInit {
     call$
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe({
-        next: (res) => {
+        next: (res: any) => {
           this.addEditAddressForm.reset();
           this.dialogRef.close(res ?? v);  // return latest info
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error saving address:', err);
           // show snackbar if you have one
         },

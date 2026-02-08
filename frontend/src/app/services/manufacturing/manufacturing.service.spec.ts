@@ -34,7 +34,7 @@ describe('ManufacturingService', () => {
       expect(res).toEqual(mockResponse);
     });
 
-    const expectedUrl = `/mfg/api/jobs?page=0&size=10&queryString=cutting`;
+    const expectedUrl = `/wms/api/jobs?page=0&size=10&queryString=cutting`;
     expect(apiServiceSpy.get).toHaveBeenCalledWith(expectedUrl);
   });
 
@@ -46,7 +46,7 @@ describe('ManufacturingService', () => {
       expect(res).toEqual(mockJob);
     });
 
-    expect(apiServiceSpy.get).toHaveBeenCalledWith('/mfg/api/jobs/WE123');
+    expect(apiServiceSpy.get).toHaveBeenCalledWith('/wms/api/jobs/WE123');
   });
 
   it('should call createJob with correct payload', () => {
@@ -59,7 +59,7 @@ describe('ManufacturingService', () => {
       expect(res).toEqual(mockResponse);
     });
 
-    expect(apiServiceSpy.post).toHaveBeenCalledWith('/mfg/api/jobs', params);
+    expect(apiServiceSpy.post).toHaveBeenCalledWith('/wms/api/jobs', params);
   });
 
   it('should call getJobBom with correct product', () => {
@@ -70,6 +70,6 @@ describe('ManufacturingService', () => {
       expect(res).toEqual(mockBom);
     });
 
-    expect(apiServiceSpy.get).toHaveBeenCalledWith('/mfg/api/jobs/bom?productId=P1');
+    expect(apiServiceSpy.get).toHaveBeenCalledWith('/wms/api/jobs/bom?productId=P1');
   });
 });

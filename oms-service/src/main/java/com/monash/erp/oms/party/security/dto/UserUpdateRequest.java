@@ -1,0 +1,21 @@
+package com.monash.erp.oms.party.security.dto;
+
+import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.AllArgsConstructor;
+import java.util.List;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class UserUpdateRequest {
+
+    private String password;
+    private String partyId;
+    private String firstName;
+    private String lastName;
+    private Boolean enabled;
+    private Boolean requirePasswordChange;
+    private List<String> roleIds;
+    private List<String> permissionIds;
+}

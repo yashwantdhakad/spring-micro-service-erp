@@ -5,3 +5,7 @@ spring:
 
 oms:
   base-url: ${OMS_BASE_URL:http://localhost:8081}
+
+wms:
+  base-url: ${WMS_BASE_URL:http://localhost:8082}
+  service-token: ${WMS_SERVICE_TOKEN:}

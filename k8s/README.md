@@ -6,10 +6,9 @@ Build images (example)
 1) docker build --build-arg MODULE=api-gateway -t spring-micro-service-erp/api-gateway:latest .
 2) docker build --build-arg MODULE=oms-service -t spring-micro-service-erp/oms-service:latest .
 3) docker build --build-arg MODULE=wms-service -t spring-micro-service-erp/wms-service:latest .
-4) docker build --build-arg MODULE=mfg-service -t spring-micro-service-erp/mfg-service:latest .
-5) docker build --build-arg MODULE=party-service -t spring-micro-service-erp/party-service:latest .
-6) docker build --build-arg MODULE=kafka-service -t spring-micro-service-erp/kafka-service:latest .
-7) docker build -f frontend/Dockerfile -t spring-micro-service-erp/frontend:latest frontend
+4) docker build --build-arg MODULE=party-service -t spring-micro-service-erp/party-service:latest .
+5) docker build --build-arg MODULE=kafka-service -t spring-micro-service-erp/kafka-service:latest .
+6) docker build -f frontend/Dockerfile -t spring-micro-service-erp/frontend:latest frontend
 
 Apply manifests
 kubectl apply -f k8s

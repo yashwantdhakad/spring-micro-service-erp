@@ -6,7 +6,7 @@ import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operato
 import { ProductService } from 'src/app/services/product/product.service';
 import { SupplierProductService } from 'src/app/services/supplier-product/supplier-product.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({

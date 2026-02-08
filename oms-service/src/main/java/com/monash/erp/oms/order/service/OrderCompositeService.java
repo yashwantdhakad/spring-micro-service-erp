@@ -5,6 +5,7 @@ import com.monash.erp.oms.common.entity.StatusItem;
 import com.monash.erp.oms.common.repository.GeoRepository;
 import com.monash.erp.oms.common.repository.StatusItemRepository;
 import com.monash.erp.oms.order.dto.CustomerPartyDto;
+
 import com.monash.erp.oms.order.dto.FacilityContactInfoDto;
 import com.monash.erp.oms.order.dto.FacilityDto;
 import com.monash.erp.oms.order.dto.FirstPartDto;
@@ -67,7 +68,7 @@ import com.monash.erp.oms.order.entity.OrderNote;
 import com.monash.erp.oms.entity.OrderItemBilling;
 import com.monash.erp.oms.entity.OrderRole;
 import com.monash.erp.oms.entity.OrderStatus;
-import com.monash.erp.oms.order.entity.PostalAddress;
+import com.monash.erp.oms.party.entity.PostalAddress;
 import com.monash.erp.oms.order.repository.OrderAdjustmentRepository;
 import com.monash.erp.oms.order.repository.OrderContactMechRepository;
 import com.monash.erp.oms.order.repository.OrderContentInfoRepository;
@@ -80,7 +81,7 @@ import com.monash.erp.oms.order.repository.OrderItemShipGroupRepository;
 import com.monash.erp.oms.order.repository.OrderNoteRepository;
 import com.monash.erp.oms.order.repository.OrderRoleRepository;
 import com.monash.erp.oms.order.repository.OrderStatusRepository;
-import com.monash.erp.oms.order.repository.PostalAddressRepository;
+import com.monash.erp.oms.party.repository.PostalAddressRepository;
 import com.monash.erp.oms.order.repository.OrderItemBillingRepository;
 import com.monash.erp.oms.repository.OrderPaymentPreferenceRepository;
 import com.monash.erp.oms.repository.OrderTermRepository;
@@ -225,6 +226,7 @@ public class OrderCompositeService {
         this.orderPaymentPreferenceRepository = orderPaymentPreferenceRepository;
         this.orderTermRepository = orderTermRepository;
         this.restTemplate = restTemplate;
+
         this.wmsBaseUrl = wmsBaseUrl;
     }
 
@@ -260,6 +262,14 @@ public class OrderCompositeService {
                 .stream()
                 .filter(role -> !isBlank(role.getOrderId()))
                 .collect(Collectors.toMap(OrderRole::getOrderId, role -> role, (left, right) -> left));
+
+        List<String> partyIds = new ArrayList<>();
+        billToRoles.values().forEach(role -> partyIds.add(role.getPartyId()));
+        shipGroupMap.values().forEach(group -> {
+            if (!isBlank(group.getVendorPartyId())) {
+                partyIds.add(group.getVendorPartyId());
+            }
+        });
 
         List<OrderListItem> items = headers.stream()
                 .map(order -> toListItem(order, aggregates, shipGroupMap, billToRoles))
@@ -658,6 +668,8 @@ public class OrderCompositeService {
         List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderIdIn(orderIds);
         Map<String, List<OrderItemShipGrpInvRes>> reservationsByOrder = reservations.stream()
                 .filter(res -> res.getQuantity() != null && res.getQuantity().compareTo(BigDecimal.ZERO) > 0)
+                // TODO: Check against picked quantity if available in OMS, currently relying on
+                // removed reservations
                 .collect(Collectors.groupingBy(OrderItemShipGrpInvRes::getOrderId));
 
         if (reservationsByOrder.isEmpty()) {
@@ -1157,6 +1169,7 @@ public class OrderCompositeService {
         OrderListItem item = new OrderListItem();
         item.setId(order.getId());
         item.setOrderId(order.getOrderId());
+        OrderItemShipGroup firstGroup = shipGroupMap.get(order.getOrderId());
         item.setEntryDate(order.getEntryDate());
         BigDecimal grandTotal = order.getGrandTotal();
         OrderItemRepository.OrderItemAggregate aggregate = aggregates.get(order.getOrderId());
@@ -1167,10 +1180,10 @@ public class OrderCompositeService {
         item.setStatusDescription(resolveStatusDescription(order.getStatusId()));
         item.setStoreName(order.getProductStoreId());
 
-        OrderItemShipGroup firstGroup = shipGroupMap.get(order.getOrderId());
         if (firstGroup != null) {
+            String vendorPartyId = firstGroup.getVendorPartyId();
             item.setFacilityName(firstGroup.getFacilityId());
-            item.setVendorOrganizationName(firstGroup.getVendorPartyId());
+            item.setVendorOrganizationName(vendorPartyId);
         }
 
         OrderRole role = billToRoles.get(order.getOrderId());
@@ -2636,6 +2649,119 @@ public class OrderCompositeService {
         } catch (Exception e) {
             e.printStackTrace();
             return List.of();
+        }
+    }
+
+    public Map<String, String> createBulkSalesPicklist(List<String> orderIds) {
+        if (orderIds == null || orderIds.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No orders provided");
+        }
+
+        String commonFacilityId = null;
+        List<WmsPicklistRequest> orderRequests = new ArrayList<>();
+
+        for (String orderId : orderIds) {
+            OrderHeader header = getOrderHeader(orderId);
+            ReservationStatusDto status = buildReservationStatus(orderId);
+
+            // Skip validation if not strictly required or handle as partial failure
+            // For now, we enforce all orders must be ready
+            if (!status.isFullyReserved()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Order " + orderId + " has backordered items");
+            }
+
+            String facilityId = resolveFacility(orderId);
+            if (isBlank(facilityId)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "facilityId is required for order " + orderId);
+            }
+
+            if (commonFacilityId == null) {
+                commonFacilityId = facilityId;
+            } else if (!commonFacilityId.equals(facilityId)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "All orders must be from the same facility");
+            }
+
+            List<OrderItemShipGrpInvRes> reservations = orderItemShipGrpInvResRepository.findByOrderId(orderId);
+            if (reservations.isEmpty()) {
+                // Skip orders with no reservations
+                continue;
+            }
+
+            List<WmsPicklistItem> items = reservations.stream()
+                    .filter(res -> !isBlank(res.getInventoryItemId()))
+                    .map(res -> {
+                        OrderItem item = orderItemRepository
+                                .findByOrderIdAndOrderItemSeqId(orderId, res.getOrderItemSeqId())
+                                .orElse(null);
+                        if (item == null) {
+                            return null;
+                        }
+                        WmsPicklistItem pickItem = new WmsPicklistItem();
+                        pickItem.setOrderItemSeqId(res.getOrderItemSeqId());
+                        pickItem.setProductId(item.getProductId());
+                        pickItem.setInventoryItemId(res.getInventoryItemId());
+                        pickItem.setQuantity(defaultIfNull(res.getQuantity(), BigDecimal.ZERO));
+                        return pickItem;
+                    })
+                    .filter(value -> value != null)
+                    .collect(Collectors.toList());
+
+            if (items.isEmpty()) {
+                continue;
+            }
+
+            WmsPicklistRequest request = new WmsPicklistRequest();
+            request.setOrderId(orderId);
+            request.setFacilityId(facilityId);
+            request.setShipGroupSeqId(firstNonBlank(resolveShipGroup(orderId), "00001"));
+            request.setShipmentMethodTypeId(null); // aggregate?
+            request.setItems(items);
+
+            orderRequests.add(request);
+        }
+
+        if (orderRequests.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No reservable items found for selected orders");
+        }
+
+        WmsBulkPicklistRequest bulkRequest = new WmsBulkPicklistRequest();
+        bulkRequest.setFacilityId(commonFacilityId);
+        bulkRequest.setOrders(orderRequests);
+
+        String url = wmsBaseUrl + "/api/fulfillment/sales-orders/bulk-picklist";
+        WmsPicklistResponse response = restTemplate.postForObject(url, bulkRequest, WmsPicklistResponse.class);
+
+        if (response == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create bulk picklist");
+        }
+
+        Map<String, String> result = new HashMap<>();
+        result.put("picklistId", response.getPicklistId());
+        result.put("picklistBinId", response.getPicklistBinId());
+        result.put("shipmentId", response.getShipmentId());
+        return result;
+    }
+
+    private static class WmsBulkPicklistRequest {
+        private String facilityId;
+        private List<WmsPicklistRequest> orders;
+
+        public String getFacilityId() {
+            return facilityId;
+        }
+
+        public void setFacilityId(String facilityId) {
+            this.facilityId = facilityId;
+        }
+
+        public List<WmsPicklistRequest> getOrders() {
+            return orders;
+        }
+
+        public void setOrders(List<WmsPicklistRequest> orders) {
+            this.orders = orders;
         }
     }
 }

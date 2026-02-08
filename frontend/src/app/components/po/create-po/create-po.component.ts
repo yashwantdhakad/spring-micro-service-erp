@@ -19,7 +19,7 @@ import {
   toArray,
 } from 'rxjs/operators';
 import { OrderService } from 'src/app/services/order/order.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ProductService } from 'src/app/services/product/product.service';

@@ -6,7 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { finalize, forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
 import { FacilityService } from 'src/app/services/facility/facility.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { FacilityLocationDialogComponent } from '../facility-location-dialog/facility-location-dialog.component';
 
 @Component({

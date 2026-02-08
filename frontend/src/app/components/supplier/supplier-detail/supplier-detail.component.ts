@@ -11,7 +11,7 @@ import { AddEditPhoneComponent } from 'src/app/components/party/add-edit-phone/a
 import { AddIdentificationComponent } from 'src/app/components/party/add-identification/add-identification.component';
 import { AddRoleComponent } from 'src/app/components/party/add-role/add-role.component';
 import { filterGeoRecords } from 'src/app/helpers/geo-type-helper';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { SupplierProductService } from 'src/app/services/supplier-product/supplier-product.service';
 import { loadGeos } from 'src/app/store/geo/geo.actions';

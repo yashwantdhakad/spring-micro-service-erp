@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CustomerAutoCompleteComponent } from './customer-auto-complete.component';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { By } from '@angular/platform-browser';
 
 describe('CustomerAutoCompleteComponent', () => {

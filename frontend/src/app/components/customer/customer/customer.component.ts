@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort, Sort } from '@angular/material/sort';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { Subject, asyncScheduler } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, observeOn, switchMap, takeUntil, tap } from 'rxjs/operators';

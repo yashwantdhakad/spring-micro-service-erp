@@ -35,9 +35,9 @@ management:
       exposure:
         include: health,info
 
-wms:
-  base-url: ${WMS_BASE_URL:http://localhost:8082}
+encryption:
+  key: DefaultSecretKey
 
-grpc:
-  server:
-    port: 9090
+wms:
+  base-url: http://localhost:8082
+

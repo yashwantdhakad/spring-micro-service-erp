@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { CreateSOComponent } from './create-so.component';
 import { OrderService } from 'src/app/services/order/order.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { MatDialog } from '@angular/material/dialog';
 
 describe('CreateSOComponent', () => {

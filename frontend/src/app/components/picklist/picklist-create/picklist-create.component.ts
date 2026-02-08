@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject, finalize, forkJoin, takeUntil } from 'rxjs';
+import { Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common/common.service';
 import { OrderService } from 'src/app/services/order/order.service';
 import { PicklistCreateItemsDialogComponent } from './picklist-create-items-dialog.component';
@@ -40,8 +41,9 @@ export class PicklistCreateComponent implements OnInit, OnDestroy {
     private commonService: CommonService,
     private orderService: OrderService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
-  ) {}
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.loadLookups();
@@ -153,13 +155,19 @@ export class PicklistCreateComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = true;
-    forkJoin(orderIds.map((orderId) => this.orderService.createPicklist(orderId)))
+    this.orderService.createBulkPicklist(orderIds)
       .subscribe({
-        next: () => {
-          this.selection.clear();
-          this.loadPicklists();
+        next: (response) => {
           this.isLoading = false;
-          this.cdr.detectChanges();
+          // Navigate to picklist detail page
+          if (response && response.picklistId) {
+            this.router.navigate(['/wms/picklists', response.picklistId]);
+          } else {
+            // Fallback or error handling if no picklist ID returned
+            this.selection.clear();
+            this.loadPicklists();
+            this.cdr.detectChanges();
+          }
         },
         error: () => {
           this.loadPicklists();

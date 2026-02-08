@@ -23,10 +23,10 @@ public class GatewayRoutesConfig {
                 .path("/wms/**", "/wms-service/**")
                 .filters(f -> f.stripPrefix(1))
                 .uri("lb://wms-service"))
-            .route("mfg-service", r -> r
+            .route("mfg-legacy", r -> r
                 .path("/mfg/**", "/mfg-service/**")
                 .filters(f -> f.stripPrefix(1))
-                .uri("lb://mfg-service"))
+                .uri("lb://wms-service"))
             .route("kafka-service", r -> r
                 .path("/kafka/**", "/kafka-service/**")
                 .filters(f -> f.stripPrefix(1))

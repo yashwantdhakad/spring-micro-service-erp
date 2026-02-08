@@ -186,7 +186,7 @@ describe('CommonService', () => {
       expect(response).toEqual([mockResponse[0]]);
     });
 
-    const req = httpMock.expectOne('/party/api/role-types');
+    const req = httpMock.expectOne('/oms/api/role-types');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });

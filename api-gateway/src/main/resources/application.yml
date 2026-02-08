@@ -40,7 +40,7 @@ spring:
           lower-case-service-id: true
       routes:
         - id: party-service
-          uri: lb://party-service
+          uri: lb://oms-service
           predicates:
             - Path=/party/**
           filters:
@@ -57,8 +57,8 @@ spring:
             - Path=/wms/**
           filters:
             - StripPrefix=1
-        - id: mfg-service
-          uri: lb://mfg-service
+        - id: mfg-legacy
+          uri: lb://wms-service
           predicates:
             - Path=/mfg/**
           filters:

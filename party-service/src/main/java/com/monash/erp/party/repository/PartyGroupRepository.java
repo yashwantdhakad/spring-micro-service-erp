@@ -11,4 +11,6 @@ public interface PartyGroupRepository extends JpaRepository<PartyGroup, Long> {
     Optional<PartyGroup> findByPartyId(String partyId);
 
     Page<PartyGroup> findByGroupNameContainingIgnoreCase(String groupName, Pageable pageable);
+
+    java.util.List<PartyGroup> findByPartyIdIn(java.util.List<String> partyIds);
 }

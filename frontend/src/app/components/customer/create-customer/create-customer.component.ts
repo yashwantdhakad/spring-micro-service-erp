@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { filterGeoRecords } from 'src/app/helpers/geo-type-helper';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { loadGeos } from 'src/app/store/geo/geo.actions';
 import { selectGeoList } from 'src/app/store/geo/geo.selector';
 import { GeoState } from 'src/app/store/geo/geo.state';

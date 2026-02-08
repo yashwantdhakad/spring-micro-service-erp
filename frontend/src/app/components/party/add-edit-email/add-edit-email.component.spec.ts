@@ -5,7 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddEditEmailComponent', () => {

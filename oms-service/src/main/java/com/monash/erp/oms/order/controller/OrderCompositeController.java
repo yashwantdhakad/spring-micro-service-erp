@@ -192,6 +192,11 @@ public class OrderCompositeController {
         return orderCompositeService.createSalesPicklist(orderId);
     }
 
+    @PostMapping("/picklist/bulk")
+    public java.util.Map<String, String> createOrdersPicklist(@RequestBody List<String> orderIds) {
+        return orderCompositeService.createBulkSalesPicklist(orderIds);
+    }
+
     @PostMapping("/{orderId}/invoice-sales")
     public InvoiceSummaryDto createSalesInvoice(@PathVariable String orderId) {
         return orderCompositeService.createSalesInvoice(orderId);

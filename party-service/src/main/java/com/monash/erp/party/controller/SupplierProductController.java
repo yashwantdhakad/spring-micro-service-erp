@@ -1,6 +1,6 @@
 package com.monash.erp.party.controller;
 
-import com.monash.erp.party.entity.SupplierProduct;
+import com.monash.erp.party.dto.SupplierProductDto;
 import com.monash.erp.party.service.SupplierProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,24 +26,24 @@ public class SupplierProductController {
     }
 
     @GetMapping
-    public List<SupplierProduct> list() {
+    public List<SupplierProductDto> list() {
         return service.list();
     }
 
     @GetMapping("/{id}")
-    public SupplierProduct get(@PathVariable Long id) {
+    public SupplierProductDto get(@PathVariable Long id) {
         return service.get(id);
     }
 
     @PostMapping
-    public ResponseEntity<SupplierProduct> create(@RequestBody SupplierProduct entity) {
-        SupplierProduct created = service.create(entity);
+    public ResponseEntity<SupplierProductDto> create(@RequestBody SupplierProductDto dto) {
+        SupplierProductDto created = service.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
-    public SupplierProduct update(@PathVariable Long id, @RequestBody SupplierProduct entity) {
-        return service.update(id, entity);
+    public SupplierProductDto update(@PathVariable Long id, @RequestBody SupplierProductDto dto) {
+        return service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

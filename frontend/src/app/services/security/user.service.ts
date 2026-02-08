@@ -21,27 +21,27 @@ export class UserService {
     if (sortDirection) {
       params.append('sortDirection', sortDirection);
     }
-    return this.apiService.get(`/party/security/users?${params.toString()}`);
+    return this.apiService.get(`/oms/security/users?${params.toString()}`);
   }
 
   getUser(userLoginId: string): Observable<any> {
-    return this.apiService.get(`/party/security/users/${encodeURIComponent(userLoginId)}`);
+    return this.apiService.get(`/oms/security/users/${encodeURIComponent(userLoginId)}`);
   }
 
   createUser(payload: any): Observable<any> {
-    return this.apiService.post('/party/security/users', payload);
+    return this.apiService.post('/oms/security/users', payload);
   }
 
   updateUser(userLoginId: string, payload: any): Observable<any> {
-    return this.apiService.put(`/party/security/users/${encodeURIComponent(userLoginId)}`, payload);
+    return this.apiService.put(`/oms/security/users/${encodeURIComponent(userLoginId)}`, payload);
   }
 
   deleteUser(userLoginId: string): Observable<any> {
-    return this.apiService.delete(`/party/security/users/${encodeURIComponent(userLoginId)}`);
+    return this.apiService.delete(`/oms/security/users/${encodeURIComponent(userLoginId)}`);
   }
 
   listRoles(): Observable<any> {
-    return this.apiService.get('/party/security/security-groups').pipe(
+    return this.apiService.get('/oms/security/security-groups').pipe(
       map((response: any) => {
         if (Array.isArray(response)) {
           return response;
@@ -52,7 +52,7 @@ export class UserService {
   }
 
   listPermissions(): Observable<any> {
-    return this.apiService.get('/party/security/security-permissions').pipe(
+    return this.apiService.get('/oms/security/security-permissions').pipe(
       map((response: any) => {
         if (Array.isArray(response)) {
           return response;

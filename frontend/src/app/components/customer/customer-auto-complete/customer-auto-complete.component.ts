@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { PartyService } from 'src/app/services/party/party.service'; // Replace with your service path
+import { PartyService } from 'src/app/services/oms/party/party.service'; // Replace with your service path
 
 @Component({
   standalone: false,

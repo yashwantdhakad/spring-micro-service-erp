@@ -9,7 +9,7 @@ import { OrderService } from 'src/app/services/order/order.service';
 import { CommonService } from 'src/app/services/common/common.service';
 import { ProductService } from 'src/app/services/product/product.service';
 import { FacilityService } from 'src/app/services/facility/facility.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { ContentComponent } from '../../order/content/content.component';
 import { NoteComponent } from '../../order/note/note.component';

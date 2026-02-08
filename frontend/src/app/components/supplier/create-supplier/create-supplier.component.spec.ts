@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CreateSupplierComponent } from './create-supplier.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';

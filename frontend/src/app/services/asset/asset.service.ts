@@ -36,7 +36,7 @@ export class AssetService {
   }
 
   getWorkEffortReservations(inventoryItemId: string): Observable<any> {
-    const url = `/mfg/api/work-effort-inv-reservations?inventoryItemId=${encodeURIComponent(inventoryItemId)}`;
+    const url = `/wms/api/work-effort-inv-reservations?inventoryItemId=${encodeURIComponent(inventoryItemId)}`;
     return this.apiService.get(url);
   }
 

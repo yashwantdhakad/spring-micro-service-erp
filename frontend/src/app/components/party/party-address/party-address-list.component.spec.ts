@@ -3,7 +3,7 @@ import { PartyAddressListComponent } from './party-address-list.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 
 describe('PartyAddressListComponent', () => {
   let component: PartyAddressListComponent;

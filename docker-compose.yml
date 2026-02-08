@@ -94,42 +94,6 @@ services:
     ports:
       - "8082:8082"
 
-  mfg-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MODULE: mfg-service
-    depends_on:
-      - eureka-server
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-      DB_HOST: mysql
-      DB_PORT: "3306"
-      DB_NAME: mfgdb
-      DB_USER: root
-      DB_PASSWORD: 123456
-    ports:
-      - "8083:8083"
-
-  party-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        MODULE: party-service
-    depends_on:
-      - eureka-server
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
-      DB_HOST: mysql
-      DB_PORT: "3306"
-      DB_NAME: partydb
-      DB_USER: root
-      DB_PASSWORD: 123456
-    ports:
-      - "8084:8084"
-
   kafka-service:
     build:
       context: .

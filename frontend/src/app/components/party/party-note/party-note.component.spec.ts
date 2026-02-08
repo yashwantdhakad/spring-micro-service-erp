@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PartyNoteComponent } from './party-note.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { of, throwError } from 'rxjs';
 

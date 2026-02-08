@@ -31,9 +31,14 @@ public class SalesOrderFulfillmentController {
     @PostMapping("/sales-orders/{orderId}/picklist")
     public ResponseEntity<SalesOrderPicklistResponse> createPicklist(
             @PathVariable String orderId,
-            @RequestBody SalesOrderPicklistRequest request
-    ) {
+            @RequestBody SalesOrderPicklistRequest request) {
         request.setOrderId(orderId);
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createPicklist(request));
+    }
+
+    @PostMapping("/sales-orders/bulk-picklist")
+    public ResponseEntity<SalesOrderPicklistResponse> createBulkPicklist(
+            @RequestBody com.monash.erp.wms.dto.BulkSalesOrderPicklistRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createBulkPicklist(request));
     }
 }

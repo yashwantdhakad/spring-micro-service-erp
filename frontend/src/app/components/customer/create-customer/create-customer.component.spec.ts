@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CreateCustomerComponent } from './create-customer.component';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Store } from '@ngrx/store';

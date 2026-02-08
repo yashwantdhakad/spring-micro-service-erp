@@ -21,7 +21,6 @@
         <module>api-gateway</module>
         <module>oms-service</module>
         <module>wms-service</module>
-        <module>mfg-service</module>
         <module>party-service</module>
         <module>kafka-service</module>
         <module>data-migration-service</module>

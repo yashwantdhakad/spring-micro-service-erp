@@ -3,8 +3,7 @@
 This repository contains a learning-friendly ERP landscape composed of three Spring Boot microservices plus the infrastructure pieces required to let them communicate:
 
 - **OMS Service (Order Management)** – handles customer orders and validates product data with the WMS service before persisting to an in-memory H2 database.
-- **WMS Service (Warehouse Management)** – provides product and inventory CRUD APIs and queries the manufacturing service for related work orders.
-- **MFG Service (Manufacturing)** – manages work orders stored in its own in-memory database.
+- **WMS Service (Warehouse Management + Manufacturing)** – provides product/inventory APIs plus manufacturing work order endpoints.
 - **Eureka Server** – acts as the service discovery registry shared by all services.
 - **API Gateway** – exposes a unified entry point using Spring Cloud Gateway and performs service discovery based routing.
 
@@ -21,7 +20,6 @@ All persistence uses in-memory H2 databases, so you can start experimenting with
    ./mvnw -pl api-gateway spring-boot:run
    ./mvnw -pl oms-service spring-boot:run
    ./mvnw -pl wms-service spring-boot:run
-   ./mvnw -pl mfg-service spring-boot:run
    ```
 
    Each service registers itself with Eureka and exposes its API through the gateway running on port `8080`.
@@ -46,7 +44,6 @@ The services are exposed on the same ports as the local run:
 - API Gateway: `http://localhost:8080`
 - OMS Service: `http://localhost:8081`
 - WMS Service: `http://localhost:8082`
-- MFG Service: `http://localhost:8083`
 
 3. **Interact with the APIs** – example curl workflow:
    ```bash
@@ -60,7 +57,7 @@ The services are exposed on the same ports as the local run:
      -d '{"sku":"SKU-1","quantityOnHand":100}'
 
    # Create a manufacturing work order
-   curl -X POST http://localhost:8080/mfg/work-orders \
+   curl -X POST http://localhost:8080/wms/work-orders \
      -H 'Content-Type: application/json' \
      -d '{"sku":"SKU-1","status":"PLANNED","quantity":50}'
 

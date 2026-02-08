@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { OrderService } from 'src/app/services/order/order.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 

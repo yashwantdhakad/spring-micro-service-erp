@@ -13,7 +13,7 @@ import {
 } from 'rxjs/operators';
 import { AssetService } from 'src/app/services/asset/asset.service';
 import { CommonService } from 'src/app/services/common/common.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { ProductService } from 'src/app/services/product/product.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 

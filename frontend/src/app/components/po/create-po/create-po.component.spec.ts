@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { CreatePOComponent } from './create-po.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OrderService } from 'src/app/services/order/order.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';

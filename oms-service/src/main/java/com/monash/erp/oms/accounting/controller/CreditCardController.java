@@ -1,6 +1,6 @@
 package com.monash.erp.oms.accounting.controller;
 
-import com.monash.erp.oms.accounting.entity.CreditCard;
+import com.monash.erp.oms.party.entity.CreditCard;
 import com.monash.erp.oms.accounting.service.CreditCardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class CreditCardController {
     }
 
     @GetMapping("/{id}")
-    public CreditCard get(@PathVariable Long id) {
+    public CreditCard get(@PathVariable String id) {
         return service.get(id);
     }
 
@@ -42,12 +42,12 @@ public class CreditCardController {
     }
 
     @PutMapping("/{id}")
-    public CreditCard update(@PathVariable Long id, @RequestBody CreditCard entity) {
+    public CreditCard update(@PathVariable String id, @RequestBody CreditCard entity) {
         return service.update(id, entity);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { UserService } from 'src/app/services/security/user.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { EditUserComponent } from '../edit-user/edit-user.component';
 import { AddRoleComponent } from '../../party/add-role/add-role.component';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';

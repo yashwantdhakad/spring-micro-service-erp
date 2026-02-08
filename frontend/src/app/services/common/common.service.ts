@@ -112,7 +112,7 @@ export class CommonService {
 
   getRoleTypes(enumTypeId: string): Observable<any> {
     if (!this.roleTypeCache.has(enumTypeId)) {
-      const request$ = this.apiService.get<any[]>('/party/api/role-types').pipe(
+      const request$ = this.apiService.get<any[]>('/oms/api/role-types').pipe(
         map((items) =>
           (items || []).filter((item) =>
             enumTypeId ? item?.parentTypeId === enumTypeId : true
@@ -269,7 +269,7 @@ export class CommonService {
       return of(filterParams(purposes));
     }
     if (tableKey === 'roletypes') {
-      return this.apiService.get<any[]>('/party/api/role-types').pipe(
+      return this.apiService.get<any[]>('/oms/api/role-types').pipe(
         map((items) => filterParams(items || [])),
         catchError(this.handleError)
       );

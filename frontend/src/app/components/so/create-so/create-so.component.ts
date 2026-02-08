@@ -16,7 +16,7 @@ import {
 } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { OrderService } from 'src/app/services/order/order.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { AddEditAddressComponent } from 'src/app/components/party/add-edit-address/add-edit-address.component';
 import { AddEditPhoneComponent } from 'src/app/components/party/add-edit-phone/add-edit-phone.component';

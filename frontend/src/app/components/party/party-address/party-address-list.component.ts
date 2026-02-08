@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from 
 import { MatDialog } from '@angular/material/dialog';
 import { AddEditAddressComponent } from '../add-edit-address/add-edit-address.component';
 import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 
 @Component({
   standalone: false,

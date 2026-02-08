@@ -23,8 +23,8 @@ spring:
             - Path=/wms/**
           filters:
             - StripPrefix=1
-        - id: mfg-service
-          uri: http://mfg-service:8083
+        - id: mfg-legacy
+          uri: http://wms-service:8082
           predicates:
             - Path=/mfg/**
           filters:

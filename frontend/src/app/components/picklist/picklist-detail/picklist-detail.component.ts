@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject, finalize, takeUntil } from 'rxjs';
 import { PicklistService } from 'src/app/services/picklist/picklist.service';
 import { CommonService } from 'src/app/services/common/common.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { MatDialog } from '@angular/material/dialog';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { PicklistAssignPickerDialogComponent } from './picklist-assign-picker-dialog.component';

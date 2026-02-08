@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
 import { CommonService } from 'src/app/services/common/common.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { AddClassificationComponent } from './add-classification.component';
 
 describe('AddClassificationComponent', () => {

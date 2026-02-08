@@ -1,0 +1,54 @@
+package com.monash.erp.oms.party.controller;
+
+import com.monash.erp.oms.party.entity.Vendor;
+import com.monash.erp.oms.party.service.VendorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/vendors")
+public class VendorController {
+
+    private final VendorService service;
+
+    public VendorController(VendorService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<Vendor> list() {
+        return service.list();
+    }
+
+    @GetMapping("/{id}")
+    public Vendor get(@PathVariable Long id) {
+        return service.get(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<Vendor> create(@RequestBody Vendor entity) {
+        Vendor created = service.create(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    public Vendor update(@PathVariable Long id, @RequestBody Vendor entity) {
+        return service.update(id, entity);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}

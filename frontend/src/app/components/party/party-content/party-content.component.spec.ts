@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { of, throwError } from 'rxjs';
 import { PartyContentComponent } from './party-content.component';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { SnackbarService } from 'src/app/services/common/snackbar.service';
 import { TranslateService } from '@ngx-translate/core';
 

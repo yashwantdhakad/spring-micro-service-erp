@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { CommonService } from 'src/app/services/common/common.service';
-import { PartyService } from 'src/app/services/party/party.service';
+import { PartyService } from 'src/app/services/oms/party/party.service';
 import { of, throwError } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 

@@ -61,7 +61,7 @@ describe('OrderService', () => {
       expect(data).toEqual(mockCustomer);
     });
 
-    const req = httpMock.expectOne((request) => request.url.includes('/party/api/customers/P100'));
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/customers/P100'));
     expect(req.request.method).toBe('GET');
     req.flush(mockCustomer);
   });
@@ -109,7 +109,7 @@ describe('OrderService', () => {
     const params = { name: 'c' };
     const res = { partyId: '1' };
     service.createCustomer(params).subscribe(d => expect(d).toEqual(res));
-    const req = httpMock.expectOne((request) => request.url.includes('/party/api/customers'));
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/customers'));
     expect(req.request.method).toBe('POST');
     req.flush(res);
   });
@@ -152,7 +152,7 @@ describe('OrderService', () => {
     service.getVendorParties('PS1').subscribe(d => expect(d).toEqual([
       { value: 'v1', label: 'Vendor 1' }
     ]));
-    const req = httpMock.expectOne((request) => request.url.includes('/party/api/suppliers'));
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/suppliers'));
     expect(req.request.method).toBe('GET');
     req.flush({ resultList: res });
   });
@@ -190,7 +190,7 @@ describe('OrderService', () => {
     service.getCustomerParties().subscribe(d => expect(d).toEqual([
       { value: 'c1', label: 'Customer One' }
     ]));
-    const req = httpMock.expectOne((request) => request.url.includes('/party/api/customers'));
+    const req = httpMock.expectOne((request) => request.url.includes('/oms/api/customers'));
     expect(req.request.method).toBe('GET');
     req.flush({ resultList: res });
   });
