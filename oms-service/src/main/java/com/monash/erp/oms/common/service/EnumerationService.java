@@ -21,8 +21,13 @@ public class EnumerationService {
         return repository.findAll();
     }
 
+    public List<Enumeration> findByEnumTypeId(String enumTypeId) {
+        return repository.findByEnumTypeId(enumTypeId);
+    }
+
     public Enumeration get(Long id) {
-        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Enumeration %d not found".formatted(id)));
+        return repository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Enumeration %d not found".formatted(id)));
     }
 
     public Enumeration create(Enumeration entity) {

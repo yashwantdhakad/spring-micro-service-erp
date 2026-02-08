@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.monash.erp.party.client.OmsGrpcClient;
+import com.monash.erp.party.dto.EnumerationDto;
 import java.util.List;
 
 @RestController
@@ -20,9 +22,11 @@ import java.util.List;
 public class PartyController {
 
     private final PartyService service;
+    private final OmsGrpcClient omsGrpcClient;
 
-    public PartyController(PartyService service) {
+    public PartyController(PartyService service, OmsGrpcClient omsGrpcClient) {
         this.service = service;
+        this.omsGrpcClient = omsGrpcClient;
     }
 
     @GetMapping
@@ -33,6 +37,11 @@ public class PartyController {
     @GetMapping("/{id}")
     public PartyDto get(@PathVariable Long id) {
         return service.get(id);
+    }
+
+    @GetMapping("/enumerations/{enumTypeId}")
+    public ResponseEntity<List<EnumerationDto>> getEnumerations(@PathVariable String enumTypeId) {
+        return ResponseEntity.ok(omsGrpcClient.getEnumerationsByType(enumTypeId));
     }
 
     @PostMapping

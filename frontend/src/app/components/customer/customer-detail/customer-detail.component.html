@@ -376,13 +376,13 @@
         <ul class="custom-list">
           <li class="custom-list-item" *ngFor="let payment of payments; let last = last">
             <div *ngIf="
-                payment.paymentMethod.paymentMethodTypeEnumId == 'PmtCreditCard'
+                payment.paymentMethod.paymentMethodTypeEnumId == 'CREDIT_CARD'
               ">
               <strong> Credit Card: </strong>
               <div>{{ payment.paymentMethod.description }}</div>
               <div>
                 {{ payment.creditCardTypeEnum?.description }}
-                {{ maskCreditCardNumber(payment.creditCard.cardNumber) }}
+                {{ payment.creditCard.cardNumber }}
                 <span *ngIf="payment.creditCard">
                   {{ payment.creditCard?.expireDate }}
                 </span>

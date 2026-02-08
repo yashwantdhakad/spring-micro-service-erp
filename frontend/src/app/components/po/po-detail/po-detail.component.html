@@ -18,7 +18,7 @@
           </button>
 
 
-          <ng-container *ngIf="validStatusChanges?.length">
+          <ng-container *ngIf="validStatusChanges.length">
             <div class="split-btn-group">
               <button mat-raised-button color="primary" [class.split-btn-primary]="validStatusChanges.length > 1"
                 (click)="changeOrderStatus(validStatusChanges[0].statusIdTo)">

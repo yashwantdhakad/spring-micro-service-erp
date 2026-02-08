@@ -7,7 +7,7 @@ import { HttpResponse } from '@angular/common/http';
   providedIn: 'root',
 })
 export class FeatureService {
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) { }
 
   getFeatures(pageIndex: number, keyword: string): Observable<HttpResponse<any>> {
     const params = {
@@ -55,5 +55,9 @@ export class FeatureService {
   getProductFeatureAppls(productId: string): Observable<any[]> {
     const url = `/wms/api/product-feature-appls/product/${encodeURIComponent(productId)}`;
     return this.apiService.get(url);
+  }
+
+  deleteProductFeatureAppl(id: number): Observable<any> {
+    return this.apiService.delete(`/wms/api/product-feature-appls/${id}`);
   }
 }

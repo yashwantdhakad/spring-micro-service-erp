@@ -448,7 +448,7 @@ export class PODetailComponent implements OnInit {
       })
       .afterClosed()
       .subscribe((result) => {
-        if (this.orderId) {
+        if (result && this.orderId) {
           if (this.orderPrimaryId) {
             this.getOrderById(this.orderPrimaryId).subscribe();
           }
@@ -466,7 +466,7 @@ export class PODetailComponent implements OnInit {
       .open(NoteComponent, { data: { noteData: this.noteData } })
       .afterClosed()
       .subscribe((result) => {
-        if (this.orderId) {
+        if (result && this.orderId) {
           if (this.orderPrimaryId) {
             this.getOrderById(this.orderPrimaryId).subscribe();
           }
@@ -508,7 +508,7 @@ export class PODetailComponent implements OnInit {
       .open(ContentComponent, { data: { contentData: this.contentData } })
       .afterClosed()
       .subscribe((result) => {
-        if (this.orderId) {
+        if (result && this.orderId) {
           if (this.orderPrimaryId) {
             this.getOrderById(this.orderPrimaryId).subscribe();
           }
@@ -662,8 +662,8 @@ export class PODetailComponent implements OnInit {
 
     this.dialog.open(AddEditAddressComponent, {
       data: { addressData },
-    }).afterClosed().subscribe(() => {
-      if (this.orderId) {
+    }).afterClosed().subscribe((result) => {
+      if (result && this.orderId) {
         if (this.orderPrimaryId) {
           this.getOrderById(this.orderPrimaryId).subscribe();
         }
@@ -690,8 +690,8 @@ export class PODetailComponent implements OnInit {
 
     this.dialog.open(AddEditAddressComponent, {
       data: { addressData },
-    }).afterClosed().subscribe(() => {
-      if (this.vendorPartyId) {
+    }).afterClosed().subscribe((result) => {
+      if (result && this.vendorPartyId) {
         this.loadVendorDetails(this.vendorPartyId);
       }
     });

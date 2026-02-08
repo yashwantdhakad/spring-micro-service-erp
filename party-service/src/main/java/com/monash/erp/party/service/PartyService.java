@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class PartyService {
@@ -58,7 +60,10 @@ public class PartyService {
         Party entity = repository.findById(id)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Party %d not found".formatted(id)));
-        return mapper.toDTO(entity);
+        PartyDto dto = mapper.toDTO(entity);
+        dto.setCreditCards(getCreditCards(entity.getPartyId()));
+        dto.setPostalAddressList(getPostalAddresses(entity.getPartyId()));
+        return dto;
     }
 
     @Transactional
@@ -164,8 +169,7 @@ public class PartyService {
             String partyId,
             String contactMechId,
             String roleTypeId,
-            LocalDateTime now
-    ) {
+            LocalDateTime now) {
         boolean hasContactMech = partyContactMechRepository
                 .findByPartyIdAndContactMechId(partyId, contactMechId)
                 .isPresent();
@@ -203,5 +207,66 @@ public class PartyService {
 
     private String generateId() {
         return UUID.randomUUID().toString().replace("-", "").substring(0, 20);
+    }
+
+    private List<CreditCardDTO> getCreditCards(String partyId) {
+        return paymentMethodRepository.findByPartyIdAndPaymentMethodTypeId(partyId, "CREDIT_CARD").stream()
+                .map(pm -> creditCardRepository.findById(pm.getPaymentMethodId()).map(cc -> {
+                    CreditCardDTO dto = new CreditCardDTO();
+                    dto.setCardType(cc.getCardType());
+                    // Decrypt card number if present
+                    if (cc.getCardNumber() != null) {
+                        try {
+                            dto.setCardNumber(encryptionService.decrypt(cc.getCardNumber()));
+                        } catch (Exception e) {
+                            dto.setCardNumber(cc.getCardNumber()); // Fallback
+                        }
+                    }
+                    dto.setValidFromDate(cc.getValidFromDate());
+                    dto.setExpireDate(cc.getExpireDate());
+                    dto.setFirstNameOnCard(cc.getFirstNameOnCard());
+                    dto.setMiddleNameOnCard(cc.getMiddleNameOnCard());
+                    dto.setLastNameOnCard(cc.getLastNameOnCard());
+                    dto.setPostalAddressId(cc.getContactMechId());
+                    return dto;
+                }).orElse(null))
+                .filter(java.util.Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private List<com.monash.erp.party.dto.AddressDto> getPostalAddresses(String partyId) {
+        return partyContactMechRepository.findByPartyId(partyId).stream()
+                .map(pcm -> {
+                    // Check if it's a postal address
+                    return contactMechRepository.findByContactMechId(pcm.getContactMechId())
+                            .filter(cm -> "POSTAL_ADDRESS".equals(cm.getContactMechTypeId()))
+                            .flatMap(cm -> postalAddressRepository.findByContactMechId(pcm.getContactMechId())
+                                    .map(pa -> {
+                                        com.monash.erp.party.dto.AddressDto dto = new com.monash.erp.party.dto.AddressDto();
+                                        dto.setContactMechId(pa.getContactMechId());
+                                        dto.setToName(pa.getToName());
+                                        dto.setAddress1(pa.getAddress1());
+                                        dto.setAddress2(pa.getAddress2());
+                                        dto.setCity(pa.getCity());
+                                        dto.setPostalCode(pa.getPostalCode());
+                                        dto.setCountryGeoId(pa.getCountryGeoId());
+                                        dto.setStateProvinceGeoId(pa.getStateProvinceGeoId());
+
+                                        // Find purpose
+                                        partyContactMechPurposeRepository
+                                                .findByPartyIdAndContactMechId(partyId, pa.getContactMechId())
+                                                .stream()
+                                                .filter(p -> p.getThruDate() == null)
+                                                .findFirst()
+                                                .ifPresent(purpose -> dto
+                                                        .setContactMechPurposeId(
+                                                                purpose.getContactMechPurposeTypeId()));
+
+                                        return dto;
+                                    }));
+                })
+                .filter(java.util.Optional::isPresent)
+                .map(java.util.Optional::get)
+                .collect(Collectors.toList());
     }
 }

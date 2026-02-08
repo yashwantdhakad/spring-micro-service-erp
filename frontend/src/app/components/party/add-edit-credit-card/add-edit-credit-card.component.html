@@ -38,7 +38,7 @@
       <mat-form-field appearance="outline" fxFlex="32%">
         <mat-label>{{ 'PARTY.CREDIT_CARD_TYPE' | translate }}</mat-label>
         <mat-select formControlName="creditCardTypeEnumId" name="creditCardTypeEnumId">
-          <mat-option *ngFor="let enumType of enumTypes" [value]="enumType.paymentMethodTypeId">{{ enumType.description
+          <mat-option *ngFor="let enumType of enumTypes" [value]="enumType.enumId">{{ enumType.description
             }}</mat-option>
         </mat-select>
         <mat-error *ngIf="addEditCreditCardForm.get('creditCardTypeEnumId')?.hasError('required')">{{
@@ -130,7 +130,8 @@
         <mat-form-field appearance="outline" fxFlex="49%">
           <mat-label>{{ 'CUSTOMER.CITY' | translate }}</mat-label>
           <input matInput placeholder="City" formControlName="city" />
-          <mat-error *ngIf="addEditCreditCardForm.get('city')?.hasError('required')">{{ 'CUSTOMER.CITY' | translate }} {{
+          <mat-error *ngIf="addEditCreditCardForm.get('city')?.hasError('required')">{{ 'CUSTOMER.CITY' | translate }}
+            {{
             'CUSTOMER.REQUIRED' | translate }}</mat-error>
         </mat-form-field>
         <span fxFlex="2%"></span>

@@ -1,9 +1,5 @@
 <ng-container *ngIf="isLoading; else content">
-  <mat-progress-spinner
-    [diameter]="100"
-    mode="indeterminate"
-    color="primary"
-  ></mat-progress-spinner>
+  <mat-progress-spinner [diameter]="100" mode="indeterminate" color="primary"></mat-progress-spinner>
 </ng-container>
 <ng-template #content>
   <mat-list>
@@ -24,13 +20,8 @@
               <li class="custom-list-item">
                 <strong>{{ 'FEATURE.ABBREV' | translate }}:</strong>
                 {{ featureDetail?.abbrev }}
-                <mat-icon
-                  matListIcon
-                  class="custom-mat-icon custom-icon-align icon-right"
-                  color="primary"
-                  (click)="editFeatureDialog()"
-                  >edit</mat-icon
-                >
+                <mat-icon matListIcon class="custom-mat-icon custom-icon-align icon-right" color="primary"
+                  (click)="editFeatureDialog()">edit</mat-icon>
               </li>
               <li class="custom-list-item">
                 <strong>{{ 'COMMON.DESCRIPTION' | translate }}:</strong>
@@ -47,13 +38,8 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'FEATURE.PRODUCTS_TITLE' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addFeatureToProductDialog({isNew: true})"
-          >add</mat-icon
-        >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addFeatureToProductDialog({isNew: true})">add</mat-icon>
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
@@ -89,13 +75,10 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="primary"
-              (click)="addFeatureToProductDialog(item)"
-              >edit</mat-icon
-            >
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+              (click)="addFeatureToProductDialog(item)">edit</mat-icon>
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="warn"
+              (click)="deleteProductFeatureAppl(item)">delete</mat-icon>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="productsColumns"></tr>
@@ -108,14 +91,8 @@
     <mat-card-header>
       <mat-card-title>
         {{ 'FEATURE.GROUPS_TITLE' | translate }}
-        <mat-icon
-          matListIcon
-          class="custom-mat-icon custom-icon-align"
-          color="primary"
-          (click)="addFeatureToGroupDialog({isNew: true})"
-          >add</mat-icon
-        ></mat-card-title
-      >
+        <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+          (click)="addFeatureToGroupDialog({isNew: true})">add</mat-icon></mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="groups">
@@ -150,13 +127,8 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell class="text-left" *matHeaderCellDef>{{ 'COMMON.ACTION' | translate }}</th>
           <td mat-cell class="text-left" *matCellDef="let item">
-            <mat-icon
-              matListIcon
-              class="custom-mat-icon custom-icon-align"
-              color="primary"
-              (click)="addFeatureToGroupDialog(item)"
-              >edit</mat-icon
-            >
+            <mat-icon matListIcon class="custom-mat-icon custom-icon-align" color="primary"
+              (click)="addFeatureToGroupDialog(item)">edit</mat-icon>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="groupsColumns"></tr>

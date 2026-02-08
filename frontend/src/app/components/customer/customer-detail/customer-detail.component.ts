@@ -436,11 +436,7 @@ export class CustomerDetailComponent implements OnDestroy {
       });
   }
 
-  maskCreditCardNumber(creditCardNumber: string): string {
-    const maskedNumber = creditCardNumber.replace(/\d(?=\d{4})/g, '*');
 
-    return maskedNumber;
-  }
 
   addEditBankAccountDialog(params: any = null) {
     this.bankAccountData = {

@@ -23,4 +23,8 @@ public class PartyDto {
     private LocalDateTime lastUpdatedStamp;
     private LocalDateTime createdTxStamp;
     private LocalDateTime lastUpdatedTxStamp;
+
+    // New fields for details
+    private java.util.List<CreditCardDTO> creditCards;
+    private java.util.List<AddressDto> postalAddressList;
 }

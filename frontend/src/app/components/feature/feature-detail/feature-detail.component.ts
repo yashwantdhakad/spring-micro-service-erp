@@ -6,6 +6,7 @@ import { EditFeatureComponent } from '../edit-feature/edit-feature.component';
 import { AddToProductComponent } from '../add-to-product/add-to-product.component';
 import { AddToFeatureGroupComponent } from '../add-to-feature-group/add-to-feature-group.component';
 import { finalize } from 'rxjs/operators';
+import { ConfirmationDialogComponent } from '../../common/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   standalone: false,
@@ -44,7 +45,7 @@ export class FeatureDetailComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly dialog: MatDialog,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
@@ -122,6 +123,31 @@ export class FeatureDetailComponent implements OnInit {
           this.fetchFeature(result.productFeatureId);
         }
       });
+  }
+
+  deleteProductFeatureAppl(item: any): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: {
+        title: 'Confirm Deletion',
+        message: 'Are you sure you want to remove this product association?',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.isLoading = true;
+        this.featureService.deleteProductFeatureAppl(item.id).subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.fetchFeature(this.productFeatureId!);
+          },
+          error: (error) => {
+            this.isLoading = false;
+            console.error('Error deleting product feature appl', error);
+          },
+        });
+      }
+    });
   }
 
   getCurrentDateTime(): string {

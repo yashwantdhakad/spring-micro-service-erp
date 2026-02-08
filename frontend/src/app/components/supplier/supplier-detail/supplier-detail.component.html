@@ -135,8 +135,8 @@
         <ul class="custom-list">
           <li class="custom-list-item" *ngFor="let role of partyRoleList">
             {{ role.roleTypeDescription || role.description || role.roleType }}
-            <mat-icon *ngIf="(role?.roleType || '') !== 'SUPPLIER'"
-              class="custom-mat-icon custom-icon-align" color="warn" (click)="deleteRoleDialog(role)">
+            <mat-icon *ngIf="(role?.roleType || '') !== 'SUPPLIER'" class="custom-mat-icon custom-icon-align"
+              color="warn" (click)="deleteRoleDialog(role)">
               delete
             </mat-icon>
 
@@ -436,13 +436,13 @@
         <ul class="custom-list">
           <li class="custom-list-item" *ngFor="let payment of payments; let last = last">
             <div *ngIf="
-                payment.paymentMethod.paymentMethodTypeEnumId == 'PmtCreditCard'
+                payment.paymentMethod.paymentMethodTypeEnumId == 'CREDIT_CARD'
               ">
               <strong> {{ 'SUPPLIER.CREDIT_CARD_TITLE' | translate }} </strong>
               <div>{{ payment.paymentMethod.description }}</div>
               <div>
                 {{ payment.creditCardTypeEnum?.description }}
-                {{ maskCreditCardNumber(payment.creditCard.cardNumber) }}
+                {{ payment.creditCard.cardNumber }}
                 <span *ngIf="payment.creditCard">
                   {{ payment.creditCard?.expireDate }}
                 </span>

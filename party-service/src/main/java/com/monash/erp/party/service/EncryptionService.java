@@ -11,7 +11,7 @@ import java.util.Base64;
 @Service
 public class EncryptionService {
 
-    @Value("${encryption.key:DefaultSecretKey123}") // Default for dev, override in prod
+    @Value("${encryption.key:DefaultSecretKey}") // Default for dev, override in prod (16 chars)
     private String secretKey;
 
     private static final String ALGORITHM = "AES";

@@ -77,17 +77,24 @@ public class SupplierService {
     private final PartyRoleRepository partyRoleRepository;
     private final PartyNoteRepository partyNoteRepository;
     private final PartyContentInfoRepository partyContentInfoRepository;
+    private final com.monash.erp.party.repository.PaymentMethodRepository paymentMethodRepository;
+    private final com.monash.erp.party.repository.CreditCardRepository creditCardRepository;
+    private final EncryptionService encryptionService;
 
     public SupplierService(PartyRepository partyRepository,
-                           PartyGroupRepository partyGroupRepository,
-                           ContactMechRepository contactMechRepository,
-                           PartyContactMechRepository partyContactMechRepository,
-                           PartyContactMechPurposeRepository partyContactMechPurposeRepository,
-                           TelecomNumberRepository telecomNumberRepository,
-                           PostalAddressRepository postalAddressRepository,
-                           PartyRoleRepository partyRoleRepository,
-                           PartyNoteRepository partyNoteRepository,
-                           PartyContentInfoRepository partyContentInfoRepository) {
+            PartyGroupRepository partyGroupRepository,
+            ContactMechRepository contactMechRepository,
+            PartyContactMechRepository partyContactMechRepository,
+            PartyContactMechPurposeRepository partyContactMechPurposeRepository,
+            TelecomNumberRepository telecomNumberRepository,
+            PostalAddressRepository postalAddressRepository,
+            PartyRoleRepository partyRoleRepository,
+            PartyNoteRepository partyNoteRepository,
+
+            PartyContentInfoRepository partyContentInfoRepository,
+            com.monash.erp.party.repository.PaymentMethodRepository paymentMethodRepository,
+            com.monash.erp.party.repository.CreditCardRepository creditCardRepository,
+            EncryptionService encryptionService) {
         this.partyRepository = partyRepository;
         this.partyGroupRepository = partyGroupRepository;
         this.contactMechRepository = contactMechRepository;
@@ -98,6 +105,9 @@ public class SupplierService {
         this.partyRoleRepository = partyRoleRepository;
         this.partyNoteRepository = partyNoteRepository;
         this.partyContentInfoRepository = partyContentInfoRepository;
+        this.paymentMethodRepository = paymentMethodRepository;
+        this.creditCardRepository = creditCardRepository;
+        this.encryptionService = encryptionService;
     }
 
     public SupplierListResponse listSuppliers(int page, int size, String query, String sortBy, String sortDirection) {
@@ -141,7 +151,8 @@ public class SupplierService {
 
     public SupplierDetailResponse getSupplier(String partyId) {
         Party party = partyRepository.findByPartyId(partyId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Party %s not found".formatted(partyId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Party %s not found".formatted(partyId)));
         PartyGroup group = partyGroupRepository.findByPartyId(partyId).orElse(null);
         return new SupplierDetailResponse(toDetail(party, group));
     }
@@ -173,11 +184,13 @@ public class SupplierService {
             addEmail(partyId, request.getEmailAddress(), request.getEmailPurposeId());
         }
         if (StringUtils.hasText(request.getContactNumber())) {
-            addPhone(partyId, request.getContactNumber(), request.getCountryCode(), request.getAreaCode(), request.getPhonePurposeId());
+            addPhone(partyId, request.getContactNumber(), request.getCountryCode(), request.getAreaCode(),
+                    request.getPhonePurposeId());
         }
         if (StringUtils.hasText(request.getAddress1())) {
             AddressRequest addressRequest = new AddressRequest();
-            addressRequest.setToName(StringUtils.hasText(request.getToName()) ? request.getToName() : request.getGroupName());
+            addressRequest
+                    .setToName(StringUtils.hasText(request.getToName()) ? request.getToName() : request.getGroupName());
             addressRequest.setAddress1(request.getAddress1());
             addressRequest.setAddress2(request.getAddress2());
             addressRequest.setCity(request.getCity());
@@ -194,14 +207,16 @@ public class SupplierService {
     @Transactional
     public SupplierDetailResponse updateSupplier(String partyId, SupplierUpdateRequest request) {
         PartyGroup group = partyGroupRepository.findByPartyId(partyId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "PartyGroup %s not found".formatted(partyId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "PartyGroup %s not found".formatted(partyId)));
         if (StringUtils.hasText(request.getGroupName())) {
             group.setGroupName(request.getGroupName());
         }
         partyGroupRepository.save(group);
 
         Party party = partyRepository.findByPartyId(partyId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Party %s not found".formatted(partyId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Party %s not found".formatted(partyId)));
         party.setLastModifiedDate(LocalDateTime.now());
         partyRepository.save(party);
 
@@ -213,19 +228,22 @@ public class SupplierService {
         ContactMech contactMech = createContactMech(CONTACT_TYPE_EMAIL, emailAddress);
         linkContactMech(partyId, contactMech.getContactMechId());
         upsertPurpose(partyId, contactMech.getContactMechId(), purposeId, DEFAULT_EMAIL_PURPOSE);
-        return new EmailDto(contactMech.getContactMechId(), resolvePurpose(purposeId, DEFAULT_EMAIL_PURPOSE), emailAddress);
+        return new EmailDto(contactMech.getContactMechId(), resolvePurpose(purposeId, DEFAULT_EMAIL_PURPOSE),
+                emailAddress);
     }
 
     @Transactional
     public EmailDto updateEmail(String partyId, String contactMechId, EmailRequest request) {
         ContactMech contactMech = contactMechRepository.findByContactMechId(contactMechId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "ContactMech %s not found".formatted(contactMechId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "ContactMech %s not found".formatted(contactMechId)));
         if (StringUtils.hasText(request.getEmailAddress())) {
             contactMech.setInfoString(request.getEmailAddress());
         }
         contactMechRepository.save(contactMech);
         upsertPurpose(partyId, contactMechId, request.getContactMechPurposeId(), DEFAULT_EMAIL_PURPOSE);
-        return new EmailDto(contactMechId, resolvePurpose(request.getContactMechPurposeId(), DEFAULT_EMAIL_PURPOSE), contactMech.getInfoString());
+        return new EmailDto(contactMechId, resolvePurpose(request.getContactMechPurposeId(), DEFAULT_EMAIL_PURPOSE),
+                contactMech.getInfoString());
     }
 
     @Transactional
@@ -237,10 +255,10 @@ public class SupplierService {
 
     @Transactional
     public PhoneDto addPhone(String partyId,
-                             String contactNumber,
-                             String countryCode,
-                             String areaCode,
-                             String purposeId) {
+            String contactNumber,
+            String countryCode,
+            String areaCode,
+            String purposeId) {
         ContactMech contactMech = createContactMech(CONTACT_TYPE_PHONE, null);
         TelecomNumber telecomNumber = new TelecomNumber();
         telecomNumber.setContactMechId(contactMech.getContactMechId());
@@ -262,7 +280,8 @@ public class SupplierService {
     @Transactional
     public PhoneDto updatePhone(String partyId, String contactMechId, PhoneRequest request) {
         TelecomNumber telecomNumber = telecomNumberRepository.findByContactMechId(contactMechId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "TelecomNumber %s not found".formatted(contactMechId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "TelecomNumber %s not found".formatted(contactMechId)));
         if (StringUtils.hasText(request.getContactNumber())) {
             telecomNumber.setContactNumber(request.getContactNumber());
         }
@@ -318,7 +337,8 @@ public class SupplierService {
     @Transactional
     public AddressDto updateAddress(String partyId, String contactMechId, AddressRequest request) {
         PostalAddress address = postalAddressRepository.findByContactMechId(contactMechId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "PostalAddress %s not found".formatted(contactMechId)));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "PostalAddress %s not found".formatted(contactMechId)));
         if (StringUtils.hasText(request.getToName())) {
             address.setToName(request.getToName());
         }
@@ -372,7 +392,8 @@ public class SupplierService {
         PartyNote note = partyNoteRepository.findByPartyId(partyId).stream()
                 .filter(existing -> noteId.equals(existing.getNoteId()))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note %s not found".formatted(noteId)));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note %s not found".formatted(noteId)));
 
         if (StringUtils.hasText(request.getNoteText())) {
             note.setNoteText(request.getNoteText());
@@ -392,7 +413,8 @@ public class SupplierService {
         PartyNote note = partyNoteRepository.findByPartyId(partyId).stream()
                 .filter(existing -> noteId.equals(existing.getNoteId()))
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note %s not found".formatted(noteId)));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Note %s not found".formatted(noteId)));
         partyNoteRepository.delete(note);
     }
 
@@ -434,13 +456,19 @@ public class SupplierService {
         return "asc".equalsIgnoreCase(sortDirection) ? Sort.Direction.ASC : Sort.Direction.DESC;
     }
 
-    private List<SupplierSummary> sortSummaries(List<SupplierSummary> results, String sortField, Sort.Direction direction) {
+    private List<SupplierSummary> sortSummaries(List<SupplierSummary> results, String sortField,
+            Sort.Direction direction) {
         Comparator<SupplierSummary> comparator = switch (sortField) {
-            case "partyId" -> Comparator.comparing(SupplierSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "groupName" -> Comparator.comparing(SupplierSummary::getGroupName, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "contactNumber" -> Comparator.comparing(SupplierSummary::getContactNumber, Comparator.nullsLast(String::compareToIgnoreCase));
-            case "emailAddress" -> Comparator.comparing(SupplierSummary::getEmailAddress, Comparator.nullsLast(String::compareToIgnoreCase));
-            default -> Comparator.comparing(SupplierSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "partyId" ->
+                Comparator.comparing(SupplierSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "groupName" ->
+                Comparator.comparing(SupplierSummary::getGroupName, Comparator.nullsLast(String::compareToIgnoreCase));
+            case "contactNumber" -> Comparator.comparing(SupplierSummary::getContactNumber,
+                    Comparator.nullsLast(String::compareToIgnoreCase));
+            case "emailAddress" -> Comparator.comparing(SupplierSummary::getEmailAddress,
+                    Comparator.nullsLast(String::compareToIgnoreCase));
+            default ->
+                Comparator.comparing(SupplierSummary::getPartyId, Comparator.nullsLast(String::compareToIgnoreCase));
         };
         if (direction == Sort.Direction.DESC) {
             comparator = comparator.reversed();
@@ -453,8 +481,7 @@ public class SupplierService {
                 party.getPartyId(),
                 group != null ? group.getGroupName() : null,
                 party.getPartyTypeId(),
-                party.getStatusId()
-        );
+                party.getStatusId());
 
         List<RoleSummary> roles = partyRoleRepository.findByPartyId(party.getPartyId()).stream()
                 .map(role -> new RoleSummary(role.getRoleTypeId(), role.getRoleTypeId()))
@@ -469,6 +496,7 @@ public class SupplierService {
 
         SupplierDetail detail = new SupplierDetail(profile, roles, emails, phones, addresses, notes);
         detail.setContentList(resolveContents(party.getPartyId()));
+        detail.setPayments(resolvePayments(party.getPartyId()));
         return detail;
     }
 
@@ -520,7 +548,8 @@ public class SupplierService {
                 continue;
             }
             for (String purposeId : toPurposeEntries(contactMechId, purposes, DEFAULT_PHONE_PURPOSE)) {
-                results.add(new PhoneDto(contactMechId, purposeId, telecom.getCountryCode(), telecom.getAreaCode(), telecom.getContactNumber()));
+                results.add(new PhoneDto(contactMechId, purposeId, telecom.getCountryCode(), telecom.getAreaCode(),
+                        telecom.getContactNumber()));
             }
         }
         return results;
@@ -633,5 +662,73 @@ public class SupplierService {
 
     private String resolvePurpose(String requested, String fallback) {
         return StringUtils.hasText(requested) ? requested : fallback;
+    }
+
+    private List<Object> resolvePayments(String partyId) {
+        List<Object> payments = new ArrayList<>();
+        List<com.monash.erp.party.entity.PaymentMethod> methods = paymentMethodRepository.findByPartyId(partyId);
+
+        for (com.monash.erp.party.entity.PaymentMethod pm : methods) {
+            Map<String, Object> paymentData = new HashMap<>();
+
+            // Map PaymentMethod
+            Map<String, Object> pmMap = new HashMap<>();
+            pmMap.put("paymentMethodId", pm.getPaymentMethodId());
+            pmMap.put("paymentMethodTypeEnumId", pm.getPaymentMethodTypeId()); // e.g. "PmtCreditCard" or "CREDIT_CARD"
+            pmMap.put("description", pm.getDescription());
+            paymentData.put("paymentMethod", pmMap);
+
+            if ("CREDIT_CARD".equals(pm.getPaymentMethodTypeId())
+                    || "PmtCreditCard".equals(pm.getPaymentMethodTypeId())) {
+                creditCardRepository.findById(pm.getPaymentMethodId()).ifPresent(cc -> {
+                    Map<String, Object> ccMap = new HashMap<>();
+                    ccMap.put("cardType", cc.getCardType());
+
+                    String decryptedNumber = cc.getCardNumber();
+                    try {
+                        decryptedNumber = encryptionService.decrypt(cc.getCardNumber());
+                    } catch (Exception e) {
+                        // ignore
+                        decryptedNumber = cc.getCardNumber();
+                    }
+
+                    // Mask the card number (Show only last 4 strings)
+                    if (StringUtils.hasText(decryptedNumber) && decryptedNumber.length() > 4) {
+                        String last4 = decryptedNumber.substring(decryptedNumber.length() - 4);
+                        ccMap.put("cardNumber", "**** **** **** " + last4);
+                    } else {
+                        ccMap.put("cardNumber", decryptedNumber);
+                    }
+
+                    ccMap.put("validFromDate", cc.getValidFromDate());
+                    ccMap.put("expireDate", cc.getExpireDate());
+                    ccMap.put("firstNameOnCard", cc.getFirstNameOnCard());
+                    ccMap.put("lastNameOnCard", cc.getLastNameOnCard());
+                    paymentData.put("creditCard", ccMap);
+
+                    // Mock Enum object for display
+                    Map<String, String> enumMap = new HashMap<>();
+                    enumMap.put("description", cc.getCardType());
+                    paymentData.put("creditCardTypeEnum", enumMap);
+
+                    // Postal Address
+                    if (StringUtils.hasText(cc.getContactMechId())) {
+                        postalAddressRepository.findByContactMechId(cc.getContactMechId()).ifPresent(pa -> {
+                            Map<String, Object> paMap = new HashMap<>();
+                            paMap.put("toName", pa.getToName());
+                            paMap.put("address1", pa.getAddress1());
+                            paMap.put("address2", pa.getAddress2());
+                            paMap.put("city", pa.getCity());
+                            paMap.put("postalCode", pa.getPostalCode());
+                            paMap.put("countryGeoId", pa.getCountryGeoId());
+                            paMap.put("stateProvinceGeoId", pa.getStateProvinceGeoId());
+                            paymentData.put("postalAddress", paMap);
+                        });
+                    }
+                });
+            }
+            payments.add(paymentData);
+        }
+        return payments;
     }
 }

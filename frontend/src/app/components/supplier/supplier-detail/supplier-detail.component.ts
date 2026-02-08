@@ -86,7 +86,7 @@ export class SupplierDetailComponent implements OnDestroy {
     private supplierProductService: SupplierProductService,
     private snackbarService: SnackbarService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   private destroy$ = new Subject<void>();
 
@@ -104,14 +104,14 @@ export class SupplierDetailComponent implements OnDestroy {
     this.store
       .pipe(select(selectGeoList), takeUntil(this.destroy$))
       .subscribe((geoListObject: any) => {
-      if (geoListObject) {
-        setTimeout(() => {
-          this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
-          this.states = filterGeoRecords(geoListObject, 'STATE');
-          this.cdr.markForCheck();
-        }, 0);
-      }
-    });
+        if (geoListObject) {
+          setTimeout(() => {
+            this.countries = filterGeoRecords(geoListObject, 'COUNTRY');
+            this.states = filterGeoRecords(geoListObject, 'STATE');
+            this.cdr.markForCheck();
+          }, 0);
+        }
+      });
 
   }
 
@@ -468,11 +468,7 @@ export class SupplierDetailComponent implements OnDestroy {
       });
   }
 
-  maskCreditCardNumber(creditCardNumber: string): string {
-    const maskedNumber = creditCardNumber.replace(/\d(?=\d{4})/g, '*');
 
-    return maskedNumber;
-  }
 
   addEditBankAccountDialog(params: any = null) {
     this.bankAccountData = {

@@ -42,7 +42,7 @@ export class AddEditCreditCardComponent implements OnInit {
     this.initializeForm();
     this.loadGeoOptions();
 
-    this.getPaymentMethodTypes();
+    this.getEnumerations();
   }
 
   initializeForm(): void {
@@ -61,7 +61,7 @@ export class AddEditCreditCardComponent implements OnInit {
       firstNameOnAccount: [d.firstNameOnAccount, [required]],
       lastNameOnAccount: [d.lastNameOnAccount, [required]],
       companyNameOnAccount: [d.companyNameOnAccount],
-      creditCardTypeEnumId: [d.creditCardTypeEnumId || 'CctAmericanExpress', [required]],
+      creditCardTypeEnumId: [d.creditCardTypeEnumId, [required]], // Removed default 'CctAmericanExpress' to force selection
       cardNumber: [d.cardNumber, [required]],
       validateSecurityCode: [d.validateSecurityCode],
       expireMonth: [d.expireMonth, [required]],
@@ -121,8 +121,8 @@ export class AddEditCreditCardComponent implements OnInit {
     }
   }
 
-  getPaymentMethodTypes(): void {
-    this.partyService.getPaymentMethodTypes().subscribe({
+  getEnumerations(): void {
+    this.partyService.getEnumerations('CREDIT_CARD_TYPE').subscribe({
       next: (data) => {
         this.enumTypes = Array.isArray(data) ? data : [data];
       },
@@ -183,7 +183,7 @@ export class AddEditCreditCardComponent implements OnInit {
 
     if (address.countryGeoId) {
       this.addEditCreditCardForm.get('countryGeoId')?.setValue(address.countryGeoId);
-        this.states = this.filterStatesByCountry(this.allStates);
+      this.states = this.filterStatesByCountry(this.allStates);
     }
 
     if (address.stateProvinceGeoId) {

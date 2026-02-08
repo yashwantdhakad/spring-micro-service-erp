@@ -1,0 +1,17 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: integration-service
+
+shopify:
+  shop-domain: "your-shop.myshopify.com"
+  access-token: "replace-with-admin-access-token"
+  api-key: "replace-with-api-key"
+  api-secret: "replace-with-api-secret"
+  webhook-secret: "replace-with-webhook-secret"
+
+logging:
+  level:
+    com.monash.erp.integration: DEBUG

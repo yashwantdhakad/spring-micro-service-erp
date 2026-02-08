@@ -373,4 +373,8 @@ export class PartyService {
   getPaymentMethodTypes(): Observable<any[]> {
     return this.apiService.get('/oms/api/accounting/payment-method-types');
   }
+
+  getEnumerations(enumTypeId: string): Observable<any[]> {
+    return this.apiService.get(`/party/api/parties/enumerations/${enumTypeId}`);
+  }
 }

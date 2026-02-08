@@ -175,6 +175,7 @@
     "PRICE_TYPE": "Price Type",
     "PRODUCT_NAME": "Product Name",
     "PRODUCTS_TITLE": "Products",
+    "PRODUCT_REQUIRED": "Product is required.",
     "FACILITY_ID": "Facility ID",
     "STATUS_ID": "Status ID",
     "FACILITY_LOCATION": "Facility Location"
